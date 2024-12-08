@@ -18,6 +18,25 @@ fn main() -> Result<(), PyErr> {
         prepare_freethreaded_python()
     }
 
+    let settings = Settings::default();
+
+    let interpreter = rustpython::InterpreterConfig::new()
+        .init_hook(Box::new(|vm| {
+            let python_libs = vm::py_freeze!(file = "../python/codelldb/src/codelldb/__init__.py", module_name = "codelldb");
+            vm.add_frozen(python_libs);
+        }))
+        .init_stdlib()
+        .settings(settings)
+        .interpreter();
+
+    let module = vm::py_compile!(file = "python/pytauri_demo/__main__.py");
+
+    interpreter.run(|vm| {
+        let scope = vm.new_scope_with_builtins();
+        vm.run_code_obj(vm.ctx.new_code(module), scope)?;
+        Ok(())
+    });
+
     Python::with_gil(|py| {
         let script = || {
             append_ext_mod(wrap_pymodule!(_ext_mod)(py).into_bound(py))?;

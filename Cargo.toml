@@ -22,18 +22,13 @@ tauri-plugin-notification = { version = "2" }
 
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-
-anyhow = { version = "1" }
 parking_lot = { version = "0.12" }
 libc = { version = "0.2" }
-
-tracing = { version = "0.1" }
 
 tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri" }
 pytauri-core = { path = "crates/pytauri-core" }
 pytauri = { path = "crates/pytauri" }
 pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification" }
-pyfuture = { path = "crates/pyfuture" }
 pyo3-utils = { path = "crates/pyo3-utils" }
 
 tokio = { version = "1", default-features = false }

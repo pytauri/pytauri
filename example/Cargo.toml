@@ -9,7 +9,7 @@ rust-version = { workspace = true }
 name = "_ext_mod"
 # `cdylib` for python extension module,
 # `lib` for rust testing
-crate-type = ["cdylib", "lib"]
+crate-type = ["cdylib", "lib", "staticlib"]
 
 [dependencies]
 # DO NOT enble `extension-module` feature, instead enable it in `pyproject.toml`
@@ -28,6 +28,16 @@ pytauri-plugin-notification = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
+rustpython = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
+rustpython-vm = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
+rustpython-pylib = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
 
 [build-dependencies]
+uv-python = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
+uv-settings = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
+uv-cache = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
+uv-installer  = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
+hashbrown = { version = "0.15" }
+
 tauri-build = { workspace = true }
+directories = "5.0.1"
