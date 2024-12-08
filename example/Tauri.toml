@@ -5,7 +5,7 @@ identifier = "com.pytauri-demo.app"
 [build]
 beforeDevCommand = "pnpm -F=pytauri-demo dev"
 devUrl = "http://localhost:1420"
-beforeBuildCommand = "pnpm -F=pytauri-demo build"
+beforeBuildCommand = "pytauri-bundler && pnpm -F=pytauri-demo build"
 frontendDist = "./front/dist"
 
 [app]

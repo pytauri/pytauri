@@ -9,6 +9,9 @@ use pytauri::standalone::{
     append_ext_mod, prepare_freethreaded_python, prepare_freethreaded_python_venv,
 };
 
+use std::{error::Error, path::PathBuf, process::Command};
+use tauri::{Env, Wry};
+
 use _ext_mod::_ext_mod;
 
 fn main() -> Result<(), PyErr> {
@@ -20,22 +23,24 @@ fn main() -> Result<(), PyErr> {
 
     let settings = Settings::default();
 
-    let interpreter = rustpython::InterpreterConfig::new()
-        .init_hook(Box::new(|vm| {
-            let python_libs = vm::py_freeze!(file = "../python/codelldb/src/codelldb/__init__.py", module_name = "codelldb");
-            vm.add_frozen(python_libs);
-        }))
-        .init_stdlib()
-        .settings(settings)
-        .interpreter();
+    // This is kinda risky to be honest, not garunteed to be supported 
+    let context: tauri::Context<Wry> = tauri::generate_context!();
+    let package_info = context.package_info();
+    println!("package_info: {:?}", package_info);
+    let resource_dir = tauri_utils::platform::resource_dir(package_info, &Env::default())?;
 
-    let module = vm::py_compile!(file = "python/pytauri_demo/__main__.py");
+    let mut python_path = PathBuf::from(resource_dir);
+    python_path.push("front");
+    python_path.push("resources");
+    python_path.push("cpython-aarch64-apple-darwin");
+    python_path.push("bin");
+    python_path.push("python");
 
-    interpreter.run(|vm| {
-        let scope = vm.new_scope_with_builtins();
-        vm.run_code_obj(vm.ctx.new_code(module), scope)?;
-        Ok(())
-    });
+    println!("python_path: {:?}", python_path.display());
+
+    let _ = Command::new(python_path)
+        .arg("--help")
+        .spawn()?;
 
     Python::with_gil(|py| {
         let script = || {

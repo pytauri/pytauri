@@ -1,0 +1,13 @@
+[package]
+name = "pytauri-bundler"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+tokio = { workspace = true, features = ["full"] }
+reqwest = { workspace = true }
+serde = { workspace = true }
+flate2 = { workspace = true }
+tar = { workspace = true }

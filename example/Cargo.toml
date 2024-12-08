@@ -18,6 +18,7 @@ pyo3 = { workspace = true }
 
 tauri = { workspace = true, features = ["devtools", "config-toml"] }
 pytauri = { workspace = true, features = ["standalone"] }
+tauri-utils = { workspace = true }
 tauri-plugin-pytauri = { workspace = true }
 
 tauri-plugin-shell = "2"
@@ -27,17 +28,7 @@ pytauri-plugin-notification = { workspace = true }
 
 serde = { workspace = true }
 serde_json = { workspace = true }
-
-rustpython = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
-rustpython-vm = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
-rustpython-pylib = { version = "0.4.0", default-features = false, features = ["freeze-stdlib"] }
+dirs = { workspace = true }
 
 [build-dependencies]
-uv-python = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
-uv-settings = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
-uv-cache = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
-uv-installer  = { git = "https://github.com/astral-sh/uv", rev = "0805242" }
-hashbrown = { version = "0.15" }
-
 tauri-build = { workspace = true }
-directories = "5.0.1"
