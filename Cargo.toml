@@ -42,3 +42,9 @@ dirs = "5"
 
 [profile.release]
 lto = "thin"
+
+[patch.crates-io]
+tauri = { path = "../tauri/crates/tauri" }
+tauri-utils = { path = "../tauri/crates/tauri-utils" }
+tauri-build = { path = "../tauri/crates/tauri-build" }
+tauri-plugin = { path = "../tauri/crates/tauri-plugin" }

@@ -35,3 +35,5 @@ tauri-build = { workspace = true }
 tauri-utils = { workspace = true }
 anyhow = { workspace = true }
 pytauri-bundler = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
