@@ -41,12 +41,7 @@ flate2 = "1.0"
 tar = "0.4"
 dirs = "5"
 
+run_script = "^0.11.0"
+
 [profile.release]
 lto = "thin"
-
-[patch.crates-io]
-tauri = { path = "../tauri/crates/tauri" }
-tauri-cli = { path = "../tauri/crates/tauri-cli" }
-tauri-utils = { path = "../tauri/crates/tauri-utils" }
-tauri-build = { path = "../tauri/crates/tauri-build" }
-tauri-plugin = { path = "../tauri/crates/tauri-plugin" }

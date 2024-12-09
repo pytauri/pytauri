@@ -1,7 +1,6 @@
-use anyhow::Result;
+fn main() {
+    println!("cargo:rustc-link-arg=-Wl,-rpath,@executable_path/../Resources/pyembed/lib");
+    println!("cargo:rustc-link-arg=-Wl,-rpath,@executable_path/./pyembed/lib");
 
-fn main() -> Result<()> {
     tauri_build::build();
-
-    Ok(())
 }

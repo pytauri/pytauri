@@ -6,6 +6,7 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+run_script = { workspace = true }
 tokio = { workspace = true, features = ["full"] }
 reqwest = { workspace = true }
 serde = { workspace = true }

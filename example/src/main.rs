@@ -1,7 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::env::var;
+use tauri::{Env, Wry};
+use std::{env::var, path::PathBuf};
 
 use pyo3::prelude::*;
 use pyo3::wrap_pymodule;
@@ -9,38 +10,20 @@ use pytauri::standalone::{
     append_ext_mod, prepare_freethreaded_python, prepare_freethreaded_python_venv,
 };
 
-use std::{error::Error, path::PathBuf, process::Command};
-use tauri::{Env, Wry};
-
 use _ext_mod::_ext_mod;
 
 fn main() -> Result<(), PyErr> {
-    if let Ok(venv_path) = var("VIRTUAL_ENV") {
-        prepare_freethreaded_python_venv(venv_path).expect("failed to initialize python from venv");
-    } else {
-        prepare_freethreaded_python()
-    }
-
     // let settings = Settings::default();
 
-    // // This is kinda risky to be honest, not garunteed to be supported 
-    // let context: tauri::Context<Wry> = tauri::generate_context!();
-    // let package_info = context.package_info();
-    // println!("package_info: {:?}", package_info);
-    // let resource_dir = tauri_utils::platform::resource_dir(package_info, &Env::default())?;
+    // This is kinda risky to be honest, not garunteed to be supported 
+    let context: tauri::Context<Wry> = tauri::generate_context!();
+    let package_info = context.package_info();
+    let resource_dir = tauri_utils::platform::resource_dir(package_info, &Env::default()).unwrap();
 
-    // let mut python_path = PathBuf::from(resource_dir);
-    // python_path.push("front");
-    // python_path.push("resources");
-    // python_path.push("cpython-aarch64-apple-darwin");
-    // python_path.push("bin");
-    // python_path.push("python");
+    let mut python_venv_path = PathBuf::from(resource_dir);
+    python_venv_path.push("venv");
 
-    // println!("python_path: {:?}", python_path.display());
-
-    // let _ = Command::new(python_path)
-    //     .arg("--help")
-    //     .spawn()?;
+    prepare_freethreaded_python_venv(python_venv_path).expect("failed to initialize python from venv");
 
     Python::with_gil(|py| {
         let script = || {

@@ -1,4 +1,4 @@
-use std::{env, ffi::OsStr, fs::{self}, io::Cursor, path::PathBuf};
+use std::{env, ffi::OsStr, fs::{self}, io::Cursor, path::{Path, PathBuf}, process::Command};
 use anyhow::{bail, Result};
 use flate2::read::GzDecoder;
 
@@ -29,9 +29,9 @@ pub fn get_cargo_toml_path() -> Result<PathBuf> {
     bail!("Could not find Cargo.toml");
 }
 
-pub fn download_standalone(python_version: &str, target_triple: &str, output_dir: PathBuf) -> Result<()> {
+pub fn download_standalone(python_version: &str, target_triple: &str, output_dir: &impl AsRef<Path>) -> Result<()> {
     let body = async {
-        if output_dir.exists() { return Ok(()) }
+        if output_dir.as_ref().exists() { return Ok(()) }
 
         let mut out_dir = env::temp_dir();
         out_dir.push("python-build-standalone");
@@ -61,4 +61,14 @@ pub fn download_standalone(python_version: &str, target_triple: &str, output_dir
         .build()
         .expect("Failed building the Runtime")
         .block_on(body);
+}
+
+pub fn install_venv(output_dir: &impl AsRef<Path>) -> Result<()> {
+    Command::new("uv")
+        .arg("venv")
+        .arg("--relocatable")
+        .arg(output_dir.as_ref())
+        .status()?;
+
+    Ok(())
 }
