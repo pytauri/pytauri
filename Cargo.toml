@@ -23,6 +23,7 @@ tauri-plugin-notification = { version = "2" }
 
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
+toml = { version = "0.8" }
 parking_lot = { version = "0.12" }
 libc = { version = "0.2" }
 
@@ -45,6 +46,7 @@ lto = "thin"
 
 [patch.crates-io]
 tauri = { path = "../tauri/crates/tauri" }
+tauri-cli = { path = "../tauri/crates/tauri-cli" }
 tauri-utils = { path = "../tauri/crates/tauri-utils" }
 tauri-build = { path = "../tauri/crates/tauri-build" }
 tauri-plugin = { path = "../tauri/crates/tauri-plugin" }

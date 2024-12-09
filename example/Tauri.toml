@@ -5,7 +5,7 @@ identifier = "com.pytauri-demo.app"
 [build]
 beforeDevCommand = "pnpm -F=pytauri-demo dev"
 devUrl = "http://localhost:1420"
-beforeBuildCommand = "pytauri-bundler && pnpm -F=pytauri-demo build"
+beforeBuildCommand = "pnpm -F=pytauri-demo build"
 frontendDist = "./front/dist"
 
 [app]
@@ -29,4 +29,3 @@ icon = [
   "icons/icon.icns",
   "icons/icon.ico",
 ]
-resources = ["python/"]
