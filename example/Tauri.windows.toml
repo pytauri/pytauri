@@ -1,0 +1,13 @@
+# FIXME, XXX, TODO:
+#
+# See: <https://github.com/tauri-apps/tauri/issues/3700>
+# On windows, we must install the package via the `.msi` or `nsis`, or `tauri-plugin-notification` will not work.
+#
+# However `pytauri` does not support bundle the `.msi` or `nsis` yet.
+# So, this is a hacky way to make the notification work by borrowing the identifier of the `powershell.exe`.
+# See: <https://docs.rs/crate/tauri-plugin-notification/2.0.1/source/src/desktop.rs#184-188>
+# and: <https://docs.rs/crate/notify-rust/4.11.3/source/src/windows.rs#25-26>
+# and: <https://docs.rs/crate/tauri-winrt-notification/0.2.1/source/src/lib.rs#249-250>
+#
+# We create a issue to tauri. We need a api such as `notification::builder::app_id` to set the app id.
+identifier = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\WindowsPowerShell\\v1.0\\powershell.exe"

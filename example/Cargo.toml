@@ -9,7 +9,7 @@ rust-version = { workspace = true }
 name = "_ext_mod"
 # `cdylib` for python extension module,
 # `lib` for rust testing
-crate-type = ["cdylib", "lib"]
+crate-type = ["cdylib", "lib", "staticlib"]
 
 [dependencies]
 # DO NOT enble `extension-module` feature, instead enable it in `pyproject.toml`
@@ -18,6 +18,7 @@ pyo3 = { workspace = true }
 
 tauri = { workspace = true, features = ["devtools", "config-toml"] }
 pytauri = { workspace = true, features = ["standalone"] }
+tauri-utils = { workspace = true }
 tauri-plugin-pytauri = { workspace = true }
 
 tauri-plugin-shell = "2"
@@ -27,7 +28,12 @@ pytauri-plugin-notification = { workspace = true }
 
 serde = { workspace = true }
 serde_json = { workspace = true }
-
+dirs = { workspace = true }
 
 [build-dependencies]
 tauri-build = { workspace = true }
+tauri-utils = { workspace = true }
+anyhow = { workspace = true }
+pytauri-bundler = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

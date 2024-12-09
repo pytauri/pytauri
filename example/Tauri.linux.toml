@@ -1,0 +1,2 @@
+[bundle.linux.dep]
+depends = ["python3"]
