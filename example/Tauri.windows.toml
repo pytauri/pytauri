@@ -11,6 +11,3 @@
 #
 # We create a issue to tauri. We need a api such as `notification::builder::app_id` to set the app id.
 identifier = "{1AC14E77-02E7-4E5D-B744-2EB1AE5198B7}\\WindowsPowerShell\\v1.0\\powershell.exe"
-
-[bundle]
-resources = ["front/resources/"]

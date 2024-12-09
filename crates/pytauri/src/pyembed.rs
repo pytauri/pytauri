@@ -8,6 +8,7 @@ use std::path::Path;
 
 use libc::wchar_t;
 use pyo3::ffi as pyffi;
+use std::ffi::CString;
 
 // see: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/error.rs>
 mod error {

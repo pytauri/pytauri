@@ -1,53 +1,10 @@
 #![allow(dead_code)]
-use std::{env, error::Error, fs::{self, create_dir_all}, io::Cursor};
-use flate2::read::GzDecoder;
 
-use serde::Deserialize;
-use tar::Archive;
 
-#[derive(Clone, Debug, Deserialize)]
-struct DownloadUrlResponse {
-    version: u32,
-    tag: String,
-    release_url: String,
-    asset_url_prefix: String
-}
+use pytauri_bundler::{get_cargo_toml_path, download_standalone};
+use std::{env, fs::create_dir_all, error::Error};
 
-async fn download_standalone(python_version: String, target_triple: String) -> Result<(), Box<dyn Error>> {
-    let mut output_dir = env::current_dir()?;
-    output_dir.push("resources");
-    create_dir_all(&output_dir)?;
-    output_dir.push(format!("cpython-{}", target_triple));
-
-    if output_dir.exists() { return Ok(()) }
-
-    let mut out_dir = env::temp_dir();
-    out_dir.push("python-build-standalone");
-
-    let download_url = "https://raw.githubusercontent.com/indygreg/python-build-standalone/latest-release/latest-release.json";
-    let response: DownloadUrlResponse = reqwest::get(download_url).await?.json().await?;
-
-    let file_name = format!("cpython-{}+{}-{}-install_only_stripped.tar.gz", python_version, response.tag, target_triple);
-
-    let response = reqwest::get(format!("{}/{}", response.asset_url_prefix, file_name)).await?;
-    let bytes = response.bytes().await?;
-
-    let tar = GzDecoder::new(Cursor::new(bytes));
-    let mut archive = Archive::new(tar);
-
-    archive.unpack(&out_dir)?;
-
-    out_dir.push("python");
-    println!("out_dir: {:?}", out_dir);
-    println!("output_dir: {:?}", output_dir);
-
-    fs::rename(out_dir, output_dir)?;
-
-    Ok(())
-}
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<(), Box<dyn Error>> {
     let debug_mode = match env::var("TAURI_ENV_DEBUG") {
         Ok(val) if val == "true" => true,
         _ => false
@@ -67,7 +24,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
     }
 
     if platform == "windows" || platform == "darwin" {
-        download_standalone(python_version, target_triple).await?;
+        let mut output_dir = get_cargo_toml_path()?;
+        output_dir.push("resources");
+        create_dir_all(&output_dir)?;
+        output_dir.push(format!("cpython-{}", target_triple));
+
+        download_standalone(&python_version, &target_triple, output_dir)?;
     }
 
     Ok(())

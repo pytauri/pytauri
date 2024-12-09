@@ -11,3 +11,4 @@ reqwest = { workspace = true }
 serde = { workspace = true }
 flate2 = { workspace = true }
 tar = { workspace = true }
+anyhow = { workspace = true }

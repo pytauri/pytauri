@@ -1,0 +1,6 @@
+[bundle]
+active = true
+targets = "all"
+
+[bundle.resources]
+"pyembed/windows" = "pyembed"

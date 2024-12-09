@@ -3133,6 +3133,7 @@ dependencies = [
 name = "pytauri-bundler"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "flate2",
  "reqwest",
  "serde",
@@ -3153,9 +3154,11 @@ dependencies = [
 name = "pytauri-demo"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "dirs",
  "pyo3",
  "pytauri",
+ "pytauri-bundler",
  "pytauri-plugin-notification",
  "serde",
  "serde_json",

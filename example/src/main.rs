@@ -21,26 +21,26 @@ fn main() -> Result<(), PyErr> {
         prepare_freethreaded_python()
     }
 
-    let settings = Settings::default();
+    // let settings = Settings::default();
 
-    // This is kinda risky to be honest, not garunteed to be supported 
-    let context: tauri::Context<Wry> = tauri::generate_context!();
-    let package_info = context.package_info();
-    println!("package_info: {:?}", package_info);
-    let resource_dir = tauri_utils::platform::resource_dir(package_info, &Env::default())?;
+    // // This is kinda risky to be honest, not garunteed to be supported 
+    // let context: tauri::Context<Wry> = tauri::generate_context!();
+    // let package_info = context.package_info();
+    // println!("package_info: {:?}", package_info);
+    // let resource_dir = tauri_utils::platform::resource_dir(package_info, &Env::default())?;
 
-    let mut python_path = PathBuf::from(resource_dir);
-    python_path.push("front");
-    python_path.push("resources");
-    python_path.push("cpython-aarch64-apple-darwin");
-    python_path.push("bin");
-    python_path.push("python");
+    // let mut python_path = PathBuf::from(resource_dir);
+    // python_path.push("front");
+    // python_path.push("resources");
+    // python_path.push("cpython-aarch64-apple-darwin");
+    // python_path.push("bin");
+    // python_path.push("python");
 
-    println!("python_path: {:?}", python_path.display());
+    // println!("python_path: {:?}", python_path.display());
 
-    let _ = Command::new(python_path)
-        .arg("--help")
-        .spawn()?;
+    // let _ = Command::new(python_path)
+    //     .arg("--help")
+    //     .spawn()?;
 
     Python::with_gil(|py| {
         let script = || {
