@@ -45,12 +45,9 @@ jobs:
           python-version-file: "pyproject.toml"
           # Issue ref: https://github.com/actions/setup-python/issues/436
           cache: "pip"
-      - name: Sync docs environment
-        run: |
-          uv sync --only-group=docs --only-group=workspaces --all-extras
       - name: Build docs
         run: |
-          mkdocs build
+          uv run --only-group=docs --only-group=workspaces --all-extras -- mkdocs build 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
