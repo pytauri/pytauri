@@ -43,8 +43,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
-          # Issue ref: https://github.com/actions/setup-python/issues/436
-          cache: "pip"
       - name: Build docs
         run: |
           uv run --only-group=docs --only-group=workspaces --all-extras -- mkdocs build 
