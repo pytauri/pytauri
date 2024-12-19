@@ -14,7 +14,7 @@ on:
       - main
   workflow_dispatch:
 
-# Allow one concurrent deployment
+# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: true
@@ -27,6 +27,9 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
+      - name: setup-envs-ver
+        id: setup-envs-ver
+        uses: ./.github/actions/setup-envs-ver
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -36,16 +39,15 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           # see: <https://docs.astral.sh/uv/guides/integration/github/>
-          version: "0.5.8"
+          version: ${{ steps.setup-envs-ver.outputs.uv }}
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
       - name: Build docs
         run: |
-          uv run --only-group=docs --only-group=workspaces --all-extras -- mkdocs build 
+          uv run --only-group=docs --only-group=workspaces --all-extras -- mkdocs build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -1,0 +1,15 @@
+# WARNING: Do not change the name of this folder, keep `setup-sys-deps`.
+# other workflows need the name of the action to work.
+
+name: "Setup system dependencies (ubuntu only)"
+description: "Setup system dependencies (ubuntu only)"
+
+runs:
+  using: composite
+  steps:
+    # see: <https://github.com/tauri-apps/tauri-action/tree/6a45448f17a006facb105cc5257b3edbc353038a?tab=readme-ov-file#usage>
+    - name: install dependencies (ubuntu only)
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf

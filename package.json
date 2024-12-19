@@ -3,6 +3,9 @@
     "private": true,
     "license": "APACHE-2.0",
     "type": "module",
+    "engines": {
+        "node": ">=20"
+    },
     "scripts": {},
     "devDependencies": {
         "eslint": "^9.10.0",

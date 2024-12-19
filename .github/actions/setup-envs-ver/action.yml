@@ -1,0 +1,17 @@
+# WARNING: Do not change the name of this folder, keep `setup-envs`.
+# other workflows need the name of the action to work.
+
+name: "Setup deps envs version"
+description: Specify the version of the development environment
+
+outputs:
+  uv:
+    description: "uv version"
+    value: 0.5.8
+
+runs:
+  using: composite
+  steps:
+    - name: done
+      shell: bash
+      run: echo "done"

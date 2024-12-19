@@ -1,0 +1,17 @@
+# WARNING: Do not change the name of this folder, keep `cache-pre-commit`.
+# other workflows need the name of the action to work.
+
+# modified from:
+# - https://github.com/pre-commit/action/blob/c7d159c2092cbfaab7352e2d8211ab536aa2267c/action.yml
+# - https://pre-commit.com/#github-actions-example
+
+name: "Cache pre-commit"
+description: "Cache pre-commit"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ~/.cache/pre-commit
+        key: pre-commit-3|${{ env.pythonLocation }}|${{ hashFiles('.pre-commit-config.yaml') }}
