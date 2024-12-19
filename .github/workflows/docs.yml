@@ -27,14 +27,14 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     steps:
-      - name: setup-envs-ver
-        id: setup-envs-ver
-        uses: ./.github/actions/setup-envs-ver
       - name: Checkout
         uses: actions/checkout@v4
         with:
           # see: <https://github.com/timvink/mkdocs-git-revision-date-localized-plugin/tree/2e7646ee3405d8793e5ebb83eb45f7aa9407b205?tab=readme-ov-file#note-when-using-build-systems-like-github-actions>
           fetch-depth: 0
+      - name: setup-envs-ver
+        id: setup-envs-ver
+        uses: ./.github/actions/setup-envs-ver
       - name: Install uv
         uses: astral-sh/setup-uv@v4
         with:
