@@ -94,15 +94,15 @@ mod sealed {
 
     pub trait SealedMappableDeref {}
 
-    impl<'a, T: ?Sized> SealedMappableDeref for &'a T {}
-    impl<'a, T: ?Sized> SealedMappableDeref for RwLockReadGuard<'a, T> {}
-    impl<'a, T: ?Sized> SealedMappableDeref for MappedRwLockReadGuard<'a, T> {}
+    impl<T: ?Sized> SealedMappableDeref for &T {}
+    impl<T: ?Sized> SealedMappableDeref for RwLockReadGuard<'_, T> {}
+    impl<T: ?Sized> SealedMappableDeref for MappedRwLockReadGuard<'_, T> {}
 
     pub trait SealedMappableDerefMut {}
 
-    impl<'a, T: ?Sized> SealedMappableDerefMut for &'a mut T {}
-    impl<'a, T: ?Sized> SealedMappableDerefMut for RwLockWriteGuard<'a, T> {}
-    impl<'a, T: ?Sized> SealedMappableDerefMut for MappedRwLockWriteGuard<'a, T> {}
+    impl<T: ?Sized> SealedMappableDerefMut for &mut T {}
+    impl<T: ?Sized> SealedMappableDerefMut for RwLockWriteGuard<'_, T> {}
+    impl<T: ?Sized> SealedMappableDerefMut for MappedRwLockWriteGuard<'_, T> {}
 }
 
 trait RwLockExt {

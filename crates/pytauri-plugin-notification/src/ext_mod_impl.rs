@@ -119,7 +119,7 @@ enum ImplNotificationExtRef<'py> {
     AppHandle(PyRef<'py, AppHandle>),
 }
 
-impl<'py> ImplNotificationExtRef<'py> {
+impl ImplNotificationExtRef<'_> {
     // NOTE: `#[inline]` is necessary for optimization to dyn object
     #[inline]
     fn defer_dyn(
