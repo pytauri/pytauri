@@ -57,9 +57,11 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      # see: <https://github.com/dtolnay/rust-toolchain>
+      # see: <https://github.com/swatinem/rust-cache>
       - name: Rust cache
         uses: swatinem/rust-cache@v2
+        with:
+          key: py-${{ matrix.python-version }}
 
       - name: Cache pre-commit
         uses: ./.github/actions/cache-pre-commit
