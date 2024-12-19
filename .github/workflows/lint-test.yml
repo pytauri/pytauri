@@ -11,6 +11,10 @@ on:
   # NOTE: set `secrets: inherit` when call this workflow from other workflow.
   workflow_call:
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   pre-commit-run:
     runs-on: ${{ matrix.os }}
