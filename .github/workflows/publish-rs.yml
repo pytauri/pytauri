@@ -6,8 +6,11 @@ on:
       # e.g., rs/pyo3-utils/v0.1.0
       - rs/*/v*
 
-# NOTE: It's better not to use cache for release workflow.
+defaults:
+  run:
+    shell: bash
 
+# NOTE: It's better not to use cache for release workflow.
 jobs:
   dry-run:
     name: cargo publish dry-run
@@ -42,7 +45,6 @@ jobs:
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
-
       - name: pnpm build frontend
         run: pnpm -r build
 
@@ -72,6 +74,23 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
+      # see: <https://github.com/pnpm/action-setup>
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      # see: <https://github.com/actions/setup-node>
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+      # see: <https://github.com/dtolnay/rust-toolchain>
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+      - name: pnpm build frontend
+        run: pnpm -r build
+
       - name: release
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
