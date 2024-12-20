@@ -5,6 +5,8 @@ on:
     tags:
       - rs/*
 
+# NOTE: It's better not to use cache for release workflow.
+
 jobs:
   dry-run:
     name: cargo publish dry-run
@@ -13,14 +15,35 @@ jobs:
       package: ${{ steps.dry-run.outputs.package }}
     steps:
       - uses: actions/checkout@v4
+
       # needed for build pyo3 and run scripts
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version-file: "pyproject.toml"
+
+      # see: <https://github.com/pnpm/action-setup>
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      # see: <https://github.com/actions/setup-node>
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+
+      # see: <https://github.com/dtolnay/rust-toolchain>
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
       # needed for build tauri
       - name: setup-sys-deps
         uses: ./.github/actions/setup-sys-deps
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm build frontend
+        run: pnpm -r build
 
       - name: Dry-run release
         id: dry-run
