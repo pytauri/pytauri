@@ -2857,7 +2857,7 @@ dependencies = [
 
 [[package]]
 name = "pyo3-utils"
-version = "0.1.0"
+version = "0.1.0-beta.0"
 dependencies = [
  "parking_lot",
  "pyo3",
@@ -2865,7 +2865,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri"
-version = "0.1.0"
+version = "0.1.0-beta.0"
 dependencies = [
  "libc",
  "pyo3",
@@ -2877,7 +2877,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri-core"
-version = "0.1.0"
+version = "0.1.0-beta.0"
 dependencies = [
  "pyo3",
  "pyo3-utils",
@@ -2902,7 +2902,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri-plugin-notification"
-version = "0.1.0"
+version = "0.1.0-beta.0"
 dependencies = [
  "pyo3",
  "pyo3-utils",
@@ -3802,7 +3802,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-pytauri"
-version = "0.1.0"
+version = "0.1.0-beta.0"
 dependencies = [
  "pyo3",
  "pyo3-build-config",

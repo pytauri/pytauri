@@ -1,9 +1,12 @@
 [package]
 name = "tauri-plugin-pytauri"
-version = { workspace = true }
+version = "0.1.0-beta.0"
 edition = { workspace = true }
 license = { workspace = true }
 rust-version = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+
 links = "tauri-plugin-pytauri"
 include = [
     "/src/",
@@ -14,12 +17,13 @@ include = [
 
 [dependencies]
 tauri = { workspace = true }
-
 pyo3 = { workspace = true }
-pytauri-core = { workspace = true, features = ["__private"] }
-
 tokio = { workspace = true, features = ["rt", "rt-multi-thread"] }
 
+# workspace dependencies
+pytauri-core = { workspace = true, features = ["__private"] }
+
+
 [build-dependencies]
-tauri-plugin = { workspace = true }
+tauri-plugin = { workspace = true, features = ["build"] }
 pyo3-build-config = { workspace = true, features = ["resolve-config"] }

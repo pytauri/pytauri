@@ -1,15 +1,20 @@
 [package]
 name = "pytauri-core"
-version = { workspace = true }
+version = "0.1.0-beta.0"
 edition = { workspace = true }
 license = { workspace = true }
 rust-version = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
+
 
 [dependencies]
-tauri = { workspace = true }
-
+tauri = { workspace = true, features = ["wry"] }
 pyo3 = { workspace = true }
+
+# workspace dependencies
 pyo3-utils = { workspace = true }
+
 
 [features]
 __private = []

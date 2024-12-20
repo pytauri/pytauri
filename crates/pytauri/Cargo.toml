@@ -1,9 +1,11 @@
 [package]
 name = "pytauri"
-version = { workspace = true }
+version = "0.1.0-beta.0"
 edition = { workspace = true }
 license = { workspace = true }
 rust-version = { workspace = true }
+repository = { workspace = true }
+authors = { workspace = true }
 
 [features]
 standalone = ["dep:libc"] # MPL2.0
@@ -11,8 +13,10 @@ standalone = ["dep:libc"] # MPL2.0
 [dependencies]
 tauri = { workspace = true }
 tauri-plugin-pytauri = { workspace = true }
-pytauri-core = { workspace = true }
 
 pyo3 = { workspace = true }
-pyo3-utils = { workspace = true }
 libc = { workspace = true, optional = true }
+
+# workspace dependencies
+pytauri-core = { workspace = true }
+pyo3-utils = { workspace = true }
