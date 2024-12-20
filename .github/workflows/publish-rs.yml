@@ -3,7 +3,8 @@ name: Publish rust crate to Crates.io 🦀
 on:
   push:
     tags:
-      - rs/*
+      # e.g., rs/pyo3-utils/v0.1.0
+      - rs/*/v*
 
 # NOTE: It's better not to use cache for release workflow.
 
