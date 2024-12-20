@@ -48,7 +48,7 @@ jobs:
 
       - name: Dry-run release
         id: dry-run
-        run: python ./release.py
+        run: python ./release.py ${{ github.ref }}
 
       - name: Store the .crate file
         uses: actions/upload-artifact@v4
@@ -74,7 +74,7 @@ jobs:
       - name: release
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: python ./release.py --no-dry-run
+        run: python ./release.py --no-dry-run ${{ github.ref }}
 
   github-release:
     needs:

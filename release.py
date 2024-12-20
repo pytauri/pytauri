@@ -27,16 +27,19 @@ class Kind(Enum):
     JS = "js"
 
 
-class Release(NamedTuple):
+class ReleaseTag(NamedTuple):
     kind: Kind
     package: str
     version: str
     """Version number without leading `v`."""
 
     @staticmethod
-    def parse(release: str):
-        kind, package, version = release.split("/")
-        return Release(Kind(kind), package, version[1:])
+    def parse(release_tag: str):
+        # got it from `GITHUB_REF` env var
+        release_tag = release_tag.removeprefix("refs/tags/")
+
+        kind, package, version = release_tag.split("/")
+        return ReleaseTag(Kind(kind), package, version[1:])
 
     def write_to_github_output(self) -> None:
         # see: <https://docs.github.com/zh/actions/writing-workflows/choosing-what-your-workflow-does/passing-information-between-jobs>
@@ -54,7 +57,9 @@ class Release(NamedTuple):
 
 parser = argparse.ArgumentParser(description="Release pytauri workspace package.")
 parser.add_argument(
-    "release", type=Release.parse, help="release string, e.g. 'rs/pyo3-utils/v0.1.0'"
+    "release_tag",
+    type=ReleaseTag.parse,
+    help="release string, e.g. '[refs/tags/]rs/pyo3-utils/v0.1.0'",
 )
 parser.add_argument(
     "--no-dry-run",
@@ -80,20 +85,20 @@ if __name__ == "__main__":
     basicConfig(level="INFO")
 
     args = parser.parse_args()
-    assert isinstance(args.release, Release)
+    assert isinstance(args.release_tag, ReleaseTag)
     assert isinstance(args.no_dry_run, bool)
 
-    release = args.release
+    release_tag = args.release_tag
     no_dry_run = args.no_dry_run
 
-    logger.info(f"kind={release.kind.value}")
-    logger.info(f"package={release.package}")
-    logger.info(f"version={release.version}")
-    release.write_to_github_output()
+    logger.info(f"kind={release_tag.kind.value}")
+    logger.info(f"package={release_tag.package}")
+    logger.info(f"version={release_tag.version}")
+    release_tag.write_to_github_output()
 
     async def main() -> int:
-        if release.kind == Kind.RS:
-            return await release_rs(release.package, no_dry_run)
+        if release_tag.kind == Kind.RS:
+            return await release_rs(release_tag.package, no_dry_run)
         raise NotImplementedError()
 
     sys.exit(asyncio.run(main()))
