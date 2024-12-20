@@ -1,4 +1,4 @@
-import { pyInvoke, fromJson } from "tauri-plugin-pytauri-api";
+import { pyInvoke } from "tauri-plugin-pytauri-api";
 // or if tauri config `app.withGlobalTauri = true`:
 //
 // ```js
@@ -17,6 +17,5 @@ export async function greet(person: Person): Promise<Greeting> {
     // NOTE: DO NOT use `greet.name` as `funcName` parameter,
     // rollup will change the identifier of `greet` function.
     // see: <https://github.com/rollup/rollup/issues/1914>
-    const response = await pyInvoke("greet", person);
-    return fromJson(response);
+    return await pyInvoke("greet", person);
 }

@@ -6,21 +6,21 @@ const PY_INVOKE_HEADER = "pyfunc";
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
-// we dont support `number[]`, because it will make type checking hard
-type RawHandlerArgType = ArrayBuffer | Uint8Array;
+// we dont support `number[]`, because it will make type checking hard in `pyInvoke` function
+type RawHandlerBodyType = ArrayBuffer | Uint8Array;
 type RawHandlerReturnType = ArrayBuffer;
 
-async function rawPyInvoke(
+export async function rawPyInvoke(
     funcName: string,
-    arg: RawHandlerArgType
+    body: RawHandlerBodyType
 ): Promise<RawHandlerReturnType> {
-    const invokePromise = invoke(PY_INVOKE_TAURI_CMD, arg, {
+    const invokePromise = invoke(PY_INVOKE_TAURI_CMD, body, {
         headers: { [PY_INVOKE_HEADER]: funcName },
     });
 
     if (process.env.NODE_ENV === "development") {
         // development-time type checking to make sure pytauri ipc implementation is correct
-        return invokePromise.then((response) => {
+        return await invokePromise.then((response) => {
             if (!(response instanceof ArrayBuffer)) {
                 throw new Error(
                     "response is not ArrayBuffer. This is not your fault, \
@@ -30,28 +30,25 @@ it's a bug for pytauri, please report this issue."
             return response;
         });
     } else {
-        return invokePromise as Promise<RawHandlerReturnType>;
+        return (await invokePromise) as RawHandlerReturnType;
     }
 }
 
-export async function pyInvoke(
+export async function pyInvoke<T>(
     funcName: string,
-    arg: object | RawHandlerArgType
-): ReturnType<typeof rawPyInvoke> {
-    let argEncoded: RawHandlerArgType;
+    body: object | RawHandlerBodyType
+): Promise<T> {
+    let bodyEncoded: RawHandlerBodyType;
 
-    if (!(arg instanceof ArrayBuffer) && !(arg instanceof Uint8Array)) {
-        const argJson = JSON.stringify(arg);
-        argEncoded = textEncoder.encode(argJson);
+    if (!(body instanceof ArrayBuffer) && !(body instanceof Uint8Array)) {
+        const bodyJson = JSON.stringify(body);
+        bodyEncoded = textEncoder.encode(bodyJson);
     } else {
-        argEncoded = arg;
+        bodyEncoded = body;
     }
-    return rawPyInvoke(funcName, argEncoded);
-}
 
-export function fromJson(
-    json: ArrayBuffer | Uint8Array
-): ReturnType<typeof JSON.parse> {
-    const jsonStr = textDecoder.decode(json);
-    return JSON.parse(jsonStr);
+    const resp = await rawPyInvoke(funcName, bodyEncoded);
+
+    const respJson = textDecoder.decode(resp);
+    return JSON.parse(respJson);
 }
