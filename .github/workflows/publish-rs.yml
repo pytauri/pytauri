@@ -71,6 +71,8 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
       - name: release
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: python ./release.py --no-dry-run
 
   github-release:
