@@ -1,0 +1,71 @@
+name: Publish rust crate to Crates.io 🦀
+
+on:
+  push:
+    tags:
+      - rs/*
+
+jobs:
+  dry-run:
+    name: cargo publish dry-run
+    runs-on: ubuntu-latest
+    outputs:
+      package: ${{ steps.dry-run.outputs.package }}
+    steps:
+      - uses: actions/checkout@v4
+      # needed for build pyo3 and run scripts
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+      # needed for build tauri
+      - name: setup-sys-deps
+        uses: ./.github/actions/setup-sys-deps
+
+      - name: Dry-run release
+        id: dry-run
+        run: python ./release.py
+
+      - name: Store the .crate file
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-crate
+          # see: <https://doc.rust-lang.org/cargo/commands/cargo-package.html#description>
+          path: target/package/*.crate
+          if-no-files-found: error
+
+  publish:
+    needs:
+      - dry-run
+    name: Publish to Crates.io
+    runs-on: ubuntu-latest
+    environment:
+      name: crates-io
+      url: https://crates.io/crates/${{ needs.dry-run.outputs.package }}
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "pyproject.toml"
+      - name: release
+        run: python ./release.py --no-dry-run
+
+  github-release:
+    needs:
+      - publish
+    name: Create GitHub release 🏷️
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # IMPORTANT: mandatory for creating release
+    steps:
+      - name: Download all the dists
+        uses: actions/download-artifact@v4
+        with:
+          name: rust-crate
+          path: target/package/
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          draft: true
+          body: ${{ github.event.head_commit.message }}
+          artifacts: target/package/*.crate
