@@ -200,7 +200,7 @@ wheels = [
 
 [[package]]
 name = "codelldb"
-version = "0.1.0"
+version = "0.1.0b0"
 source = { editable = "python/codelldb" }
 
 [[package]]
@@ -972,7 +972,7 @@ wheels = [
 
 [[package]]
 name = "pyo3-utils"
-version = "0.1.0"
+version = "0.1.0b0"
 source = { editable = "python/pyo3-utils" }
 dependencies = [
     { name = "typing-extensions" },
@@ -983,7 +983,7 @@ requires-dist = [{ name = "typing-extensions", specifier = ">=4" }]
 
 [[package]]
 name = "pytauri"
-version = "0.1.0"
+version = "0.1.0b0"
 source = { editable = "python/pytauri" }
 dependencies = [
     { name = "anyio" },
@@ -995,9 +995,9 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anyio", specifier = "==4.*" },
-    { name = "importlib-metadata", specifier = ">=3.6" },
-    { name = "pydantic", specifier = "==2.*" },
+    { name = "anyio", specifier = ">=4" },
+    { name = "importlib-metadata", specifier = ">=8" },
+    { name = "pydantic", specifier = ">=2" },
     { name = "pyo3-utils", editable = "python/pyo3-utils" },
     { name = "typing-extensions", specifier = ">=4" },
 ]
@@ -1027,14 +1027,18 @@ requires-dist = [
 
 [[package]]
 name = "pytauri-plugin-notification"
-version = "0.1.0"
+version = "0.1.0b0"
 source = { editable = "python/pytauri-plugin-notification" }
 dependencies = [
+    { name = "pytauri" },
     { name = "typing-extensions" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "typing-extensions", specifier = ">=4" }]
+requires-dist = [
+    { name = "pytauri", editable = "python/pytauri" },
+    { name = "typing-extensions", specifier = ">=4" },
+]
 
 [[package]]
 name = "pytauri-workspace"
