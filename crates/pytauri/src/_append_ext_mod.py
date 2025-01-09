@@ -1,20 +1,38 @@
 import sys
-from importlib.metadata import entry_points
+from importlib.metadata import EntryPoint, distribution, entry_points
+from os import getenv
 from multiprocessing import freeze_support
 from types import ModuleType
 
 __all__ = ["append_ext_mod"]
 
+_SPECIFIC_DIST = getenv("_PYTAURI_DIST")
+"""specify the package distribution name of a pytauri app to load the extension module."""
+
+
+def _get_ext_mod_entry_point() -> EntryPoint:
+    group = "pytauri"
+    name = "ext_mod"
+
+    if not _SPECIFIC_DIST:
+        if sys.version_info >= (3, 10):
+            # To avoid deprecation warnings
+            eps = entry_points(group=group, name=name)
+        else:
+            # TODO: how to specify the name?
+            eps = entry_points()[group]
+    else:
+        eps = distribution(_SPECIFIC_DIST).entry_points
+
+    # we dont check if `len(eps) > 1`, `pytauri.ffi._ext_mod` will do that
+    ep = next(iter(eps), None)
+    if ep is None:
+        raise RuntimeError(f"No `group={group}, name={name}` entry point is found")
+    return ep
+
 
 def append_ext_mod(ext_mod: ModuleType) -> None:
-    if sys.version_info >= (3, 10):
-        # To avoid deprecation warnings
-        eps = entry_points(group="pytauri", name="ext_mod")
-    else:
-        # TODO: how to specify the name?
-        eps = entry_points()["pytauri"]
-
-    ext_mod_path = next(iter(eps)).value
+    ext_mod_path = _get_ext_mod_entry_point().value
 
     sys.modules[ext_mod_path] = ext_mod
 

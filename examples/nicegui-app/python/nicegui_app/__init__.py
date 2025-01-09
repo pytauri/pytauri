@@ -1,5 +1,13 @@
 # ruff: noqa: D101, D103, D104, D107
 
+from os import environ
+
+# This is an env var that can only be used internally by pytauri to distinguish
+# between different example extension modules.
+# You don't need and shouldn't set this in your own app.
+# Must be set before importing any pytauri module.
+environ["_PYTAURI_DIST"] = "nicegui-app"
+
 import sys
 from concurrent.futures import Future
 from socket import socket

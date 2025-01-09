@@ -3,7 +3,7 @@
 
 use std::env::var;
 
-use pyo3::{prelude::*, wrap_pymodule};
+use pyo3::{prelude::*, py_run, types::PyDict, wrap_pymodule};
 use pytauri::standalone::{
     append_ext_mod, get_python_executable_from_venv, prepare_freethreaded_python_with_executable,
     write_py_err_to_file,
@@ -79,6 +79,19 @@ fn main() -> Result<(), PyErr> {
     prepare_python_interpreter();
 
     Python::with_gil(|py| {
+        // This is an env var that can only be used internally by pytauri to distinguish
+        // between different example extension modules.
+        // You don't need and shouldn't set this in your own app.
+        // Must be set before calling [append_ext_mod]
+        py_run!(
+            py,
+            *PyDict::new(py),
+            r#"
+            from os import environ
+            environ["_PYTAURI_DIST"] = "tauri-app"
+            "#
+        );
+
         let result = execute_python_script(py);
 
         // handle the error
