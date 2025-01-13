@@ -92,5 +92,6 @@ repos:
         entry: cargo test --all --all-features
         pass_filenames: false
 
+      # TODO, FIXME: typescript fmt
       # TODO, FIXME: typescript check
       # TODO, FIXME: rust doc check
