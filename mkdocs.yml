@@ -200,6 +200,19 @@ watch:
   - README.md
   - CONTRIBUTING.md
   - CHANGELOG.md
+  # py
+  - python/pytauri/CHANGELOG.md
+  - python/pytauri-plugin-notification/CHANGELOG.md
+  - python/pyo3-utils/CHANGELOG.md
+  - python/codelldb/CHANGELOG.md
+  # rs
+  - crates/pytauri/CHANGELOG.md
+  - crates/pytauri-core/CHANGELOG.md
+  - crates/tauri-plugin-pytauri/CHANGELOG.md
+  - crates/pytauri-plugin-notification/CHANGELOG.md
+  - crates/pyo3-utils/CHANGELOG.md
+  # js
+  - crates/tauri-plugin-pytauri/guest-js/CHANGELOG.md
 
 validation:
   omitted_files: warn
@@ -226,6 +239,21 @@ nav:
   # DO NOT change `reference/`, it's used in `utils/gen_ref_pages.py`
   - API Reference: reference/
   - CONTRIBUTING:
-      - CONTRIBUTING/CONTRIBUTING.md
+      - CONTRIBUTING/index.md
   - CHANGELOG:
-      - CHANGELOG/CHANGELOG.md
+      - CHANGELOG/index.md
+      # NOTE: must set the title for the first item, or it will be considered as `index`.
+      # see: <https://github.com/oprypin/mkdocs-section-index/issues/6#issuecomment-914666358>
+      - py:
+          - pytauri: CHANGELOG/py/pytauri.md
+          - pytauri-plugin-notification: CHANGELOG/py/pytauri-plugin-notification.md
+          - pyo3-utils: CHANGELOG/py/pyo3-utils.md
+          - codelldb: CHANGELOG/py/codelldb.md
+      - rs:
+          - pytauri: CHANGELOG/rs/pytauri.md
+          - pytauri-core: CHANGELOG/rs/pytauri-core.md
+          - tauri-plugin-pytauri: CHANGELOG/rs/tauri-plugin-pytauri.md
+          - pytauri-plugin-notification: CHANGELOG/rs/pytauri-plugin-notification.md
+          - pyo3-utils: CHANGELOG/rs/pyo3-utils.md
+      - js:
+          - tauri-plugin-pytauri-api: CHANGELOG/js/tauri-plugin-pytauri-api.md

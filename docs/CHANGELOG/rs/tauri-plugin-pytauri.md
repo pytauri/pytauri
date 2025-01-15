@@ -1,0 +1,1 @@
+--8<-- "crates/tauri-plugin-pytauri/CHANGELOG.md"
