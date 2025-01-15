@@ -8,28 +8,28 @@
       
       
       
-        <link rel="canonical" href="https://WSH032.github.io/pytauri/dev/usage/tutorial/build-wheel/">
+        <link rel="canonical" href="https://WSH032.github.io/pytauri/dev/CONTRIBUTING/">
       
       
-        <link rel="prev" href="../build-sdist/">
+        <link rel="prev" href="../reference/codelldb/">
       
       
-        <link rel="next" href="../build-standalone/">
+        <link rel="next" href="../CHANGELOG/">
       
       
-      <link rel="icon" href="../../../images/rocket-24.svg">
+      <link rel="icon" href="../images/rocket-24.svg">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.49">
     
     
       
-        <title>Build python Wheel distribution - pytauri</title>
+        <title>CONTRIBUTING - pytauri</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.6f8fc17f.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.6f8fc17f.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -48,11 +48,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../css/timeago.css">
+      <link rel="stylesheet" href="../css/timeago.css">
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#build-python-wheel-distribution" class="md-skip">
+        <a href="#contributing" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="pytauri" class="md-header__button md-logo" aria-label="pytauri" data-md-component="logo">
+    <a href=".." title="pytauri" class="md-header__button md-logo" aria-label="pytauri" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a24 24 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.3 1.3 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.3 1.3 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a24 24 0 0 1 1.542-1.594l1.304-1.23A10.75 10.75 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.3 22.3 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744.034.034 1.743 1.858 3.288-2.192a22.3 22.3 0 0 0 3.854-3.257l1.228-1.303a9.25 9.25 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.25 9.25 0 0 0-6.344 2.518M6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.24.24 0 0 1-.18-.067.24.24 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0s.9 2.6 0 3.5m-.592-8.588L8.17 9.017q.346-.519.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112q-.5.372-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Build python Wheel distribution
+              CONTRIBUTING
             
           </span>
         </div>
@@ -240,7 +240,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
     
@@ -255,13 +255,11 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../usage/tutorial/" class="md-tabs__link">
           
   
   Usage
@@ -279,7 +277,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../reference/pyo3_utils/" class="md-tabs__link">
+        <a href="../reference/pyo3_utils/" class="md-tabs__link">
           
   
   API Reference
@@ -293,9 +291,11 @@
         
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../../../CONTRIBUTING/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
     
@@ -312,7 +312,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../CHANGELOG/" class="md-tabs__link">
+      <a href="../CHANGELOG/" class="md-tabs__link">
         
   
     
@@ -346,7 +346,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="pytauri" class="md-nav__button md-logo" aria-label="pytauri" data-md-component="logo">
+    <a href=".." title="pytauri" class="md-nav__button md-logo" aria-label="pytauri" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.322.75h1.176a1.75 1.75 0 0 1 1.75 1.749v1.177a10.75 10.75 0 0 1-2.925 7.374l-1.228 1.304a24 24 0 0 1-1.596 1.542v5.038c0 .615-.323 1.184-.85 1.5l-4.514 2.709a.75.75 0 0 1-1.12-.488l-.963-4.572a1.3 1.3 0 0 1-.14-.129L8.04 15.96l-1.994-1.873a1.3 1.3 0 0 1-.129-.14l-4.571-.963a.75.75 0 0 1-.49-1.12l2.71-4.514c.316-.527.885-.85 1.5-.85h5.037a24 24 0 0 1 1.542-1.594l1.304-1.23A10.75 10.75 0 0 1 20.321.75Zm-6.344 4.018v-.001l-1.304 1.23a22.3 22.3 0 0 0-3.255 3.851l-2.193 3.29 1.859 1.744.034.034 1.743 1.858 3.288-2.192a22.3 22.3 0 0 0 3.854-3.257l1.228-1.303a9.25 9.25 0 0 0 2.517-6.346V2.5a.25.25 0 0 0-.25-.25h-1.177a9.25 9.25 0 0 0-6.344 2.518M6.5 21c-1.209 1.209-3.901 1.445-4.743 1.49a.24.24 0 0 1-.18-.067.24.24 0 0 1-.067-.18c.045-.842.281-3.534 1.49-4.743.9-.9 2.6-.9 3.5 0s.9 2.6 0 3.5m-.592-8.588L8.17 9.017q.346-.519.717-1.017H5.066a.25.25 0 0 0-.214.121l-2.167 3.612ZM16 15.112q-.5.372-1.018.718l-3.393 2.262.678 3.223 3.612-2.167a.25.25 0 0 0 .121-.214ZM17.5 8a1.5 1.5 0 1 1-3.001-.001A1.5 1.5 0 0 1 17.5 8"/></svg>
@@ -376,7 +376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -393,28 +393,23 @@
       
   
   
-    
   
   
-  
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -425,7 +420,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Usage
@@ -436,8 +431,6 @@
                 
   
   
-    
-  
   
   
     
@@ -447,16 +440,16 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" >
         
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../usage/tutorial/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -473,7 +466,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2_1">
             <span class="md-nav__icon md-icon"></span>
             Tutorial
@@ -487,7 +480,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../usage/tutorial/getting-started/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -508,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../using-pytauri/" class="md-nav__link">
+      <a href="../usage/tutorial/using-pytauri/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -529,7 +522,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../py-js-ipc/" class="md-nav__link">
+      <a href="../usage/tutorial/py-js-ipc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -550,7 +543,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../using-plugins/" class="md-nav__link">
+      <a href="../usage/tutorial/using-plugins/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -571,7 +564,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-sdist/" class="md-nav__link">
+      <a href="../usage/tutorial/build-sdist/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -589,30 +582,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Build python Wheel distribution
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../usage/tutorial/build-wheel/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -621,71 +594,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#maturin" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maturin
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build-manylinux-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      Build manylinux wheel
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#bundle-system-dependencies-with-the-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      Bundle system dependencies with the wheel
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build-abi3-wheel" class="md-nav__link">
-    <span class="md-ellipsis">
-      Build abi3 wheel
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#whats-projectentry-pointspytauri-mean" class="md-nav__link">
-    <span class="md-ellipsis">
-      What's project.entry-points.pytauri mean?
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -698,7 +606,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../build-standalone/" class="md-nav__link">
+      <a href="../usage/tutorial/build-standalone/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -742,7 +650,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../concepts/" class="md-nav__link ">
+            <a href="../usage/concepts/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -773,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../concepts/ipc/" class="md-nav__link">
+      <a href="../usage/concepts/ipc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -847,7 +755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/pyo3_utils/" class="md-nav__link">
+      <a href="../reference/pyo3_utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -883,7 +791,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/pytauri_plugin_notification/" class="md-nav__link ">
+            <a href="../reference/pytauri_plugin_notification/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -914,7 +822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/pytauri_plugin_notification/ffi/" class="md-nav__link">
+      <a href="../reference/pytauri_plugin_notification/ffi/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -958,7 +866,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/pytauri/" class="md-nav__link ">
+            <a href="../reference/pytauri/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1004,7 +912,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/pytauri/ffi/" class="md-nav__link ">
+            <a href="../reference/pytauri/ffi/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1035,7 +943,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/pytauri/ffi/ipc/" class="md-nav__link">
+      <a href="../reference/pytauri/ffi/ipc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1056,7 +964,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/pytauri/ffi/lib/" class="md-nav__link">
+      <a href="../reference/pytauri/ffi/lib/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1085,7 +993,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/pytauri/ipc/" class="md-nav__link">
+      <a href="../reference/pytauri/ipc/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1114,7 +1022,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/codelldb/" class="md-nav__link">
+      <a href="../reference/codelldb/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1139,10 +1047,30 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../CONTRIBUTING/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    CONTRIBUTING
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -1151,6 +1079,197 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#environment-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment setup
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ide-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      IDE setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IDE setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source code
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-and-toturial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python and Toturial
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rust
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edit-changelogmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edit CHANGELOG.md
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message convention
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ci-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI checks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      😢
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy Docs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR Checks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publish-and-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish and Release 🚀
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1177,7 +1296,7 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../CHANGELOG/" class="md-nav__link ">
+            <a href="../CHANGELOG/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
@@ -1246,7 +1365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/py/pytauri/" class="md-nav__link">
+      <a href="../CHANGELOG/py/pytauri/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1267,7 +1386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/py/pytauri-plugin-notification/" class="md-nav__link">
+      <a href="../CHANGELOG/py/pytauri-plugin-notification/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1288,7 +1407,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/py/pyo3-utils/" class="md-nav__link">
+      <a href="../CHANGELOG/py/pyo3-utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1309,7 +1428,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/py/codelldb/" class="md-nav__link">
+      <a href="../CHANGELOG/py/codelldb/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1376,7 +1495,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/rs/pytauri/" class="md-nav__link">
+      <a href="../CHANGELOG/rs/pytauri/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1397,7 +1516,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/rs/pytauri-core/" class="md-nav__link">
+      <a href="../CHANGELOG/rs/pytauri-core/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1418,7 +1537,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/rs/tauri-plugin-pytauri/" class="md-nav__link">
+      <a href="../CHANGELOG/rs/tauri-plugin-pytauri/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1439,7 +1558,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/rs/pytauri-plugin-notification/" class="md-nav__link">
+      <a href="../CHANGELOG/rs/pytauri-plugin-notification/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1460,7 +1579,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/rs/pyo3-utils/" class="md-nav__link">
+      <a href="../CHANGELOG/rs/pyo3-utils/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1527,7 +1646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../CHANGELOG/js/tauri-plugin-pytauri-api/" class="md-nav__link">
+      <a href="../CHANGELOG/js/tauri-plugin-pytauri-api/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -1583,45 +1702,171 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#maturin" class="md-nav__link">
+  <a href="#environment-setup" class="md-nav__link">
     <span class="md-ellipsis">
-      Maturin
+      Environment setup
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-manylinux-wheel" class="md-nav__link">
+  <a href="#ide-setup" class="md-nav__link">
     <span class="md-ellipsis">
-      Build manylinux wheel
+      IDE setup
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IDE setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debug
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Source code
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#bundle-system-dependencies-with-the-wheel" class="md-nav__link">
+  <a href="#testing" class="md-nav__link">
     <span class="md-ellipsis">
-      Bundle system dependencies with the wheel
+      Testing
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-abi3-wheel" class="md-nav__link">
+  <a href="#documentation" class="md-nav__link">
     <span class="md-ellipsis">
-      Build abi3 wheel
+      Documentation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-and-toturial" class="md-nav__link">
+    <span class="md-ellipsis">
+      Python and Toturial
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rust" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rust
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edit-changelogmd" class="md-nav__link">
+    <span class="md-ellipsis">
+      Edit CHANGELOG.md
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-message-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit message convention
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ci-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      CI checks
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#whats-projectentry-pointspytauri-mean" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
-      What's project.entry-points.pytauri mean?
+      😢
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy Docs
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      PR Checks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publish-and-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      Publish and Release 🚀
     </span>
   </a>
   
@@ -1642,7 +1887,7 @@
                   
 
   
-    <a href="https://github.com/WSH032/pytauri/edit/main/docs/usage/tutorial/build-wheel.md" title="Edit this page" class="md-content__button md-icon">
+    <a href="https://github.com/WSH032/pytauri/edit/main/docs/CONTRIBUTING/index.md" title="Edit this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1651,119 +1896,189 @@
     
       
     
-    <a href="https://github.com/WSH032/pytauri/raw/main/docs/usage/tutorial/build-wheel.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/WSH032/pytauri/raw/main/docs/CONTRIBUTING/index.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="build-python-wheel-distribution">Build python Wheel distribution<a class="headerlink" href="#build-python-wheel-distribution" title="Permanent link">&para;</a></h1>
-<p>Although you have built the sdist in the previous step and can build the wheel using <code>setuptools-rust</code>, take a look at the output wheel file name <code>tauri-app-0.1.0-cp39-cp39-linux_x86_64.whl</code>.</p>
-<p>According to <a href="https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/">https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/</a>, this indicates that the wheel can only be used on <code>CPython == 3.9</code>.</p>
-<p>This means that if you want to distribute the wheel built in this way, you need to build a wheel for each CPython version.</p>
-<p>Additionally, PyPI will not allow you to upload wheels with the <code>linux*</code> tag because such a tag does not specify the libc version required to run the wheel. PyPI only allows <a href="https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#manylinux">manylinux</a> and <a href="https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#musllinux">musllinux</a>.</p>
-<div class="admonition info">
-<p class="admonition-title">Info</p>
-<p>This is not an issue for users who use your sdist, as they will build the wheel in their own environment and do not need to distribute that wheel.</p>
-</div>
-<h2 id="maturin">Maturin<a class="headerlink" href="#maturin" title="Permanent link">&para;</a></h2>
-<p>To make it easier to build distributable wheels, we recommend using <a href="https://github.com/PyO3/maturin">maturin</a>, which is a <code>setuptools-rust</code> with batteries included.</p>
-<p>First, install it (<code>v1.8.0</code>) using uv:</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="windows-or-macos" name="__tabbed_1" type="radio" /><input id="linux" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="windows-or-macos">windows or macos</label><label for="linux">linux</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>maturin
+<!-- The content will be also use in `docs/CONTRIBUTING/CONTRIBUTING.md` by `pymdownx.snippets` -->
+<!-- Do not use any **relative link** and  **GitHub-specific syntax** ！-->
+<!-- Do not rename or move the file -->
+
+<h1 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h1>
+<p>Contributions are welcome, and they are greatly appreciated! Every little bit helps, and credit will always be given.</p>
+<h2 id="environment-setup">Environment setup<a class="headerlink" href="#environment-setup" title="Permanent link">&para;</a></h2>
+<p>Make sure you have installed <code>Rust</code>, <code>Python</code>, <code>uv</code>, <code>Node.js</code>, <code>pnpm</code>, <code>tauri-cli</code> and Tauri Prerequisites as documented.</p>
+<p>Also, you need <code>bash</code>. If you are on Windows, you can use <a href="https://gitforwindows.org/">Git for Windows</a>.</p>
+<p>Fork the pytauri repository on GitHub.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="ch">#!/bin/bash</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># clone your fork locally</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:your_name_here/pytauri.git
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">cd</span><span class="w"> </span>pytauri
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># create a branch for local development</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>branch-name
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># install dev dependencies and build frontend assets</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>pnpm<span class="w"> </span>install
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>pnpm<span class="w"> </span>-r<span class="w"> </span>run<span class="w"> </span>build
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># activate virtual environment</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>uv<span class="w"> </span>venv<span class="w"> </span>--python-preference<span class="o">=</span>only-system
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># or Windows: `source .venv/Scripts/activate`</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c1"># install dev dependencies and tools</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>uv<span class="w"> </span>sync
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Init pre-commit (installed by `uv sync`)</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># https://pre-commit.com/#3-install-the-git-hook-scripts</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>pre-commit<span class="w"> </span>install
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>pre-commit<span class="w"> </span>run<span class="w"> </span>--all-files
 </span></code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>maturin<span class="o">[</span>patchelf<span class="o">]</span>
+<p>That's all! Now, you can start to develop.</p>
+<h2 id="ide-setup">IDE setup<a class="headerlink" href="#ide-setup" title="Permanent link">&para;</a></h2>
+<p>We strongly recommend using <code>VSCode</code> with the extensions in <code>.vscode/extensions.json</code>.</p>
+<p>These extensions will help you to format, lint, type-check, and debug your code.</p>
+<h3 id="debug">Debug<a class="headerlink" href="#debug" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<ul>
+<li>check <code>.vscode/launch.json</code> and <a class="autorefs autorefs-internal" href="../reference/codelldb/#codelldb">codelldb</a> for debugging <code>py/rs</code> from python.</li>
+<li>check <a href="https://code.visualstudio.com/docs/python/debugging#_debugging-by-attaching-over-a-network-connection">vscode/python-debugging</a> for debugging <code>py/rs</code> from rust.</li>
+</ul>
+<h2 id="source-code">Source code<a class="headerlink" href="#source-code" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>python</strong>: members in <code>/pyproject.toml</code></li>
+<li><strong>rust</strong>: menbers in <code>/Cargo.toml</code></li>
+<li><strong>frontend</strong>: members in <code>/package.json</code></li>
+</ul>
+<h2 id="testing">Testing<a class="headerlink" href="#testing" title="Permanent link">&para;</a></h2>
+<p>We use <a href="https://docs.pytest.org/en/stable/">pytest</a> and <code>cargo test</code> to test our code.</p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<h3 id="python-and-toturial">Python and Toturial<a class="headerlink" href="#python-and-toturial" title="Permanent link">&para;</a></h3>
+<p>We use <a href="https://www.mkdocs.org">mkdocs</a>, <a href="https://squidfunk.github.io/mkdocs-material">mkdocs-material</a>, <a href="https://mkdocstrings.github.io">mkdocstrings</a> and <a href="https://github.com/jimporter/mike">mike</a> to build our documentation.</p>
+<p>The documentation source code is in <code>docs/</code>, <code>docs_src/</code>, <code>mkdocs.yml</code>, and <code>utils/</code> (check <code>mkdocs.yml</code> to find others).</p>
+<p>Live-reloading main docs:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mkdocs<span class="w"> </span>serve
 </span></code></pre></div>
-</div>
-</div>
-</div>
-<p>Add the following configuration, which is the same as the configuration for <code>setuptools-rust</code>:</p>
-<div class="language-toml highlight"><span class="filename">src-tauri/pyproject.toml</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># see: &lt;https://www.maturin.rs/config&gt;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">[tool.maturin]</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># the same as [tool.setuptools.packages.find.where]</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">python-source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;python&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># the same as `[project.entry-points.pytauri.ext_mod]`,</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># i.e., `target` in `setup.py`</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">module-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;tauri_app.ext_mod&quot;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># see `setup.py`</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyo3/extension-module&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tauri/custom-protocol&quot;</span><span class="p">]</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># equivalent to `setuptools_scm`</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">sdist-generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git&quot;</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># equivalent to `MANIFEST.in`</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">include</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;frontend/**/*&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">format</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s2">&quot;sdist&quot;</span><span class="w"> </span><span class="p">}]</span>
+<p>Live-reloading versioned docs:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mike<span class="w"> </span>serve
 </span></code></pre></div>
-<h2 id="build-manylinux-wheel">Build manylinux wheel<a class="headerlink" href="#build-manylinux-wheel" title="Permanent link">&para;</a></h2>
-<p>ref: <a href="https://www.maturin.rs/distribution#build-wheels">https://www.maturin.rs/distribution#build-wheels</a></p>
-<p>Maturin can automatically detect the current system's glibc version and assign the appropriate tag to the built wheel. Use the following command to build a manylinux wheel:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">cd</span><span class="w"> </span>src-tauri
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pnpm<span class="w"> </span>build<span class="w">  </span><span class="c1"># build frontend assets</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>maturin<span class="w"> </span>build<span class="w"> </span>--release<span class="w">  </span><span class="c1"># `--strip` &lt;-- optional to reduce the size</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">cd</span><span class="w"> </span>..
-</span></code></pre></div>
-<p>When you build on <code>ubuntu 22.04 (glibc 2.35)</code>, you will get a wheel file named <code>*-manylinux_2_35_*.whl</code>. The <code>manylinux_2_35</code> tag indicates that the wheel can run on systems with <code>glibc &gt;= 2.35</code>.</p>
-<p>If you want to support as many systems as possible, you should build the wheel on an older system. However, please note that the dependencies of <code>tauri v2</code> require you to use <code>ubuntu 22+</code>.</p>
-<h2 id="bundle-system-dependencies-with-the-wheel">Bundle system dependencies with the wheel<a class="headerlink" href="#bundle-system-dependencies-with-the-wheel" title="Permanent link">&para;</a></h2>
-<p>According to <a href="https://peps.python.org/pep-0513/">PEP513</a>, the manylinux wheel you built in the previous step can only link to a limited set of system libraries at runtime. To meet this requirement, maturin will copy and bundle these system libraries (including tauri's dependencies) during the build process, similar to how <a href="https://appimage.org/">AppImage</a> works.</p>
+<div class="admonition tip">
+<p class="admonition-title">Docs references</p>
+<ul>
+<li><a href="https://www.mkdocs.org/getting-started/">mkdocs/getting-started</a></li>
+<li><a href="https://squidfunk.github.io/mkdocs-material/getting-started/">mkdocs-material/getting-started</a></li>
+<li><a href="https://mkdocstrings.github.io/python/usage/">mkdocstrings/usage</a></li>
+</ul>
+</div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Not all linked libraries will be bundled. Some libraries commonly found in various Linux distributions will be whitelisted. See more:</p>
+<p>We use <code>Google</code> style to write python docstrings, please refer to:</p>
 <ul>
-<li><a href="https://github.com/pypa/auditwheel/issues/78">https://github.com/pypa/auditwheel/issues/78</a></li>
-<li><a href="https://github.com/kuelumbus/rdkit-pypi/issues/75">https://github.com/kuelumbus/rdkit-pypi/issues/75</a></li>
-<li><a href="https://github.com/PyO3/maturin/blob/f5b807eaf3f576ea08e6a574d699fc6f54e2be46/src/auditwheel/manylinux-policy.json#L454">https://github.com/PyO3/maturin/blob/f5b807eaf3f576ea08e6a574d699fc6f54e2be46/src/auditwheel/manylinux-policy.json#L454</a></li>
+<li><a href="https://mkdocstrings.github.io/python/usage/docstrings/google/">mkdocstrings-python's documentation</a></li>
+<li><a href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html">Napoleon's documentation</a></li>
+<li><a href="https://mkdocstrings.github.io/griffe/docstrings/">Griffe's documentation</a></li>
 </ul>
 </div>
-<p>Building the wheel in this way means your users will no longer need to manually install dependencies. However, note that <strong>this will increase your wheel size from 10MB to 100MB</strong>.</p>
-<p>If you do not want this behavior, skip patching and manually specify the manylinux tag:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>maturin<span class="w"> </span>build<span class="w"> </span>--release<span class="w"> </span>--auditwheel<span class="w"> </span>skip<span class="w"> </span>--manylinux<span class="w"> </span>2_35<span class="w"> </span><span class="c1"># &lt;-- your glibc version</span>
+<h3 id="rust">Rust<a class="headerlink" href="#rust" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cargo<span class="w"> </span>doc
 </span></code></pre></div>
-<p>Then, require your users to install these dependencies before running the wheel:</p>
-<p>ref: <a href="https://tauri.app/distribute/debian/#debian">https://tauri.app/distribute/debian/#debian</a></p>
+<h3 id="frontend">Frontend<a class="headerlink" href="#frontend" title="Permanent link">&para;</a></h3>
+<p>TODO</p>
+<h2 id="pr">PR<a class="headerlink" href="#pr" title="Permanent link">&para;</a></h2>
 <ul>
-<li>libwebkit2gtk-4.1-0</li>
-<li>libgtk-3-0</li>
-<li>libappindicator3-1 (if your app uses the system tray)</li>
+<li>PRs should target the <code>main</code> branch.</li>
+<li>Keep branches up to date by <code>rebase</code> before merging.</li>
+<li>Do not add multiple unrelated things in same PR.</li>
+<li>Do not submit PRs where you just take existing lines and reformat them without changing what they do.</li>
+<li>Do not change other parts of the code that are not yours for formatting reasons.</li>
+<li>Do not use your clone's main branch to make a PR - create a branch and PR that.</li>
 </ul>
-<h2 id="build-abi3-wheel">Build abi3 wheel<a class="headerlink" href="#build-abi3-wheel" title="Permanent link">&para;</a></h2>
-<p>ref: <a href="https://www.maturin.rs/bindings.html#py_limited_apiabi3">https://www.maturin.rs/bindings.html#py_limited_apiabi3</a></p>
-<p>add pyo3 feature <code>pyo3/abi3-py3*</code>:</p>
-<div class="language-toml highlight"><span class="filename">src-tauri/pyproject.toml</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">[tool.maturin]</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># ...</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">features</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;pyo3/extension-module&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;tauri/custom-protocol&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;pyo3/abi3-py39&quot;</span><span class="p">]</span>
-</span></code></pre></div>
-<p>then build your wheel:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>maturin<span class="w"> </span>build<span class="w"> </span>--release<span class="w">  </span><span class="c1"># your maturin args</span>
-</span></code></pre></div>
-<p>you will get a wheel file named <code>*-cp39-abi3-*.whl</code>, which means that the wheel can run on <code>CPython &gt;= 3.9</code>.</p>
+<h3 id="edit-changelogmd">Edit <code>CHANGELOG.md</code><a class="headerlink" href="#edit-changelogmd" title="Permanent link">&para;</a></h3>
+<p>If you have made the corresponding changes, please record them in <code>CHANGELOG.md</code>.</p>
+<h3 id="commit-message-convention">Commit message convention<a class="headerlink" href="#commit-message-convention" title="Permanent link">&para;</a></h3>
+<p>Commit messages must follow <a href="https://www.conventionalcommits.org/en/v1.0.0/">Conventional Commits</a>,
+or <code>pre-commit</code> will reject your commit.</p>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>The <code>pytauri/standalone</code> feature is incompatible with the <code>pyo3/abi3</code> feature, which is why we only enable it in <code>[[bin]]</code> target.</p>
+<p>If you don't know how to finish these, it's okay, feel free to initiate a PR, we will help you continue.</p>
 </div>
-<h2 id="whats-projectentry-pointspytauri-mean">What's <code>project.entry-points.pytauri</code> mean?<a class="headerlink" href="#whats-projectentry-pointspytauri-mean" title="Permanent link">&para;</a></h2>
-<p>Now it's time to explain <a href="../using-pytauri/#init-pyproject"><code>[project.entry-points.pytauri]</code></a>.</p>
-<p>Looking at the contents of the <code>.whl</code>, you will see the following structure:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>└── tauri_app-0.1.0-*.whl
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    ├── tauri_app
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    │   ├── __init__.py
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    │   ├── __main__.py
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    │   └── ext_mod.*.so/pyd
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    └── ...
-</span></code></pre></div>
-<p>We indicate the extension module <code>mod ext_mod</code> in <code>lib.rs</code> to be compiled into the <code>tauri_app/ext_mod.*.so/pyd</code> file by:</p>
-<ul>
-<li><code>setup.py (setuptools-rust)</code>: <code>target="tauri_app.ext_mod"</code></li>
-<li><code>pyproject.toml (maturin)</code>: <code>module-name = "tauri_app.ext_mod"</code></li>
-</ul>
+<h2 id="ci-checks">CI checks<a class="headerlink" href="#ci-checks" title="Permanent link">&para;</a></h2>
+<p>We will check your commits on GitHub Actions, and your PR will only be merged if it passes the CI checks.</p>
+<p>You can run these checks locally by executing <code>pre-commit run --all-files</code> in <strong>bash</strong>.</p>
+<blockquote>
+<p>Usually, you don't need to do this manually, because <code>pre-commit</code> will automatically run these checks on each commit as long as you have installed the git hooks via <code>pre-commit install</code>.</p>
+</blockquote>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Some slow checks are not run locally by default. If you really want to run them, pass <code>--hook-stage=manual</code>. You can also look at <code>.pre-commit-config.yaml</code> and run the individual checks yourself if you prefer.</p>
+</div>
+<hr />
+<h2 id="_1">😢<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p><code>pytauri</code> does not have any opinion on where you place the extension module, but note that in <code>lib.rs</code> we specified the extension module name with <code>#[pyo3(name = "ext_mod")]</code>, so your extension module file name must match this name.</p>
+<p>The following 👇 content is for the maintainers of this project, may be you don't need to read it.</p>
 </div>
-<p>Finally, we tell pytauri how to find it through <code>project.entry-points.pytauri.ext_mod = "tauri_app.ext_mod"</code> in <code>pyproject.toml</code>.</p>
+<hr />
+<h2 id="deploy-docs">Deploy Docs<a class="headerlink" href="#deploy-docs" title="Permanent link">&para;</a></h2>
+<p>please refer to <code>.github/workflows/docs.yml</code>.</p>
+<ul>
+<li>Every push to the <code>main</code> branch will trigger the <code>dev</code> version docs deployment.</li>
+<li>
+<p>Every <code>v*</code> semver tag will trigger the corresponding version docs deployment.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Remember make a Github Release (not package release) for the version docs deployment.</p>
+</div>
+</li>
+</ul>
+<h2 id="pr-checks">PR Checks<a class="headerlink" href="#pr-checks" title="Permanent link">&para;</a></h2>
+<p>please refer to <code>.github/workflows/lint-test.yml</code>.</p>
+<ul>
+<li>Every PR push will trigger the CI checks.</li>
+</ul>
+<h2 id="publish-and-release">Publish and Release 🚀<a class="headerlink" href="#publish-and-release" title="Permanent link">&para;</a></h2>
+<p>Please refer to <code>.github/workflows/publish-*.yml</code>.</p>
+<ul>
+<li>Every <code>py|rs|js/package-name/v*</code> semver tag will trigger the corresponding package publish.</li>
+</ul>
+<p>First, check-out to a <strong>new branch</strong>, edit <code>CHANGELOG.md</code> to record the changes and bump the version.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Remember also update the dependencies version for <strong>workspace members</strong>.</p>
+</div>
+<p>Then, push the <strong>new branch</strong> with the <strong>signed tag</strong> to GitHub, and create a PR to the <code>main</code> branch.</p>
+<blockquote>
+<p>Again, the tag must be <strong>signed</strong>!!!</p>
+</blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code>bump version</code> PR must have <strong>only one commit with the corresponding tag</strong>; otherwise, it will be rejected.</p>
+</div>
+<p>Review the PR, if it's ok, <strong>rebase</strong> it to <code>main</code> branch <strong>in local</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title"><strong>DO NOT rebase with tag on GitHub.</strong></p>
+<p>Refer to:</p>
+<blockquote>
+<p><a href="https://docs.github.com/authentication/managing-commit-signature-verification/about-commit-signature-verification#signature-verification-for-rebase-and-merge">https://docs.github.com/authentication/managing-commit-signature-verification/about-commit-signature-verification#signature-verification-for-rebase-and-merge</a></p>
+<p>When you use this option, GitHub creates modified commits using the original commit data and content.</p>
+</blockquote>
+<p>This will cause the commits merged into main to be inconsistent with the tagged commits.</p>
+<p>If you unfortunately do this, you must delete the tag and re-tag the merged commit.</p>
+</div>
+<p>Check if everything is ok, for example:</p>
+<ul>
+<li><strong>check if the tag is on the <code>main</code> branch</strong>.</li>
+<li><strong>check if the version specified by the tag is correct</strong>.</li>
+<li>check if the dependencies version of workspace members are updated.</li>
+<li>check if the link in <code>CHANGELOG.md</code> is correct.</li>
+</ul>
+<p>If so, make a <code>approve</code> in environment <code>pypi</code>/<code>crates-io</code>/<code>npmjs</code> for the workflow.</p>
+<p>After that, the <code>publish-*.yml</code> workflow will build and publish the package.</p>
+<p>Finally, edit the <code>draft release</code> created by <code>publish-*.yml</code> workflow, and publish the release.</p>
 
 
 
@@ -1786,7 +2101,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-03T12:27:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-12-13T23:22:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-12-13</span>
   </span>
 
     
@@ -1796,7 +2111,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-03T12:27:31+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-03</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2024-12-13T23:22:24+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2024-12-13</span>
   </span>
 
     
@@ -1817,6 +2132,11 @@
         <a href="https://github.com/WSH032" class="md-author" title="@WSH032">
           
           <img src="https://avatars.githubusercontent.com/u/126865849?v=4&size=72" alt="WSH032">
+        </a>
+      
+        <a href="https://github.com/web-flow" class="md-author" title="@web-flow">
+          
+          <img src="https://avatars.githubusercontent.com/u/19864447?v=4&size=72" alt="web-flow">
         </a>
       
       
@@ -1856,7 +2176,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../build-sdist/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Build python source (sdist) distribution">
+          <a href="../reference/codelldb/" class="md-footer__link md-footer__link--prev" aria-label="Previous: codelldb">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1866,20 +2186,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Build python source (sdist) distribution
+                codelldb
               </div>
             </div>
           </a>
         
         
           
-          <a href="../build-standalone/" class="md-footer__link md-footer__link--next" aria-label="Next: Build standalone binary">
+          <a href="../CHANGELOG/" class="md-footer__link md-footer__link--next" aria-label="Next: CHANGELOG">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Build standalone binary
+                CHANGELOG
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -1930,14 +2250,14 @@
       <div class="md-progress" data-md-component="progress" role="progressbar"></div>
     
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "content.code.annotate", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.instant.preview", "navigation.top", "navigation.tabs", "navigation.path", "search.suggest", "search.highlight", "search.share", "navigation.footer", "content.action.edit", "content.action.view", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy", "content.code.annotate", "navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.instant.preview", "navigation.top", "navigation.tabs", "navigation.path", "search.suggest", "search.highlight", "search.share", "navigation.footer", "content.action.edit", "content.action.view", "content.tabs.link", "content.tooltips"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.88dd0f4e.min.js"></script>
+      <script src="../assets/javascripts/bundle.88dd0f4e.min.js"></script>
       
-        <script src="../../../js/timeago.min.js"></script>
+        <script src="../js/timeago.min.js"></script>
       
-        <script src="../../../js/timeago_mkdocs_material.js"></script>
+        <script src="../js/timeago_mkdocs_material.js"></script>
       
     
   </body>
