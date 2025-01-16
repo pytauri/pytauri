@@ -1,0 +1,53 @@
+# from: <https://github.com/tauri-apps/tauri/blob/tauri-v2.2.2/.github/ISSUE_TEMPLATE/feature_request.yml>
+
+name: 💡 Feature Request
+title: '[feat] '
+description: Suggest an idea
+labels: ["enhancement"]
+
+body:
+  - type: input
+    attributes:
+      label: Have you discussed it?
+      description: |
+         I have discussed this feature request in discussions, and developers ask me directly to create an issue here.
+         If not, the issue may be closed immediately.
+
+         Discuss it here: <https://github.com/WSH032/pytauri/discussions/categories/ideas>
+      placeholder: the discussion link / None
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe your feature request
+      description: A clear and concise description of what the feature is.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Is your feature request related to a problem? Please describe
+      description: A clear and concise description of what the problem is.
+      placeholder: I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the feature request here.
