@@ -1,18 +1,20 @@
 pub mod ipc;
+pub mod webview;
 
-use std::error::Error;
-use std::fmt::{Debug, Display};
-use std::ops::Deref;
+use std::{
+    collections::HashMap,
+    error::Error,
+    fmt::{Debug, Display},
+    ops::Deref,
+};
 
-use pyo3::exceptions::PyRuntimeError;
-use pyo3::prelude::*;
-use pyo3::{IntoPyObject, PyErr};
+use pyo3::{exceptions::PyRuntimeError, prelude::*, IntoPyObject};
 use pyo3_utils::{
     py_match::PyMatchRef,
-    py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2},
+    py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT0, PyWrapperT2},
     ungil::UnsafeUngilExt,
 };
-use tauri::Manager;
+use tauri::Manager as _;
 
 use crate::tauri_runtime::Runtime;
 
@@ -150,7 +152,7 @@ impl From<PyAppHandleStateError> for PyErr {
 pub type PyAppHandleStateResult<T> = Result<T, PyAppHandleStateError>;
 
 /// You can use this trait to get the global singleton [Py]<[AppHandle]>.
-pub trait PyAppHandleExt<R: tauri::Runtime>: Manager<R> {
+pub trait PyAppHandleExt<R: tauri::Runtime>: tauri::Manager<R> {
     /// # Panics
     ///
     /// Panics if [PyAppHandleExt::try_py_app_handle] returns an error.
@@ -165,7 +167,7 @@ pub trait PyAppHandleExt<R: tauri::Runtime>: Manager<R> {
     }
 }
 
-impl<R: tauri::Runtime, T: Manager<R>> PyAppHandleExt<R> for T {}
+impl<R: tauri::Runtime, T: tauri::Manager<R>> PyAppHandleExt<R> for T {}
 
 #[pyclass(frozen, unsendable)]
 #[non_exhaustive]
@@ -254,6 +256,12 @@ impl App {
             })
         }
     }
+
+    fn handle(&self, py: Python<'_>) -> PyResult<Py<AppHandle>> {
+        let app = self.0.try_lock_inner_ref()??;
+        let app_handle = app.py_app_handle().clone_ref(py);
+        Ok(app_handle)
+    }
 }
 
 #[pyclass(frozen)]
@@ -263,5 +271,81 @@ pub struct Context(pub PyWrapper<PyWrapperT2<tauri::Context>>);
 impl Context {
     pub fn new(context: tauri::Context) -> Self {
         Self(PyWrapper::new2(context))
+    }
+}
+
+#[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
+#[non_exhaustive]
+// TODO: more types
+pub enum ImplManager {
+    App(Py<App>),
+    AppHandle(Py<AppHandle>),
+    WebviewWindow(Py<webview::WebviewWindow>),
+}
+
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct Manager;
+
+macro_rules! manager_method_impl {
+    ($slf:expr, $macro:ident) => {
+        match $slf {
+            ImplManager::App(v) => $macro!(v),
+            ImplManager::AppHandle(v) => $macro!(v),
+            ImplManager::WebviewWindow(v) => $macro!(v),
+        }
+    };
+}
+
+#[pymethods]
+impl Manager {
+    #[staticmethod]
+    fn app_handle(py: Python<'_>, slf: ImplManager) -> PyResult<Py<AppHandle>> {
+        macro_rules! app_handle_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let app_handle = guard.py_app_handle().clone_ref(py);
+                Ok(app_handle)
+            }};
+        }
+        manager_method_impl!(slf, app_handle_impl)
+    }
+
+    #[staticmethod]
+    fn get_webview_window(
+        py: Python<'_>,
+        slf: ImplManager,
+        label: &str,
+    ) -> PyResult<Option<webview::WebviewWindow>> {
+        macro_rules! get_webview_window_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let webview_window = guard.get_webview_window(label);
+                Ok(webview_window.map(webview::WebviewWindow::new))
+            }};
+        }
+        manager_method_impl!(slf, get_webview_window_impl)
+    }
+
+    #[staticmethod]
+    fn webview_windows(
+        py: Python<'_>,
+        slf: ImplManager,
+    ) -> PyResult<HashMap<String, webview::WebviewWindow>> {
+        macro_rules! webview_windows_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let webview_windows = guard.webview_windows();
+                let webview_windows = webview_windows
+                    .into_iter()
+                    .map(|(label, window)| (label, webview::WebviewWindow::new(window)))
+                    .collect::<_>();
+                Ok(webview_windows)
+            }};
+        }
+        manager_method_impl!(slf, webview_windows_impl)
     }
 }

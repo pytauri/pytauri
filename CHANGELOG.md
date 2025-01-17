@@ -30,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [#46](https://github.com/WSH032/pytauri/pull/46) - bump `tauri` to `v2.2`
+
 ## [0.1.0-beta]
 
 [unreleased]: https://github.com/WSH032/pytauri/tree/HEAD
