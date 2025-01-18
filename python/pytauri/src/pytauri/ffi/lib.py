@@ -4,6 +4,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    NewType,
     Optional,
     Protocol,
     Union,
@@ -20,7 +21,11 @@ __all__ = [
     "Builder",
     "BuilderArgs",
     "Context",
+    "Event",
+    "EventId",
+    "ImplListener",
     "ImplManager",
+    "Listener",
     "Manager",
     "RunEvent",
     "RunEventEnum",
@@ -38,6 +43,8 @@ class _InvokeHandlerProto(Protocol):
 
 
 _AppRunCallbackType = Callable[["AppHandle", "RunEvent"], None]
+
+_EventHandlerType = Callable[["Event"], None]
 
 
 if TYPE_CHECKING:
@@ -226,6 +233,90 @@ if TYPE_CHECKING:
             """Fetch all managed webview windows."""
             ...
 
+    class Event:
+        """[tauri::Event](https://docs.rs/tauri/latest/tauri/struct.Event.html)"""
+
+        @property
+        def id(self) -> "EventId":
+            """The `EventId` of the handler that was triggered."""
+            ...
+
+        @property
+        def payload(self) -> str:
+            """The event payload."""
+            ...
+
+    class Listener:
+        """[tauri::Listener](https://docs.rs/tauri/latest/tauri/trait.Listener.html)
+
+        See also: <https://tauri.app/develop/calling-rust/#event-system>
+        """
+
+        @staticmethod
+        def listen(
+            slf: "ImplListener",
+            event: str,
+            handler: _EventHandlerType,
+            /,
+        ) -> "EventId":
+            """Listen to an emitted event on this manager.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
+        @staticmethod
+        def once(
+            slf: "ImplListener",
+            event: str,
+            handler: _EventHandlerType,
+            /,
+        ) -> "EventId":
+            """Listen to an event on this manager only once.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
+        @staticmethod
+        def unlisten(
+            slf: "ImplListener",
+            id: "EventId",  # noqa: A002
+            /,
+        ) -> None:
+            """Remove an event listener."""
+            ...
+
+        @staticmethod
+        def listen_any(
+            slf: "ImplListener",
+            event: str,
+            handler: _EventHandlerType,
+            /,
+        ) -> "EventId":
+            """Listen to an emitted event to any target.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
+        @staticmethod
+        def once_any(
+            slf: "ImplListener",
+            event: str,
+            handler: _EventHandlerType,
+            /,
+        ) -> "EventId":
+            """Listens once to an emitted event to any target .
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
 
 else:
     App = pytauri_mod.App
@@ -238,6 +329,8 @@ else:
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
+    Event = pytauri_mod.Event
+    Listener = pytauri_mod.Listener
 
 
 RunEventEnumType: TypeAlias = Union[
@@ -253,3 +346,8 @@ RunEventEnumType: TypeAlias = Union[
 """See [RunEventEnum][pytauri.RunEventEnum] for details."""
 
 ImplManager: TypeAlias = Union[App, AppHandle, "webview.WebviewWindow"]
+
+EventId = NewType("EventId", int)
+"""[tauri::EventId](https://docs.rs/tauri/latest/tauri/type.EventId.html)"""
+
+ImplListener = ImplManager

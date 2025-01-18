@@ -2,19 +2,20 @@ pub mod ipc;
 pub mod webview;
 
 use std::{
+    borrow::Cow,
     collections::HashMap,
     error::Error,
     fmt::{Debug, Display},
     ops::Deref,
 };
 
-use pyo3::{exceptions::PyRuntimeError, prelude::*, IntoPyObject};
+use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject};
 use pyo3_utils::{
     py_match::PyMatchRef,
     py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT0, PyWrapperT2},
     ungil::UnsafeUngilExt,
 };
-use tauri::Manager as _;
+use tauri::{Listener as _, Manager as _};
 
 use crate::tauri_runtime::Runtime;
 
@@ -274,6 +275,7 @@ impl Context {
     }
 }
 
+/// The Implementors of [tauri::Manager].
 #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
 #[non_exhaustive]
 // TODO: more types
@@ -283,6 +285,7 @@ pub enum ImplManager {
     WebviewWindow(Py<webview::WebviewWindow>),
 }
 
+/// See also: [tauri::Manager].
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Manager;
@@ -347,5 +350,133 @@ impl Manager {
             }};
         }
         manager_method_impl!(slf, webview_windows_impl)
+    }
+}
+
+/// See also: [tauri::EventId].
+pub use tauri::EventId;
+
+/// See also: [tauri::Event].
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct Event {
+    #[pyo3(get)]
+    pub id: EventId,
+    #[pyo3(get)]
+    pub payload: Py<PyString>,
+}
+
+/// The Implementors of [tauri::Listener].
+pub type ImplListener = ImplManager;
+
+/// See also: [tauri::Listener].
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct Listener;
+
+impl Listener {
+    fn pyobj_to_handler(pyobj: PyObject) -> impl Fn(tauri::Event) + Send + 'static {
+        move |event| {
+            Python::with_gil(|py| {
+                let event = Event {
+                    id: event.id(),
+                    payload: PyString::new(py, event.payload()).unbind(),
+                };
+                let pyobj = pyobj.bind(py);
+                let result = pyobj.call1((event,));
+                if let Err(e) = result {
+                    e.write_unraisable(py, Some(pyobj));
+                    panic!("Python exception occurred in Listener handler")
+                }
+            })
+        }
+    }
+}
+
+#[pymethods]
+impl Listener {
+    #[staticmethod]
+    fn listen(
+        py: Python<'_>,
+        slf: ImplListener,
+        event: Cow<'_, str>,
+        handler: PyObject,
+    ) -> PyResult<EventId> {
+        macro_rules! listen_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let enevt_id = guard.listen(event, Self::pyobj_to_handler(handler));
+                Ok(enevt_id)
+            }};
+        }
+        manager_method_impl!(slf, listen_impl)
+    }
+
+    #[staticmethod]
+    fn once(
+        py: Python<'_>,
+        slf: ImplListener,
+        event: Cow<'_, str>,
+        handler: PyObject,
+    ) -> PyResult<EventId> {
+        macro_rules! once_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let enevt_id = guard.once(event, Self::pyobj_to_handler(handler));
+                Ok(enevt_id)
+            }};
+        }
+        manager_method_impl!(slf, once_impl)
+    }
+
+    #[staticmethod]
+    fn unlisten(py: Python<'_>, slf: ImplListener, id: EventId) -> PyResult<()> {
+        macro_rules! unlisten_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                guard.unlisten(id);
+                Ok(())
+            }};
+        }
+        manager_method_impl!(slf, unlisten_impl)
+    }
+
+    #[staticmethod]
+    fn listen_any(
+        py: Python<'_>,
+        slf: ImplListener,
+        event: Cow<'_, str>,
+        handler: PyObject,
+    ) -> PyResult<EventId> {
+        macro_rules! listen_any_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let enevt_id = guard.listen_any(event, Self::pyobj_to_handler(handler));
+                Ok(enevt_id)
+            }};
+        }
+        manager_method_impl!(slf, listen_any_impl)
+    }
+
+    #[staticmethod]
+    fn once_any(
+        py: Python<'_>,
+        slf: ImplListener,
+        event: Cow<'_, str>,
+        handler: PyObject,
+    ) -> PyResult<EventId> {
+        macro_rules! once_any_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let enevt_id = guard.once_any(event, Self::pyobj_to_handler(handler));
+                Ok(enevt_id)
+            }};
+        }
+        manager_method_impl!(slf, once_any_impl)
     }
 }

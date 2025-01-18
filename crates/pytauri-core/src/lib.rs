@@ -19,10 +19,13 @@ pub mod ext_mod {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{App, AppHandle, Context, Manager, RunEvent, RunEventEnum};
+    pub use ext_mod_impl::{
+        App, AppHandle, Context, Event, Listener, Manager, RunEvent, RunEventEnum,
+    };
 
     pub use ext_mod_impl::{
-        ImplManager, PyAppHandleExt, PyAppHandleStateError, PyAppHandleStateResult,
+        EventId, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
+        PyAppHandleStateResult,
     };
 
     /// see also: [tauri::ipc]
