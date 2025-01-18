@@ -1,12 +1,19 @@
 use std::borrow::Cow;
 
-use pyo3::prelude::*;
-use pyo3::types::{PyByteArray, PyDict, PyMapping, PyString};
+use pyo3::{
+    prelude::*,
+    types::{PyByteArray, PyDict, PyMapping, PyString},
+};
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
-use tauri::ipc::{InvokeBody, InvokeMessage, InvokeResponseBody};
+use tauri::{
+    ipc::{CommandArg as _, CommandItem, InvokeBody, InvokeMessage, InvokeResponseBody},
+    webview::WebviewWindow as TauriWebviewWindow,
+};
 
-use crate::ext_mod_impl::PyAppHandleExt as _;
-use crate::tauri_runtime::Runtime;
+use crate::{
+    ext_mod_impl::{webview::WebviewWindow, PyAppHandleExt as _},
+    tauri_runtime::Runtime,
+};
 
 type IpcInvoke = tauri::ipc::Invoke<Runtime>;
 type IpcInvokeResolver = tauri::ipc::InvokeResolver<Runtime>;
@@ -105,17 +112,22 @@ impl Invoke {
     // TODO, PERF: may be we should use [PyString::intern] ?
     const BODY_KEY: &str = "body";
     const APP_HANDLE_KEY: &str = "app_handle";
+    const WEBVIEW_WINDOW_KEY: &str = "webview_window";
 
     /// Pass in a Python dictionary, which can contain the following
     /// optional keys (values are arbitrary):
     ///
     /// - [Self::BODY_KEY] : [PyByteArray]
-    /// - [Self::APP_HANDLE_KEY] : [crate::AppHandle]
+    /// - [Self::APP_HANDLE_KEY] : [crate::ext_mod::AppHandle]
+    /// - [Self::WEBVIEW_WINDOW_KEY] : [crate::ext_mod::webview::WebviewWindow]
     ///
     /// # Returns
     ///
     /// - On successful parsing of [Invoke], this function will set
     ///     the corresponding types for the existing keys and return [InvokeResolver].
+    ///
+    ///     The return value [InvokeResolver::arguments] is not the same object as
+    ///     the input `parameters`.
     /// - On failure, it returns [None], consumes and rejects [Invoke];
     fn bind_to(&self, parameters: Bound<'_, PyMapping>) -> PyResult<Option<InvokeResolver>> {
         // NOTE: This function implementation must not block
@@ -128,7 +140,7 @@ impl Invoke {
         let IpcInvoke {
             message,
             resolver,
-            acl: _acl,
+            acl,
         } = invoke;
 
         let arguments = PyDict::new(py);
@@ -150,6 +162,25 @@ impl Invoke {
         if parameters.contains(Self::APP_HANDLE_KEY)? {
             let py_app_handle = message.webview_ref().try_py_app_handle()?;
             arguments.set_item(Self::APP_HANDLE_KEY, py_app_handle.clone_ref(py))?;
+        }
+
+        if parameters.contains(Self::WEBVIEW_WINDOW_KEY)? {
+            let command_webview_window_item = CommandItem {
+                plugin: None,
+                name: "__whatever__pyfunc",
+                key: "__whatever__webviewWindow",
+                message: &message,
+                acl: &acl,
+            };
+            let webview_window = match TauriWebviewWindow::from_command(command_webview_window_item)
+            {
+                Ok(webview_window) => webview_window,
+                Err(e) => {
+                    resolver.invoke_error(e);
+                    return Ok(None);
+                }
+            };
+            arguments.set_item(Self::WEBVIEW_WINDOW_KEY, WebviewWindow::new(webview_window))?;
         }
 
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))

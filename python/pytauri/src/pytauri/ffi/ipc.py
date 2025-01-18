@@ -19,6 +19,7 @@ _ipc_mod = pytauri_mod.ipc
 
 if TYPE_CHECKING:
     from pytauri.ffi.lib import AppHandle
+    from pytauri.ffi.webview import WebviewWindow
 
 
 class ParametersType(TypedDict, total=False):
@@ -29,9 +30,11 @@ class ParametersType(TypedDict, total=False):
     """
 
     body: ReadOnly[Any]
-    """whatever"""
+    """Whatever. We just use the `key`, not the `value`."""
     app_handle: ReadOnly[Any]
-    """whatever"""
+    """Whatever. We just use the `key`, not the `value`."""
+    webview_window: ReadOnly[Any]
+    """Whatever. We just use the `key`, not the `value`."""
 
 
 class ArgumentsType(TypedDict, total=False):
@@ -46,6 +49,8 @@ class ArgumentsType(TypedDict, total=False):
     """The body of ipc message."""
     app_handle: "AppHandle"
     """The handle of the app."""
+    webview_window: "WebviewWindow"
+    """The `WebviewWindow` of this `Invoke`."""
 
 
 _ArgumentsTypeVar = TypeVar("_ArgumentsTypeVar", default=dict[str, Any])
@@ -69,6 +74,9 @@ if TYPE_CHECKING:
 
             If the frontend illegally calls the IPC,
             this method will automatically reject this `Invoke` and return `None`.
+
+            The return value [InvokeResolver.arguments][pytauri.ffi.ipc.InvokeResolver.arguments]
+            is not the same object as the input `parameters`.
             """
 
         def resolve(self, value: Union[bytearray, bytes]) -> None:

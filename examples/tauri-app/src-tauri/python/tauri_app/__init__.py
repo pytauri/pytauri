@@ -13,6 +13,7 @@ from pytauri import (
     builder_factory,
     context_factory,
 )
+from pytauri.webview import WebviewWindow
 from pytauri_plugin_notification import NotificationBuilderArgs, NotificationExt
 
 commands: Commands = Commands()
@@ -27,11 +28,15 @@ class Greeting(BaseModel):
 
 
 @commands.command()
-async def greet(body: Person, app_handle: AppHandle) -> Greeting:
+async def greet(
+    body: Person, app_handle: AppHandle, webview_window: WebviewWindow
+) -> Greeting:
     notification_builder = NotificationExt.builder(app_handle)
     notification_builder.show(
         NotificationBuilderArgs(title="Greeting", body=f"Hello, {body.name}!")
     )
+
+    webview_window.set_title(f"Hello {body.name}!")
 
     return Greeting(
         message=f"Hello, {body.name}! You've been greeted from Python {sys.version}!"

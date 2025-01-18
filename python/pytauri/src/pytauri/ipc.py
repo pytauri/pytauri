@@ -23,6 +23,7 @@ from pytauri.ffi.lib import (
     AppHandle,
     _InvokeHandlerProto,  # pyright: ignore[reportPrivateUsage]
 )
+from pytauri.ffi.webview import WebviewWindow
 
 __all__ = [
     "ArgumentsType",
@@ -284,14 +285,16 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             return cast(ParametersType, parameters)
 
         return_annotation = sig.return_annotation
-        checked_parameters: ParametersType = {}
 
         arguments_type = {
             "body": bytearray,
             "app_handle": AppHandle,
+            "webview_window": WebviewWindow,
         }
 
         for name, param in parameters.items():
+            # check if the `parameters` type hint conforms to [pytauri.ipc.ArgumentsType][]
+
             correct_anna = arguments_type.get(name)
             if correct_anna is None:
                 raise ValueError(
@@ -301,14 +304,16 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 raise ValueError(
                     f"Expected `{name}` to be subclass of `{correct_anna}`, got `{param.annotation}`"
                 )
-            checked_parameters[name] = param
+        else:
+            # after checking, we make sure the `parameters` are valid
+            parameters = cast(ParametersType, parameters)
 
         if not issubclass(return_annotation, (bytes, bytearray)):
             raise ValueError(
                 f"Expected return_annotation to be subclass of {bytes} or {bytearray}, got `{return_annotation}`"
             )
 
-        return checked_parameters
+        return parameters
 
     def set_command(
         self,
