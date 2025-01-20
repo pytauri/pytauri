@@ -6,8 +6,10 @@ from functools import partial, wraps
 from inspect import signature
 from logging import getLogger
 from typing import (
+    Annotated,
     Any,
     Callable,
+    Generic,
     NamedTuple,
     Optional,
     Union,
@@ -15,22 +17,43 @@ from typing import (
 )
 
 from anyio.from_thread import BlockingPortal
-from pydantic import BaseModel, ValidationError
-from typing_extensions import TypeVar
+from pydantic import (
+    BaseModel,
+    GetPydanticSchema,
+    RootModel,
+    ValidationError,
+)
+from pydantic_core.core_schema import (
+    any_schema,
+    chain_schema,
+    json_or_python_schema,
+    no_info_plain_validator_function,
+    str_schema,
+)
+from typing_extensions import Self, TypeVar
 
-from pytauri.ffi.ipc import ArgumentsType, Invoke, InvokeResolver, ParametersType
+from pytauri.ffi.ipc import (
+    ArgumentsType,
+    Invoke,
+    InvokeResolver,
+    ParametersType,
+)
+from pytauri.ffi.ipc import Channel as _FFIChannel
+from pytauri.ffi.ipc import JavaScriptChannelId as _FFIJavaScriptChannelId
 from pytauri.ffi.lib import (
     AppHandle,
     _InvokeHandlerProto,  # pyright: ignore[reportPrivateUsage]
 )
-from pytauri.ffi.webview import WebviewWindow
+from pytauri.ffi.webview import Webview, WebviewWindow
 
 __all__ = [
     "ArgumentsType",
+    "Channel",
     "Commands",
     "Invoke",
     "InvokeException",
     "InvokeResolver",
+    "JavaScriptChannelId",
     "ParametersType",
 ]
 
@@ -379,3 +402,123 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             return self._register
         else:
             return partial(self._register, command=command)
+
+
+# see:
+# - <https://docs.pydantic.dev/2.10/concepts/types/#customizing-validation-with-__get_pydantic_core_schema__>
+# - <https://docs.pydantic.dev/2.10/concepts/json_schema/#implementing-__get_pydantic_core_schema__>
+_FFIJavaScriptChannelIdAnno = Annotated[
+    _FFIJavaScriptChannelId,
+    GetPydanticSchema(
+        lambda _source, _handler: json_or_python_schema(
+            json_schema=chain_schema(
+                [
+                    str_schema(),
+                    no_info_plain_validator_function(_FFIJavaScriptChannelId.from_str),
+                ]
+            ),
+            python_schema=any_schema(),
+        )
+    ),
+]
+
+_ModelTypeVar = TypeVar(
+    "_ModelTypeVar", bound=BaseModel, default=BaseModel, infer_variance=True
+)
+
+
+class JavaScriptChannelId(
+    RootModel[_FFIJavaScriptChannelIdAnno], Generic[_ModelTypeVar]
+):
+    """This class is a wrapper around [pytauri.ffi.ipc.JavaScriptChannelId][].
+
+    You can use this class as model field in pydantic model directly, or use it as model directly.
+
+    > [pytauri.ffi.ipc.JavaScriptChannelId][] can't be used directly in pydantic model.
+
+    # Examples
+
+    ```py
+    from asyncio import Task, create_task, sleep
+    from typing import Any
+
+    from pydantic import BaseModel, RootModel
+    from pydantic.networks import HttpUrl
+    from pytauri import Commands
+    from pytauri.ipc import JavaScriptChannelId, WebviewWindow
+
+    commands = Commands()
+
+    Progress = RootModel[int]
+
+
+    class Download(BaseModel):
+        url: HttpUrl
+        channel: JavaScriptChannelId[Progress]
+
+
+    background_tasks: set[Task[Any]] = set()
+
+
+    @commands.command()
+    async def download(body: Download, webview_window: WebviewWindow) -> bytes:
+        channel = body.channel.channel_on(webview_window.as_ref_webview())
+
+        async def task():
+            progress = Progress(0)
+            while progress.root <= 100:
+                channel.send_model(progress)
+                await sleep(0.1)
+                progress.root += 1
+
+        t = create_task(task())
+        background_tasks.add(t)
+        t.add_done_callback(background_tasks.discard)
+
+        return b"null"
+
+
+    # Or you can use it as `body` model directly
+    @commands.command()
+    async def my_command(body: JavaScriptChannelId) -> bytes: ...
+    ```
+    """
+
+    @classmethod
+    def from_str(cls, value: str, /) -> Self:
+        """See [pytauri.ffi.ipc.JavaScriptChannelId.from_str][]."""
+        ffi_js_channel_id = _FFIJavaScriptChannelId.from_str(value)
+        return cls(ffi_js_channel_id)
+
+    def channel_on(self, webview: Webview, /) -> "Channel[_ModelTypeVar]":
+        """See [pytauri.ffi.ipc.JavaScriptChannelId.channel_on][]."""
+        ffi_channel = self.root.channel_on(webview)
+        return Channel(ffi_channel)
+
+
+class Channel(Generic[_ModelTypeVar]):
+    """This class is a wrapper around [pytauri.ffi.ipc.Channel][].
+
+    It adds the following methods:
+
+    - [send_model][pytauri.ipc.Channel.send_model]
+
+    # Examples
+
+    See [JavaScriptChannelId][pytauri.ipc.JavaScriptChannelId--examples]
+    """
+
+    def __init__(self, ffi_channel: _FFIChannel, /):  # noqa: D107
+        self._ffi_channel = ffi_channel
+
+    def id(self, /) -> int:
+        """See [pytauri.ffi.ipc.Channel.id][]."""
+        return self._ffi_channel.id()
+
+    def send(self, data: Union[bytearray, bytes], /) -> None:
+        """See [pytauri.ffi.ipc.Channel.send][]."""
+        self._ffi_channel.send(data)
+
+    def send_model(self, model: _ModelTypeVar, /) -> None:
+        """Equivalent to `self.send(model.__pydantic_serializer__.to_json(model))`."""
+        self.send(model.__pydantic_serializer__.to_json(model))

@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Removed` for now removed features.
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
-- `Docs` for ducomentation changes.
+- `Docs` for documentation changes.
 - `YANKED` for deprecated releases.
 - `Internal` for internal changes. Only for maintainers.
 

@@ -10,7 +10,7 @@ from typing import (
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
-__all__ = ["WebviewWindow"]
+__all__ = ["Webview", "WebviewWindow"]
 
 _webview_mod = pytauri_mod.webview
 
@@ -115,5 +115,15 @@ if TYPE_CHECKING:
         def set_zoom(self, scale_factor: float, /) -> None: ...
 
         def clear_all_browsing_data(self) -> None: ...
+
+        def as_ref_webview(self) -> "Webview": ...
+
+    @final
+    class Webview:
+        """[tauri::webview::Webview](https://docs.rs/tauri/latest/tauri/webview/struct.Webview.html)"""
+
+        ...
+
 else:
     WebviewWindow = _webview_mod.WebviewWindow
+    Webview = _webview_mod.Webview

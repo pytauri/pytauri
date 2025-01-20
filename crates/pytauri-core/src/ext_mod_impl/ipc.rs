@@ -1,22 +1,27 @@
-use std::borrow::Cow;
+use std::{borrow::Cow, str::FromStr as _};
 
 use pyo3::{
+    exceptions::PyValueError,
     prelude::*,
-    types::{PyByteArray, PyDict, PyMapping, PyString},
+    types::{PyByteArray, PyDict, PyMapping, PyString, PyType},
 };
-use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
-use tauri::{
-    ipc::{CommandArg as _, CommandItem, InvokeBody, InvokeMessage, InvokeResponseBody},
-    webview::WebviewWindow as TauriWebviewWindow,
+use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
+use tauri::ipc::{
+    self, CommandArg as _, CommandItem, InvokeBody, InvokeMessage, InvokeResponseBody,
 };
 
 use crate::{
-    ext_mod_impl::{webview::WebviewWindow, PyAppHandleExt as _},
+    ext_mod_impl::{
+        webview::{Webview, WebviewWindow},
+        PyAppHandleExt as _,
+    },
     tauri_runtime::Runtime,
+    utils::TauriError,
 };
 
 type IpcInvoke = tauri::ipc::Invoke<Runtime>;
 type IpcInvokeResolver = tauri::ipc::InvokeResolver<Runtime>;
+type TauriWebviewWindow = tauri::webview::WebviewWindow<Runtime>;
 
 /// Please refer to the Python-side documentation
 // `subclass` for Generic type hint
@@ -204,6 +209,77 @@ impl Invoke {
         py.allow_threads(|| {
             let resolver = self.inner.try_take_inner()??.resolver;
             resolver.reject(value);
+            Ok(())
+        })
+    }
+}
+
+/// see also: [tauri::ipc::JavaScriptChannelId]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct JavaScriptChannelId(PyWrapper<PyWrapperT0<ipc::JavaScriptChannelId>>);
+
+impl JavaScriptChannelId {
+    fn new(js_channel_id: ipc::JavaScriptChannelId) -> Self {
+        Self(PyWrapper::new0(js_channel_id))
+    }
+}
+
+#[pymethods]
+impl JavaScriptChannelId {
+    #[classmethod]
+    fn from_str(cls: &Bound<'_, PyType>, value: &str) -> PyResult<Self> {
+        let py = cls.py();
+        let result = ipc::JavaScriptChannelId::from_str(value);
+        match result {
+            Ok(js_channel_id) => Ok(Self::new(js_channel_id)),
+            Err(err) => {
+                let msg: &'static str = err;
+                // because the `err` is `static`, so we use `PyString::intern`.
+                let msg = PyString::intern(py, msg).unbind();
+                Err(PyValueError::new_err(msg))
+            }
+        }
+    }
+
+    /// PERF, TODO: maybe we should accept `Union[Webview, WebviewWindow]`,
+    /// so that user dont need create new `Webview` pyobject for `WebviewWindow`.
+    fn channel_on(&self, webview: Py<Webview>) -> Channel {
+        let js_channel_id = self.0.inner_ref();
+        let webview = webview.get().0.inner_ref().clone();
+        // TODO, FIXME, PERF:
+        // Why [JavaScriptChannelId::channel_on] need take the ownership of [Webview]?
+        // We should ask tauri developers.
+        let channel = js_channel_id.channel_on(webview);
+        Channel::new(channel)
+    }
+}
+
+/// see also: [tauri::ipc::Channel]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct Channel(PyWrapper<PyWrapperT0<ipc::Channel>>);
+
+impl Channel {
+    fn new(channel: ipc::Channel) -> Self {
+        Self(PyWrapper::new0(channel))
+    }
+}
+
+#[pymethods]
+impl Channel {
+    fn id(&self) -> u32 {
+        self.0.inner_ref().id()
+    }
+
+    fn send(&self, py: Python<'_>, data: Vec<u8>) -> PyResult<()> {
+        // [tauri::ipc::Channel::send] is not a very fast operation,
+        // so we need to release the GIL
+        py.allow_threads(|| {
+            self.0
+                .inner_ref()
+                .send(InvokeResponseBody::Raw(data))
+                .map_err(TauriError::from)?;
             Ok(())
         })
     }

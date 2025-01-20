@@ -34,7 +34,7 @@ pub mod ext_mod {
         use super::*;
 
         #[pymodule_export]
-        pub use ext_mod_impl::ipc::{Invoke, InvokeResolver};
+        pub use ext_mod_impl::ipc::{Channel, Invoke, InvokeResolver, JavaScriptChannelId};
     }
 
     /// see also: [tauri::webview]
@@ -43,6 +43,6 @@ pub mod ext_mod {
         use super::*;
 
         #[pymodule_export]
-        pub use ext_mod_impl::webview::WebviewWindow;
+        pub use ext_mod_impl::webview::{Webview, WebviewWindow};
     }
 }

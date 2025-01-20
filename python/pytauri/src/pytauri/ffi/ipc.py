@@ -13,13 +13,20 @@ from typing_extensions import ReadOnly, TypedDict, TypeVar
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
-__all__ = ["ArgumentsType", "Invoke", "InvokeResolver", "ParametersType"]
+__all__ = [
+    "ArgumentsType",
+    "Channel",
+    "Invoke",
+    "InvokeResolver",
+    "JavaScriptChannelId",
+    "ParametersType",
+]
 
 _ipc_mod = pytauri_mod.ipc
 
 if TYPE_CHECKING:
     from pytauri.ffi.lib import AppHandle
-    from pytauri.ffi.webview import WebviewWindow
+    from pytauri.ffi.webview import Webview, WebviewWindow
 
 
 class ParametersType(TypedDict, total=False):
@@ -103,6 +110,35 @@ if TYPE_CHECKING:
             """Consumes this `InvokeResolver` and rejects the command with the given value."""
             ...
 
+    @final
+    class JavaScriptChannelId:
+        """[tauri::ipc::JavaScriptChannelId](https://docs.rs/tauri/latest/tauri/ipc/struct.JavaScriptChannelId.html)"""
+
+        @classmethod
+        def from_str(cls, value: str, /) -> "JavaScriptChannelId":
+            """Parse a string to a `JavaScriptChannelId`.
+
+            Raises:
+                ValueError: If the string is ivnalid.
+                TypeError: If the `value` is not a string.
+            """
+            ...
+
+        def channel_on(self, webview: Webview, /) -> "Channel":
+            """Gets a `Channel` for this channel ID on the given `Webview`."""
+            ...
+
+    @final
+    class Channel:
+        """[tauri::ipc::Channel](https://docs.rs/tauri/latest/tauri/ipc/struct.Channel.html)"""
+
+        def id(self, /) -> int:
+            """The channel identifier."""
+            ...
+
+        def send(self, data: Union[bytearray, bytes], /) -> None:
+            """Sends the given data through the channel."""
+            ...
 
 else:
     Invoke = _ipc_mod.Invoke
@@ -112,3 +148,6 @@ else:
     # TODO, FIXME, XXX: It seems that `mkdocstrings` cannot correctly handle two `class InvokeResolver`,
     # so we need this alias
     InvokeResolver = _InvokeResolver
+
+    JavaScriptChannelId = _ipc_mod.JavaScriptChannelId
+    Channel = _ipc_mod.Channel

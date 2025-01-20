@@ -6,14 +6,15 @@ use crate::tauri_runtime::Runtime;
 use crate::utils::TauriError;
 
 type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
+type TauriWebview = webview::Webview<Runtime>;
 
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct WebviewWindow(pub PyWrapper<PyWrapperT0<TauriWebviewWindow>>);
 
 impl WebviewWindow {
-    pub(crate) fn new(window: TauriWebviewWindow) -> Self {
-        Self(PyWrapper::new0(window))
+    pub(crate) fn new(webview_window: TauriWebviewWindow) -> Self {
+        Self(PyWrapper::new0(webview_window))
     }
 }
 
@@ -212,6 +213,7 @@ impl WebviewWindow {
     }
 
     // // TODO, FIXME: Why `navigate` need `mut self`? We should ask tauri developers.
+    // // see: <https://github.com/tauri-apps/tauri/issues/12430>
     // fn navigate(&self, url: &str) -> PyResult<()> {
     //     let url = Url::parse(url).map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
     //     delegate_inner!(mut self, navigate, url)
@@ -227,5 +229,22 @@ impl WebviewWindow {
 
     fn clear_all_browsing_data(&self) -> PyResult<()> {
         delegate_inner!(self, clear_all_browsing_data,)
+    }
+
+    /// see also: [tauri::webview::WebviewWindow::as_ref]
+    fn as_ref_webview(&self) -> Webview {
+        let webview = self.0.inner_ref().as_ref().clone();
+        Webview::new(webview)
+    }
+}
+
+/// see also: [tauri::webview::Webview]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct Webview(pub PyWrapper<PyWrapperT0<TauriWebview>>);
+
+impl Webview {
+    pub(crate) fn new(webview: TauriWebview) -> Self {
+        Self(PyWrapper::new0(webview))
     }
 }
