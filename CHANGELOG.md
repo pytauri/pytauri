@@ -9,13 +9,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- `BREAKING` for breaking changes.
 - `Added` for new features.
 - `Changed` for changes in existing functionality.
 - `Deprecated` for soon-to-be removed features.
 - `Removed` for now removed features.
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
-- `BREAKING` for breaking changes.
+- `Docs` for ducomentation changes.
 - `YANKED` for deprecated releases.
 - `Internal` for internal changes. Only for maintainers.
 
@@ -29,6 +30,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 ## [Unreleased]
+
+### BREAKING
+
+- [#51](https://github.com/WSH032/pytauri/pull/51) - rs/pytauri: When the app executable is spawned by python `multiprocessing` to execute subprocess tasks, `fn append_ext_mod` will return a `PySystemExit` exception at the end of execution. At this point, you should exit the Rust code instead of continuing to run the Python app. Please refer to its documentation for more information.
+
+    ```rust
+    use pyo3::exceptions::PySystemExit;
+
+    fn execute_python_script(py: Python<'_>) -> PyResult<()> {
+        let ext_mod = wrap_pymodule!(ext_mod)(py).into_bound(py);
+
+        // If spawned as subprocess for `multiprocessing`,
+        // it will return `PySystemExit` after execution.
+        if let Err(err) = append_ext_mod(ext_mod) {
+            if err.is_instance_of::<PySystemExit>(py) && is_forking() {
+                // just return to end the rust code normally,
+                // don't execute your python app code.
+                return Ok(());
+            } else {
+                return Err(err);
+            }
+        }
+
+        // Or you can just return the error and handle it later.
+        // Just dont execute your python app code is enough.
+        //
+        // ```rust
+        // append_ext_mod(ext_mod)?;
+        // ```
+
+
+        // execute your python app.
+        // ...
+    }
+    ```
+
+### Docs
+
+- [#51](https://github.com/WSH032/pytauri/pull/51) - `examples`: Ignore `PySystemExit` exception.
+
+    ```rust
+    use pyo3::exceptions::PySystemExit;
+
+    let result = execute_python_script(py);
+
+    result.inspect_err(|e| {
+        if e.is_instance_of::<PySystemExit>(py) {
+            // python interpreter requires to exit normally, it's not an error
+            return;
+        }
+
+        // ...
+    })
+    ```
 
 ### Changed
 

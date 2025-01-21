@@ -3,7 +3,7 @@
 
 use std::env::var;
 
-use pyo3::{prelude::*, wrap_pymodule};
+use pyo3::{exceptions::PySystemExit, prelude::*, wrap_pymodule};
 use pytauri::standalone::{
     append_ext_mod, get_python_executable_from_venv, prepare_freethreaded_python_with_executable,
     write_py_err_to_file,
@@ -83,6 +83,11 @@ fn main() -> Result<(), PyErr> {
 
         // handle the error
         result.inspect_err(|e| {
+            if e.is_instance_of::<PySystemExit>(py) {
+                // python interpreter requires to exit normally, it's not an error
+                return;
+            }
+
             if cfg!(all(not(debug_assertions), windows)) {
                 // I.g., `windows_subsystem = "windows"` in `main.rs`.
                 // In this case, there is no console to print the error, so we write the error to a file
