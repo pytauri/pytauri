@@ -4,23 +4,27 @@
 
 ### BREAKING
 
-- [#51](https://github.com/WSH032/pytauri/pull/51) - When the app executable is spawned by python `multiprocessing` to execute subprocess tasks, `fn append_ext_mod` will return a `PySystemExit` exception at the end of execution. At this point, you should exit the Rust code instead of continuing to run the Python app. Please refer to its documentation for more information.
+- [#52](https://github.com/WSH032/pytauri/pull/52) - refactor(standalone)!: new API for preparing python interpreter.
+    The `pytauri::standalone` module has been completely rewritten.
+    Previously, you used `prepare_freethreaded_python_with_executable` and `append_ext_mod`. Now, you need to use `PythonInterpreterBuilder`.
+    See the `pytauri` crate rust API docs and tutorial (examples/tauri-app) `main.rs` code for more information on how to migrate.
 
 ### Added
 
 - [#51](https://github.com/WSH032/pytauri/pull/51) - feat: support `multiprocessing` for standalone app.
     - For standalone app:
-        - set `sys.argv` to `std::env::args_os()`
-        - set `sys.frozen` to `True`
+        - set `sys.executable` to the actual python interpreter executable path.
+        - set `sys.argv` to `std::env::args_os()`.
+        - set `sys.frozen` to `True`.
         - call `multiprocessing.set_start_method` with
             - windows: `spawn`
             - unix: `fork`
-        - call `multiprocessing.set_executable` with `std::env::current_exe()`
-        - call `multiprocessing.freeze_support()` at the end of `append_ext_mod`
+        - call `multiprocessing.set_executable` with `std::env::current_exe()`.
     - Add `fn is_forking` for checking if the app is spawned by `multiprocessing`.
 
 ### Internal
 
+- [#52](https://github.com/WSH032/pytauri/pull/52) - internal: set `sys._pytauri_standalone=True` when built as standalone app (i.e., launch from rust).
 - [#51](https://github.com/WSH032/pytauri/pull/51) - refactor: use `Python::run` with `locals` as arguments to execute `_append_ext_mod.py` for better performance.
 
 ## [0.1.0-beta.0]

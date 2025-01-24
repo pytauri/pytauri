@@ -89,11 +89,7 @@ def main() -> None:
 ```
 
 ```python title="src-tauri/python/tauri_app/__main__.py"
-"""The main entry point for the Tauri app."""
-
-from tauri_app import main
-
-main()
+--8<-- "examples/tauri-app/src-tauri/python/tauri_app/__main__.py"
 ```
 
 ## Run pytauri from rust

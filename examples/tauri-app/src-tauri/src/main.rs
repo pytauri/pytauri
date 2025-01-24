@@ -1,101 +1,53 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::env::var;
+use std::{convert::Infallible, env::var, error::Error, path::PathBuf};
 
-use pyo3::{exceptions::PySystemExit, prelude::*, wrap_pymodule};
-use pytauri::standalone::{
-    append_ext_mod, get_python_executable_from_venv, prepare_freethreaded_python_with_executable,
-    write_py_err_to_file,
-};
+use pyo3::wrap_pymodule;
+use pytauri::standalone::{PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript};
 use tauri::{Builder, Manager as _};
 
 use tauri_app_lib::{ext_mod, tauri_generate_context};
 
-fn prepare_python_interpreter() {
-    // `cfg(dev)` is set by `tauri-build` in `build.rs`, which means running with `tauri dev`,
-    // see: <https://github.com/tauri-apps/tauri/pull/8937>.
-    if cfg!(dev) {
-        // virtualenv Python
-        //
-        // See:
-        //
-        // - <https://github.com/PyO3/pyo3/issues/3589>
-        // - <https://github.com/PyO3/pyo3/issues/1896>
-        //
-        // pyo3 currently cannot automatically detect the virtual environment and configure pyconfig,
-        // so we do it manually here.
-        let venv_path = var("VIRTUAL_ENV").expect(
-            "The app is running in tauri dev mode, \
+fn main() -> Result<Infallible, Box<dyn Error>> {
+    let py_env = if cfg!(dev) {
+        // `cfg(dev)` is set by `tauri-build` in `build.rs`, which means running with `tauri dev`,
+        // see: <https://github.com/tauri-apps/tauri/pull/8937>.
+
+        let venv_dir = var("VIRTUAL_ENV").map_err(|err| {
+            format!(
+                "The app is running in tauri dev mode, \
                 please activate the python virtual environment first \
-                or set the `VIRTUAL_ENV` environment variable",
-        );
-        let python_executable = get_python_executable_from_venv(venv_path);
-        prepare_freethreaded_python_with_executable(python_executable)
-            .expect("failed to initialize python from venv");
+                or set the `VIRTUAL_ENV` environment variable: {err}",
+            )
+        })?;
+        PythonInterpreterEnv::Venv(PathBuf::from(venv_dir).into())
     } else {
         // embedded Python, i.e., bundle mode with `tauri build`.
 
         // Actually, we don't use this app, we just use it to get the resource directory
         let sample_app = Builder::default()
             .build(tauri_generate_context())
-            .expect("failed to build sample app");
+            .map_err(|err| format!("failed to build sample app: {err}"))?;
         let resource_dir = sample_app
             .path()
             .resource_dir()
-            .expect("failed to get resource dir");
+            .map_err(|err| format!("failed to get resource dir: {err}"))?;
 
-        let py_executable = if cfg!(windows) {
-            resource_dir.join("python.exe")
-        } else {
-            resource_dir.join("bin/python3")
-        };
+        // 👉 When bundled as a standalone App, we will put python in the resource directory
+        PythonInterpreterEnv::Standalone(resource_dir.into())
+    };
 
-        debug_assert!(
-            py_executable.is_file(),
-            "Python executable not found, maybe you forgot to bundle it: {}",
-            py_executable.display()
-        );
+    // 👉 Equivalent to `python -m tauri_app`,
+    // i.e, run the `src-tauri/python/tauri_app/__main__.py`
+    let py_script = PythonScript::Module("tauri_app".into());
 
-        prepare_freethreaded_python_with_executable(py_executable)
-            .expect("failed to initialize embedded python");
-    }
-}
+    // 👉 `ext_mod` is your extension module, we export it from memory,
+    // so you don't need to compile it into a binary file (.pyd/.so).
+    let builder =
+        PythonInterpreterBuilder::new(py_env, py_script, |py| wrap_pymodule!(ext_mod)(py));
+    let interpreter = builder.build()?;
 
-fn execute_python_script(py: Python<'_>) -> PyResult<()> {
-    // insert pytauri extension module into `sys.modules`
-    append_ext_mod(wrap_pymodule!(ext_mod)(py).into_bound(py))?;
-
-    // execute your Python script
-    py.run(
-        // equivalent to `python -m tauri_app`
-        c"from runpy import run_module; run_module('tauri_app')",
-        None,
-        None,
-    )
-}
-
-fn main() -> Result<(), PyErr> {
-    prepare_python_interpreter();
-
-    Python::with_gil(|py| {
-        let result = execute_python_script(py);
-
-        // handle the error
-        result.inspect_err(|e| {
-            if e.is_instance_of::<PySystemExit>(py) {
-                // python interpreter requires to exit normally, it's not an error
-                return;
-            }
-
-            if cfg!(all(not(debug_assertions), windows)) {
-                // I.g., `windows_subsystem = "windows"` in `main.rs`.
-                // In this case, there is no console to print the error, so we write the error to a file
-                write_py_err_to_file(py, e, "error.log").expect("failed to write error to file");
-            } else {
-                // we have a console, so we just call `sys.excepthook` and print the error
-                e.print_and_set_sys_last_vars(py);
-            }
-        })
-    })
+    let exit_code = interpreter.run();
+    std::process::exit(exit_code);
 }

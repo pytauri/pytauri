@@ -33,57 +33,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### BREAKING
 
-- [#51](https://github.com/WSH032/pytauri/pull/51) - rs/pytauri: When the app executable is spawned by python `multiprocessing` to execute subprocess tasks, `fn append_ext_mod` will return a `PySystemExit` exception at the end of execution. At this point, you should exit the Rust code instead of continuing to run the Python app. Please refer to its documentation for more information.
-
-    ```rust
-    use pyo3::exceptions::PySystemExit;
-
-    fn execute_python_script(py: Python<'_>) -> PyResult<()> {
-        let ext_mod = wrap_pymodule!(ext_mod)(py).into_bound(py);
-
-        // If spawned as subprocess for `multiprocessing`,
-        // it will return `PySystemExit` after execution.
-        if let Err(err) = append_ext_mod(ext_mod) {
-            if err.is_instance_of::<PySystemExit>(py) && is_forking() {
-                // just return to end the rust code normally,
-                // don't execute your python app code.
-                return Ok(());
-            } else {
-                return Err(err);
-            }
-        }
-
-        // Or you can just return the error and handle it later.
-        // Just dont execute your python app code is enough.
-        //
-        // ```rust
-        // append_ext_mod(ext_mod)?;
-        // ```
-
-
-        // execute your python app.
-        // ...
-    }
-    ```
+- [#52](https://github.com/WSH032/pytauri/pull/52) - refactor(standalone)!: new API for preparing python interpreter.
+    The `pytauri::standalone` module has been completely rewritten.
+    Previously, you used `prepare_freethreaded_python_with_executable` and `append_ext_mod`. Now, you need to use `PythonInterpreterBuilder`.
+    See the `pytauri` crate rust API docs and tutorial (examples/tauri-app) `main.rs` code for more information on how to migrate.
 
 ### Docs
 
-- [#51](https://github.com/WSH032/pytauri/pull/51) - `examples`: Ignore `PySystemExit` exception.
-
-    ```rust
-    use pyo3::exceptions::PySystemExit;
-
-    let result = execute_python_script(py);
-
-    result.inspect_err(|e| {
-        if e.is_instance_of::<PySystemExit>(py) {
-            // python interpreter requires to exit normally, it's not an error
-            return;
-        }
-
-        // ...
-    })
-    ```
+- [#52](https://github.com/WSH032/pytauri/pull/52) - update `examples/tauri-app` `main.rs` for new API to prepare python interpreter.
+- [#52](https://github.com/WSH032/pytauri/pull/52) - add the usage of `multiprocessing.freeze_support` in `examples/tauri-app` `__main__.py`.
 
 ### Changed
 

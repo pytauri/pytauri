@@ -34,11 +34,27 @@ mod error {
             .repr()
             .map_err(|_| "unable to get repr of error value")?;
 
-        let value = format!(
-            "{}: {}",
-            type_repr.to_string_lossy(),
-            value_repr.to_string_lossy()
-        );
+        let mut traceback = None;
+        if let Some(tb) = err.traceback(py) {
+            if let Ok(tb) = tb.format() {
+                traceback = Some(tb)
+            }
+        }
+
+        let value = if let Some(tb) = traceback {
+            format!(
+                "{}: {}\n{}",
+                type_repr.to_string_lossy(),
+                value_repr.to_string_lossy(),
+                tb
+            )
+        } else {
+            format!(
+                "{}: {}",
+                type_repr.to_string_lossy(),
+                value_repr.to_string_lossy()
+            )
+        };
 
         Ok(value)
     }
@@ -68,14 +84,14 @@ mod error {
     impl std::error::Error for NewInterpreterError {}
 
     impl NewInterpreterError {
-        pub fn new_from_pyerr(py: Python, err: PyErr, context: &str) -> Self {
+        pub(crate) fn new_from_pyerr(py: Python, err: PyErr, context: &str) -> Self {
             match format_pyerr(py, err) {
                 Ok(value) => NewInterpreterError::Dynamic(format!("during {}: {}", context, value)),
                 Err(msg) => NewInterpreterError::Dynamic(format!("during {}: {}", context, msg)),
             }
         }
 
-        pub fn new_from_pystatus(status: &pyffi::PyStatus, context: &str) -> Self {
+        pub(crate) fn new_from_pystatus(status: &pyffi::PyStatus, context: &str) -> Self {
             if !status.func.is_null() && !status.err_msg.is_null() {
                 let func = unsafe { CStr::from_ptr(status.func) };
                 let msg = unsafe { CStr::from_ptr(status.err_msg) };
@@ -106,21 +122,50 @@ mod error {
     pub type NewInterpreterResult<T> = Result<T, NewInterpreterError>;
 }
 
-pub(crate) use error::{NewInterpreterError, NewInterpreterResult};
+pub use error::{NewInterpreterError, NewInterpreterResult};
 
 // see: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/interpreter_config.rs#L29-L251>
 pub(crate) mod utils {
     use super::*;
-    use std::ffi::OsString;
+    use std::ffi::{CString, OsString};
 
     #[cfg(target_family = "unix")]
-    use std::{
-        ffi::{CString, NulError},
-        os::unix::ffi::OsStrExt,
-    };
+    use std::{ffi::NulError, os::unix::ffi::OsStrExt};
 
     #[cfg(target_family = "windows")]
     use std::os::windows::prelude::OsStrExt;
+
+    /// Set a PyConfig string value from a str.
+    ///
+    /// # Safety
+    ///
+    /// You must ensure that you hold a mutable reference to `config`
+    /// (i.e., you must modify it atomically)
+    pub(crate) unsafe fn set_config_string_from_str(
+        config: &pyffi::PyConfig,
+        dest: &*mut wchar_t,
+        value: &str,
+        context: &str,
+    ) -> Result<(), NewInterpreterError> {
+        match CString::new(value) {
+            Ok(value) => unsafe {
+                let status = pyffi::PyConfig_SetBytesString(
+                    config as *const _ as *mut _,
+                    dest as *const *mut _ as *mut *mut _,
+                    value.as_ptr(),
+                );
+                if pyffi::PyStatus_Exception(status) != 0 {
+                    Err(NewInterpreterError::new_from_pystatus(&status, context))
+                } else {
+                    Ok(())
+                }
+            },
+            Err(_) => Err(NewInterpreterError::Dynamic(format!(
+                "during {}: unable to convert {} to C string",
+                context, value
+            ))),
+        }
+    }
 
     /// # Safety
     ///

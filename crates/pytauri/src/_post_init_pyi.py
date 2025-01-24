@@ -1,15 +1,18 @@
 import sys
+from importlib.metadata import entry_points
 from multiprocessing import set_executable, set_start_method
+from types import ModuleType
 from typing import TYPE_CHECKING, cast
 
 ### locals
 if TYPE_CHECKING:
     # i.e., std::env::current_exe()
-    current_exe = cast(str, ...)  # input
+    CURRENT_EXE = cast(str, ...)  # input
+    # the pytauri extension module
+    EXT_MOD = cast(ModuleType, ...)  # input
 
 
-### impl 👇
-
+### Freezing  ###
 
 # ref:
 #
@@ -18,10 +21,6 @@ if TYPE_CHECKING:
 # - <https://pyinstaller.org/en/v6.11.1/common-issues-and-pitfalls.html#multi-processing>
 # - <https://github.com/pyinstaller/pyinstaller/blob/v6.11.1/PyInstaller/hooks/rthooks/pyi_rth_multiprocessing.py>
 
-# NOTE: Even if we do not intend to support the `multiprocessing`,
-# it is necessary to set `sys.frozen` to `True` so that the Python side can
-# recognize that `pytauri` is in `standalone` mode
-setattr(sys, "frozen", True)  # noqa: B010
 
 # see also: <https://docs.python.org/3.13/library/multiprocessing.html#contexts-and-start-methods>
 if sys.platform == "win32":
@@ -39,4 +38,26 @@ else:
 
 # we must set `executable` for `multiprocessing` manually,
 # because on rust, we set `sys.executable` to actual python interpreter path.
-set_executable(current_exe)
+set_executable(CURRENT_EXE)
+
+# MUST be set, or `set_executable` will not work,
+# see the implementation of `multiprocessing.spawn.get_command_line`
+setattr(sys, "frozen", True)  # noqa: B010
+
+# a private custom var, to info python we are built as standalone app.
+setattr(sys, "_pytauri_standalone", True)  # noqa: B010
+
+
+### Append Ext Mod  ###
+
+if sys.version_info >= (3, 10):
+    # To avoid deprecation warnings
+    eps = entry_points(group="pytauri", name="ext_mod")
+else:
+    # TODO: how to specify the name?
+    eps = entry_points()["pytauri"]
+
+
+ext_mod_path = next(iter(eps)).value
+
+sys.modules[ext_mod_path] = EXT_MOD

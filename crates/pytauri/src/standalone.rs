@@ -2,8 +2,9 @@
 //!
 //! In most cases you will use:
 //!
-//! - [prepare_freethreaded_python_with_executable]
-//! - [append_ext_mod]
+//! - [PythonInterpreterBuilder]
+//! - [PythonInterpreter]
+//! - [is_forking]
 //!
 //! # NOTE
 //!
@@ -12,32 +13,32 @@
 //! [pyembed]: https://crates.io/crates/pyembed
 
 use std::{
+    borrow::Cow,
     env::{args_os, current_exe},
     ffi::OsString,
-    fs, io,
-    path::{absolute, Path, PathBuf},
+    ops::Drop,
+    path::Path,
 };
 
 use pyo3::{
     ffi::{self as pyffi, c_str},
     prelude::*,
-    prepare_freethreaded_python,
     types::{PyDict, PyModule},
 };
 
-use crate::pyembed::{utils, NewInterpreterError, NewInterpreterResult};
+use crate::pyembed::utils;
+pub use crate::pyembed::{NewInterpreterError, NewInterpreterResult};
 
 #[non_exhaustive]
-pub enum PyConfigProfile {
+enum PyConfigProfile {
     Python,
+    #[expect(dead_code)]
     Isolated,
 }
 
 /// see: <https://docs.python.org/3/c-api/init_config.html#c.PyConfig>
-pub struct PyConfig(pyffi::PyConfig);
+struct PyConfig(pyffi::PyConfig);
 
-/// NOTE: You can use [PyConfig] only before calling [pyo3::prepare_freethreaded_python],
-/// otherwise it is an invalid operation
 // ref: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/interpreter_config.rs#L252-L619>
 impl PyConfig {
     pub fn new(profile: PyConfigProfile) -> Self {
@@ -53,12 +54,18 @@ impl PyConfig {
         Self(config)
     }
 
+    pub fn set_home(&mut self, home: &Path) -> NewInterpreterResult<()> {
+        unsafe { utils::set_config_string_from_path(&self.0, &self.0.home, home, "setting home") }
+    }
+
+    #[expect(dead_code)]
     pub fn set_prefix(&mut self, prefix: &Path) -> NewInterpreterResult<()> {
         unsafe {
             utils::set_config_string_from_path(&self.0, &self.0.prefix, prefix, "setting prefix")
         }
     }
 
+    #[expect(dead_code)]
     pub fn set_base_prefix(&mut self, base_prefix: &Path) -> NewInterpreterResult<()> {
         unsafe {
             utils::set_config_string_from_path(
@@ -70,6 +77,7 @@ impl PyConfig {
         }
     }
 
+    #[expect(dead_code)]
     pub fn set_exec_prefix(&mut self, exec_prefix: &Path) -> NewInterpreterResult<()> {
         unsafe {
             utils::set_config_string_from_path(
@@ -81,6 +89,7 @@ impl PyConfig {
         }
     }
 
+    #[expect(dead_code)]
     pub fn set_base_exec_prefix(&mut self, base_exec_prefix: &Path) -> NewInterpreterResult<()> {
         unsafe {
             utils::set_config_string_from_path(
@@ -122,11 +131,57 @@ impl PyConfig {
         self.0.parse_argv = if parse_argv { 1 } else { 0 };
     }
 
-    /// After calling this method, the Python interpreter has already been initialized,
-    /// so [pyo3::prepare_freethreaded_python] is a no-op.
-    /// But you still need to call it to let pyo3 know that the interpreter has been initialized.
+    pub fn set_run_command(&mut self, run_command: &str) -> NewInterpreterResult<()> {
+        unsafe {
+            utils::set_config_string_from_str(
+                &self.0,
+                &self.0.run_command,
+                run_command,
+                "setting run_command",
+            )
+        }
+    }
+
+    pub fn set_run_module(&mut self, run_module: &str) -> NewInterpreterResult<()> {
+        unsafe {
+            utils::set_config_string_from_str(
+                &self.0,
+                &self.0.run_module,
+                run_module,
+                "setting run_module",
+            )
+        }
+    }
+
+    pub fn set_run_filename(&mut self, run_filename: &Path) -> NewInterpreterResult<()> {
+        unsafe {
+            utils::set_config_string_from_path(
+                &self.0,
+                &self.0.run_filename,
+                run_filename,
+                "setting run_filename",
+            )
+        }
+    }
+
+    /// Initialize the Python interpreter with the specified configuration.
+    ///
+    /// - If the Python interpreter is already initialized (e.g, called [pyo3::prepare_freethreaded_python] before),
+    ///   this method will return an error.
+    ///
+    /// - After calling this method, the Python interpreter has already been initialized,
+    ///   and you dont need to call [pyo3::prepare_freethreaded_python] again (it's no-op).
+    ///
+    /// - If this function returns an error, the Python interpreter is not initialized.
+    //
     // ref: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/interpreter.rs#L130-L255>
     pub fn init(self) -> NewInterpreterResult<()> {
+        if PythonInterpreter::is_initialized() {
+            return Err(NewInterpreterError::Simple(
+                "Python interpreter has already been initialized",
+            ));
+        }
+
         let status = unsafe { pyffi::Py_InitializeFromConfig(&self.0) };
         if unsafe { pyffi::PyStatus_Exception(status) } != 0 {
             return Err(NewInterpreterError::new_from_pystatus(
@@ -146,36 +201,13 @@ impl PyConfig {
     }
 }
 
+/// Clear the `PyConfig` to release memory.
 impl Drop for PyConfig {
     fn drop(&mut self) {
         unsafe {
             pyffi::PyConfig_Clear(&mut self.0);
         }
     }
-}
-
-/// Get the absolute path of the Python interpreter from the virtual environment path.
-///
-/// For Unix systems, it is equivalent to `venv_path / "bin/python3"`.
-///
-/// For Windows systems, it is equivalent to `venv_path / "Scripts/python.exe"`.
-///
-/// # Panics
-///
-/// Panics if [std::path::absolute] fails.
-pub fn get_python_executable_from_venv(venv_path: impl Into<PathBuf>) -> PathBuf {
-    let mut venv_path: PathBuf = venv_path.into();
-    #[cfg(unix)]
-    venv_path.push("bin/python3");
-    #[cfg(windows)]
-    venv_path.push(r"Scripts\python.exe");
-    #[cfg(not(any(unix, windows)))]
-    unimplemented!();
-    // NOTE: Use [std::path::absolute] instead of [Path::canonicalize].
-    // On Unix, the Python executable in the virtual environment is actually a symbolic link,
-    // [canonicalize] will resolve the symbolic link,
-    // causing the path to be set to the system-level Python interpreter.
-    absolute(&venv_path).expect("failed to get absolute path")
 }
 
 /// Whether the Python interpreter is in "multiprocessing worker" mode.
@@ -202,189 +234,363 @@ pub fn is_forking() -> bool {
     }
 }
 
-fn freeze(py: Python<'_>, current_exe: &Path) -> PyResult<()> {
-    let locals = PyDict::new(py);
-    locals.set_item("current_exe", current_exe)?;
-
-    // TODO, PERF: compile into python bytecode.
-    // see: <https://users.rust-lang.org/t/why-calling-python-from-rust-is-faster-than-python/39789/13>
-    py.run(c_str!(include_str!("_freeze.py")), None, Some(&locals))
-}
-
-/// Prepare a Python interpreter with the specified Python executable.
-///
-/// NOTE: the `executable` must be an absolute path.
-///
-/// - [pyo3::prepare_freethreaded_python] can only be used with system-installed Python,
-///   and not with virtual environments or standalone distributions like `python-build-standalone`.
-///   This function allows you to do that.
-/// - Also, this function correctly configures the `multiprocessing` module.
-///
-/// > This method will internally call [pyo3::prepare_freethreaded_python], so there is no need to call it manually.
-///
-/// # Behavior
-///
-/// > This is the behavior at the time of writing and may change in the future.
-///
-/// ref:
-///
-/// - <https://docs.python.org/3.13/c-api/intro.html#embedding-python>
-/// - <https://github.com/python/cpython/blob/3.13/Modules/getpath.py>
-///
-/// behavior:
-///
-/// - Set `PyConfig.program_name` to `std::env::current_exe()`.
-/// - Set `PyConfig.executable` to the specified `executable`.
-/// - Set `PyConfig.argv` to `std::env::args_os()`.
-/// - Set `PyConfig.parse_argv` to `false`.
-/// - Set `sys.frozen` to `True`.
-/// - Call `multiprocessing.set_start_method` with
-///     - windows: `spawn`
-///     - unix: `fork`
-/// - Call `multiprocessing.set_executable` with `std::env::current_exe()`
-///
-/// # Example
-/**
-```no_run
-use pyo3::prelude::*;
-use pytauri::standalone::prepare_freethreaded_python_with_executable;
-
-prepare_freethreaded_python_with_executable("/my/python")
-    .expect("failed to prepare python interpreter");
-Python::with_gil(|_py| {
-    // Your code here
-});
-```
-*/
-pub fn prepare_freethreaded_python_with_executable(
-    executable: impl AsRef<Path>,
+fn _post_init_pyi(
+    py: Python<'_>,
+    current_exe: &Path,
+    ext_mod: Py<PyModule>,
 ) -> NewInterpreterResult<()> {
-    let py_executable = executable.as_ref();
-    let current_exe = current_exe().map_err(|e| {
-        NewInterpreterError::Dynamic(format!("failed to get the current executable path: {}", e))
-    })?;
+    let script = || {
+        let locals = PyDict::new(py);
+        locals.set_item("CURRENT_EXE", current_exe)?;
+        locals.set_item("EXT_MOD", ext_mod)?;
 
-    let mut config = PyConfig::new(PyConfigProfile::Python);
-
-    // 👇 Init config ref:
-    // - <https://github.com/python/cpython/blob/3.13/Modules/getpath.py>
-    // - <https://docs.python.org/3.13/c-api/init_config.html#python-path-configuration>
-    // - <https://docs.python.org/3.13/c-api/intro.html#embedding-python>
-
-    // in fact, unnecessary, python will get it from `argv[0]`
-    config.set_program_name(&current_exe)?;
-    // necessary for finding python home
-    config.set_executable(py_executable)?;
-    // necessary for `multiprocessing`
-    config.set_argv(&args_os().collect::<Vec<_>>())?;
-    // `parse_argv=false` is necessary, because python only accepts following argv pattern:
-    //
-    // ```shell
-    // # <https://docs.python.org/3/using/cmdline.html#using-on-cmdline>
-    // python [-bBdEhiIOPqRsSuvVWx?] [-c command | -m module-name | script | - ] [args]
-    // ```
-    //
-    // This will prevent us from using libraries like `clap` to parse command line arguments
-    config.set_parse_argv(false);
-    config.init()?;
-
-    prepare_freethreaded_python();
-
-    Python::with_gil(|py| {
-        freeze(py, &current_exe).map_err(|e| {
-            NewInterpreterError::new_from_pyerr(py, e, "failed to freeze the Python interpreter")
-        })
-    })?;
-
-    Ok(())
+        // TODO, PERF: compile into python bytecode.
+        // see: <https://users.rust-lang.org/t/why-calling-python-from-rust-is-faster-than-python/39789/13>
+        py.run(
+            c_str!(include_str!("_post_init_pyi.py")),
+            None,
+            Some(&locals),
+        )
+    };
+    script().map_err(|e| {
+        NewInterpreterError::new_from_pyerr(py, e, "failed to post init python interpreter")
+    })
 }
 
-/// Insert the `pytauri` extension module into `sys.modules`,
-/// otherwise your Python code cannot import `pytauri` when built as a standalone application.
+/// The python interpreter environment you want to use.
 ///
-/// Also, this function will call `multiprocessing.freeze_support()`.
-///
-/// <div class="warning">
-///
-/// For child processes spawned by `multiprocessing`,
-/// `multiprocessing.freeze_support()` will execute the [`Process`],
-/// and after execution, it will raise a [`SystemExit`] exception to inform the Python interpreter to exit.
-///
-/// This exception will be returned as [pyo3::exceptions::PySystemExit]. When you catch this exception,
-/// you should let your Rust code exit and not continue executing your Python app code, otherwise you will get
-/// an endless spawn loop of the application process.
-/// See: <https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html#multi-processing>.
-///
-/// > You need to do this only on Windows, because on Unix, we use the `fork` start method instead.
-///
-/// </div>
-///
-/// [`Process`]: https://docs.python.org/3/library/multiprocessing.html#multiprocessing.Process
-/// [`SystemExit`]: https://docs.python.org/3/library/exceptions.html#SystemExit
-///
-/// # Example
-/**
-```no_run
-use pyo3::{exceptions::PySystemExit, prelude::*, wrap_pymodule};
-use pytauri::standalone::{append_ext_mod, is_forking};
+/// NOTE: This path **must be absolute**.
+#[non_exhaustive]
+pub enum PythonInterpreterEnv<'a> {
+    /// The virtual environment python `root` directory.
+    ///
+    /// You can get it from env var `VIRTUAL_ENV` if you activated the venv.
+    ///
+    /// ## Windows
+    ///
+    /// ```text
+    /// root\
+    /// ├── Lib\
+    /// ├── Scripts\
+    /// ├── pyvenv.cfg
+    /// ├── ...
+    /// ```
+    ///
+    /// ## Unix
+    ///
+    /// ```text
+    /// root/
+    /// ├── bin/
+    /// ├── lib/
+    /// ├── pyvenv.cfg
+    /// ├── ...
+    /// ```
+    Venv(Cow<'a, Path>),
+    /// [python-build-standalone] distribution `root` directory.
+    ///
+    /// [python-build-standalone]: https://github.com/astral-sh/python-build-standalone
+    ///
+    /// ## Windows
+    ///
+    /// ```text
+    /// root\
+    /// ├── Lib\
+    /// ├── python.exe
+    /// ├── python3.dll
+    /// ├── ...
+    /// ```
+    ///
+    /// ## Unix
+    ///
+    /// ```text
+    /// root/
+    /// ├── bin/
+    /// ├── lib/
+    /// ...
+    /// ```
+    Standalone(Cow<'a, Path>),
+}
 
-// Your extension module
-#[pymodule]
-mod ext_mod {}
+impl PythonInterpreterEnv<'_> {
+    // ref:
+    // - <https://docs.python.org/3.13/c-api/init_config.html#python-path-configuration>
+    // - <https://github.com/python/cpython/blob/3.13/Modules/getpath.py>
+    fn set_path_for_config(self, config: &mut PyConfig) -> NewInterpreterResult<()> {
+        // necessary, because:
+        // 1. make sure that `sys.executable` is actually the python executable
+        // 2. python can calculate other path such as `PyConfig.prefix`, from `PyConfig.executable`.
+        //     ref: <https://github.com/python/cpython/blob/3.13/Modules/getpath.py>
+        let executable;
+        // Normally we don't need to set `prefix` and `exec_prefix`:
+        // - For `Venv`: python can rely on `pyvenv.cfg` to set it.
+        //     see: <https://github.com/python/cpython/blob/a3797492179c249417a06d2499a7d535d453ac2c/Modules/getpath.py#L347-L403>
+        // - For `Standalone`: python can rely on `executable` and linked `libpython` path to automatically guess it.
+        //     see: <https://github.com/python/cpython/blob/a3797492179c249417a06d2499a7d535d453ac2c/Modules/getpath.py#L559-L573>.
+        //     In most cases, this works fine because the `libpython` we link is right next to the standard library
+        //     (refer to the `python-standalone-build` file layout).
+        //
+        // But for `AppImage` packaging,
+        // `libpython` will be [moved to `${APPDIR}/usr/lib/`](https://github.com/tauri-apps/tauri/issues/11898),
+        // instead of the expected [`${APPDIR}/usr/lib/{your-app-name}/lib`](https://wsh032.github.io/pytauri/latest/usage/tutorial/build-standalone/#unix_3).
+        // So we need to manually set `prefix` and `exec_prefix`.
+        // (as long as we set it correctly, it won't have much impact compared to automatic guessing).
+        //
+        // Note:
+        // - we prefer set `home` instead of setting `prefix/exec_prefix` directly,
+        //   because `home` is [`input field`](https://docs.python.org/3.13/c-api/init_config.html#python-path-configuration)
+        // - We can set `exec_prefix` the same as `prefix`, it's because:
+        //     - On Windows, they are always the same: <https://github.com/python/cpython/blob/eed7865ceea83f56e46307c9dc78cb53526071f6/Modules/getpath.py#L608-L612>
+        //     - On unix, the `python-build-standalone` has the [{prefix/}{PLATSTDLIB_LANDMARK}](https://github.com/python/cpython/blob/eed7865ceea83f56e46307c9dc78cb53526071f6/Modules/getpath.py#L617C9-L617C85),
+        //       which indicates that `prefix` and `exec_prefix` are the same.
+        let home;
+        match self {
+            PythonInterpreterEnv::Venv(dir) => {
+                executable = if cfg!(windows) {
+                    dir.join(r"Scripts\python.exe")
+                } else {
+                    dir.join("bin/python3")
+                };
 
-fn main() -> PyResult<()> {
-    Python::with_gil(|py| {
-        let ext_mod = wrap_pymodule!(ext_mod)(py).into_bound(py);
+                home = None;
+            }
+            PythonInterpreterEnv::Standalone(dir) => {
+                executable = if cfg!(windows) {
+                    dir.join("python.exe")
+                } else {
+                    dir.join("bin/python3")
+                };
 
-        if let Err(err) = append_ext_mod(ext_mod) {
-            if err.is_instance_of::<PySystemExit>(py) && is_forking() {
-                // just return to end the rust code normally,
-                // don't execute your python app code.
-                return Ok(());
-            } else {
-                return Err(err);
+                home = Some(dir);
             }
         }
 
-        // Or you can just return the error and handle it later.
-        // Just dont execute your python app code is enough.
-        //
-        // ```rust
-        // append_ext_mod(ext_mod)?;
-        // ```
-
-
-        // Your python app code here
-        py.run(c"print('Hello, world!')", None, None)?;
+        config.set_executable(&executable)?;
+        if let Some(home) = home {
+            config.set_home(&home)?;
+        }
 
         Ok(())
-    })
-}
-```
-*/
-pub fn append_ext_mod(ext_mod: Bound<PyModule>) -> PyResult<()> {
-    let py = ext_mod.py();
-    let locals = PyDict::new(py);
-    locals.set_item("ext_mod", ext_mod)?;
-
-    // TODO, PERF: compile into python bytecode.
-    // see: <https://users.rust-lang.org/t/why-calling-python-from-rust-is-faster-than-python/39789/13>
-    py.run(
-        c_str!(include_str!("_append_ext_mod.py")),
-        None,
-        Some(&locals),
-    )
+    }
 }
 
-pub fn write_py_err_to_file(
-    py: Python<'_>,
-    py_err: &PyErr,
-    file_path: impl AsRef<Path>,
-) -> io::Result<()> {
-    if let Some(tb) = py_err.traceback(py) {
-        if let Ok(tb) = tb.format() {
-            return fs::write(file_path, tb);
+/// Indicates how to run your Python code, used by [PythonInterpreter::run].
+#[non_exhaustive]
+pub enum PythonScript<'a> {
+    /// Filename passed on the command line.
+    /// For example, it is set to `script.py` by the `python3 script.py` arg command line.
+    File(Cow<'a, Path>),
+    /// Value of the `-m` command line option.
+    /// For example, it is set to `module` by the `python3 -m module` arg command line.
+    Module(Cow<'a, str>),
+    /// Value of the `-c` command line option.
+    /// For example, it is set to `code` by the `python3 -c code` arg command line.
+    Code(Cow<'a, str>),
+    /// If you don't set anything, `Py_RunMain` will runs the interactive Python prompt (REPL)
+    /// using the `__main__` module’s global namespace. Usually just used for debugging.
+    REPL,
+}
+
+/// Build a Python interpreter for your script.
+#[non_exhaustive]
+pub struct PythonInterpreterBuilder<'a, M>
+where
+    M: for<'py> FnOnce(Python<'py>) -> Py<PyModule> + 'a,
+{
+    env: PythonInterpreterEnv<'a>,
+    script: PythonScript<'a>,
+    ext_mod: M,
+}
+
+impl<'a, M> PythonInterpreterBuilder<'a, M>
+where
+    M: for<'py> FnOnce(Python<'py>) -> Py<PyModule> + 'a,
+{
+    /// # Example
+    /**
+    ```rust
+    use pyo3::{prelude::*, wrap_pymodule};
+    use pytauri::standalone::{PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript};
+    use std::path::Path;
+
+    // Your extension module
+    #[pymodule]
+    mod ext_mod {}
+
+    let env = PythonInterpreterEnv::Venv(From::<&Path>::from("/home/myvenv/".as_ref()));
+    let script = PythonScript::Code("print('Hello, world!')".into());
+
+    let builder = PythonInterpreterBuilder::new(env, script, |py| wrap_pymodule!(ext_mod)(py));
+    ```
+    */
+    pub fn new(env: PythonInterpreterEnv<'a>, script: PythonScript<'a>, ext_mod: M) -> Self {
+        PythonInterpreterBuilder {
+            env,
+            script,
+            ext_mod,
         }
     }
-    fs::write(file_path, format!("{:?}", py_err))
+
+    /// Build the Python interpreter.
+    ///
+    /// After calling this function, the Python interpreter is initialized.
+    /// And you don't need to call [pyo3::prepare_freethreaded_python] again (it's no-op).
+    ///
+    /// NOTE: you can only build only one Python interpreter per process,
+    /// or you will get a [NewInterpreterError].
+    ///
+    /// # Behavior
+    ///
+    /// > This is the behavior at the time of writing and may change in the future.
+    ///
+    /// - Set `PyConfig.program_name` to `std::env::current_exe()`.
+    /// - Set `sys.executable` to the actual python interpreter executable path.
+    /// - Set `sys.argv` to `std::env::args_os()`.
+    /// - Set `PyConfig.parse_argv` to `false`.
+    /// - Set `sys.frozen` to `True`.
+    /// - Call `multiprocessing.set_start_method` with
+    ///     - windows: `spawn`
+    ///     - unix: `fork`
+    /// - Call `multiprocessing.set_executable` with `std::env::current_exe()`
+    ///
+    pub fn build(self) -> NewInterpreterResult<PythonInterpreter> {
+        let current_exe = current_exe().map_err(|e| {
+            NewInterpreterError::Dynamic(format!(
+                "failed to get the current executable path: {}",
+                e
+            ))
+        })?;
+
+        let mut config = PyConfig::new(PyConfigProfile::Python);
+
+        // 👇 Init config ref:
+        // - <https://github.com/python/cpython/blob/3.13/Modules/getpath.py>
+        // - <https://docs.python.org/3.13/c-api/init_config.html#python-path-configuration>
+        // - <https://docs.python.org/3.13/c-api/intro.html#embedding-python>
+
+        // in fact, unnecessary, python will get it from `argv[0]`
+        config.set_program_name(&current_exe)?;
+        // necessary for finding the standard library and installed libraries
+        self.env.set_path_for_config(&mut config)?;
+        // necessary for `multiprocessing`
+        config.set_argv(&args_os().collect::<Vec<_>>())?;
+        // `parse_argv=false` is necessary, because python only accepts following argv pattern:
+        //
+        // ```shell
+        // # <https://docs.python.org/3/using/cmdline.html#using-on-cmdline>
+        // python [-bBdEhiIOPqRsSuvVWx?] [-c command | -m module-name | script | - ] [args]
+        // ```
+        //
+        // This will prevent us from using libraries like `clap` to parse command line arguments
+        config.set_parse_argv(false);
+
+        match self.script {
+            PythonScript::File(path) => {
+                config.set_run_filename(&path)?;
+            }
+            PythonScript::Module(module) => {
+                config.set_run_module(&module)?;
+            }
+            PythonScript::Code(code) => {
+                config.set_run_command(&code)?;
+            }
+            PythonScript::REPL => {
+                // if we don't set any of the above, `Py_RunMain` will run the REPL
+            }
+        }
+
+        let interpreter = PythonInterpreter::new(config)?;
+        interpreter.with_gil(|py| _post_init_pyi(py, &current_exe, (self.ext_mod)(py)))?;
+
+        Ok(interpreter)
+    }
+}
+
+/// The Python interpreter to run Python code.
+///
+/// # Safety
+///
+/// Dropping a [PythonInterpreter] instance will call `Py_FinalizeEx()` to
+/// finalize the Python interpreter and prevent it from running any more Python
+/// code.
+///
+/// If a Python C API is called after interpreter finalization, a segfault can
+/// occur.
+///
+/// If you use pyo3 APIs like [Python::with_gil()] directly, you may
+/// inadvertently attempt to operate on a finalized interpreter. Therefore
+/// it is recommended to always go through a method on an [PythonInterpreter]
+/// instance in order to interact with the Python interpreter.
+#[non_exhaustive]
+pub struct PythonInterpreter {}
+
+impl PythonInterpreter {
+    fn new(config: PyConfig) -> NewInterpreterResult<Self> {
+        // [PyConfig::init()] need make sure if it failed, the interpreter is not initialized.
+        // So we can just return here and dont need finalize the interpreter.
+        config.init()?;
+
+        let slf = Self {};
+        Ok(slf)
+    }
+
+    fn is_initialized() -> bool {
+        unsafe { pyffi::Py_IsInitialized() != 0 }
+    }
+
+    /// Runs `Py_RunMain()` and finalizes the interpreter.
+    ///
+    /// This will execute [PythonScript] and return an integer suitable
+    /// for use as a process exit code.
+    ///
+    /// Calling this function will finalize the interpreter and only gives you an
+    /// exit code: there is no opportunity to inspect the return value or handle
+    /// an uncaught exception. If you want to keep the interpreter alive or inspect
+    /// the evaluation result, consider using [Self::with_gil()] instead.
+    //
+    // ref: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/interpreter.rs#L505-L523>
+    pub fn run(self) -> i32 {
+        unsafe {
+            // GIL must be acquired before calling Py_RunMain(). And Py_RunMain()
+            // finalizes the interpreter. So we don't need to release the GIL
+            // afterwards.
+            pyffi::PyGILState_Ensure();
+            pyffi::Py_RunMain()
+        }
+    }
+
+    /// Proxy for [pyo3::Python::with_gil()].
+    ///
+    /// This function is just a wrapper around [pyo3::Python::with_gil()].
+    /// But since the function holds a reference to self,
+    /// it prevents MainPythonInterpreter from being dropped prematurely.
+    ///
+    /// This allows running Python code via the PyO3 Rust APIs. Alternatively,
+    /// this can be used to run code when the Python GIL is held.
+    #[inline]
+    pub fn with_gil<F, R>(&self, f: F) -> R
+    where
+        F: for<'py> FnOnce(Python<'py>) -> R,
+    {
+        Python::with_gil(f)
+    }
+}
+
+/// Finalize the python interpreter
+//
+// ref: <https://github.com/indygreg/PyOxidizer/blob/1ceca8664c71f39e849ce4873e00d821504b32bd/pyembed/src/interpreter.rs#L728-L752>
+impl Drop for PythonInterpreter {
+    fn drop(&mut self) {
+        // Interpreter may have been finalized already. Possibly through our invocation
+        // of Py_RunMain(). Possibly something out-of-band beyond our control. We don't
+        // muck with the interpreter after finalization because this will likely result
+        // in a segfault.
+        if !Self::is_initialized() {
+            return;
+        }
+
+        unsafe {
+            pyffi::PyGILState_Ensure();
+            pyffi::Py_FinalizeEx();
+        }
+    }
 }
