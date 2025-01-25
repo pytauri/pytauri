@@ -951,6 +951,27 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="../../../reference/codelldb/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    codelldb
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
     
     
     
@@ -962,7 +983,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4" >
         
           
           
@@ -978,14 +999,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
             <span class="md-nav__icon md-icon"></span>
             pytauri
           </label>
@@ -1008,7 +1029,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3_1" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_4_1" >
         
           
           
@@ -1024,14 +1045,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_3_3_1" id="__nav_3_3_1_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_3_4_1" id="__nav_3_4_1_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_3_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3_3_1">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4_1">
             <span class="md-nav__icon md-icon"></span>
             ffi
           </label>
@@ -1153,27 +1174,6 @@
           </ul>
         </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../reference/codelldb/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    codelldb
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -1798,9 +1798,17 @@
 </span></code></pre></div>
 <div class="language-python highlight"><span class="filename">src-tauri/python/tauri_app/__main__.py</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="sd">&quot;&quot;&quot;The main entry point for the Tauri app.&quot;&quot;&quot;</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span> <span class="nn">tauri_app</span> <span class="kn">import</span> <span class="n">main</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">freeze_support</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">main</span><span class="p">()</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="kn">from</span> <span class="nn">tauri_app</span> <span class="kn">import</span> <span class="n">main</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># - If you don&#39;t use `multiprocessing`, you can remove this line.</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># - If you do use `multiprocessing` but without this line,</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">#   you will get endless spawn loop of your application process.</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#   See: &lt;https://pyinstaller.org/en/v6.11.1/common-issues-and-pitfalls.html#multi-processing&gt;.</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="n">freeze_support</span><span class="p">()</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">main</span><span class="p">()</span>
 </span></code></pre></div>
 <h2 id="run-pytauri-from-rust">Run pytauri from rust<a class="headerlink" href="#run-pytauri-from-rust" title="Permanent link">&para;</a></h2>
 <p>Add following dependencies to <code>Cargo.toml</code>:</p>
@@ -1867,104 +1875,56 @@
 <div class="language-rust highlight"><span class="filename">src-tauri/src/main.rs</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1">// Prevents additional console window on Windows in release, DO NOT REMOVE!!</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="cp">#![cfg_attr(not(debug_assertions), windows_subsystem = </span><span class="s">&quot;windows&quot;</span><span class="cp">)]</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::</span><span class="n">env</span><span class="p">::</span><span class="n">var</span><span class="p">;</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">use</span><span class="w"> </span><span class="n">std</span><span class="p">::{</span><span class="n">convert</span><span class="p">::</span><span class="n">Infallible</span><span class="p">,</span><span class="w"> </span><span class="n">env</span><span class="p">::</span><span class="n">var</span><span class="p">,</span><span class="w"> </span><span class="n">error</span><span class="p">::</span><span class="n">Error</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">::</span><span class="n">PathBuf</span><span class="p">};</span>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">use</span><span class="w"> </span><span class="n">pyo3</span><span class="p">::{</span><span class="n">exceptions</span><span class="p">::</span><span class="n">PySystemExit</span><span class="p">,</span><span class="w"> </span><span class="n">prelude</span><span class="p">::</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">wrap_pymodule</span><span class="p">};</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">use</span><span class="w"> </span><span class="n">pytauri</span><span class="p">::</span><span class="n">standalone</span><span class="p">::{</span>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="n">append_ext_mod</span><span class="p">,</span><span class="w"> </span><span class="n">get_python_executable_from_venv</span><span class="p">,</span><span class="w"> </span><span class="n">prepare_freethreaded_python_with_executable</span><span class="p">,</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="n">write_py_err_to_file</span><span class="p">,</span>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">};</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">use</span><span class="w"> </span><span class="n">tauri</span><span class="p">::{</span><span class="n">Builder</span><span class="p">,</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">_</span><span class="p">};</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="k">use</span><span class="w"> </span><span class="n">tauri_app_lib</span><span class="p">::{</span><span class="n">ext_mod</span><span class="p">,</span><span class="w"> </span><span class="n">tauri_generate_context</span><span class="p">};</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="k">fn</span><span class="w"> </span><span class="nf">prepare_python_interpreter</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">    </span><span class="c1">// `cfg(dev)` is set by `tauri-build` in `build.rs`, which means running with `tauri dev`,</span>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="c1">// see: &lt;https://github.com/tauri-apps/tauri/pull/8937&gt;.</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="fm">cfg!</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">        </span><span class="c1">// virtualenv Python</span>
-</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">        </span><span class="c1">//</span>
-</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">        </span><span class="c1">// See:</span>
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">        </span><span class="c1">//</span>
-</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">        </span><span class="c1">// - &lt;https://github.com/PyO3/pyo3/issues/3589&gt;</span>
-</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">        </span><span class="c1">// - &lt;https://github.com/PyO3/pyo3/issues/1896&gt;</span>
-</span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">        </span><span class="c1">//</span>
-</span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">        </span><span class="c1">// pyo3 currently cannot automatically detect the virtual environment and configure pyconfig,</span>
-</span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">        </span><span class="c1">// so we do it manually here.</span>
-</span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">venv_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s">&quot;VIRTUAL_ENV&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span>
-</span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">            </span><span class="s">&quot;The app is running in tauri dev mode, \</span>
-</span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="s">                please activate the python virtual environment first \</span>
-</span><span id="__span-10-31"><a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="s">                or set the `VIRTUAL_ENV` environment variable&quot;</span><span class="p">,</span>
-</span><span id="__span-10-32"><a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">        </span><span class="p">);</span>
-</span><span id="__span-10-33"><a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">python_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_python_executable_from_venv</span><span class="p">(</span><span class="n">venv_path</span><span class="p">);</span>
-</span><span id="__span-10-34"><a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="w">        </span><span class="n">prepare_freethreaded_python_with_executable</span><span class="p">(</span><span class="n">python_executable</span><span class="p">)</span>
-</span><span id="__span-10-35"><a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">            </span><span class="p">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;failed to initialize python from venv&quot;</span><span class="p">);</span>
-</span><span id="__span-10-36"><a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-37"><a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">        </span><span class="c1">// embedded Python, i.e., bundle mode with `tauri build`.</span>
-</span><span id="__span-10-38"><a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>
-</span><span id="__span-10-39"><a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="w">        </span><span class="c1">// Actually, we don&#39;t use this app, we just use it to get the resource directory</span>
-</span><span id="__span-10-40"><a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">sample_app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Builder</span><span class="p">::</span><span class="n">default</span><span class="p">()</span>
-</span><span id="__span-10-41"><a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="w">            </span><span class="p">.</span><span class="n">build</span><span class="p">(</span><span class="n">tauri_generate_context</span><span class="p">())</span>
-</span><span id="__span-10-42"><a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="w">            </span><span class="p">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;failed to build sample app&quot;</span><span class="p">);</span>
-</span><span id="__span-10-43"><a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">resource_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample_app</span>
-</span><span id="__span-10-44"><a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a><span class="w">            </span><span class="p">.</span><span class="n">path</span><span class="p">()</span>
-</span><span id="__span-10-45"><a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="w">            </span><span class="p">.</span><span class="n">resource_dir</span><span class="p">()</span>
-</span><span id="__span-10-46"><a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="w">            </span><span class="p">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;failed to get resource dir&quot;</span><span class="p">);</span>
-</span><span id="__span-10-47"><a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>
-</span><span id="__span-10-48"><a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">py_executable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="fm">cfg!</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-49"><a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="w">            </span><span class="n">resource_dir</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;python.exe&quot;</span><span class="p">)</span>
-</span><span id="__span-10-50"><a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-51"><a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a><span class="w">            </span><span class="n">resource_dir</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;bin/python3&quot;</span><span class="p">)</span>
-</span><span id="__span-10-52"><a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a><span class="w">        </span><span class="p">};</span>
-</span><span id="__span-10-53"><a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a>
-</span><span id="__span-10-54"><a id="__codelineno-10-54" name="__codelineno-10-54" href="#__codelineno-10-54"></a><span class="w">        </span><span class="fm">debug_assert!</span><span class="p">(</span>
-</span><span id="__span-10-55"><a id="__codelineno-10-55" name="__codelineno-10-55" href="#__codelineno-10-55"></a><span class="w">            </span><span class="n">py_executable</span><span class="p">.</span><span class="n">is_file</span><span class="p">(),</span>
-</span><span id="__span-10-56"><a id="__codelineno-10-56" name="__codelineno-10-56" href="#__codelineno-10-56"></a><span class="w">            </span><span class="s">&quot;Python executable not found, maybe you forgot to bundle it: {}&quot;</span><span class="p">,</span>
-</span><span id="__span-10-57"><a id="__codelineno-10-57" name="__codelineno-10-57" href="#__codelineno-10-57"></a><span class="w">            </span><span class="n">py_executable</span><span class="p">.</span><span class="n">display</span><span class="p">()</span>
-</span><span id="__span-10-58"><a id="__codelineno-10-58" name="__codelineno-10-58" href="#__codelineno-10-58"></a><span class="w">        </span><span class="p">);</span>
-</span><span id="__span-10-59"><a id="__codelineno-10-59" name="__codelineno-10-59" href="#__codelineno-10-59"></a>
-</span><span id="__span-10-60"><a id="__codelineno-10-60" name="__codelineno-10-60" href="#__codelineno-10-60"></a><span class="w">        </span><span class="n">prepare_freethreaded_python_with_executable</span><span class="p">(</span><span class="n">py_executable</span><span class="p">)</span>
-</span><span id="__span-10-61"><a id="__codelineno-10-61" name="__codelineno-10-61" href="#__codelineno-10-61"></a><span class="w">            </span><span class="p">.</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;failed to initialize embedded python&quot;</span><span class="p">);</span>
-</span><span id="__span-10-62"><a id="__codelineno-10-62" name="__codelineno-10-62" href="#__codelineno-10-62"></a><span class="w">    </span><span class="p">}</span>
-</span><span id="__span-10-63"><a id="__codelineno-10-63" name="__codelineno-10-63" href="#__codelineno-10-63"></a><span class="p">}</span>
-</span><span id="__span-10-64"><a id="__codelineno-10-64" name="__codelineno-10-64" href="#__codelineno-10-64"></a>
-</span><span id="__span-10-65"><a id="__codelineno-10-65" name="__codelineno-10-65" href="#__codelineno-10-65"></a><span class="k">fn</span><span class="w"> </span><span class="nf">execute_python_script</span><span class="p">(</span><span class="n">py</span><span class="p">:</span><span class="w"> </span><span class="nc">Python</span><span class="o">&lt;&#39;</span><span class="nb">_</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">PyResult</span><span class="o">&lt;</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-66"><a id="__codelineno-10-66" name="__codelineno-10-66" href="#__codelineno-10-66"></a><span class="w">    </span><span class="c1">// insert pytauri extension module into `sys.modules`</span>
-</span><span id="__span-10-67"><a id="__codelineno-10-67" name="__codelineno-10-67" href="#__codelineno-10-67"></a><span class="w">    </span><span class="n">append_ext_mod</span><span class="p">(</span><span class="n">wrap_pymodule</span><span class="o">!</span><span class="p">(</span><span class="n">ext_mod</span><span class="p">)(</span><span class="n">py</span><span class="p">).</span><span class="n">into_bound</span><span class="p">(</span><span class="n">py</span><span class="p">))</span><span class="o">?</span><span class="p">;</span>
-</span><span id="__span-10-68"><a id="__codelineno-10-68" name="__codelineno-10-68" href="#__codelineno-10-68"></a>
-</span><span id="__span-10-69"><a id="__codelineno-10-69" name="__codelineno-10-69" href="#__codelineno-10-69"></a><span class="w">    </span><span class="c1">// execute your Python script</span>
-</span><span id="__span-10-70"><a id="__codelineno-10-70" name="__codelineno-10-70" href="#__codelineno-10-70"></a><span class="w">    </span><span class="n">py</span><span class="p">.</span><span class="n">run</span><span class="p">(</span>
-</span><span id="__span-10-71"><a id="__codelineno-10-71" name="__codelineno-10-71" href="#__codelineno-10-71"></a><span class="w">        </span><span class="c1">// equivalent to `python -m tauri_app`</span>
-</span><span id="__span-10-72"><a id="__codelineno-10-72" name="__codelineno-10-72" href="#__codelineno-10-72"></a><span class="w">        </span><span class="n">c</span><span class="s">&quot;from runpy import run_module; run_module(&#39;tauri_app&#39;)&quot;</span><span class="p">,</span>
-</span><span id="__span-10-73"><a id="__codelineno-10-73" name="__codelineno-10-73" href="#__codelineno-10-73"></a><span class="w">        </span><span class="nb">None</span><span class="p">,</span>
-</span><span id="__span-10-74"><a id="__codelineno-10-74" name="__codelineno-10-74" href="#__codelineno-10-74"></a><span class="w">        </span><span class="nb">None</span><span class="p">,</span>
-</span><span id="__span-10-75"><a id="__codelineno-10-75" name="__codelineno-10-75" href="#__codelineno-10-75"></a><span class="w">    </span><span class="p">)</span>
-</span><span id="__span-10-76"><a id="__codelineno-10-76" name="__codelineno-10-76" href="#__codelineno-10-76"></a><span class="p">}</span>
-</span><span id="__span-10-77"><a id="__codelineno-10-77" name="__codelineno-10-77" href="#__codelineno-10-77"></a>
-</span><span id="__span-10-78"><a id="__codelineno-10-78" name="__codelineno-10-78" href="#__codelineno-10-78"></a><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="p">(),</span><span class="w"> </span><span class="n">PyErr</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-79"><a id="__codelineno-10-79" name="__codelineno-10-79" href="#__codelineno-10-79"></a><span class="w">    </span><span class="n">prepare_python_interpreter</span><span class="p">();</span>
-</span><span id="__span-10-80"><a id="__codelineno-10-80" name="__codelineno-10-80" href="#__codelineno-10-80"></a>
-</span><span id="__span-10-81"><a id="__codelineno-10-81" name="__codelineno-10-81" href="#__codelineno-10-81"></a><span class="w">    </span><span class="n">Python</span><span class="p">::</span><span class="n">with_gil</span><span class="p">(</span><span class="o">|</span><span class="n">py</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-82"><a id="__codelineno-10-82" name="__codelineno-10-82" href="#__codelineno-10-82"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">execute_python_script</span><span class="p">(</span><span class="n">py</span><span class="p">);</span>
-</span><span id="__span-10-83"><a id="__codelineno-10-83" name="__codelineno-10-83" href="#__codelineno-10-83"></a>
-</span><span id="__span-10-84"><a id="__codelineno-10-84" name="__codelineno-10-84" href="#__codelineno-10-84"></a><span class="w">        </span><span class="c1">// handle the error</span>
-</span><span id="__span-10-85"><a id="__codelineno-10-85" name="__codelineno-10-85" href="#__codelineno-10-85"></a><span class="w">        </span><span class="n">result</span><span class="p">.</span><span class="n">inspect_err</span><span class="p">(</span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-86"><a id="__codelineno-10-86" name="__codelineno-10-86" href="#__codelineno-10-86"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">is_instance_of</span><span class="p">::</span><span class="o">&lt;</span><span class="n">PySystemExit</span><span class="o">&gt;</span><span class="p">(</span><span class="n">py</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-87"><a id="__codelineno-10-87" name="__codelineno-10-87" href="#__codelineno-10-87"></a><span class="w">                </span><span class="c1">// python interpreter requires to exit normally, it&#39;s not an error</span>
-</span><span id="__span-10-88"><a id="__codelineno-10-88" name="__codelineno-10-88" href="#__codelineno-10-88"></a><span class="w">                </span><span class="k">return</span><span class="p">;</span>
-</span><span id="__span-10-89"><a id="__codelineno-10-89" name="__codelineno-10-89" href="#__codelineno-10-89"></a><span class="w">            </span><span class="p">}</span>
-</span><span id="__span-10-90"><a id="__codelineno-10-90" name="__codelineno-10-90" href="#__codelineno-10-90"></a>
-</span><span id="__span-10-91"><a id="__codelineno-10-91" name="__codelineno-10-91" href="#__codelineno-10-91"></a><span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="fm">cfg!</span><span class="p">(</span><span class="n">all</span><span class="p">(</span><span class="n">not</span><span class="p">(</span><span class="n">debug_assertions</span><span class="p">),</span><span class="w"> </span><span class="n">windows</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-92"><a id="__codelineno-10-92" name="__codelineno-10-92" href="#__codelineno-10-92"></a><span class="w">                </span><span class="c1">// I.g., `windows_subsystem = &quot;windows&quot;` in `main.rs`.</span>
-</span><span id="__span-10-93"><a id="__codelineno-10-93" name="__codelineno-10-93" href="#__codelineno-10-93"></a><span class="w">                </span><span class="c1">// In this case, there is no console to print the error, so we write the error to a file</span>
-</span><span id="__span-10-94"><a id="__codelineno-10-94" name="__codelineno-10-94" href="#__codelineno-10-94"></a><span class="w">                </span><span class="n">write_py_err_to_file</span><span class="p">(</span><span class="n">py</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;error.log&quot;</span><span class="p">).</span><span class="n">expect</span><span class="p">(</span><span class="s">&quot;failed to write error to file&quot;</span><span class="p">);</span>
-</span><span id="__span-10-95"><a id="__codelineno-10-95" name="__codelineno-10-95" href="#__codelineno-10-95"></a><span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-10-96"><a id="__codelineno-10-96" name="__codelineno-10-96" href="#__codelineno-10-96"></a><span class="w">                </span><span class="c1">// we have a console, so we just call `sys.excepthook` and print the error</span>
-</span><span id="__span-10-97"><a id="__codelineno-10-97" name="__codelineno-10-97" href="#__codelineno-10-97"></a><span class="w">                </span><span class="n">e</span><span class="p">.</span><span class="n">print_and_set_sys_last_vars</span><span class="p">(</span><span class="n">py</span><span class="p">);</span>
-</span><span id="__span-10-98"><a id="__codelineno-10-98" name="__codelineno-10-98" href="#__codelineno-10-98"></a><span class="w">            </span><span class="p">}</span>
-</span><span id="__span-10-99"><a id="__codelineno-10-99" name="__codelineno-10-99" href="#__codelineno-10-99"></a><span class="w">        </span><span class="p">})</span>
-</span><span id="__span-10-100"><a id="__codelineno-10-100" name="__codelineno-10-100" href="#__codelineno-10-100"></a><span class="w">    </span><span class="p">})</span>
-</span><span id="__span-10-101"><a id="__codelineno-10-101" name="__codelineno-10-101" href="#__codelineno-10-101"></a><span class="p">}</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="k">use</span><span class="w"> </span><span class="n">pyo3</span><span class="p">::</span><span class="n">wrap_pymodule</span><span class="p">;</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="k">use</span><span class="w"> </span><span class="n">pytauri</span><span class="p">::</span><span class="n">standalone</span><span class="p">::{</span><span class="n">PythonInterpreterBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">PythonInterpreterEnv</span><span class="p">,</span><span class="w"> </span><span class="n">PythonScript</span><span class="p">};</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="k">use</span><span class="w"> </span><span class="n">tauri</span><span class="p">::{</span><span class="n">Builder</span><span class="p">,</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">_</span><span class="p">};</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="k">use</span><span class="w"> </span><span class="n">tauri_app_lib</span><span class="p">::{</span><span class="n">ext_mod</span><span class="p">,</span><span class="w"> </span><span class="n">tauri_generate_context</span><span class="p">};</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="k">fn</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nb">Result</span><span class="o">&lt;</span><span class="n">Infallible</span><span class="p">,</span><span class="w"> </span><span class="nb">Box</span><span class="o">&lt;</span><span class="k">dyn</span><span class="w"> </span><span class="n">Error</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">py_env</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="fm">cfg!</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="c1">// `cfg(dev)` is set by `tauri-build` in `build.rs`, which means running with `tauri dev`,</span>
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="c1">// see: &lt;https://github.com/tauri-apps/tauri/pull/8937&gt;.</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">venv_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">var</span><span class="p">(</span><span class="s">&quot;VIRTUAL_ENV&quot;</span><span class="p">).</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">err</span><span class="o">|</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">            </span><span class="fm">format!</span><span class="p">(</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">                </span><span class="s">&quot;The app is running in tauri dev mode, \</span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="s">                please activate the python virtual environment first \</span>
+</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="s">                or set the `VIRTUAL_ENV` environment variable: {err}&quot;</span><span class="p">,</span>
+</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">            </span><span class="p">)</span>
+</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">        </span><span class="p">})</span><span class="o">?</span><span class="p">;</span>
+</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">        </span><span class="n">PythonInterpreterEnv</span><span class="p">::</span><span class="n">Venv</span><span class="p">(</span><span class="n">PathBuf</span><span class="p">::</span><span class="n">from</span><span class="p">(</span><span class="n">venv_dir</span><span class="p">).</span><span class="n">into</span><span class="p">())</span>
+</span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-26"><a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">        </span><span class="c1">// embedded Python, i.e., bundle mode with `tauri build`.</span>
+</span><span id="__span-10-27"><a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
+</span><span id="__span-10-28"><a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">        </span><span class="c1">// Actually, we don&#39;t use this app, we just use it to get the resource directory</span>
+</span><span id="__span-10-29"><a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">sample_app</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Builder</span><span class="p">::</span><span class="n">default</span><span class="p">()</span>
+</span><span id="__span-10-30"><a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a><span class="w">            </span><span class="p">.</span><span class="n">build</span><span class="p">(</span><span class="n">tauri_generate_context</span><span class="p">())</span>
+</span><span id="__span-10-31"><a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="w">            </span><span class="p">.</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">err</span><span class="o">|</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;failed to build sample app: {err}&quot;</span><span class="p">))</span><span class="o">?</span><span class="p">;</span>
+</span><span id="__span-10-32"><a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a><span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">resource_dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sample_app</span>
+</span><span id="__span-10-33"><a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a><span class="w">            </span><span class="p">.</span><span class="n">path</span><span class="p">()</span>
+</span><span id="__span-10-34"><a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="w">            </span><span class="p">.</span><span class="n">resource_dir</span><span class="p">()</span>
+</span><span id="__span-10-35"><a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a><span class="w">            </span><span class="p">.</span><span class="n">map_err</span><span class="p">(</span><span class="o">|</span><span class="n">err</span><span class="o">|</span><span class="w"> </span><span class="fm">format!</span><span class="p">(</span><span class="s">&quot;failed to get resource dir: {err}&quot;</span><span class="p">))</span><span class="o">?</span><span class="p">;</span>
+</span><span id="__span-10-36"><a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>
+</span><span id="__span-10-37"><a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">        </span><span class="c1">// 👉 When bundled as a standalone App, we will put python in the resource directory</span>
+</span><span id="__span-10-38"><a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">        </span><span class="n">PythonInterpreterEnv</span><span class="p">::</span><span class="n">Standalone</span><span class="p">(</span><span class="n">resource_dir</span><span class="p">.</span><span class="n">into</span><span class="p">())</span>
+</span><span id="__span-10-39"><a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="w">    </span><span class="p">};</span>
+</span><span id="__span-10-40"><a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>
+</span><span id="__span-10-41"><a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="w">    </span><span class="c1">// 👉 Equivalent to `python -m tauri_app`,</span>
+</span><span id="__span-10-42"><a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a><span class="w">    </span><span class="c1">// i.e, run the `src-tauri/python/tauri_app/__main__.py`</span>
+</span><span id="__span-10-43"><a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">py_script</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PythonScript</span><span class="p">::</span><span class="n">Module</span><span class="p">(</span><span class="s">&quot;tauri_app&quot;</span><span class="p">.</span><span class="n">into</span><span class="p">());</span>
+</span><span id="__span-10-44"><a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>
+</span><span id="__span-10-45"><a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="w">    </span><span class="c1">// 👉 `ext_mod` is your extension module, we export it from memory,</span>
+</span><span id="__span-10-46"><a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="w">    </span><span class="c1">// so you don&#39;t need to compile it into a binary file (.pyd/.so).</span>
+</span><span id="__span-10-47"><a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">builder</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-10-48"><a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a><span class="w">        </span><span class="n">PythonInterpreterBuilder</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="n">py_env</span><span class="p">,</span><span class="w"> </span><span class="n">py_script</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">py</span><span class="o">|</span><span class="w"> </span><span class="n">wrap_pymodule</span><span class="o">!</span><span class="p">(</span><span class="n">ext_mod</span><span class="p">)(</span><span class="n">py</span><span class="p">));</span>
+</span><span id="__span-10-49"><a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">interpreter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">builder</span><span class="p">.</span><span class="n">build</span><span class="p">()</span><span class="o">?</span><span class="p">;</span>
+</span><span id="__span-10-50"><a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>
+</span><span id="__span-10-51"><a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a><span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">exit_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">interpreter</span><span class="p">.</span><span class="n">run</span><span class="p">();</span>
+</span><span id="__span-10-52"><a id="__codelineno-10-52" name="__codelineno-10-52" href="#__codelineno-10-52"></a><span class="w">    </span><span class="n">std</span><span class="p">::</span><span class="n">process</span><span class="p">::</span><span class="n">exit</span><span class="p">(</span><span class="n">exit_code</span><span class="p">);</span>
+</span><span id="__span-10-53"><a id="__codelineno-10-53" name="__codelineno-10-53" href="#__codelineno-10-53"></a><span class="p">}</span>
 </span></code></pre></div>
 <h2 id="launch-the-app-in-dev-mode">Launch the app in dev mode<a class="headerlink" href="#launch-the-app-in-dev-mode" title="Permanent link">&para;</a></h2>
 <p>The <code>tauri-cli</code> has the ability to watch code changes and hot reload. Before starting, we need to add the following file to tell <code>tauri-cli</code> to ignore the python bytecode:</p>
@@ -2008,7 +1968,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-22T06:24:29+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-22</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-01-25T07:10:54+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-01-25</span>
   </span>
 
     
