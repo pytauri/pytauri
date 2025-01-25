@@ -24,7 +24,8 @@
 
 ### Internal
 
-- [#52](https://github.com/WSH032/pytauri/pull/52) - internal: set `sys._pytauri_standalone=True` when built as standalone app (i.e., launch from rust).
+- [#54](https://github.com/WSH032/pytauri/pull/54) - feat: export the extension module to `sys.modules["__pytauri_ext_mod__"]` if on standalone mode.
+- [#52](https://github.com/WSH032/pytauri/pull/52) - feat: set `sys._pytauri_standalone=True` when run on standalone app (i.e., launch from rust).
 - [#51](https://github.com/WSH032/pytauri/pull/51) - refactor: use `Python::run` with `locals` as arguments to execute `_append_ext_mod.py` for better performance.
 
 ## [0.1.0-beta.0]

@@ -1,5 +1,4 @@
 import sys
-from importlib.metadata import entry_points
 from multiprocessing import set_executable, set_start_method
 from types import ModuleType
 from typing import TYPE_CHECKING, cast
@@ -44,20 +43,10 @@ set_executable(CURRENT_EXE)
 # see the implementation of `multiprocessing.spawn.get_command_line`
 setattr(sys, "frozen", True)  # noqa: B010
 
-# a private custom var, to info python we are built as standalone app.
+# a private custom var, to info python we are running as standalone app.
 setattr(sys, "_pytauri_standalone", True)  # noqa: B010
 
 
 ### Append Ext Mod  ###
 
-if sys.version_info >= (3, 10):
-    # To avoid deprecation warnings
-    eps = entry_points(group="pytauri", name="ext_mod")
-else:
-    # TODO: how to specify the name?
-    eps = entry_points()["pytauri"]
-
-
-ext_mod_path = next(iter(eps)).value
-
-sys.modules[ext_mod_path] = EXT_MOD
+sys.modules["__pytauri_ext_mod__"] = EXT_MOD
