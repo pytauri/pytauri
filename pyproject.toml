@@ -50,16 +50,21 @@ workspaces = [
     "pytauri",
     "pytauri-plugin-notification",
 ]
+# NOTE: when adding examples,
+# remember to update `[tool.uv.sources]` and `[tool.uv.workspace.members]`
+# and [tool.coverage.run.source] in `pyproject.toml`.
 examples = [
     "setuptools >= 64",
     "setuptools-scm >= 8",
     "setuptools-rust == 1.*",
     "tauri-app",
+    "nicegui-app",
 ]
 
 
 [tool.uv.sources]
 tauri-app = { workspace = true }
+nicegui-app = { workspace = true }
 codelldb = { workspace = true }
 pyfuture = { workspace = true }
 pyo3-utils = { workspace = true }
@@ -68,7 +73,7 @@ pytauri-plugin-notification = { workspace = true }
 
 # https://docs.astral.sh/uv/concepts/workspaces/
 [tool.uv.workspace]
-members = ["python/*", "examples/tauri-app/src-tauri"]
+members = ["python/*", "examples/tauri-app/src-tauri", "examples/nicegui-app"]
 
 
 [tool.pyright]
@@ -85,8 +90,8 @@ exclude = [
     "**/dist",
     "**/.*",
     "./.venv",
-    "examples/tauri-app/src-tauri/pyembed/",
-    "examples/tauri-app/src-tauri/frontend/",
+    "examples/**/pyembed/",
+    "examples/**/frontend/",
 ]
 
 
@@ -152,6 +157,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "docs_src/**/*.py" = ["D"]
+"examples/**/*.py" = ["D"]
 
 # https://docs.astral.sh/ruff/settings/#pydocstyle
 [tool.ruff.lint.pydocstyle]
@@ -163,6 +169,7 @@ convention = "google"
 branch = true
 source = [
     "tauri_app",
+    "nicegui_app",
     "codelldb",
     "pyfuture",
     "pyo3_utils",

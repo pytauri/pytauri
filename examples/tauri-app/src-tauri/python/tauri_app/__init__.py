@@ -1,7 +1,3 @@
-# ruff: noqa: D101, D103
-
-"""The tauri-app."""
-
 from os import environ
 
 # This is an env var that can only be used internally by pytauri to distinguish
