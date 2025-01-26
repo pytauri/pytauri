@@ -1651,6 +1651,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/56">#56</a> - perf(pytauri): all IPC methods that previously accepted <code>bytearray</code> as a parameter now only accept <code>bytes</code> as a parameter.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/52">#52</a> - refactor(standalone)!: new API for preparing python interpreter.
     The <code>pytauri::standalone</code> module has been completely rewritten.
     Previously, you used <code>prepare_freethreaded_python_with_executable</code> and <code>append_ext_mod</code>. Now, you need to use <code>PythonInterpreterBuilder</code>.
