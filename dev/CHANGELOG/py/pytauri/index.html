@@ -1716,7 +1716,27 @@
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="https://github.com/WSH032/pytauri/pull/56">#56</a> - perf: all IPC methods that previously accepted <code>bytearray</code> as a parameter now only accept <code>bytes</code> as a parameter.</li>
+<li>
+<p><a href="https://github.com/WSH032/pytauri/pull/57">#57</a> - refactor: remove <code>RunEventEnum</code>, use matched <code>RunEvent</code> directly.
+    Previously:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">run_event_enum</span><span class="p">:</span> <span class="n">RunEventEnumType</span> <span class="o">=</span> <span class="n">run_event</span><span class="o">.</span><span class="n">match_ref</span><span class="p">()</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">match</span> <span class="n">run_event_enum</span><span class="p">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="k">case</span> <span class="n">RunEventEnum</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Now:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">match</span> <span class="n">run_event</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="k">case</span> <span class="n">RunEvent</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+</span></code></pre></div>
+</li>
+<li>
+<p><a href="https://github.com/WSH032/pytauri/pull/56">#56</a> - perf: all IPC methods that previously accepted <code>bytearray</code> as a parameter now only accept <code>bytes</code> as a parameter.</p>
+</li>
 </ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
