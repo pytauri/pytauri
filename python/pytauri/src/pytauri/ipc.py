@@ -59,7 +59,7 @@ __all__ = [
 
 _logger = getLogger(__name__)
 
-_InvokeResponse = Union[bytes, bytearray]
+_InvokeResponse = bytes
 
 _PyHandlerType = Callable[..., Awaitable[_InvokeResponse]]
 
@@ -196,7 +196,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         Specifically:
 
         - If `pyfunc` has a `KEYWORD_ONLY` parameter named `body`, will check if `issubclass(body, BaseModel)` is true,
-          and if so, wrap it as a new function with `body: bytearray` parameter.
+          and if so, wrap it as a new function with `body: bytes` parameter.
         - If `pyfunc` conforms to `issubclass(return_annotation, BaseModel)`,
           wrap it as a new function with `return_annotation: bytes` return type.
         - If not, will return the original `pyfunc`.
@@ -223,18 +223,18 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             if issubclass(body_type, BaseModel):
                 serializer = body_type.model_validate_json
             else:
-                if not issubclass(body_type, bytearray):
+                if not issubclass(body_type, bytes):
                     raise ValueError(
-                        f"Expected `{body_key}` to be subclass of {BaseModel} or {bytearray}, "
+                        f"Expected `{body_key}` to be subclass of {BaseModel} or {bytes}, "
                         f"got {body_type}"
                     )
 
         if issubclass(return_annotation, BaseModel):
             deserializer = return_annotation.__pydantic_serializer__.to_json
         else:
-            if not issubclass(return_annotation, (bytes, bytearray)):
+            if not issubclass(return_annotation, bytes):
                 raise ValueError(
-                    f"Expected `return_annotation` to be subclass of {BaseModel}, {bytes} or {bytearray}, "
+                    f"Expected `return_annotation` to be subclass of {BaseModel} or {bytes}, "
                     f"got {return_annotation}"
                 )
 
@@ -246,12 +246,12 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             nonlocal serializer, deserializer
 
             if serializer is not None:
-                body_bytearray = kwargs[body_key]
-                assert isinstance(body_bytearray, bytearray)  # PERF
+                body_bytes = kwargs[body_key]
+                assert isinstance(body_bytes, bytes)  # PERF
                 try:
-                    body_model = serializer(body_bytearray)
+                    body_model = serializer(body_bytes)
                 except ValidationError as e:
-                    raise InvokeException(str(e)) from e
+                    raise InvokeException(repr(e)) from e
                 kwargs[body_key] = body_model
 
             resp = await pyfunc(*args, **kwargs)
@@ -266,9 +266,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         new_parameters = None
         if serializer is not None:
             new_parameters = parameters.copy()
-            new_parameters[body_key] = parameters[body_key].replace(
-                annotation=bytearray
-            )
+            new_parameters[body_key] = parameters[body_key].replace(annotation=bytes)
 
         # see: <https://docs.python.org/3.13/library/inspect.html#inspect.signature>
         wrapper.__signature__ = (  # pyright: ignore[reportAttributeAccessIssue]
@@ -288,7 +286,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         """Check the signature of a `Callable` and return the parameters.
 
         Check if the [Signature][inspect.Signature] of `pyfunc` conforms to [ArgumentsType][pytauri.ipc.ArgumentsType],
-        and if the return value is a subclass of [bytes][] or [bytearray][].
+        and if the return value is a subclass of [bytes][].
 
         Args:
             pyfunc: The `Callable` to check.
@@ -310,7 +308,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         return_annotation = sig.return_annotation
 
         arguments_type = {
-            "body": bytearray,
+            "body": bytes,
             "app_handle": AppHandle,
             "webview_window": WebviewWindow,
         }
@@ -331,9 +329,9 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             # after checking, we make sure the `parameters` are valid
             parameters = cast(ParametersType, parameters)
 
-        if not issubclass(return_annotation, (bytes, bytearray)):
+        if not issubclass(return_annotation, bytes):
             raise ValueError(
-                f"Expected return_annotation to be subclass of {bytes} or {bytearray}, got `{return_annotation}`"
+                f"Expected return_annotation to be subclass of {bytes}, got `{return_annotation}`"
             )
 
         return parameters
@@ -515,7 +513,7 @@ class Channel(Generic[_ModelTypeVar]):
         """See [pytauri.ffi.ipc.Channel.id][]."""
         return self._ffi_channel.id()
 
-    def send(self, data: Union[bytearray, bytes], /) -> None:
+    def send(self, data: bytes, /) -> None:
         """See [pytauri.ffi.ipc.Channel.send][]."""
         self._ffi_channel.send(data)
 

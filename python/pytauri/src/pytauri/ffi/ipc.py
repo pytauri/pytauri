@@ -5,7 +5,6 @@ from typing import (
     Any,
     Generic,
     Optional,
-    Union,
     final,
 )
 
@@ -52,7 +51,7 @@ class ArgumentsType(TypedDict, total=False):
     You can use it like `**kwargs`, for example `command(**arguments)`.
     """
 
-    body: bytearray
+    body: bytes
     """The body of ipc message."""
     app_handle: "AppHandle"
     """The handle of the app."""
@@ -86,7 +85,7 @@ if TYPE_CHECKING:
             is not the same object as the input `parameters`.
             """
 
-        def resolve(self, value: Union[bytearray, bytes]) -> None:
+        def resolve(self, value: bytes) -> None:
             """Consumes this `Invoke` and resolves the command with the given value."""
             ...
 
@@ -103,7 +102,7 @@ if TYPE_CHECKING:
             """The bound arguments of the current command."""
             ...
 
-        def resolve(self, value: Union[bytearray, bytes]) -> None:
+        def resolve(self, value: bytes) -> None:
             """Consumes this `InvokeResolver` and resolves the command with the given value."""
 
         def reject(self, value: str) -> None:
@@ -136,7 +135,7 @@ if TYPE_CHECKING:
             """The channel identifier."""
             ...
 
-        def send(self, data: Union[bytearray, bytes], /) -> None:
+        def send(self, data: bytes, /) -> None:
             """Sends the given data through the channel."""
             ...
 

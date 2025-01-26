@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### BREAKING
 
+- [#56](https://github.com/WSH032/pytauri/pull/56) - perf(pytauri): all IPC methods that previously accepted `bytearray` as a parameter now only accept `bytes` as a parameter.
 - [#52](https://github.com/WSH032/pytauri/pull/52) - refactor(standalone)!: new API for preparing python interpreter.
     The `pytauri::standalone` module has been completely rewritten.
     Previously, you used `prepare_freethreaded_python_with_executable` and `append_ext_mod`. Now, you need to use `PythonInterpreterBuilder`.

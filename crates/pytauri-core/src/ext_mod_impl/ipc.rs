@@ -3,7 +3,7 @@ use std::{borrow::Cow, str::FromStr as _};
 use pyo3::{
     exceptions::PyValueError,
     prelude::*,
-    types::{PyByteArray, PyDict, PyMapping, PyString, PyType},
+    types::{PyBytes, PyDict, PyMapping, PyString, PyType},
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
 use tauri::ipc::{
@@ -122,7 +122,7 @@ impl Invoke {
     /// Pass in a Python dictionary, which can contain the following
     /// optional keys (values are arbitrary):
     ///
-    /// - [Self::BODY_KEY] : [PyByteArray]
+    /// - [Self::BODY_KEY] : [PyBytes]
     /// - [Self::APP_HANDLE_KEY] : [crate::ext_mod::AppHandle]
     /// - [Self::WEBVIEW_WINDOW_KEY] : [crate::ext_mod::webview::WebviewWindow]
     ///
@@ -159,7 +159,7 @@ impl Invoke {
                     return Ok(None);
                 }
                 InvokeBody::Raw(body) => {
-                    arguments.set_item(Self::BODY_KEY, PyByteArray::new(py, body))?
+                    arguments.set_item(Self::BODY_KEY, PyBytes::new(py, body))?
                 }
             }
         }

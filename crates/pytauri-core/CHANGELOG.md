@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#56](https://github.com/WSH032/pytauri/pull/56) - perf: `Invoke::bind_to` now returns `[Self::BODY_KEY]`: `PyBytes` instead of `PyByteArray`.
+
 ### Added
 
 - [#50](https://github.com/WSH032/pytauri/pull/50) - feat: add `ipc::Channel`, `ipc::JavaScriptChannelId`, `webview::Webview`, `webview::WebviewWindow::as_ref::<webview>` for [channels ipc](https://tauri.app/develop/calling-frontend/#channels).
