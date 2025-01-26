@@ -19,7 +19,7 @@ dependencies = [
     # Deprecated: once we no longer support versions Python 3.9, we can remove this dependency.
     "importlib-metadata >= 8",
     # workspaces, must use `==`
-    "pyo3-utils == 0.1.*",
+    # ...
 ]
 
 [project.urls]
@@ -29,7 +29,7 @@ source = "https://github.com/WSH032/pytauri"
 
 
 [tool.uv.sources]
-pyo3-utils = { workspace = true }
+# ...
 
 [build-system]
 requires = ["hatchling"]

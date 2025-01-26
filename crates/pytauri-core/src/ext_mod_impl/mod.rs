@@ -11,7 +11,6 @@ use std::{
 
 use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject};
 use pyo3_utils::{
-    py_match::PyMatchRef,
     py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT0, PyWrapperT2},
     ungil::UnsafeUngilExt,
 };
@@ -22,7 +21,7 @@ use crate::tauri_runtime::Runtime;
 /// see also: [tauri::RunEvent]
 #[pyclass(frozen)]
 #[non_exhaustive]
-pub enum RunEventEnum {
+pub enum RunEvent {
     Exit(),
     #[non_exhaustive]
     ExitRequested {
@@ -51,50 +50,26 @@ pub enum RunEventEnum {
     // TrayIconEvent(tauri::tray::TrayIconEvent),
 }
 
-#[pyclass(frozen)]
-#[non_exhaustive]
-pub struct RunEvent(pub PyWrapper<PyWrapperT0<tauri::RunEvent>>);
-
-impl PyMatchRef for RunEvent {
-    type Output = RunEventEnum;
-
-    fn match_ref(&self) -> Self::Output {
-        match self.0.inner_ref().deref() {
-            tauri::RunEvent::Exit => RunEventEnum::Exit(),
+impl RunEvent {
+    fn new(value: tauri::RunEvent) -> Self {
+        match value {
+            tauri::RunEvent::Exit => Self::Exit(),
             tauri::RunEvent::ExitRequested {
                 code, /* TODO */ ..
-            } => RunEventEnum::ExitRequested { code: *code },
+            } => Self::ExitRequested { code },
             tauri::RunEvent::WindowEvent {
                 label, /* TODO */ ..
-            } => RunEventEnum::WindowEvent {
-                label: label.to_owned(),
-            },
+            } => Self::WindowEvent { label },
             tauri::RunEvent::WebviewEvent {
                 label, /* TODO */ ..
-            } => RunEventEnum::WebviewEvent {
-                label: label.to_owned(),
-            },
-            tauri::RunEvent::Ready => RunEventEnum::Ready(),
-            tauri::RunEvent::Resumed => RunEventEnum::Resumed(),
-            tauri::RunEvent::MainEventsCleared => RunEventEnum::MainEventsCleared(),
-            tauri::RunEvent::MenuEvent(/* TODO */ _) => RunEventEnum::MenuEvent(),
+            } => Self::WebviewEvent { label },
+            tauri::RunEvent::Ready => Self::Ready(),
+            tauri::RunEvent::Resumed => Self::Resumed(),
+            tauri::RunEvent::MainEventsCleared => Self::MainEventsCleared(),
+            tauri::RunEvent::MenuEvent(/* TODO */ _) => Self::MenuEvent(),
             // TODO: tauri::RunEvent::TrayIconEvent,
-            event => unimplemented!("Unimplemented RunEvent: {event:?}"),
+            event => unimplemented!("Please make a issue for unimplemented RunEvent: {event:?}"),
         }
-    }
-}
-
-#[pymethods]
-impl RunEvent {
-    fn match_ref(&self) -> <Self as PyMatchRef>::Output {
-        <Self as PyMatchRef>::match_ref(self)
-    }
-}
-
-impl RunEvent {
-    #[inline]
-    fn new(run_event: tauri::RunEvent) -> Self {
-        Self(PyWrapper::new0(run_event))
     }
 }
 

@@ -28,8 +28,7 @@ __all__ = [
     "Listener",
     "Manager",
     "RunEvent",
-    "RunEventEnum",
-    "RunEventEnumType",
+    "RunEventType",
     "builder_factory",
     "context_factory",
 ]
@@ -42,14 +41,12 @@ class _InvokeHandlerProto(Protocol):
     def __call__(self, invoke: "Invoke", /) -> Any: ...
 
 
-_AppRunCallbackType = Callable[["AppHandle", "RunEvent"], None]
+_AppRunCallbackType = Callable[["AppHandle", "RunEventType"], None]
 
 _EventHandlerType = Callable[["Event"], None]
 
 
 if TYPE_CHECKING:
-    from pyo3_utils import PyMatchRefMixin
-
     from pytauri.ffi import webview
 
     @final
@@ -151,11 +148,7 @@ if TYPE_CHECKING:
         """[tauri::Context](https://docs.rs/tauri/latest/tauri/struct.Context.html)"""
 
     @final
-    class RunEvent(PyMatchRefMixin["RunEventEnumType"]):
-        """[tauri::RunEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html)"""
-
-    @final
-    class RunEventEnum:
+    class RunEvent:
         """[tauri::RunEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html)"""
 
         @final
@@ -325,7 +318,6 @@ else:
     BuilderArgs = pytauri_mod.BuilderArgs
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
-    RunEventEnum = pytauri_mod.RunEventEnum
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -333,17 +325,17 @@ else:
     Listener = pytauri_mod.Listener
 
 
-RunEventEnumType: TypeAlias = Union[
-    RunEventEnum.Exit,
-    RunEventEnum.ExitRequested,
-    RunEventEnum.WindowEvent,
-    RunEventEnum.WebviewEvent,
-    RunEventEnum.Ready,
-    RunEventEnum.Resumed,
-    RunEventEnum.MainEventsCleared,
-    RunEventEnum.MenuEvent,
+RunEventType: TypeAlias = Union[
+    RunEvent.Exit,
+    RunEvent.ExitRequested,
+    RunEvent.WindowEvent,
+    RunEvent.WebviewEvent,
+    RunEvent.Ready,
+    RunEvent.Resumed,
+    RunEvent.MainEventsCleared,
+    RunEvent.MenuEvent,
 ]
-"""See [RunEventEnum][pytauri.RunEventEnum] for details."""
+"""See [RunEvent][pytauri.ffi.RunEvent] for details."""
 
 ImplManager: TypeAlias = Union[App, AppHandle, "webview.WebviewWindow"]
 

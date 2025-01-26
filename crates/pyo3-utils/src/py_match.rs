@@ -1,4 +1,11 @@
-//! When you want to expose an enum to Python, you should implement the trait in this module.
+//! When you want to expose an **state machine** enum to Python,
+//! you should implement the trait in this module.
+//!
+//! # Tips
+//!
+//! In most cases, `enum` is just like Python's `Union` type, rather than a state machine.
+//! For such cases, you can directly return the matched `FooEnum`,
+//! without creating a newtype `struct Foo(third_party::Foo)`.
 //!
 //! # Example:
 /*!

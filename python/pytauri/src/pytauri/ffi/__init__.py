@@ -19,8 +19,7 @@ from pytauri.ffi.lib import (
     Listener,
     Manager,
     RunEvent,
-    RunEventEnum,
-    RunEventEnumType,
+    RunEventType,
     builder_factory,
     context_factory,
 )
@@ -39,8 +38,7 @@ __all__ = (
     "Listener",
     "Manager",
     "RunEvent",
-    "RunEventEnum",
-    "RunEventEnumType",
+    "RunEventType",
     "builder_factory",
     "context_factory",
 )

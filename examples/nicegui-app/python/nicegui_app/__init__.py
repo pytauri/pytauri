@@ -21,7 +21,7 @@ from pytauri import (
     BuilderArgs,
     Manager,
     RunEvent,
-    RunEventEnum,
+    RunEventType,
     builder_factory,
     context_factory,
 )
@@ -135,15 +135,13 @@ def main() -> None:
         global app_handle
         app_handle = tauri_app.handle()
 
-        def tauri_run_callback(app_handle: AppHandle, run_event: RunEvent) -> None:
+        def tauri_run_callback(app_handle: AppHandle, run_event: RunEventType) -> None:
             """Add a callback to show the main window after the server is started and
             shutdown the server when the app is going to exit."""
 
-            run_event_enum = run_event.match_ref()
-
             # show the main window after the server is started,
             # and set the global variable `webview_window`.
-            if isinstance(run_event_enum, RunEventEnum.Ready):
+            if isinstance(run_event, RunEvent.Ready):
                 webview_window_ = Manager.get_webview_window(app_handle, "main")
                 assert (
                     webview_window_ is not None
@@ -164,7 +162,7 @@ def main() -> None:
                         "document.body.innerHTML = `failed to start front server, see backend logs for details`"
                     )
 
-            elif isinstance(run_event_enum, RunEventEnum.Exit):
+            elif isinstance(run_event, RunEvent.Exit):
                 # user closed the window so the app is going to exit,
                 # we need shutdown the front server first.
                 server.request_shutdown()

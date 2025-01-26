@@ -4,6 +4,28 @@
 
 ### BREAKING
 
+- [#57](https://github.com/WSH032/pytauri/pull/57) - refactor: remove `RunEventEnum`, use matched `RunEvent` directly.
+    Previously:
+
+    ```python
+    def callback(app_handle: AppHandle, run_event: RunEvent) -> None:
+        run_event_enum: RunEventEnumType = run_event.match_ref()
+        match run_event_enum:
+            case RunEventEnum.Ready: ...
+
+    app.run(callback)
+    ```
+
+    Now:
+
+    ```python
+    def callback(app_handle: AppHandle, run_event: RunEventType) -> None:
+        match run_event:
+            case RunEvent.Ready: ...
+
+    app.run(callback)
+    ```
+
 - [#56](https://github.com/WSH032/pytauri/pull/56) - perf: all IPC methods that previously accepted `bytearray` as a parameter now only accept `bytes` as a parameter.
 
 ### Added

@@ -4,6 +4,7 @@
 
 ### BREAKING
 
+- [#57](https://github.com/WSH032/pytauri/pull/57) - refactor: remove `RunEventEnum`, use matched `RunEvent` directly.
 - [#56](https://github.com/WSH032/pytauri/pull/56) - perf: `Invoke::bind_to` now returns `[Self::BODY_KEY]`: `PyBytes` instead of `PyByteArray`.
 
 ### Added
