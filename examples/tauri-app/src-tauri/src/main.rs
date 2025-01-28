@@ -4,7 +4,9 @@
 use std::{convert::Infallible, env::var, error::Error, path::PathBuf};
 
 use pyo3::wrap_pymodule;
-use pytauri::standalone::{PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript};
+use pytauri::standalone::{
+    dunce::simplified, PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript,
+};
 use tauri::{Builder, Manager as _};
 
 use tauri_app_lib::{ext_mod, tauri_generate_context};
@@ -33,6 +35,9 @@ fn main() -> Result<Infallible, Box<dyn Error>> {
             .path()
             .resource_dir()
             .map_err(|err| format!("failed to get resource dir: {err}"))?;
+
+        // 👉 Remove the UNC prefix `\\?\`, Python ecosystems don't like it.
+        let resource_dir = simplified(&resource_dir).to_owned();
 
         // 👉 When bundled as a standalone App, we will put python in the resource directory
         PythonInterpreterEnv::Standalone(resource_dir.into())

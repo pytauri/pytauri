@@ -11,6 +11,7 @@
 
 ### Added
 
+- [#60](https://github.com/WSH032/pytauri/pull/60) - feat: re-export `dunce::simplified` to remove `resource_dir()` UNC path prefix `\\?\` for `PythonInterpreterEnv::Standalone`. Fix [pallets/jinja#1675](https://github.com/pallets/jinja/issues/1675#issuecomment-1323555773) for `nicegui-app` standalone example.
 - [#51](https://github.com/WSH032/pytauri/pull/51) - feat: support `multiprocessing` for standalone app.
     - For standalone app:
         - set `sys.executable` to the actual python interpreter executable path.

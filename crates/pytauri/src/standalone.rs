@@ -290,6 +290,11 @@ pub enum PythonInterpreterEnv<'a> {
     ///
     /// [python-build-standalone]: https://github.com/astral-sh/python-build-standalone
     ///
+    /// # Note
+    ///
+    /// If you get the directory via [tauri::path::PathResolver::resource_dir],
+    /// you had better remove the UNC prefix `\\?\` by [self::dunce].
+    ///
     /// ## Windows
     ///
     /// ```text
@@ -391,6 +396,21 @@ pub enum PythonScript<'a> {
 }
 
 /// Build a Python interpreter for your script.
+///
+/// # Behavior
+///
+/// > This is the behavior at the time of writing and may change in the future.
+///
+/// - Set `PyConfig.program_name` to `std::env::current_exe()`.
+/// - Set `sys.executable` to the actual python interpreter executable path.
+/// - Set `PyConfig.home` to [PythonInterpreterEnv::Standalone::0].
+/// - Set `sys.argv` to `std::env::args_os()`.
+/// - Set `PyConfig.parse_argv` to `false`.
+/// - Set `sys.frozen` to `True`.
+/// - Call `multiprocessing.set_start_method` with
+///     - windows: `spawn`
+///     - unix: `fork`
+/// - Call `multiprocessing.set_executable` with `std::env::current_exe()`
 #[non_exhaustive]
 pub struct PythonInterpreterBuilder<'a, M>
 where
@@ -437,21 +457,6 @@ where
     ///
     /// NOTE: you can only build only one Python interpreter per process,
     /// or you will get a [NewInterpreterError].
-    ///
-    /// # Behavior
-    ///
-    /// > This is the behavior at the time of writing and may change in the future.
-    ///
-    /// - Set `PyConfig.program_name` to `std::env::current_exe()`.
-    /// - Set `sys.executable` to the actual python interpreter executable path.
-    /// - Set `sys.argv` to `std::env::args_os()`.
-    /// - Set `PyConfig.parse_argv` to `false`.
-    /// - Set `sys.frozen` to `True`.
-    /// - Call `multiprocessing.set_start_method` with
-    ///     - windows: `spawn`
-    ///     - unix: `fork`
-    /// - Call `multiprocessing.set_executable` with `std::env::current_exe()`
-    ///
     pub fn build(self) -> NewInterpreterResult<PythonInterpreter> {
         let current_exe = current_exe().map_err(|e| {
             NewInterpreterError::Dynamic(format!(
@@ -593,4 +598,40 @@ impl Drop for PythonInterpreter {
             pyffi::Py_FinalizeEx();
         }
     }
+}
+
+/// This is a re-export of crate [::dunce] to help you remove the UNC prefix `\\?\` for [PythonInterpreterEnv::Standalone].
+///
+/// Most Python ecosystems do not support Windows [Universal Naming Convention (UNC) paths] (e.g., `\\?\E:\xxx`).
+/// However, some Tauri APIs may return UNC paths, such as [tauri::path::PathResolver::resource_dir].
+///
+/// We re-export [dunce::simplified] to help you remove the UNC prefix,
+/// which is especially important when setting [PythonInterpreterEnv::Standalone];
+/// because if you don't do this, it will cause:
+///
+/// 1. `sys.prefix` and `sys.exec_prefix` have UNC prefix
+/// 2. further causing `stdlib` and `site-packages` in `sys.path` to have a UNC prefix
+/// 3. further causing `__file__` and `module.__file__` to have a UNC prefix
+/// 4. then it may cause [some Python packages to not work properly](https://github.com/pallets/jinja/issues/1675#issuecomment-1323555773).
+///
+/// [Universal Naming Convention (UNC) paths]: https://learn.microsoft.com/dotnet/standard/io/file-path-formats#unc-paths
+///
+/// # Example
+///
+/**
+```rust
+use pytauri::standalone::{dunce::simplified, PythonInterpreterEnv};
+use tauri::{path::PathResolver, Result, Runtime};
+
+fn py_env<R: Runtime>(path_resolver: &PathResolver<R>) -> Result<PythonInterpreterEnv<'_>> {
+    let resource_dir = path_resolver.resource_dir()?;
+
+    // 👉 Remove the UNC prefix `\\?\`, Python ecosystems don't like it.
+    let resource_dir = simplified(&resource_dir).to_owned();
+    Ok(PythonInterpreterEnv::Standalone(resource_dir.into()))
+}
+```
+*/
+pub mod dunce {
+    pub use dunce::simplified;
 }

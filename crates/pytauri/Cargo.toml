@@ -21,14 +21,15 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 
 [features]
-standalone = ["dep:libc"] # MPL2.0
-
+standalone = ["dep:libc", "dep:dunce"]
 [dependencies]
 tauri = { workspace = true }
 tauri-plugin-pytauri = { workspace = true }
 
 pyo3 = { workspace = true }
+
 libc = { workspace = true, optional = true }
+dunce = { workspace = true, optional = true }
 
 # workspace dependencies
 pytauri-core = { workspace = true }

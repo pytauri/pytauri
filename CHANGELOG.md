@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- [#60](https://github.com/WSH032/pytauri/pull/60) - update `examples` `main.rs` to remove `resource_dir()` UNC path prefix `\\?\` for `PythonInterpreterEnv::Standalone`. Fix [pallets/jinja#1675](https://github.com/pallets/jinja/issues/1675#issuecomment-1323555773) for `nicegui-app` standalone example.
 - [#55](https://github.com/WSH032/pytauri/pull/55) - Add `integrate with nicegui` example `nicegui-app`. See `examples/nicegui-app`.
 - [#52](https://github.com/WSH032/pytauri/pull/52) - update `examples/tauri-app` `main.rs` for new API to prepare python interpreter.
 - [#52](https://github.com/WSH032/pytauri/pull/52) - add the usage of `multiprocessing.freeze_support` in `examples/tauri-app` `__main__.py`.
