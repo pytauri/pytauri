@@ -28,8 +28,12 @@ __all__ = [
     "Builder",
     "BuilderArgs",
     "Context",
+    "Emitter",
     "Event",
     "EventId",
+    "EventTarget",
+    "EventTargetType",
+    "ImplEmitter",
     "ImplListener",
     "ImplManager",
     "Listener",
@@ -510,6 +514,97 @@ if TYPE_CHECKING:
         @property
         def size(self) -> "SizeType": ...
 
+    @final
+    class EventTarget:
+        """[tauri::EventTarget](https://docs.rs/tauri/latest/tauri/enum.EventTarget.html)"""
+
+        @final
+        class Any:
+            """Any and all event targets."""
+
+            def __new__(cls, /) -> Self: ...
+
+        @final
+        class AnyLabel:
+            """Any `Window`, `Webview` or `WebviewWindow` that have this label."""
+
+            label: str
+            """Target label."""
+
+            def __new__(cls, label: str, /) -> Self: ...
+
+        @final
+        class App:
+            """App and AppHandle targets."""
+
+            def __new__(cls, /) -> Self: ...
+
+        @final
+        class Window:
+            """`Window` target."""
+
+            label: str
+            """window label."""
+
+            def __new__(cls, label: str, /) -> Self: ...
+
+        @final
+        class Webview:
+            """Webview target."""
+
+            label: str
+            """webview label."""
+
+            def __new__(cls, label: str, /) -> Self: ...
+
+        @final
+        class WebviewWindow:
+            """WebviewWindow target."""
+
+            label: str
+            """webview window label."""
+
+            def __new__(cls, label: str, /) -> Self: ...
+
+    class Emitter:
+        """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)"""
+
+        @staticmethod
+        def emit_str(
+            slf: "ImplEmitter",
+            event: str,
+            payload: str,
+            /,
+        ) -> None:
+            """Similar to [`Emitter::emit`] but the payload is json serialized."""
+            ...
+
+        @staticmethod
+        def emit_str_to(
+            slf: "ImplEmitter",
+            target: "EventTargetType",
+            event: str,
+            payload: str,
+            /,
+        ) -> None:
+            """Similar to [`Emitter::emit_to`] but the payload is json serialized."""
+            ...
+
+        @staticmethod
+        def emit_str_filter(
+            slf: "ImplEmitter",
+            event: str,
+            payload: str,
+            filter: Callable[["EventTargetType"], bool],  # noqa: A002
+            /,
+        ) -> None:
+            """Similar to [`Emitter::emit_filter`] but the payload is json serialized.
+
+            !!! warning
+                `filter` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
 
 else:
     App = pytauri_mod.App
@@ -526,6 +621,8 @@ else:
     Position = pytauri_mod.Position
     Size = pytauri_mod.Size
     Rect = pytauri_mod.Rect
+    EventTarget = pytauri_mod.EventTarget
+    Emitter = pytauri_mod.Emitter
 
 RunEventType = TypeAliasType(
     "RunEventType",
@@ -584,3 +681,18 @@ class Assets(ABC):
 
 Url = TypeAliasType("Url", str)
 """[tauri::Url](https://docs.rs/tauri/latest/tauri/struct.Url.html#method.parse)"""
+
+ImplEmitter = ImplManager
+
+EventTargetType = TypeAliasType(
+    "EventTargetType",
+    Union[
+        EventTarget.Any,
+        EventTarget.AnyLabel,
+        EventTarget.App,
+        EventTarget.Window,
+        EventTarget.Webview,
+        EventTarget.WebviewWindow,
+    ],
+)
+"""See [EventTarget][pytauri.ffi.EventTarget] for details."""
