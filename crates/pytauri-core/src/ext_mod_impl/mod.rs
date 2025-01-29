@@ -1,6 +1,7 @@
 pub mod image;
 pub mod ipc;
 pub mod menu;
+pub mod path;
 pub mod tray;
 pub mod webview;
 pub mod window;
@@ -38,6 +39,7 @@ use crate::{
     ext_mod_impl::{
         image::Image,
         menu::{Menu, MenuEvent},
+        path::PathResolver,
         tray::{TrayIcon, TrayIconEvent},
         webview::{TauriWebviewWindow, WebviewWindow},
     },
@@ -741,6 +743,14 @@ impl Manager {
                 .into_iter()
                 .map(|(label, window)| (label, WebviewWindow::new(window)))
                 .collect::<_>()
+        })
+    }
+
+    #[staticmethod]
+    fn path(py: Python<'_>, slf: ImplManager) -> PyResult<PathResolver> {
+        manager_method_impl!(py, &slf, [ungil], |manager| {
+            let path_resolver = manager.path().clone();
+            PathResolver::new(path_resolver)
         })
     }
 }

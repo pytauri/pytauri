@@ -68,10 +68,11 @@ _AssetKey = TypeAliasType("_AssetKey", str)
 
 
 if TYPE_CHECKING:
-    from pytauri.ffi import webview
     from pytauri.ffi.image import Image
     from pytauri.ffi.menu import Menu, MenuEvent
+    from pytauri.ffi.path import PathResolver
     from pytauri.ffi.tray import TrayIcon, TrayIconEventType
+    from pytauri.ffi.webview import WebviewWindow
 
     @final
     class App:
@@ -327,13 +328,19 @@ if TYPE_CHECKING:
         @staticmethod
         def get_webview_window(
             slf: "ImplManager", label: str, /
-        ) -> Optional[webview.WebviewWindow]:
+        ) -> Optional[WebviewWindow]:
             """Fetch a single webview window from the manager."""
             ...
 
         @staticmethod
-        def webview_windows(slf: "ImplManager", /) -> dict[str, webview.WebviewWindow]:
+        def webview_windows(slf: "ImplManager", /) -> dict[str, WebviewWindow]:
             """Fetch all managed webview windows."""
+            ...
+
+
+        @staticmethod
+        def path(slf: "ImplManager", /) -> PathResolver:
+            """The path resolver is a helper class for general and application-specific path APIs."""
             ...
 
     @final
@@ -650,7 +657,7 @@ RunEventType = TypeAliasType(
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
 
 ImplManager = TypeAliasType(
-    "ImplManager", Union[App, AppHandle, "webview.WebviewWindow"]
+    "ImplManager", Union[App, AppHandle, "WebviewWindow"]
 )
 
 EventId = NewType("EventId", int)
