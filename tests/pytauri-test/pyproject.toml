@@ -1,0 +1,17 @@
+[project]
+name = "pytauri-test"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = ["pytauri == 0.1.*", "pydantic == 2.*", "anyio == 4.*"]
+
+
+[build-system]
+requires = ["setuptools>=61", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = { where = ["python"] }
+
+
+[tool.uv.sources]
+pytauri = { workspace = true }

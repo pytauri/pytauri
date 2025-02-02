@@ -242,10 +242,10 @@ impl App {
 
 #[pyclass(frozen)]
 #[non_exhaustive]
-pub struct Context(pub PyWrapper<PyWrapperT2<tauri::Context>>);
+pub struct Context(pub PyWrapper<PyWrapperT2<tauri::Context<Runtime>>>);
 
 impl Context {
-    pub fn new(context: tauri::Context) -> Self {
+    pub fn new(context: tauri::Context<Runtime>) -> Self {
         Self(PyWrapper::new2(context))
     }
 }

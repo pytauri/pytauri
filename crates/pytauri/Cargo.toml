@@ -22,6 +22,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 standalone = ["dep:libc", "dep:dunce"]
+
+
 [dependencies]
 tauri = { workspace = true }
 tauri-plugin-pytauri = { workspace = true }

@@ -1,5 +1,10 @@
 [workspace]
-members = ["crates/*", "examples/tauri-app/src-tauri", "examples/nicegui-app"]
+members = [
+    "crates/*",
+    "examples/tauri-app/src-tauri",
+    "examples/nicegui-app",
+    "tests/pytauri-test",
+]
 resolver = "2"
 
 

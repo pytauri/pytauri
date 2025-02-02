@@ -1,0 +1,27 @@
+[package]
+name = "pytauri-test"
+version = "0.1.0"
+edition = "2021"
+
+[[test]]
+name = "ipc"
+path = "tests/ipc.rs"
+required-features = ["test"]
+
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+tauri = { workspace = true, features = ["test"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+pyo3 = { workspace = true }
+pytauri = { workspace = true, features = ["standalone"] }
+pytauri-core = { workspace = true }
+tauri-plugin-pytauri = { workspace = true }
+
+
+[features]
+test = ["pytauri-core/__test"]

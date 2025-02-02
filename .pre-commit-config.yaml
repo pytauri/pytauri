@@ -73,7 +73,7 @@ repos:
         name: cargo clippy
         language: system
         types: [rust]
-        entry: cargo clippy --tests --all-features -- -D warnings
+        entry: cargo clippy --workspace --exclude=pytauri-test --all-features -- -D warnings
         pass_filenames: false
 
       - id: python-test
@@ -84,12 +84,19 @@ repos:
         # TODO: more tests
         entry: scripts/python-test.sh
         pass_filenames: false
-      - id: rust-test
+      - id: rust-test-all
         stages: [manual] # because it's slow
-        name: rust test
+        name: rust test all
         language: system
         types: [rust]
-        entry: cargo test --all --all-features
+        entry: cargo test --workspace --exclude=pytauri-test --all-features
+        pass_filenames: false
+      - id: rust-test-crate
+        stages: [manual] # because it's slow
+        name: rust test crate
+        language: system
+        types: [rust]
+        entry: cargo test -p pytauri-test --features="test"
         pass_filenames: false
 
       # TODO, FIXME: typescript fmt

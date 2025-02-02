@@ -5,5 +5,4 @@
     "token": "secret",
   },
   "rust-analyzer.cargo.targetDir": true,
-  "rust-analyzer.cargo.features": "all",
 }

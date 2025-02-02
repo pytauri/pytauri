@@ -49,6 +49,8 @@ workspaces = [
     "pyo3-utils",
     "pytauri",
     "pytauri-plugin-notification",
+    # tests
+    "pytauri-test",
 ]
 # NOTE: when adding examples,
 # remember to update `[tool.uv.sources]` and `[tool.uv.workspace.members]`
@@ -70,10 +72,16 @@ pyfuture = { workspace = true }
 pyo3-utils = { workspace = true }
 pytauri = { workspace = true }
 pytauri-plugin-notification = { workspace = true }
+pytauri-test = { workspace = true }
 
 # https://docs.astral.sh/uv/concepts/workspaces/
 [tool.uv.workspace]
-members = ["python/*", "examples/tauri-app/src-tauri", "examples/nicegui-app"]
+members = [
+    "python/*",
+    "examples/tauri-app/src-tauri",
+    "examples/nicegui-app",
+    "tests/pytauri-test",
+]
 
 
 [tool.pyright]
@@ -158,6 +166,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "docs_src/**/*.py" = ["D"]
 "examples/**/*.py" = ["D"]
+"tests/**/*.py" = ["D"]
 
 # https://docs.astral.sh/ruff/settings/#pydocstyle
 [tool.ruff.lint.pydocstyle]

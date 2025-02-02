@@ -77,6 +77,11 @@ jobs:
         run: pnpm -r build
 
       - name: pre-commit run
+        env:
+          # see `setup.py` of examples,
+          # we don't need compile the extension files,
+          # because we are not using it.
+          PYTAURI_STANDALONE: "1"
         run: |
           uv run --all-extras \
             -- pre-commit run --show-diff-on-failure --color=always --hook-stage=manual --all-files

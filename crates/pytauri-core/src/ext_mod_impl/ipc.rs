@@ -98,7 +98,7 @@ impl Invoke {
     }
 
     #[inline]
-    fn get_func_name_from_message(message: &InvokeMessage) -> Result<&str, String> {
+    fn get_func_name_from_message(message: &InvokeMessage<Runtime>) -> Result<&str, String> {
         const PYFUNC_HEADER_KEY: &str = "pyfunc";
 
         let func_name = message

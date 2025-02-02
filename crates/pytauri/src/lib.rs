@@ -122,7 +122,7 @@ pub mod _ext_mod {
 pub fn pymodule_export(
     parent_module: &Bound<'_, PyModule>,
     // TODO: make `context_factory` optional and get `Context` from python side
-    context_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<Context>
+    context_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<Context<Runtime>>
         + Send
         + 'static,
     builder_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<tauri::Builder<Runtime>>

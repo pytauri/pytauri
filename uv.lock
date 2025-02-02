@@ -9,6 +9,7 @@ members = [
     "pyo3-utils",
     "pytauri",
     "pytauri-plugin-notification",
+    "pytauri-test",
     "pytauri-workspace",
     "tauri-app",
 ]
@@ -329,7 +330,7 @@ name = "click"
 version = "8.1.8"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/b9/2e/0090cbf739cee7d23781ad4b89a9894a41538e4fcf4c31dcdd705b78eb8b/click-8.1.8.tar.gz", hash = "sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a", size = 226593 }
 wheels = [
@@ -926,7 +927,7 @@ version = "1.6.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
-    { name = "colorama", marker = "platform_system == 'Windows'" },
+    { name = "colorama", marker = "sys_platform == 'win32'" },
     { name = "ghp-import" },
     { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
     { name = "jinja2" },
@@ -1732,6 +1733,23 @@ requires-dist = [
 ]
 
 [[package]]
+name = "pytauri-test"
+version = "0.1.0"
+source = { editable = "tests/pytauri-test" }
+dependencies = [
+    { name = "anyio" },
+    { name = "pydantic" },
+    { name = "pytauri" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anyio", specifier = "==4.*" },
+    { name = "pydantic", specifier = "==2.*" },
+    { name = "pytauri", editable = "python/pytauri" },
+]
+
+[[package]]
 name = "pytauri-workspace"
 version = "0.1.0"
 source = { virtual = "." }
@@ -1756,6 +1774,7 @@ dev = [
     { name = "pyo3-utils" },
     { name = "pytauri" },
     { name = "pytauri-plugin-notification" },
+    { name = "pytauri-test" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-timeout" },
@@ -1806,6 +1825,7 @@ workspaces = [
     { name = "pyo3-utils" },
     { name = "pytauri" },
     { name = "pytauri-plugin-notification" },
+    { name = "pytauri-test" },
 ]
 
 [package.metadata]
@@ -1830,6 +1850,7 @@ dev = [
     { name = "pyo3-utils", editable = "python/pyo3-utils" },
     { name = "pytauri", editable = "python/pytauri" },
     { name = "pytauri-plugin-notification", editable = "python/pytauri-plugin-notification" },
+    { name = "pytauri-test", editable = "tests/pytauri-test" },
     { name = "pytest", specifier = "==8.3.*" },
     { name = "pytest-cov", specifier = "==6.0.*" },
     { name = "pytest-timeout", specifier = "==2.3.*" },
@@ -1878,6 +1899,7 @@ workspaces = [
     { name = "pyo3-utils", editable = "python/pyo3-utils" },
     { name = "pytauri", editable = "python/pytauri" },
     { name = "pytauri-plugin-notification", editable = "python/pytauri-plugin-notification" },
+    { name = "pytauri-test", editable = "tests/pytauri-test" },
 ]
 
 [[package]]

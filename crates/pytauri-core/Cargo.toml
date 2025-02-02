@@ -30,3 +30,5 @@ pyo3-utils = { workspace = true }
 
 [features]
 __private = []
+__test = ["tauri/test"]
+__no_test = []  # for allowing use `--all-features` without running tests
