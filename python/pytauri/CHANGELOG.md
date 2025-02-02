@@ -4,6 +4,7 @@
 
 ### Added
 
+- [#62](https://github.com/WSH032/pytauri/pull/62) - feat: add `path::PathResolver`, `Manager::path`.
 - [#61](https://github.com/WSH032/pytauri/pull/61) - feat: add `Emitter`, `EventTarget`, `EventTargetType`, `ImplEmitter` for [Event System](https://tauri.app/develop/calling-frontend/#event-system).
 - [#63](https://github.com/pytauri/pytauri/pull/63) - feat: add `Url` and `webview::WebviewWindow::navigate`.
 
