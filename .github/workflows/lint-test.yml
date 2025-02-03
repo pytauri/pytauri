@@ -7,6 +7,11 @@ name: Lint check and test
 # It is best to avoid direct commits to the main branch, instead make a PR for checks.
 on:
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/dependabot.yml"
   workflow_dispatch:
   # NOTE: set `secrets: inherit` when call this workflow from other workflow.
   workflow_call:
