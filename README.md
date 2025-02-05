@@ -50,7 +50,7 @@ Source Code: <https://github.com/WSH032/pytauri/>
             AppHandle,
             Commands,
         )
-        from pytauri_plugin_notification import NotificationBuilderArgs, NotificationExt
+        from pytauri_plugin_notification import NotificationExt
 
         commands: Commands = Commands()
 
@@ -66,9 +66,7 @@ Source Code: <https://github.com/WSH032/pytauri/>
         @commands.command()
         async def greet(body: Person, app_handle: AppHandle) -> Greeting:
             notification_builder = NotificationExt.builder(app_handle)
-            notification_builder.show(
-                NotificationBuilderArgs(title="Greeting", body=f"Hello, {body.name}!")
-            )
+            notification_builder.show(title="Greeting", body=f"Hello, {body.name}!")
 
             return Greeting(
                 message=f"Hello, {body.name}! You've been greeted from Python {sys.version}!"

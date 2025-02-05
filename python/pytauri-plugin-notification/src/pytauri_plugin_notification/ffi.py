@@ -9,12 +9,11 @@ from types import ModuleType
 from typing import TYPE_CHECKING, Optional, final
 
 from pytauri import EXT_MOD, ImplManager
-from typing_extensions import Self, TypeAlias
+from typing_extensions import TypeAlias
 
 __all__ = [
     "ImplNotificationExt",
     "NotificationBuilder",
-    "NotificationBuilderArgs",
     "NotificationExt",
 ]
 
@@ -36,18 +35,31 @@ _notification_mod = _load_notification_mod(EXT_MOD)
 if TYPE_CHECKING:
 
     @final
-    class NotificationBuilderArgs:  # noqa: D101
-        def __new__(
-            cls, /, *, title: Optional[str] = None, body: Optional[str] = None
-        ) -> Self:
-            """[tauri_plugin_notification::NotificationBuilder](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/struct.NotificationBuilder.html)"""
-            ...
-
-    @final
     class NotificationBuilder:
         """[tauri_plugin_notification::NotificationBuilder](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/struct.NotificationBuilder.html)"""
 
-        def show(self, args: NotificationBuilderArgs, /) -> None:
+        def show(
+            self,
+            /,
+            *,
+            id: Optional[int] = None,  # noqa: A002
+            channel_id: Optional[str] = None,
+            title: Optional[str] = None,
+            body: Optional[str] = None,
+            large_body: Optional[str] = None,
+            summary: Optional[str] = None,
+            action_type_id: Optional[str] = None,
+            group: Optional[str] = None,
+            group_summary: bool = False,
+            sound: Optional[str] = None,
+            inbox_line: Optional[str] = None,
+            icon: Optional[str] = None,
+            large_icon: Optional[str] = None,
+            icon_color: Optional[str] = None,
+            ongoing: bool = False,
+            auto_cancel: bool = False,
+            silent: bool = False,
+        ) -> None:
             """Consume this builder and show the notification.
 
             # FIXME, XXX, TODO:
@@ -58,6 +70,7 @@ if TYPE_CHECKING:
 
             Tracker issue: <https://github.com/tauri-apps/plugins-workspace/issues/2156>
             """
+            ...
 
     @final
     class NotificationExt:
@@ -69,7 +82,6 @@ if TYPE_CHECKING:
             ...
 
 else:
-    NotificationBuilderArgs = _notification_mod.NotificationBuilderArgs
     NotificationBuilder = _notification_mod.NotificationBuilder
     NotificationExt = _notification_mod.NotificationExt
 

@@ -23,7 +23,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
-from pytauri_plugin_notification import NotificationBuilderArgs, NotificationExt
+from pytauri_plugin_notification import NotificationExt
 
 commands = Commands()
 
@@ -89,9 +89,7 @@ async def greet(
     body: Person, app_handle: AppHandle, webview_window: WebviewWindow
 ) -> Greeting:
     notification_builder = NotificationExt.builder(app_handle)
-    notification_builder.show(
-        NotificationBuilderArgs(title="Greeting", body=f"Hello, {body.name}!")
-    )
+    notification_builder.show(title="Greeting", body=f"Hello, {body.name}!")
 
     webview_window.set_title(f"Hello {body.name}!")
 

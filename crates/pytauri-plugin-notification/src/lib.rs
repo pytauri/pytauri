@@ -26,7 +26,7 @@ pub mod notification {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{NotificationBuilder, NotificationBuilderArgs, NotificationExt};
+    pub use ext_mod_impl::{NotificationBuilder, NotificationExt};
 
     pub use ext_mod_impl::ImplNotificationExt;
 }

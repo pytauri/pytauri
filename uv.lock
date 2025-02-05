@@ -1700,7 +1700,7 @@ wheels = [
 
 [[package]]
 name = "pytauri"
-version = "0.1.0b0"
+version = "0.2.0"
 source = { editable = "python/pytauri" }
 dependencies = [
     { name = "anyio" },

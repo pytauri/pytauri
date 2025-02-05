@@ -31,39 +31,6 @@ impl From<plugin::Error> for PluginError {
     }
 }
 
-// We use a `newtype` instead of directly implementing methods like `show(title=...)`,
-// This is to facilitate the addition of new methods in the future,
-// such as `hide(NotificationBuilderArgs)` instead of repeatedly declaring `hide(title=...)`
-#[pyclass(frozen)]
-#[non_exhaustive]
-#[derive(Clone, Debug)]
-pub struct NotificationBuilderArgs {
-    pub title: Option<String>,
-    pub body: Option<String>,
-}
-
-#[pymethods]
-impl NotificationBuilderArgs {
-    #[new]
-    #[pyo3(signature = (*, title = None, body = None))]
-    fn new(title: Option<String>, body: Option<String>) -> Self {
-        Self { title, body }
-    }
-}
-
-impl NotificationBuilderArgs {
-    fn call_show(self, mut builder: plugin::NotificationBuilder<Runtime>) -> plugin::Result<()> {
-        let Self { title, body } = self;
-        if let Some(v) = title {
-            builder = builder.title(v)
-        }
-        if let Some(v) = body {
-            builder = builder.body(v)
-        }
-        builder.show()
-    }
-}
-
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct NotificationBuilder(pub PyWrapper<PyWrapperT2<plugin::NotificationBuilder<Runtime>>>);
@@ -76,13 +43,111 @@ impl NotificationBuilder {
 
 #[pymethods]
 impl NotificationBuilder {
-    fn show(&self, py: Python<'_>, args: NotificationBuilderArgs) -> PyResult<()> {
+    #[pyo3(signature = (
+        *,
+        id = None,
+        channel_id = None,
+        title = None,
+        body = None,
+        large_body = None,
+        summary = None,
+        action_type_id = None,
+        group = None,
+        group_summary = false,
+        sound = None,
+        inbox_line = None,
+        icon = None,
+        large_icon = None,
+        icon_color = None,
+        ongoing = false,
+        auto_cancel = false,
+        silent = false
+    ))]
+    #[expect(clippy::too_many_arguments)]
+    fn show(
+        &self,
+        py: Python<'_>,
+        id: Option<i32>,
+        channel_id: Option<String>,
+        title: Option<String>,
+        body: Option<String>,
+        /* TODO: schedule */
+        large_body: Option<String>,
+        summary: Option<String>,
+        action_type_id: Option<String>,
+        group: Option<String>,
+        group_summary: bool,
+        sound: Option<String>,
+        inbox_line: Option<String>,
+        icon: Option<String>,
+        large_icon: Option<String>,
+        icon_color: Option<String>,
+        /* TODO: attachment */
+        /* TODO: extra */
+        ongoing: bool,
+        auto_cancel: bool,
+        silent: bool,
+    ) -> PyResult<()> {
         // TODO (perf): Do we really need `py.allow_threads` here?
         // I mean, I don't know how long `NotificationBuilder::show` will take,
         // maybe it's short enough?
         py.allow_threads(|| {
-            let builder = self.0.try_take_inner()??;
-            args.call_show(builder)
+            let mut builder = self.0.try_take_inner()??;
+
+            if let Some(id) = id {
+                builder = builder.id(id);
+            }
+            if let Some(channel_id) = channel_id {
+                builder = builder.channel_id(channel_id);
+            }
+            if let Some(title) = title {
+                builder = builder.title(title);
+            }
+            if let Some(body) = body {
+                builder = builder.body(body);
+            }
+            if let Some(large_body) = large_body {
+                builder = builder.large_body(large_body);
+            }
+            if let Some(summary) = summary {
+                builder = builder.summary(summary);
+            }
+            if let Some(action_type_id) = action_type_id {
+                builder = builder.action_type_id(action_type_id);
+            }
+            if let Some(group) = group {
+                builder = builder.group(group);
+            }
+            if group_summary {
+                builder = builder.group_summary();
+            }
+            if let Some(sound) = sound {
+                builder = builder.sound(sound);
+            }
+            if let Some(inbox_line) = inbox_line {
+                builder = builder.inbox_line(inbox_line);
+            }
+            if let Some(icon) = icon {
+                builder = builder.icon(icon);
+            }
+            if let Some(large_icon) = large_icon {
+                builder = builder.large_icon(large_icon);
+            }
+            if let Some(icon_color) = icon_color {
+                builder = builder.icon_color(icon_color);
+            }
+            if ongoing {
+                builder = builder.ongoing();
+            }
+            if auto_cancel {
+                builder = builder.auto_cancel();
+            }
+            if silent {
+                builder = builder.silent();
+            }
+
+            builder
+                .show()
                 .map_err(Into::<PluginError>::into)
                 .map_err(Into::<PyErr>::into)
         })
