@@ -2071,9 +2071,12 @@ or <code>pre-commit</code> will reject your commit.</p>
 <li>Every push to the <code>main</code> branch will trigger the <code>dev</code> version docs deployment.</li>
 <li>
 <p>Every <code>v*</code> semver tag will trigger the corresponding version docs deployment.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Remember make a Github Release (not package release) for the version docs deployment.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul>
+<li>Remember update <code>CHANGELOG.md</code> before pushing the version docs tag!</li>
+<li>Remember make a Github Release (not package release) manually for the version docs deployment!</li>
+</ul>
 </div>
 </li>
 </ul>
