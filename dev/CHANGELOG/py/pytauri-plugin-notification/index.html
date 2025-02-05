@@ -1280,6 +1280,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      BREAKING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
     <span class="md-ellipsis">
       Changed
@@ -1623,6 +1641,24 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      BREAKING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
     <span class="md-ellipsis">
       Changed
@@ -1678,6 +1714,43 @@
 
 <h1 id="pytauri-plugin-notification">pytauri-plugin-notification<a class="headerlink" href="#pytauri-plugin-notification" title="Permanent link">&para;</a></h1>
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/WSH032/pytauri/pull/70">#70</a> - Removed <code>NotificationBuilderArgs</code>.
+    Previously:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">pytauri_plugin_notification</span> <span class="kn">import</span> <span class="n">NotificationBuilderArgs</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">notification_builder</span><span class="o">.</span><span class="n">show</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">NotificationBuilderArgs</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Greeting&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="n">body</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>Now:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">notification_builder</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Greeting&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Hello, </span><span class="si">{</span><span class="n">body</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+</li>
+</ul>
+<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/70">#70</a> - feat: add more <code>NotificationBuilder</code> parameters<ul>
+<li><code>id</code></li>
+<li><code>channel_id</code></li>
+<li><code>large_body</code></li>
+<li><code>summary</code></li>
+<li><code>action_type_id</code></li>
+<li><code>group</code></li>
+<li><code>group_summary</code></li>
+<li><code>sound</code></li>
+<li><code>inbox_line</code></li>
+<li><code>icon</code></li>
+<li><code>large_icon</code></li>
+<li><code>icon_color</code></li>
+<li><code>ongoing</code></li>
+<li><code>auto_cancel</code></li>
+<li><code>silent</code></li>
+</ul>
+</li>
+</ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/WSH032/pytauri/pull/47">#47</a> - refactor: use <code>pytauri::ImplManager</code> as <code>self::ImplNotificationExt</code></li>
