@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### BREAKING
 
+- [#70](https://github.com/WSH032/pytauri/pull/70) - feat(notification): removed `NotificationBuilderArgs`.
+    See `CHANGELOG.md` of `py/pytauri-plugin-notification` for how to migrate.
 - [#57](https://github.com/WSH032/pytauri/pull/57) - refactor(py/pytauri): remove `RunEventEnum`, use matched `RunEvent` directly.
     See `CHANGELOG.md` of `py/pytauri` for how to migrate.
 - [#56](https://github.com/WSH032/pytauri/pull/56) - perf(pytauri): all IPC methods that previously accepted `bytearray` as a parameter now only accept `bytes` as a parameter.
