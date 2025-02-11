@@ -10,6 +10,8 @@ pub fn tauri_generate_context() -> tauri::Context {
     tauri::generate_context!()
 }
 
+// 👉 Set `#[pymodule(gil_used = false)]` so that your extension module supports free-threading (no GIL) python,
+// see: <https://pyo3.rs/v0.23.4/free-threading.html#supporting-free-threaded-python-with-pyo3>.
 #[pymodule(gil_used = false)]
 #[pyo3(name = "ext_mod")]
 pub mod ext_mod {
