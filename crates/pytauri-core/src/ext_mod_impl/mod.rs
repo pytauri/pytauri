@@ -1,5 +1,8 @@
+pub mod image;
 pub mod ipc;
+pub mod menu;
 pub mod webview;
+pub mod window;
 
 use std::{
     borrow::Cow,
@@ -16,7 +19,12 @@ use pyo3_utils::{
 };
 use tauri::{Listener as _, Manager as _};
 
-use crate::tauri_runtime::Runtime;
+use crate::{
+    delegate_inner,
+    ext_mod_impl::menu::{Menu, MenuEvent},
+    tauri_runtime::Runtime,
+    utils::TauriError,
+};
 
 /// see also: [tauri::RunEvent]
 #[pyclass(frozen)]
@@ -73,6 +81,21 @@ impl RunEvent {
     }
 }
 
+fn debug_assert_app_handle_py_is_rs(
+    py_app_handle: &Py<AppHandle>,
+    rs_app_handle: &tauri::AppHandle<Runtime>,
+) {
+    if cfg!(debug_assertions) {
+        let py_app_handle = py_app_handle.get().0.inner_ref();
+        let py_app_handle_global = py_app_handle.py_app_handle();
+        let rs_app_handle_global = rs_app_handle.py_app_handle();
+        debug_assert!(
+            py_app_handle_global.is(&*rs_app_handle_global),
+            "AppHandle pyobject instance is not the same as the rust instance"
+        );
+    }
+}
+
 /// You can get the global singleton [Py]<[AppHandle]> using [PyAppHandleExt].
 #[pyclass(frozen)]
 #[non_exhaustive]
@@ -82,8 +105,66 @@ impl RunEvent {
 pub struct AppHandle(pub PyWrapper<PyWrapperT0<tauri::AppHandle<Runtime>>>);
 
 impl AppHandle {
+    /// NOTE: use [PyAppHandleExt] instead.
     fn new(app_handle: tauri::AppHandle<Runtime>) -> Self {
         Self(PyWrapper::new0(app_handle))
+    }
+}
+
+#[pymethods]
+impl AppHandle {
+    fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {
+        let moved_slf = slf.clone_ref(py);
+        py.allow_threads(|| {
+            slf.get()
+                .0
+                .inner_ref()
+                .on_menu_event(move |_app_handle, menu_event| {
+                    Python::with_gil(|py| {
+                        let app_handle: &Py<Self> = &moved_slf;
+                        debug_assert_app_handle_py_is_rs(app_handle, _app_handle);
+                        // TODO, PERF: do we really need `PyString::intern` here?
+                        let menu_event: Bound<'_, MenuEvent> =
+                            MenuEvent::intern(py, &menu_event.id.0);
+
+                        let handler = handler.bind(py);
+                        let result = handler.call1((app_handle, menu_event));
+                        if let Err(e) = result {
+                            e.write_unraisable(py, Some(handler));
+                            panic!(
+                                "Python exception occurred in `AppHandle::on_menu_event` handler"
+                            )
+                        }
+                    })
+                })
+        })
+    }
+
+    fn menu(&self, py: Python<'_>) -> Option<Menu> {
+        py.allow_threads(|| self.0.inner_ref().menu().map(Menu::new))
+    }
+
+    fn set_menu(&self, py: Python<'_>, menu: Py<Menu>) -> PyResult<Option<Menu>> {
+        py.allow_threads(|| {
+            let menu = menu.get().0.inner_ref().clone();
+            let returned_menu = delegate_inner!(self, set_menu, menu)?;
+            PyResult::Ok(returned_menu.map(Menu::new))
+        })
+    }
+
+    fn remove_menu(&self, py: Python<'_>) -> PyResult<Option<Menu>> {
+        py.allow_threads(|| {
+            let returned_menu = delegate_inner!(self, remove_menu,)?;
+            PyResult::Ok(returned_menu.map(Menu::new))
+        })
+    }
+
+    fn hide_menu(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, hide_menu,))
+    }
+
+    fn show_menu(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, show_menu,))
     }
 }
 
@@ -165,14 +246,16 @@ impl App {
 
     fn py_cb_to_rs_cb(
         callback: PyObject,
+        app_handle: Py<AppHandle>,
     ) -> impl FnMut(&tauri::AppHandle<Runtime>, tauri::RunEvent) {
-        move |app_handle, run_event| {
-            let py_app_handle = app_handle.py_app_handle();
-            let py_run_event = RunEvent::new(run_event);
+        move |_app_handle, run_event| {
+            let py_app_handle: &Py<AppHandle> = &app_handle;
+            debug_assert_app_handle_py_is_rs(&app_handle, _app_handle);
+            let py_run_event: RunEvent = RunEvent::new(run_event);
 
             Python::with_gil(|py| {
                 let callback = callback.bind(py);
-                let result = callback.call1((py_app_handle.clone_ref(py), py_run_event));
+                let result = callback.call1((py_app_handle, py_run_event));
                 if let Err(e) = result {
                     // Use [write_unraisable] instead of [restore]:
                     // - Because we are about to panic, Python might abort
@@ -194,12 +277,13 @@ impl App {
 impl App {
     #[pyo3(signature = (callback = None, /))]
     fn run(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<()> {
-        // `self: &App` does not hold the GIL, so this is safe
+        let app = self.0.try_take_inner()??;
+        let py_app_handle = app.py_app_handle().clone_ref(py);
         unsafe {
-            py.allow_threads_unsend(self, |slf| {
-                let app = slf.0.try_take_inner()??;
+            // `tauri::App` does not hold the GIL, so this is safe
+            py.allow_threads_unsend(app, move |app| {
                 match callback {
-                    Some(callback) => app.run(Self::py_cb_to_rs_cb(callback)),
+                    Some(callback) => app.run(Self::py_cb_to_rs_cb(callback, py_app_handle)),
                     None => app.run(Self::noop_callback),
                 }
                 Ok(())
@@ -209,12 +293,15 @@ impl App {
 
     #[pyo3(signature = (callback = None, /))]
     fn run_iteration(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<()> {
+        let app = self.0.try_lock_inner_mut()??;
+        let py_app_handle = app.py_app_handle().clone_ref(py);
         unsafe {
-            // `self: &App` does not hold the GIL, so this is safe
-            py.allow_threads_unsend(self, |slf| {
-                let mut app = slf.0.try_lock_inner_mut()??;
+            // `&mut tauri::App` does not hold the GIL, so this is safe
+            py.allow_threads_unsend(app, |mut app| {
                 match callback {
-                    Some(callback) => app.run_iteration(Self::py_cb_to_rs_cb(callback)),
+                    Some(callback) => {
+                        app.run_iteration(Self::py_cb_to_rs_cb(callback, py_app_handle))
+                    }
                     None => app.run_iteration(Self::noop_callback),
                 }
                 Ok(())
@@ -265,6 +352,8 @@ pub enum ImplManager {
 #[non_exhaustive]
 pub struct Manager;
 
+#[doc(hidden)]
+#[macro_export]
 macro_rules! manager_method_impl {
     ($slf:expr, $macro:ident) => {
         match $slf {
@@ -453,5 +542,33 @@ impl Listener {
             }};
         }
         manager_method_impl!(slf, once_any_impl)
+    }
+}
+
+/// see also: [tauri::Position]
+#[derive(Clone, Copy)]
+#[pyclass(frozen)]
+pub enum Position {
+    /// `x, y`
+    Physical(i32, i32),
+    /// `x, y`
+    Logical(f64, f64),
+}
+
+impl From<Position> for tauri::Position {
+    fn from(val: Position) -> Self {
+        match val {
+            Position::Physical(x, y) => tauri::PhysicalPosition::new(x, y).into(),
+            Position::Logical(x, y) => tauri::LogicalPosition::new(x, y).into(),
+        }
+    }
+}
+
+impl From<tauri::Position> for Position {
+    fn from(val: tauri::Position) -> Self {
+        match val {
+            tauri::Position::Physical(tauri::PhysicalPosition { x, y }) => Position::Physical(x, y),
+            tauri::Position::Logical(tauri::LogicalPosition { x, y }) => Position::Logical(x, y),
+        }
     }
 }

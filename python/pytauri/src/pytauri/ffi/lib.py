@@ -1,3 +1,5 @@
+# ruff: noqa: D102
+
 """[tauri::self](https://docs.rs/tauri/latest/tauri/index.html)"""
 
 from typing import (
@@ -11,7 +13,7 @@ from typing import (
     final,
 )
 
-from typing_extensions import Self, TypeAlias
+from typing_extensions import Self, TypeAliasType
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
@@ -27,6 +29,8 @@ __all__ = [
     "ImplManager",
     "Listener",
     "Manager",
+    "Position",
+    "PositionType",
     "RunEvent",
     "RunEventType",
     "builder_factory",
@@ -48,6 +52,7 @@ _EventHandlerType = Callable[["Event"], None]
 
 if TYPE_CHECKING:
     from pytauri.ffi import webview
+    from pytauri.ffi.menu import Menu, MenuEvent
 
     @final
     class App:
@@ -102,6 +107,21 @@ if TYPE_CHECKING:
     @final
     class AppHandle:
         """[tauri::AppHandle](https://docs.rs/tauri/latest/tauri/app/struct.AppHandle.html)"""
+
+        def on_menu_event(
+            self, handler: Callable[["Self", "MenuEvent"], None], /
+        ) -> None:
+            """Registers a global menu event listener.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+
+        def menu(self) -> Optional[Menu]: ...
+        def set_menu(self, menu: Menu, /) -> Optional[Menu]: ...
+        def remove_menu(self) -> Optional[Menu]: ...
+        def hide_menu(self) -> None: ...
+        def show_menu(self) -> None: ...
 
     @final
     class BuilderArgs:  # noqa: D101
@@ -310,6 +330,19 @@ if TYPE_CHECKING:
             """
             ...
 
+    class Position:
+        """[tauri::Position](https://docs.rs/tauri/latest/tauri/enum.Position.html)"""
+
+        class Physical:
+            """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)"""
+
+            def __new__(cls, x: int, y: int, /) -> Self: ...
+
+        class Logical:
+            """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)"""
+
+            def __new__(cls, x: float, y: float, /) -> Self: ...
+
 
 else:
     App = pytauri_mod.App
@@ -323,23 +356,31 @@ else:
     Manager = pytauri_mod.Manager
     Event = pytauri_mod.Event
     Listener = pytauri_mod.Listener
+    Position = pytauri_mod.Position
 
-
-RunEventType: TypeAlias = Union[
-    RunEvent.Exit,
-    RunEvent.ExitRequested,
-    RunEvent.WindowEvent,
-    RunEvent.WebviewEvent,
-    RunEvent.Ready,
-    RunEvent.Resumed,
-    RunEvent.MainEventsCleared,
-    RunEvent.MenuEvent,
-]
+RunEventType = TypeAliasType(
+    "RunEventType",
+    Union[
+        RunEvent.Exit,
+        RunEvent.ExitRequested,
+        RunEvent.WindowEvent,
+        RunEvent.WebviewEvent,
+        RunEvent.Ready,
+        RunEvent.Resumed,
+        RunEvent.MainEventsCleared,
+        RunEvent.MenuEvent,
+    ],
+)
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
 
-ImplManager: TypeAlias = Union[App, AppHandle, "webview.WebviewWindow"]
+ImplManager = TypeAliasType(
+    "ImplManager", Union[App, AppHandle, "webview.WebviewWindow"]
+)
 
 EventId = NewType("EventId", int)
 """[tauri::EventId](https://docs.rs/tauri/latest/tauri/type.EventId.html)"""
 
 ImplListener = ImplManager
+
+PositionType = TypeAliasType("PositionType", Union[Position.Physical, Position.Logical])
+"""See [Position][pytauri.ffi.Position] for details."""

@@ -2,12 +2,21 @@ use pyo3::{prelude::*, types::PyString};
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 use tauri::webview;
 
-use crate::tauri_runtime::Runtime;
-use crate::utils::TauriError;
+use crate::{
+    context_menu_impl,
+    ext_mod_impl::{
+        menu::{ImplContextMenu, Menu, MenuEvent},
+        window::Window,
+        Position,
+    },
+    tauri_runtime::Runtime,
+    utils::TauriError,
+};
 
 type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
 type TauriWebview = webview::Webview<Runtime>;
 
+/// see also: [tauri::webview::WebviewWindow]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct WebviewWindow(pub PyWrapper<PyWrapperT0<TauriWebviewWindow>>);
@@ -18,6 +27,8 @@ impl WebviewWindow {
     }
 }
 
+#[macro_export]
+#[doc(hidden)]
 macro_rules! delegate_inner {
     ($slf:expr, $func:ident, $($arg:expr),*) => {
         $slf.0
@@ -34,181 +45,276 @@ impl WebviewWindow {
         PyString::new(py, webview_window.label())
     }
 
-    fn is_fullscreen(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_fullscreen,)
+    fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {
+        let moved_slf = slf.clone_ref(py);
+        py.allow_threads(|| {
+            slf.get()
+                .0
+                .inner_ref()
+                .on_menu_event(move |_window, menu_event| {
+                    Python::with_gil(|py| {
+                        // See: <https://github.com/tauri-apps/tauri/blob/8e9339e8807338597132ffd8688fb9da00f4102b/crates/tauri/src/app.rs#L2168-L2184>,
+                        // The `window` argument is always the `WebviewWindow` instance that calls this method,
+                        // so we can directly use the same PyObject.
+                        let window: &Py<Self> = &moved_slf;  // TODO, XXX, FIXME: return `Window` instead of `WebviewWindow`?
+                        debug_assert_eq!(&*window.get().0.inner_ref().as_ref().window_ref(), _window);
+                        // TODO, PERF: do we really need `PyString::intern` here?
+                        let menu_event: Bound<'_, MenuEvent> = MenuEvent::intern(py, &menu_event.id.0);
+
+                        let handler = handler.bind(py);
+                        let result = handler.call1((window, menu_event));
+                        if let Err(e) = result {
+                            e.write_unraisable(py, Some(handler));
+                            panic!(
+                                "Python exception occurred in `WebviewWindow::on_menu_event` handler"
+                            )
+                        }
+                    })
+                })
+        })
     }
 
-    fn is_minimized(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_minimized,)
+    fn menu(&self, py: Python<'_>) -> Option<Menu> {
+        py.allow_threads(|| self.0.inner_ref().menu().map(Menu::new))
     }
 
-    fn is_maximized(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_maximized,)
+    fn set_menu(&self, py: Python<'_>, menu: Py<Menu>) -> PyResult<Option<Menu>> {
+        py.allow_threads(|| {
+            let menu = menu.get().0.inner_ref().clone();
+            let returned_menu = delegate_inner!(self, set_menu, menu)?;
+            PyResult::Ok(returned_menu.map(Menu::new))
+        })
     }
 
-    fn is_focused(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_focused,)
+    fn remove_menu(&self, py: Python<'_>) -> PyResult<Option<Menu>> {
+        py.allow_threads(|| {
+            let returned_menu = delegate_inner!(self, remove_menu,)?;
+            PyResult::Ok(returned_menu.map(Menu::new))
+        })
     }
 
-    fn is_decorated(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_decorated,)
+    fn hide_menu(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, hide_menu,))
     }
 
-    fn is_resizable(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_resizable,)
+    fn show_menu(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, show_menu,))
     }
 
-    fn is_enabled(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_enabled,)
+    fn is_menu_visible(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_menu_visible,))
     }
 
-    fn is_maximizable(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_maximizable,)
+    fn popup_menu(&self, py: Python<'_>, menu: ImplContextMenu) -> PyResult<()> {
+        py.allow_threads(|| {
+            macro_rules! popup_menu_impl {
+                ($menu:expr) => {{
+                    let menu = $menu.get().0.inner_ref();
+                    delegate_inner!(self, popup_menu, &*menu)
+                }};
+            }
+            context_menu_impl!(menu, popup_menu_impl)
+        })
     }
 
-    fn is_minimizable(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_minimizable,)
+    fn popup_menu_at(
+        &self,
+        py: Python<'_>,
+        menu: ImplContextMenu,
+        position: Position,
+    ) -> PyResult<()> {
+        py.allow_threads(|| {
+            macro_rules! popup_menu_at_impl {
+                ($menu:expr) => {{
+                    let menu = $menu.get().0.inner_ref();
+                    delegate_inner!(self, popup_menu_at, &*menu, position)
+                }};
+            }
+            context_menu_impl!(menu, popup_menu_at_impl)
+        })
     }
 
-    fn is_closable(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_closable,)
+    fn is_fullscreen(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_fullscreen,))
     }
 
-    fn is_visible(&self) -> PyResult<bool> {
-        delegate_inner!(self, is_visible,)
+    fn is_minimized(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_minimized,))
     }
 
-    fn title(&self) -> PyResult<String> {
-        delegate_inner!(self, title,)
+    fn is_maximized(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_maximized,))
     }
 
-    fn center(&self) -> PyResult<()> {
-        delegate_inner!(self, center,)
+    fn is_focused(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_focused,))
     }
 
-    fn set_resizable(&self, resizable: bool) -> PyResult<()> {
-        delegate_inner!(self, set_resizable, resizable)
+    fn is_decorated(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_decorated,))
     }
 
-    fn set_enabled(&self, enabled: bool) -> PyResult<()> {
-        delegate_inner!(self, set_enabled, enabled)
+    fn is_resizable(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_resizable,))
     }
 
-    fn set_maximizable(&self, maximizable: bool) -> PyResult<()> {
-        delegate_inner!(self, set_maximizable, maximizable)
+    fn is_enabled(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_enabled,))
     }
 
-    fn set_minimizable(&self, minimizable: bool) -> PyResult<()> {
-        delegate_inner!(self, set_minimizable, minimizable)
+    fn is_maximizable(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_maximizable,))
     }
 
-    fn set_closable(&self, closable: bool) -> PyResult<()> {
-        delegate_inner!(self, set_closable, closable)
+    fn is_minimizable(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_minimizable,))
     }
 
-    fn set_title(&self, title: &str) -> PyResult<()> {
-        delegate_inner!(self, set_title, title)
+    fn is_closable(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_closable,))
     }
 
-    fn maximize(&self) -> PyResult<()> {
-        delegate_inner!(self, maximize,)
+    fn is_visible(&self, py: Python<'_>) -> PyResult<bool> {
+        py.allow_threads(|| delegate_inner!(self, is_visible,))
     }
 
-    fn unmaximize(&self) -> PyResult<()> {
-        delegate_inner!(self, unmaximize,)
+    fn title(&self, py: Python<'_>) -> PyResult<String> {
+        py.allow_threads(|| delegate_inner!(self, title,))
     }
 
-    fn minimize(&self) -> PyResult<()> {
-        delegate_inner!(self, minimize,)
+    fn center(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, center,))
     }
 
-    fn unminimize(&self) -> PyResult<()> {
-        delegate_inner!(self, unminimize,)
+    fn set_resizable(&self, py: Python<'_>, resizable: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_resizable, resizable))
     }
 
-    fn show(&self) -> PyResult<()> {
-        delegate_inner!(self, show,)
+    fn set_enabled(&self, py: Python<'_>, enabled: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_enabled, enabled))
     }
 
-    fn hide(&self) -> PyResult<()> {
-        delegate_inner!(self, hide,)
+    fn set_maximizable(&self, py: Python<'_>, maximizable: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_maximizable, maximizable))
     }
 
-    fn close(&self) -> PyResult<()> {
-        delegate_inner!(self, close,)
+    fn set_minimizable(&self, py: Python<'_>, minimizable: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_minimizable, minimizable))
     }
 
-    fn destroy(&self) -> PyResult<()> {
-        delegate_inner!(self, destroy,)
+    fn set_closable(&self, py: Python<'_>, closable: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_closable, closable))
     }
 
-    fn set_decorations(&self, decorations: bool) -> PyResult<()> {
-        delegate_inner!(self, set_decorations, decorations)
+    fn set_title(&self, py: Python<'_>, title: &str) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_title, title))
     }
 
-    fn set_shadow(&self, shadow: bool) -> PyResult<()> {
-        delegate_inner!(self, set_shadow, shadow)
+    fn maximize(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, maximize,))
     }
 
-    fn set_always_on_bottom(&self, always_on_bottom: bool) -> PyResult<()> {
-        delegate_inner!(self, set_always_on_bottom, always_on_bottom)
+    fn unmaximize(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, unmaximize,))
     }
 
-    fn set_always_on_top(&self, always_on_top: bool) -> PyResult<()> {
-        delegate_inner!(self, set_always_on_top, always_on_top)
+    fn minimize(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, minimize,))
     }
 
-    fn set_visible_on_all_workspaces(&self, visible_on_all_workspaces: bool) -> PyResult<()> {
-        delegate_inner!(
-            self,
-            set_visible_on_all_workspaces,
-            visible_on_all_workspaces
-        )
+    fn unminimize(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, unminimize,))
     }
 
-    fn set_content_protected(&self, protected: bool) -> PyResult<()> {
-        delegate_inner!(self, set_content_protected, protected)
+    fn show(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, show,))
     }
 
-    fn set_fullscreen(&self, fullscreen: bool) -> PyResult<()> {
-        delegate_inner!(self, set_fullscreen, fullscreen)
+    fn hide(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, hide,))
     }
 
-    fn set_focus(&self) -> PyResult<()> {
-        delegate_inner!(self, set_focus,)
+    fn close(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, close,))
     }
 
-    fn set_skip_taskbar(&self, skip: bool) -> PyResult<()> {
-        delegate_inner!(self, set_skip_taskbar, skip)
+    fn destroy(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, destroy,))
     }
 
-    fn set_cursor_grab(&self, grab: bool) -> PyResult<()> {
-        delegate_inner!(self, set_cursor_grab, grab)
+    fn set_decorations(&self, py: Python<'_>, decorations: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_decorations, decorations))
     }
 
-    fn set_cursor_visible(&self, visible: bool) -> PyResult<()> {
-        delegate_inner!(self, set_cursor_visible, visible)
+    fn set_shadow(&self, py: Python<'_>, shadow: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_shadow, shadow))
     }
 
-    fn set_ignore_cursor_events(&self, ignore: bool) -> PyResult<()> {
-        delegate_inner!(self, set_ignore_cursor_events, ignore)
+    fn set_always_on_bottom(&self, py: Python<'_>, always_on_bottom: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_always_on_bottom, always_on_bottom))
     }
 
-    fn start_dragging(&self) -> PyResult<()> {
-        delegate_inner!(self, start_dragging,)
+    fn set_always_on_top(&self, py: Python<'_>, always_on_top: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_always_on_top, always_on_top))
+    }
+
+    fn set_visible_on_all_workspaces(
+        &self,
+        py: Python<'_>,
+        visible_on_all_workspaces: bool,
+    ) -> PyResult<()> {
+        py.allow_threads(|| {
+            delegate_inner!(
+                self,
+                set_visible_on_all_workspaces,
+                visible_on_all_workspaces
+            )
+        })
+    }
+
+    fn set_content_protected(&self, py: Python<'_>, protected: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_content_protected, protected))
+    }
+
+    fn set_fullscreen(&self, py: Python<'_>, fullscreen: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_fullscreen, fullscreen))
+    }
+
+    fn set_focus(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_focus,))
+    }
+
+    fn set_skip_taskbar(&self, py: Python<'_>, skip: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_skip_taskbar, skip))
+    }
+
+    fn set_cursor_grab(&self, py: Python<'_>, grab: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_cursor_grab, grab))
+    }
+
+    fn set_cursor_visible(&self, py: Python<'_>, visible: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_cursor_visible, visible))
+    }
+
+    fn set_ignore_cursor_events(&self, py: Python<'_>, ignore: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_ignore_cursor_events, ignore))
+    }
+
+    fn start_dragging(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, start_dragging,))
     }
 
     #[pyo3(signature = (count))]
-    fn set_badge_count(&self, count: Option<i64>) -> PyResult<()> {
-        delegate_inner!(self, set_badge_count, count)
+    fn set_badge_count(&self, py: Python<'_>, count: Option<i64>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_badge_count, count))
     }
 
-    fn print(&self) -> PyResult<()> {
-        delegate_inner!(self, print,)
+    fn print(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, print,))
     }
 
     fn url<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyString>> {
-        let url = delegate_inner!(self, url,)?;
+        let url = py.allow_threads(|| delegate_inner!(self, url,))?;
         Ok(PyString::new(py, url.as_ref()))
     }
 
@@ -219,16 +325,16 @@ impl WebviewWindow {
     //     delegate_inner!(mut self, navigate, url)
     // }
 
-    fn eval(&self, js: &str) -> PyResult<()> {
-        delegate_inner!(self, eval, js)
+    fn eval(&self, py: Python<'_>, js: &str) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, eval, js))
     }
 
-    fn set_zoom(&self, scale_factor: f64) -> PyResult<()> {
-        delegate_inner!(self, set_zoom, scale_factor)
+    fn set_zoom(&self, py: Python<'_>, scale_factor: f64) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_zoom, scale_factor))
     }
 
-    fn clear_all_browsing_data(&self) -> PyResult<()> {
-        delegate_inner!(self, clear_all_browsing_data,)
+    fn clear_all_browsing_data(&self, py: Python<'_>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, clear_all_browsing_data,))
     }
 
     /// see also: [tauri::webview::WebviewWindow::as_ref]
@@ -246,5 +352,13 @@ pub struct Webview(pub PyWrapper<PyWrapperT0<TauriWebview>>);
 impl Webview {
     pub(crate) fn new(webview: TauriWebview) -> Self {
         Self(PyWrapper::new0(webview))
+    }
+}
+
+#[pymethods]
+impl Webview {
+    fn window(&self) -> Window {
+        let window = self.0.inner_ref().window();
+        Window::new(window)
     }
 }

@@ -2,6 +2,25 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#75](https://github.com/WSH032/pytauri/pull/75) - feat: implement [tauri `menu` feature](https://tauri.app/learn/window-menu/):
+    - `mod tauri::`
+        - `AppHandle::{on_menu_event, menu, set_menu, remove_menu, hide_menu, show_menu}`
+        - `Position`
+        - `PositionType`
+    - `mod tauri::menu`
+    - `mod tauri::image`
+    - `mod tauri::window`
+    - `mod tauri::webview`
+        - `WebviewWindow::{on_menu_event, menu, set_menu, remove_menu, hide_menu, show_menu, is_menu_visible, popup_menu, popup_menu_at}`
+        - `Webview::window`
+
+### Changed
+
+- [#75](https://github.com/WSH032/pytauri/pull/75) - perf: all methods of `WebviewWindow` will release the `GIL` now.
+- [#75](https://github.com/WSH032/pytauri/pull/75) - perf: `App::{run, run_iteration}` will use a singleton `Py<AppHandle>` as an argument instead of fetching it from `tauri::State` each loop.
+
 ## [0.2.0]
 
 ### BREAKING

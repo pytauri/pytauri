@@ -129,6 +129,7 @@ plugins:
             - https://docs.pydantic.dev/latest/objects.inv
             - https://anyio.readthedocs.io/en/stable/objects.inv
             - https://typing-extensions.readthedocs.io/en/stable/objects.inv
+            - https://pillow.readthedocs.io/en/stable/objects.inv
           options:
             docstring_style: google
             members_order: source
