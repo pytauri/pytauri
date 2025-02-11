@@ -300,6 +300,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             ValueError: If the signature does not conform to the expected pattern.
         """
         sig = signature(pyfunc)
+        # NOTE: it seems that `parameters.keys()` is already `sys._is_interned` in cpython
         parameters = sig.parameters
         if not check_signature:
             # `cast` make typing happy
@@ -326,7 +327,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                     f"Expected `{name}` to be subclass of `{correct_anna}`, got `{param.annotation}`"
                 )
         else:
-            # after checking, we make sure the `parameters` are valid
+            # after checking, we are sure that the `parameters` are valid
             parameters = cast(ParametersType, parameters)
 
         if not issubclass(return_annotation, bytes):
@@ -359,6 +360,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         *,
         command: Optional[str] = None,
     ) -> _WrappablePyHandlerTypeVar:
+        # it seems that `handler.__name__` is already `sys._is_interned` in cpython
         command = command or handler.__name__
         if command in self.data:
             raise ValueError(

@@ -2,8 +2,6 @@
 
 ## [Unreleased]
 
-## [0.2.0]
-
 ### Added
 
 - [#75](https://github.com/WSH032/pytauri/pull/75) - feat: implement [tauri `menu` feature](https://tauri.app/learn/window-menu/):
@@ -21,8 +19,11 @@
 
 ### Changed
 
+- [#76](https://github.com/WSH032/pytauri/pull/76) - perf: use `pyo3::intern!` in `Invoke::bind_to` for commands `IPC` performance.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: all methods of `WebviewWindow` will release the `GIL` now.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: `App::{run, run_iteration}` will use a singleton `Py<AppHandle>` as an argument instead of fetching it from `tauri::State` each loop.
+
+## [0.2.0]
 
 ### BREAKING
 

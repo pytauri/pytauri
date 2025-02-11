@@ -2,6 +2,7 @@ use std::{borrow::Cow, str::FromStr as _};
 
 use pyo3::{
     exceptions::PyValueError,
+    intern,
     prelude::*,
     types::{PyBytes, PyDict, PyMapping, PyString, PyType},
 };
@@ -88,6 +89,9 @@ impl Invoke {
             }
         };
         // TODO, PERF: may be we should use [PyString::intern] ?
+        //     > However, for security reasons, since the input can be any string,
+        //     > unconditionally using [PyString::intern] will cause continuous memory growth issues.
+        //     > TODO, XXX: 👆 is this right?
         let command = PyString::new(py, func_name).unbind();
 
         let slf = Self {
@@ -114,7 +118,8 @@ impl Invoke {
 #[pymethods]
 // NOTE: These pymethods implementation must not block
 impl Invoke {
-    // TODO, PERF: may be we should use [PyString::intern] ?
+    // NOTE: remember to use `pyo3::intern!` for performance,
+    // see: <https://github.com/PyO3/pyo3/discussions/2266#discussioncomment-2491646>.
     const BODY_KEY: &str = "body";
     const APP_HANDLE_KEY: &str = "app_handle";
     const WEBVIEW_WINDOW_KEY: &str = "webview_window";
@@ -150,7 +155,8 @@ impl Invoke {
 
         let arguments = PyDict::new(py);
 
-        if parameters.contains(Self::BODY_KEY)? {
+        let body_key = intern!(py, Invoke::BODY_KEY);
+        if parameters.contains(body_key)? {
             match message.payload() {
                 InvokeBody::Json(_) => {
                     resolver.reject(
@@ -158,18 +164,18 @@ impl Invoke {
                     );
                     return Ok(None);
                 }
-                InvokeBody::Raw(body) => {
-                    arguments.set_item(Self::BODY_KEY, PyBytes::new(py, body))?
-                }
+                InvokeBody::Raw(body) => arguments.set_item(body_key, PyBytes::new(py, body))?,
             }
         }
 
-        if parameters.contains(Self::APP_HANDLE_KEY)? {
+        let app_handle_key = intern!(py, Invoke::APP_HANDLE_KEY);
+        if parameters.contains(app_handle_key)? {
             let py_app_handle = message.webview_ref().try_py_app_handle()?;
-            arguments.set_item(Self::APP_HANDLE_KEY, py_app_handle.clone_ref(py))?;
+            arguments.set_item(app_handle_key, &*py_app_handle)?;
         }
 
-        if parameters.contains(Self::WEBVIEW_WINDOW_KEY)? {
+        let webview_window_key = intern!(py, Invoke::WEBVIEW_WINDOW_KEY);
+        if parameters.contains(webview_window_key)? {
             let command_webview_window_item = CommandItem {
                 plugin: None,
                 name: "__whatever__pyfunc",
@@ -177,6 +183,7 @@ impl Invoke {
                 message: &message,
                 acl: &acl,
             };
+            // TODO, PERF: maybe we should release the GIL here?
             let webview_window = match TauriWebviewWindow::from_command(command_webview_window_item)
             {
                 Ok(webview_window) => webview_window,
@@ -185,7 +192,7 @@ impl Invoke {
                     return Ok(None);
                 }
             };
-            arguments.set_item(Self::WEBVIEW_WINDOW_KEY, WebviewWindow::new(webview_window))?;
+            arguments.set_item(webview_window_key, WebviewWindow::new(webview_window))?;
         }
 
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))
@@ -236,6 +243,7 @@ impl JavaScriptChannelId {
             Err(err) => {
                 let msg: &'static str = err;
                 // because the `err` is `static`, so we use `PyString::intern`.
+                // TODO, PERF: maybe we can just use `pyo3::intern!("failed to parse JavaScriptChannelId")`.
                 let msg = PyString::intern(py, msg).unbind();
                 Err(PyValueError::new_err(msg))
             }
