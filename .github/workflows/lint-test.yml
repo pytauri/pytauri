@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.13t"]
         os: ["ubuntu-latest", "windows-latest"]
     steps:
       - name: Checkout
@@ -59,8 +59,15 @@ jobs:
           version: ${{ steps.setup-envs-ver.outputs.uv }}
           enable-cache: true
       - name: Setup Python
+        if: matrix.python-version != '3.13t'
         uses: actions/setup-python@v5
         id: setup-python
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup Python
+        if: matrix.python-version == '3.13t'
+        # TODO: switch to `actions/setup-python`, see: <https://github.com/actions/setup-python/pull/973>
+        uses: Quansight-Labs/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 

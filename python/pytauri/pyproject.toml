@@ -11,7 +11,8 @@ description = "Tauri binding for Python through Pyo3."
 
 # <https://iscinumpy.dev/post/bound-version-constraints/>
 dependencies = [
-    "pydantic >= 2",
+    # TODO: bump to `>2.11`, see: <https://github.com/pydantic/pydantic/issues/10483>
+    "pydantic >= 2.11.0a2",   # `>=2.11` for free-threading
     "anyio >= 4",
     "typing-extensions >= 4",
     # See: <https://pypi.org/project/backports.entry-points-selectable/>

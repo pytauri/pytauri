@@ -1,3 +1,5 @@
+import sys
+import sysconfig
 from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Literal
@@ -75,3 +77,10 @@ def app_handle_fixture() -> Iterator[AppHandle]:
             )
         )
         yield app.handle()
+
+
+# ref: <https://docs.python.org/3/howto/free-threading-python.html#identifying-free-threaded-python>
+if sys.version_info >= (3, 13) and sysconfig.get_config_var("Py_GIL_DISABLED") == 1:
+    assert (
+        sys._is_gil_enabled() is False
+    ), "After importing `pytauri.EXT_MOD`, the `GIL` should remain disabled to indicate that `pytauri` supports free-threading"
