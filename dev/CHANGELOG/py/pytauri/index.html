@@ -1381,16 +1381,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.2.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
+    <nav class="md-nav" aria-label="Unreleased">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1410,6 +1401,21 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#breaking" class="md-nav__link">
@@ -1790,16 +1796,7 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.2.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
+    <nav class="md-nav" aria-label="Unreleased">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1819,6 +1816,21 @@
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#breaking" class="md-nav__link">
@@ -1894,7 +1906,6 @@
 
 <h1 id="pytauri">pytauri<a class="headerlink" href="#pytauri" title="Permanent link">&para;</a></h1>
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<h2 id="020"><a href="https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - feat: implement <a href="https://tauri.app/learn/window-menu/">tauri <code>menu</code> feature</a>:<ul>
@@ -1918,9 +1929,11 @@
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/76">#76</a> - perf: use <code>pyo3::intern!</code> in <code>Invoke::bind_to</code> for commands <code>IPC</code> performance.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - perf: all methods of <code>WebviewWindow</code> will release the <code>GIL</code> now.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - perf: <code>App::{run, run_iteration}</code> will use a singleton <code>Py&lt;AppHandle&gt;</code> as an argument instead of fetching it from <code>tauri::State</code> each loop.</li>
 </ul>
+<h2 id="020"><a href="https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
