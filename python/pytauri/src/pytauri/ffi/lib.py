@@ -6,6 +6,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    NamedTuple,
     NewType,
     Optional,
     Protocol,
@@ -13,7 +14,8 @@ from typing import (
     final,
 )
 
-from typing_extensions import Self, TypeAliasType
+from pydantic import NonNegativeInt
+from typing_extensions import Never, Self, TypeAliasType
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
@@ -31,8 +33,11 @@ __all__ = [
     "Manager",
     "Position",
     "PositionType",
+    "Rect",
     "RunEvent",
     "RunEventType",
+    "Size",
+    "SizeType",
     "builder_factory",
     "context_factory",
 ]
@@ -52,7 +57,9 @@ _EventHandlerType = Callable[["Event"], None]
 
 if TYPE_CHECKING:
     from pytauri.ffi import webview
+    from pytauri.ffi.image import Image
     from pytauri.ffi.menu import Menu, MenuEvent
+    from pytauri.ffi.tray import TrayIcon, TrayIconEventType
 
     @final
     class App:
@@ -108,6 +115,16 @@ if TYPE_CHECKING:
     class AppHandle:
         """[tauri::AppHandle](https://docs.rs/tauri/latest/tauri/app/struct.AppHandle.html)"""
 
+        def run_on_main_thread(self, handler: Callable[[], object], /) -> None:
+            """Runs the given closure on the main thread.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
+        def exit(self, exit_code: int, /) -> None: ...
+        def restart(self, /) -> Never: ...
         def on_menu_event(
             self, handler: Callable[["Self", "MenuEvent"], None], /
         ) -> None:
@@ -117,11 +134,31 @@ if TYPE_CHECKING:
                 `handler` has the same restrictions as [App.run][pytauri.App.run].
             """
 
+        def on_tray_icon_event(
+            self, handler: Callable[[Self, TrayIconEventType], None], /
+        ) -> None:
+            """Registers a global tray icon menu event listener.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+
+        def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def default_window_icon(self, /) -> Optional[Image]:
+            """Returns the default window icon.
+
+            !!! warning
+                Each time you call this function, a new image instance will be created.
+                So you should cache the result if you need to use it multiple times.
+            """
+
         def menu(self) -> Optional[Menu]: ...
         def set_menu(self, menu: Menu, /) -> Optional[Menu]: ...
         def remove_menu(self) -> Optional[Menu]: ...
         def hide_menu(self) -> None: ...
         def show_menu(self) -> None: ...
+        def invoke_key(self) -> str: ...
 
     @final
     class BuilderArgs:  # noqa: D101
@@ -206,8 +243,26 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::MainEventsCleared](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MainEventsCleared)"""
 
         @final
-        class MenuEvent:
-            """[tauri::RunEvent::MenuEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MenuEvent)"""
+        class MenuEvent(NamedTuple):
+            """[tauri::RunEvent::MenuEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MenuEvent)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: MenuEvent
+
+        @final
+        class TrayIconEvent(NamedTuple):
+            """[tauri::RunEvent::TrayIconEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.TrayIconEvent)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: TrayIconEventType
+
+        # When adding new variants, remember to update `RunEventType`.
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -246,6 +301,7 @@ if TYPE_CHECKING:
             """Fetch all managed webview windows."""
             ...
 
+    @final
     class Event:
         """[tauri::Event](https://docs.rs/tauri/latest/tauri/struct.Event.html)"""
 
@@ -259,6 +315,7 @@ if TYPE_CHECKING:
             """The event payload."""
             ...
 
+    @final
     class Listener:
         """[tauri::Listener](https://docs.rs/tauri/latest/tauri/trait.Listener.html)
 
@@ -330,18 +387,84 @@ if TYPE_CHECKING:
             """
             ...
 
+    @final
     class Position:
         """[tauri::Position](https://docs.rs/tauri/latest/tauri/enum.Position.html)"""
 
-        class Physical:
-            """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)"""
+        @final
+        class Physical(NamedTuple):
+            """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)
 
-            def __new__(cls, x: int, y: int, /) -> Self: ...
+            `[x, y]`
 
-        class Logical:
-            """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)"""
+            !!! warning
+                This is actually a `Class` disguised as an `NamedTuple`.
+                See also: <https://pyo3.rs/v0.23.4/class.html#pyclass-enums>.
+            """
 
-            def __new__(cls, x: float, y: float, /) -> Self: ...
+            _0: int
+            _1: int
+
+        @final
+        class Logical(NamedTuple):
+            """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)
+
+            `[x, y]`
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: float
+            _1: float
+
+    @final
+    class Size:
+        """[tauri::Size](https://docs.rs/tauri/latest/tauri/enum.Size.html)"""
+
+        @final
+        class Physical(NamedTuple):
+            """[tauri::Size::Physical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Physical)
+
+            `[width, height]`
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            # (u32, u32)
+            _0: NonNegativeInt
+            _1: NonNegativeInt
+
+        @final
+        class Logical(NamedTuple):
+            """[tauri::Size::Logical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Logical)
+
+            `[width, height]`
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: float
+            _1: float
+
+    @final
+    class Rect:
+        """[tauri::Rect](https://docs.rs/tauri/latest/tauri/struct.Rect.html)"""
+
+        def __new__(
+            cls,
+            /,
+            *,
+            position: "PositionType",
+            size: "SizeType",
+        ) -> Self: ...
+
+        @property
+        def position(self) -> "PositionType": ...
+        @property
+        def size(self) -> "SizeType": ...
 
 
 else:
@@ -357,6 +480,8 @@ else:
     Event = pytauri_mod.Event
     Listener = pytauri_mod.Listener
     Position = pytauri_mod.Position
+    Size = pytauri_mod.Size
+    Rect = pytauri_mod.Rect
 
 RunEventType = TypeAliasType(
     "RunEventType",
@@ -369,6 +494,7 @@ RunEventType = TypeAliasType(
         RunEvent.Resumed,
         RunEvent.MainEventsCleared,
         RunEvent.MenuEvent,
+        RunEvent.TrayIconEvent,
     ],
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
@@ -384,3 +510,6 @@ ImplListener = ImplManager
 
 PositionType = TypeAliasType("PositionType", Union[Position.Physical, Position.Logical])
 """See [Position][pytauri.ffi.Position] for details."""
+
+SizeType = TypeAliasType("SizeType", Union[Size.Physical, Size.Logical])
+"""See [Size][pytauri.ffi.Size] for details."""

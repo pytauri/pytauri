@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use pyo3::{marker::Ungil, prelude::*, types::PyString};
 use pyo3_utils::{
-    py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT0},
+    py_wrapper::{PyWrapper, PyWrapperT0},
     ungil::UnsafeUngilExt,
 };
 use tauri::menu::{self, ContextMenu as _, IsMenuItem, MenuId};
@@ -22,9 +22,13 @@ type TauriCheckMenuItem = menu::CheckMenuItem<Runtime>;
 type TauriIconMenuItem = menu::IconMenuItem<Runtime>;
 type TauriMenuItemKind = menu::MenuItemKind<Runtime>;
 
-/// see also: [tauri::menu::MenuId]
+/// see also: [tauri::menu::MenuId].
+///
+/// Remember use [MenuID::intern] to create a new instance.
 pub type MenuID = PyString;
 /// see also: [tauri::menu::MenuEvent]
+///
+/// Remember use [MenuEvent::intern] to create a new instance.
 pub type MenuEvent = MenuID;
 pub use menu::{HELP_SUBMENU_ID, WINDOW_SUBMENU_ID};
 
@@ -39,16 +43,17 @@ pub enum MenuItemKind {
     Icon(Py<IconMenuItem>),
 }
 
-macro_rules! menu_item_kind_method_impl {
-    ($menu_item_kind:expr, $macro:ident) => {
-        match $menu_item_kind {
-            MenuItemKind::MenuItem(v) => $macro!(v),
-            MenuItemKind::Submenu(v) => $macro!(v),
-            MenuItemKind::Predefined(v) => $macro!(v),
-            MenuItemKind::Check(v) => $macro!(v),
-            MenuItemKind::Icon(v) => $macro!(v),
+impl MenuItemKind {
+    #[inline]
+    fn delegate_inner_ref<R>(&self, f: impl FnOnce(&dyn IsMenuItem<Runtime>) -> R) -> R {
+        match self {
+            MenuItemKind::MenuItem(v) => f(&*v.get().0.inner_ref()),
+            MenuItemKind::Submenu(v) => f(&*v.get().0.inner_ref()),
+            MenuItemKind::Predefined(v) => f(&*v.get().0.inner_ref()),
+            MenuItemKind::Check(v) => f(&*v.get().0.inner_ref()),
+            MenuItemKind::Icon(v) => f(&*v.get().0.inner_ref()),
         }
-    };
+    }
 }
 
 trait TauriMenuProto {
@@ -97,13 +102,7 @@ impl_tauri_menu_proto!(TauriMenuProto => TauriMenu, TauriSubmenu => append, prep
 impl MenuItemKind {
     #[inline]
     fn append_to_menu(&self, menu: &impl TauriMenuProto) -> tauri::Result<()> {
-        macro_rules! append_to_menu_impl {
-            ($wrapper:expr) => {{
-                let menu_item = $wrapper.get().0.inner_ref();
-                menu.append(menu_item.deref())
-            }};
-        }
-        menu_item_kind_method_impl!(self, append_to_menu_impl)
+        self.delegate_inner_ref(|item| menu.append(item))
     }
 
     #[inline]
@@ -119,13 +118,7 @@ impl MenuItemKind {
 
     #[inline]
     fn prepend_to_menu(&self, menu: &impl TauriMenuProto) -> tauri::Result<()> {
-        macro_rules! prepend_to_menu_impl {
-            ($wrapper:expr) => {{
-                let menu_item = $wrapper.get().0.inner_ref();
-                menu.prepend(menu_item.deref())
-            }};
-        }
-        menu_item_kind_method_impl!(self, prepend_to_menu_impl)
+        self.delegate_inner_ref(|item| menu.prepend(item))
     }
 
     #[inline]
@@ -141,13 +134,7 @@ impl MenuItemKind {
 
     #[inline]
     fn insert_to_menu(&self, menu: &impl TauriMenuProto, position: usize) -> tauri::Result<()> {
-        macro_rules! insert_to_menu_impl {
-            ($wrapper:expr) => {{
-                let menu_item = $wrapper.get().0.inner_ref();
-                menu.insert(menu_item.deref(), position)
-            }};
-        }
-        menu_item_kind_method_impl!(self, insert_to_menu_impl)
+        self.delegate_inner_ref(|item| menu.insert(item, position))
     }
 
     #[inline]
@@ -164,13 +151,7 @@ impl MenuItemKind {
 
     #[inline]
     fn remove_from_menu(&self, menu: &impl TauriMenuProto) -> tauri::Result<()> {
-        macro_rules! remove_from_menu_impl {
-            ($wrapper:expr) => {{
-                let menu_item = $wrapper.get().0.inner_ref();
-                menu.remove(menu_item.deref())
-            }};
-        }
-        menu_item_kind_method_impl!(self, remove_from_menu_impl)
+        self.delegate_inner_ref(|item| menu.remove(item))
     }
 }
 
@@ -233,9 +214,9 @@ impl Menu {
                 }
                 tauri::Result::Ok(Self::new(menu))
             })
-            .map_err(TauriError::from)
-            .map_err(PyErr::from)
         }
+        .map_err(TauriError::from)
+        .map_err(PyErr::from)
     }
 }
 
@@ -244,26 +225,22 @@ impl Menu {
 impl Menu {
     #[new]
     fn __new__(py: Python<'_>, manager: ImplManager) -> PyResult<Self> {
-        macro_rules! new_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), None::<&str>, None)
-            }};
-        }
-        manager_method_impl!(manager, new_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            None::<&str>,
+            None
+        ))?
     }
 
     #[staticmethod]
     fn with_id(py: Python<'_>, manager: ImplManager, id: String) -> PyResult<Self> {
-        macro_rules! with_id_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), Some(MenuId(id)), None)
-            }};
-        }
-        manager_method_impl!(manager, with_id_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            Some(MenuId(id)),
+            None
+        ))?
     }
 
     #[staticmethod]
@@ -272,14 +249,12 @@ impl Menu {
         manager: ImplManager,
         items: Vec<MenuItemKind>,
     ) -> PyResult<Self> {
-        macro_rules! with_items_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), None::<&str>, Some(items))
-            }};
-        }
-        manager_method_impl!(manager, with_items_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            None::<&str>,
+            Some(items)
+        ))?
     }
 
     #[staticmethod]
@@ -289,14 +264,12 @@ impl Menu {
         id: String,
         items: Vec<MenuItemKind>,
     ) -> PyResult<Self> {
-        macro_rules! with_id_and_items_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), Some(MenuId(id)), Some(items))
-            }};
-        }
-        manager_method_impl!(manager, with_id_and_items_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            Some(MenuId(id)),
+            Some(items)
+        ))?
     }
 
     #[staticmethod]
@@ -310,14 +283,14 @@ impl Menu {
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn append(&self, py: Python<'_>, item: MenuItemKind) -> PyResult<()> {
@@ -486,9 +459,9 @@ impl Submenu {
                 }
                 tauri::Result::Ok(Self::new(menu))
             })
-            .map_err(TauriError::from)
-            .map_err(PyErr::from)
         }
+        .map_err(TauriError::from)
+        .map_err(PyErr::from)
     }
 }
 
@@ -497,14 +470,14 @@ impl Submenu {
 impl Submenu {
     #[new]
     fn __new__(py: Python<'_>, manager: ImplManager, text: &str, enabled: bool) -> PyResult<Self> {
-        macro_rules! new_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), text, enabled, None::<&str>, None)
-            }};
-        }
-        manager_method_impl!(manager, new_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            None::<&str>,
+            None
+        ))?
     }
 
     #[staticmethod]
@@ -515,14 +488,14 @@ impl Submenu {
         text: &str,
         enabled: bool,
     ) -> PyResult<Self> {
-        macro_rules! with_id_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), text, enabled, Some(MenuId(id)), None)
-            }};
-        }
-        manager_method_impl!(manager, with_id_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            Some(MenuId(id)),
+            None
+        ))?
     }
 
     #[staticmethod]
@@ -533,14 +506,14 @@ impl Submenu {
         enabled: bool,
         items: Vec<MenuItemKind>,
     ) -> PyResult<Self> {
-        macro_rules! with_items_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), text, enabled, None::<&str>, Some(items))
-            }};
-        }
-        manager_method_impl!(manager, with_items_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            None::<&str>,
+            Some(items)
+        ))?
     }
 
     #[staticmethod]
@@ -552,33 +525,26 @@ impl Submenu {
         enabled: bool,
         items: Vec<MenuItemKind>,
     ) -> PyResult<Self> {
-        macro_rules! with_id_and_items_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    Some(MenuId(id)),
-                    Some(items),
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_id_and_items_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            Some(MenuId(id)),
+            Some(items),
+        ))?
     }
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn append(&self, py: Python<'_>, item: MenuItemKind) -> PyResult<()> {
@@ -754,9 +720,9 @@ impl MenuItem {
 
                 tauri::Result::Ok(Self::new(menu))
             })
-            .map_err(TauriError::from)
-            .map_err(PyErr::from)
         }
+        .map_err(TauriError::from)
+        .map_err(PyErr::from)
     }
 }
 
@@ -771,14 +737,14 @@ impl MenuItem {
         enabled: bool,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        macro_rules! new_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(py, guard.deref(), text, enabled, accelerator, None::<&str>)
-            }};
-        }
-        manager_method_impl!(manager, new_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            accelerator,
+            None::<&str>
+        ))?
     }
 
     #[staticmethod]
@@ -791,33 +757,26 @@ impl MenuItem {
         enabled: bool,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        macro_rules! with_id_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    accelerator,
-                    Some(MenuId(id)),
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_id_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            accelerator,
+            Some(MenuId(id)),
+        ))?
     }
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn text(&self, py: Python<'_>) -> PyResult<String> {
@@ -894,226 +853,151 @@ impl PredefinedMenuItem {
 impl PredefinedMenuItem {
     #[staticmethod]
     fn separator(py: Python<'_>, manager: ImplManager) -> PyResult<Self> {
-        macro_rules! separator_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::separator(manager)
-                })
-            }};
-        }
-        manager_method_impl!(manager, separator_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::separator(manager) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn copy(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! copy_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::copy(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, copy_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::copy(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn cut(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! cut_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::cut(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, cut_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::cut(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn paste(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! paste_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::paste(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, paste_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::paste(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn select_all(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! select_all_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::select_all(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, select_all_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::select_all(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn undo(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! undo_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::undo(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, undo_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::undo(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn redo(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! redo_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::redo(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, redo_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::redo(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn minimize(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! minimize_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::minimize(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, minimize_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::minimize(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn maximize(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! maximize_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::maximize(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, maximize_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::maximize(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn fullscreen(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! fullscreen_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::fullscreen(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, fullscreen_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::fullscreen(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn hide(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! hide_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::hide(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, hide_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::hide(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn hide_others(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! hide_others_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::hide_others(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, hide_others_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::hide_others(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn show_all(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! show_all_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::show_all(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, show_all_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::show_all(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn close_window(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! close_window_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::close_window(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, close_window_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::close_window(manager, text) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn quit(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! quit_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::quit(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, quit_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::quit(manager, text) }
+        ))?
     }
 
     #[staticmethod]
@@ -1128,43 +1012,34 @@ impl PredefinedMenuItem {
             Some(ref metadata) => Some(metadata.get().to_tauri(py)?),
             None => None,
         };
-        macro_rules! about_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::about(manager, text, metadata)
-                })
-            }};
-        }
-        manager_method_impl!(manager, about_impl)
+
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::about(manager, text, metadata) }
+        ))?
     }
 
     #[staticmethod]
     #[pyo3(signature = (manager, text=None))]
     fn services(py: Python<'_>, manager: ImplManager, text: Option<&str>) -> PyResult<Self> {
-        macro_rules! services_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::delegate_inner(py, guard.deref(), move |manager| {
-                    TauriPredefinedMenuItem::services(manager, text)
-                })
-            }};
-        }
-        manager_method_impl!(manager, services_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::delegate_inner(
+            py,
+            manager,
+            move |manager| { TauriPredefinedMenuItem::services(manager, text) }
+        ))?
     }
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn text(&self, py: Python<'_>) -> PyResult<String> {
@@ -1214,9 +1089,9 @@ impl CheckMenuItem {
 
                 tauri::Result::Ok(Self::new(menu))
             })
-            .map_err(TauriError::from)
-            .map_err(PyErr::from)
         }
+        .map_err(TauriError::from)
+        .map_err(PyErr::from)
     }
 }
 
@@ -1232,22 +1107,15 @@ impl CheckMenuItem {
         checked: bool,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        macro_rules! new_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    checked,
-                    accelerator,
-                    None::<&str>,
-                )
-            }};
-        }
-        manager_method_impl!(manager, new_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            checked,
+            accelerator,
+            None::<&str>,
+        ))?
     }
 
     #[staticmethod]
@@ -1261,34 +1129,27 @@ impl CheckMenuItem {
         checked: bool,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        macro_rules! with_id_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    checked,
-                    accelerator,
-                    Some(MenuId(id)),
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_id_impl)
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            checked,
+            accelerator,
+            Some(MenuId(id)),
+        ))?
     }
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn text(&self, py: Python<'_>) -> PyResult<String> {
@@ -1537,9 +1398,9 @@ impl IconMenuItem {
 
                 tauri::Result::Ok(Self::new(menu))
             })
-            .map_err(TauriError::from)
-            .map_err(PyErr::from)
         }
+        .map_err(TauriError::from)
+        .map_err(PyErr::from)
     }
 }
 
@@ -1557,22 +1418,16 @@ impl IconMenuItem {
     ) -> PyResult<Self> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
         let icon = IconOrNative::Icon(icon);
-        macro_rules! new_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    icon,
-                    accelerator,
-                    None::<&str>,
-                )
-            }};
-        }
-        manager_method_impl!(manager, new_impl)
+
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            icon,
+            accelerator,
+            None::<&str>,
+        ))?
     }
 
     #[staticmethod]
@@ -1588,22 +1443,16 @@ impl IconMenuItem {
     ) -> PyResult<Self> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
         let icon = IconOrNative::Icon(icon);
-        macro_rules! with_id_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    icon,
-                    accelerator,
-                    Some(MenuId(id)),
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_id_impl)
+
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            icon,
+            accelerator,
+            Some(MenuId(id)),
+        ))?
     }
 
     #[staticmethod]
@@ -1616,24 +1465,18 @@ impl IconMenuItem {
         native_icon: Option<NativeIcon>,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        let native_icon = native_icon.map(|native_icon| native_icon.into_tauri());
+        let native_icon = native_icon.map(|native_icon| native_icon.into());
         let native_icon = IconOrNative::Native(native_icon);
-        macro_rules! with_native_icon_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    native_icon,
-                    accelerator,
-                    None::<&str>,
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_native_icon_impl)
+
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            native_icon,
+            accelerator,
+            None::<&str>,
+        ))?
     }
 
     #[staticmethod]
@@ -1647,36 +1490,30 @@ impl IconMenuItem {
         native_icon: Option<NativeIcon>,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
-        let native_icon = native_icon.map(|native_icon| native_icon.into_tauri());
+        let native_icon = native_icon.map(|native_icon| native_icon.into());
         let native_icon = IconOrNative::Native(native_icon);
-        macro_rules! with_id_and_native_icon_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                Self::new_impl(
-                    py,
-                    guard.deref(),
-                    text,
-                    enabled,
-                    native_icon,
-                    accelerator,
-                    Some(MenuId(id)),
-                )
-            }};
-        }
-        manager_method_impl!(manager, with_id_and_native_icon_impl)
+
+        manager_method_impl!(py, &manager, |py, manager| Self::new_impl(
+            py,
+            manager,
+            text,
+            enabled,
+            native_icon,
+            accelerator,
+            Some(MenuId(id)),
+        ))?
     }
 
     fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
         let menu = self.0.inner_ref();
+        // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
         app_handle
     }
 
-    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
+    fn id<'py>(&self, py: Python<'py>) -> Bound<'py, MenuID> {
         let menu = self.0.inner_ref();
-        // TODO, PERF: do we really need `PyString::intern` here?
-        PyString::intern(py, &menu.id().0)
+        MenuID::intern(py, &menu.id().0)
     }
 
     fn text(&self, py: Python<'_>) -> PyResult<String> {
@@ -1737,7 +1574,7 @@ impl IconMenuItem {
 
     #[pyo3(signature = (native_icon))]
     fn set_native_icon(&self, py: Python<'_>, native_icon: Option<NativeIcon>) -> PyResult<()> {
-        let native_icon = native_icon.map(|native_icon| native_icon.into_tauri());
+        let native_icon = native_icon.map(|native_icon| native_icon.into());
         py.allow_threads(|| {
             let menu = self.0.inner_ref();
             menu.set_native_icon(native_icon)
@@ -1748,7 +1585,7 @@ impl IconMenuItem {
 }
 
 macro_rules! native_icon_impl {
-    ($ident:ident => $into_tauri:ident : $($variant:ident),*) => {
+    ($ident:ident => : $($variant:ident),*) => {
         /// see also: [tauri::menu::NativeIcon]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
@@ -1756,18 +1593,27 @@ macro_rules! native_icon_impl {
             $($variant,)*
         }
 
-        impl $ident {
-            pub(crate) fn $into_tauri(self) -> tauri::menu::NativeIcon {
-                match self {
+        impl From<$ident> for tauri::menu::NativeIcon {
+            fn from(icon: $ident) -> Self {
+                match icon {
                     $($ident::$variant => tauri::menu::NativeIcon::$variant,)*
                 }
             }
         }
+
+        impl From<tauri::menu::NativeIcon> for $ident {
+            fn from(icon: tauri::menu::NativeIcon) -> Self {
+                match icon {
+                    $(tauri::menu::NativeIcon::$variant => $ident::$variant,)*
+                }
+            }
+        }
+
     };
 }
 
 native_icon_impl!(
-    NativeIcon => into_tauri:
+    NativeIcon => :
     Add,
     Advanced,
     Bluetooth,
@@ -1826,7 +1672,7 @@ native_icon_impl!(
     UserGuest
 );
 
-/// The Implementors of [tauri::menu::ContextMenu].
+/// The Implementers of [tauri::menu::ContextMenu].
 #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
 #[non_exhaustive]
 pub enum ImplContextMenu {
@@ -1834,21 +1680,44 @@ pub enum ImplContextMenu {
     Submenu(Py<Submenu>),
 }
 
+impl ImplContextMenu {
+    pub(crate) fn _delegate_inner_ref<M, R>(menu: &M, f: impl FnOnce(&M) -> R) -> R
+    where
+        M: menu::ContextMenu,
+    {
+        f(menu)
+    }
+}
+
+/// see [crate::manager_method_impl]
+#[doc(hidden)]
+#[macro_export]
+macro_rules! context_menu_impl {
+    // impl
+    ($menu:expr, $f0:expr, $f1:expr) => {{
+        use $crate::ext_mod_impl::menu::ImplContextMenu;
+
+        let menu: &ImplContextMenu = $menu;
+        match menu {
+            ImplContextMenu::Menu(v) => {
+                ImplContextMenu::_delegate_inner_ref(&*v.get().0.inner_ref(), $f0)
+            }
+            ImplContextMenu::Submenu(v) => {
+                ImplContextMenu::_delegate_inner_ref(&*v.get().0.inner_ref(), $f1)
+            }
+        }
+    }};
+
+    // entry0
+    ($menu:expr, $($f:tt)*) => {
+        context_menu_impl!($menu, $($f)*, $($f)*)
+    };
+}
+
 /// See also: [tauri::menu::ContextMenu].
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct ContextMenu;
-
-#[doc(hidden)]
-#[macro_export]
-macro_rules! context_menu_impl {
-    ($slf:expr, $macro:ident) => {
-        match $slf {
-            ImplContextMenu::Menu(v) => $macro!(v),
-            ImplContextMenu::Submenu(v) => $macro!(v),
-        }
-    };
-}
 
 #[pymethods]
 impl ContextMenu {
@@ -1860,14 +1729,11 @@ impl ContextMenu {
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let window = window.get().0.inner_ref().to_owned();
-            macro_rules! popup_impl {
-                ($wrapper:expr) => {{
-                    let context_menu = $wrapper.get().0.inner_ref();
-                    context_menu.popup(window).map_err(TauriError::from)?;
-                    Ok(())
-                }};
-            }
-            context_menu_impl!(slf, popup_impl)
+            context_menu_impl!(&slf, |menu| {
+                menu.popup(window)
+                    .map_err(TauriError::from)
+                    .map_err(PyErr::from)
+            })
         })
     }
 
@@ -1880,16 +1746,11 @@ impl ContextMenu {
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let window = window.get().0.inner_ref().to_owned();
-            macro_rules! popup_at_impl {
-                ($wrapper:expr) => {{
-                    let context_menu = $wrapper.get().0.inner_ref();
-                    context_menu
-                        .popup_at(window, position)
-                        .map_err(TauriError::from)?;
-                    Ok(())
-                }};
-            }
-            context_menu_impl!(slf, popup_at_impl)
+            context_menu_impl!(&slf, |menu| {
+                menu.popup_at(window, position)
+                    .map_err(TauriError::from)
+                    .map_err(PyErr::from)
+            })
         })
     }
 }

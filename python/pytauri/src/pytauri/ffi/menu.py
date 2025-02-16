@@ -22,6 +22,7 @@ __all__ = [
     "IconMenuItem",
     "ImplContextMenu",
     "Menu",
+    "MenuEvent",
     "MenuID",
     "MenuItem",
     "MenuItemKind",

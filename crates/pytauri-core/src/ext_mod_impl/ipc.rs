@@ -4,7 +4,7 @@ use pyo3::{
     exceptions::PyValueError,
     intern,
     prelude::*,
-    types::{PyBytes, PyDict, PyMapping, PyString, PyType},
+    types::{PyBytes, PyDict, PyMapping, PyString},
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
 use tauri::ipc::{
@@ -234,9 +234,9 @@ impl JavaScriptChannelId {
 
 #[pymethods]
 impl JavaScriptChannelId {
-    #[classmethod]
-    fn from_str(cls: &Bound<'_, PyType>, value: &str) -> PyResult<Self> {
-        let py = cls.py();
+    #[staticmethod]
+    fn from_str(py: Python<'_>, value: &str) -> PyResult<Self> {
+        // it's short enough, so we don't release the GIL
         let result = ipc::JavaScriptChannelId::from_str(value);
         match result {
             Ok(js_channel_id) => Ok(Self::new(js_channel_id)),
@@ -252,14 +252,16 @@ impl JavaScriptChannelId {
 
     /// PERF, TODO: maybe we should accept `Union[Webview, WebviewWindow]`,
     /// so that user dont need create new `Webview` pyobject for `WebviewWindow`.
-    fn channel_on(&self, webview: Py<Webview>) -> Channel {
-        let js_channel_id = self.0.inner_ref();
-        let webview = webview.get().0.inner_ref().clone();
-        // TODO, FIXME, PERF:
-        // Why [JavaScriptChannelId::channel_on] need take the ownership of [Webview]?
-        // We should ask tauri developers.
-        let channel = js_channel_id.channel_on(webview);
-        Channel::new(channel)
+    fn channel_on(&self, py: Python<'_>, webview: Py<Webview>) -> Channel {
+        py.allow_threads(|| {
+            let js_channel_id = self.0.inner_ref();
+            let webview = webview.get().0.inner_ref().clone();
+            // TODO, FIXME, PERF:
+            // Why [JavaScriptChannelId::channel_on] need take the ownership of [Webview]?
+            // We should ask tauri developers.
+            let channel = js_channel_id.channel_on(webview); // maybe block, so we release the GIL
+            Channel::new(channel)
+        })
     }
 }
 

@@ -31,6 +31,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [#79](https://github.com/WSH032/pytauri/pull/79) - bump `rust-version = "1.82"`
+
+### Docs
+
+- [#79](https://github.com/WSH032/pytauri/pull/79) - `example/nicegui-app`:
+    - use `tray` and `menu` feature
+    - use `python3.10` `match` statement instead of `if-else` statement
+    - bump `requires-python = ">=3.10"`
+
 ## [0.2.0]
 
 ### BREAKING

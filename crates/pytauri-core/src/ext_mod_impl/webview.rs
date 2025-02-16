@@ -5,6 +5,7 @@ use tauri::webview;
 use crate::{
     context_menu_impl,
     ext_mod_impl::{
+        image::Image,
         menu::{ImplContextMenu, Menu, MenuEvent},
         window::Window,
         Position,
@@ -13,7 +14,7 @@ use crate::{
     utils::TauriError,
 };
 
-type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
+pub(crate) type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
 type TauriWebview = webview::Webview<Runtime>;
 
 /// see also: [tauri::webview::WebviewWindow]
@@ -40,9 +41,25 @@ macro_rules! delegate_inner {
 
 #[pymethods]
 impl WebviewWindow {
+    fn run_on_main_thread(&self, py: Python<'_>, handler: PyObject) -> PyResult<()> {
+        py.allow_threads(|| {
+            delegate_inner!(self, run_on_main_thread, move || {
+                Python::with_gil(|py| {
+                    let handler = handler.bind(py);
+                    let result = handler.call0();
+                    if let Err(e) = result {
+                        e.write_unraisable(py, Some(handler));
+                        panic!("Python exception occurred in `WebviewWindow::run_on_main_thread`")
+                    }
+                })
+            })
+        })
+    }
+
     fn label<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {
         let webview_window = self.0.inner_ref();
-        PyString::new(py, webview_window.label())
+        // if `label` is immutable, we can intern it to save memory.
+        PyString::intern(py, webview_window.label())
     }
 
     fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {
@@ -58,7 +75,6 @@ impl WebviewWindow {
                         // so we can directly use the same PyObject.
                         let window: &Py<Self> = &moved_slf;  // TODO, XXX, FIXME: return `Window` instead of `WebviewWindow`?
                         debug_assert_eq!(&*window.get().0.inner_ref().as_ref().window_ref(), _window);
-                        // TODO, PERF: do we really need `PyString::intern` here?
                         let menu_event: Bound<'_, MenuEvent> = MenuEvent::intern(py, &menu_event.id.0);
 
                         let handler = handler.bind(py);
@@ -107,13 +123,7 @@ impl WebviewWindow {
 
     fn popup_menu(&self, py: Python<'_>, menu: ImplContextMenu) -> PyResult<()> {
         py.allow_threads(|| {
-            macro_rules! popup_menu_impl {
-                ($menu:expr) => {{
-                    let menu = $menu.get().0.inner_ref();
-                    delegate_inner!(self, popup_menu, &*menu)
-                }};
-            }
-            context_menu_impl!(menu, popup_menu_impl)
+            context_menu_impl!(&menu, |menu| delegate_inner!(self, popup_menu, menu))
         })
     }
 
@@ -124,13 +134,12 @@ impl WebviewWindow {
         position: Position,
     ) -> PyResult<()> {
         py.allow_threads(|| {
-            macro_rules! popup_menu_at_impl {
-                ($menu:expr) => {{
-                    let menu = $menu.get().0.inner_ref();
-                    delegate_inner!(self, popup_menu_at, &*menu, position)
-                }};
-            }
-            context_menu_impl!(menu, popup_menu_at_impl)
+            context_menu_impl!(&menu, |menu| delegate_inner!(
+                self,
+                popup_menu_at,
+                menu,
+                position
+            ))
         })
     }
 
@@ -282,6 +291,11 @@ impl WebviewWindow {
 
     fn set_focus(&self, py: Python<'_>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, set_focus,))
+    }
+
+    fn set_icon(&self, py: Python<'_>, icon: Py<Image>) -> PyResult<()> {
+        let icon = icon.get().to_tauri(py);
+        py.allow_threads(|| delegate_inner!(self, set_icon, icon))
     }
 
     fn set_skip_taskbar(&self, py: Python<'_>, skip: bool) -> PyResult<()> {

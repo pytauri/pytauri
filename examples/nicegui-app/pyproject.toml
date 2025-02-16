@@ -2,6 +2,9 @@
 name = "nicegui-app"
 version = "0.1.0"
 description = "Add your description here"
+# Although we use the `match` feature of py310,
+# we still keep `requires-python = ">=3.9"` here,
+# otherwise it cannot be installed in the py39 CI job.
 requires-python = ">=3.9"
 dependencies = [
     "nicegui >= 2.9.1, < 3",

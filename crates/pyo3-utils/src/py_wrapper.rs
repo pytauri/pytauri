@@ -278,19 +278,28 @@ impl<T> PyWrapper<PyWrapperT0<T>> {
     #[inline]
     pub fn inner_ref(&self) -> impl MappableDeref<'_, Target = T> {
         // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-        self.inner.as_ref().unwrap()
+        match self.inner.as_ref() {
+            Ok(inner) => inner,
+            // this arm cannot be omitted because of the reference,
+            // see: <https://blog.rust-lang.org/2024/10/17/Rust-1.82.0.html#omitting-empty-types-in-pattern-matching>
+            Err(infallible) => match *infallible {},
+        }
     }
 
     #[inline]
     pub fn inner_mut(&mut self) -> impl MappableDerefMut<'_, Target = T> {
         // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-        self.inner.as_mut().unwrap()
+        match self.inner.as_mut() {
+            Ok(inner) => inner,
+            Err(infallible) => match *infallible {},
+        }
     }
 
     #[inline]
     pub fn into_inner(self) -> T {
         // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-        self.inner.unwrap()
+        let Ok(inner) = self.inner;
+        inner
     }
 }
 
@@ -306,19 +315,30 @@ impl<T> PyWrapper<PyWrapperT1<T>> {
         self.inner
             .try_read_ext()
             // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-            .map(|guard| RwLockReadGuard::map(guard, |inner| inner.as_ref().unwrap()))
+            .map(|guard| {
+                RwLockReadGuard::map(guard, |inner| match inner.as_ref() {
+                    Ok(inner) => inner,
+                    Err(infallible) => match *infallible {},
+                })
+            })
     }
 
     pub fn lock_inner_mut(&self) -> LockResult<MappedRwLockWriteGuard<'_, T>> {
         self.inner
             .try_write_ext()
             // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-            .map(|guard| RwLockWriteGuard::map(guard, |inner| inner.as_mut().unwrap()))
+            .map(|guard| {
+                RwLockWriteGuard::map(guard, |inner| match inner.as_mut() {
+                    Ok(inner) => inner,
+                    Err(infallible) => match *infallible {},
+                })
+            })
     }
 
     pub fn into_inner(self) -> T {
         // TODO, FIXME: use [Result::into_ok] instead (unstable for now)
-        self.inner.into_inner().unwrap()
+        let Ok(inner) = self.inner.into_inner();
+        inner
     }
 
     /// # Panics

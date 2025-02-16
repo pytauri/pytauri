@@ -6,6 +6,10 @@
 
 - [#57](https://github.com/WSH032/pytauri/pull/57) - add documentation to `mod py_match` indicating it should only be used for `state-machine-like` `enum`, not for `Union-like` `enum`.
 
+### Internal
+
+- [#79](https://github.com/WSH032/pytauri/pull/79) - refactor: use `rust v1.82` feature `Omitting empty types in pattern matching` in place of `Result<T, Infallible>::unwrap`.
+
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/WSH032/pytauri/tree/HEAD

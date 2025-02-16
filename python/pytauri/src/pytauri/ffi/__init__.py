@@ -20,8 +20,11 @@ from pytauri.ffi.lib import (
     Manager,
     Position,
     PositionType,
+    Rect,
     RunEvent,
     RunEventType,
+    Size,
+    SizeType,
     builder_factory,
     context_factory,
 )
@@ -41,8 +44,11 @@ __all__ = (
     "Manager",
     "Position",
     "PositionType",
+    "Rect",
     "RunEvent",
     "RunEventType",
+    "Size",
+    "SizeType",
     "builder_factory",
     "context_factory",
 )

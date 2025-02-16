@@ -15,6 +15,14 @@ impl Image {
     pub(crate) fn to_tauri<'a>(&'a self, py: Python<'_>) -> image::Image<'a> {
         image::Image::new(self.rgba.as_bytes(py), self.width, self.height)
     }
+
+    pub(crate) fn from_tauri(py: Python<'_>, image: &image::Image) -> Self {
+        Self {
+            rgba: PyBytes::new(py, image.rgba()).unbind(),
+            width: image.width(),
+            height: image.height(),
+        }
+    }
 }
 
 #[pymethods]

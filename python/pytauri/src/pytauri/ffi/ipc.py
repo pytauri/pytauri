@@ -113,8 +113,8 @@ if TYPE_CHECKING:
     class JavaScriptChannelId:
         """[tauri::ipc::JavaScriptChannelId](https://docs.rs/tauri/latest/tauri/ipc/struct.JavaScriptChannelId.html)"""
 
-        @classmethod
-        def from_str(cls, value: str, /) -> "JavaScriptChannelId":
+        @staticmethod
+        def from_str(value: str, /) -> "JavaScriptChannelId":
             """Parse a string to a `JavaScriptChannelId`.
 
             Raises:

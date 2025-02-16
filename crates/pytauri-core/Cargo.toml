@@ -21,7 +21,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 
 [dependencies]
-tauri = { workspace = true, features = ["wry"] }
+tauri = { workspace = true, features = ["wry", "tray-icon"] }
 pyo3 = { workspace = true }
 
 # workspace dependencies
@@ -31,4 +31,4 @@ pyo3-utils = { workspace = true }
 [features]
 __private = []
 __test = ["tauri/test"]
-__no_test = []  # for allowing use `--all-features` without running tests
+__no_test = []          # for allowing use `--all-features` without running tests

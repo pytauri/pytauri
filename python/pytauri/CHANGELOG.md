@@ -4,6 +4,16 @@
 
 ### Added
 
+- [#79](https://github.com/WSH032/pytauri/pull/79) - feat: implement [tauri `tray` feature](https://tauri.app/learn/system-tray/):
+    enable `tauri/tray-icon` feature
+    - `mod tauri::`
+        - `Rect`
+        - `Size`
+        - `enum RunEvent::{MenuEvent, TrayIconEvent}`
+        - `AppHandle::{run_on_main_thread, exit, restart, on_tray_icon_event, tray_by_id, remove_tray_by_id, default_window_icon, invoke_key}`
+    - `mod tauri::tray`
+    - `mod webview::`
+        - `WebviewWindow::{run_on_main_thread, set_icon}`
 - [#75](https://github.com/WSH032/pytauri/pull/75) - feat: implement [tauri `menu` feature](https://tauri.app/learn/window-menu/):
     - `mod tauri::`
         - `AppHandle::{on_menu_event, menu, set_menu, remove_menu, hide_menu, show_menu}`
@@ -22,6 +32,10 @@
 - [#76](https://github.com/WSH032/pytauri/pull/76) - perf: use `pyo3::intern!` in `Invoke::bind_to` for commands `IPC` performance.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: all methods of `WebviewWindow` will release the `GIL` now.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: `App::{run, run_iteration}` will use a singleton `Py<AppHandle>` as an argument instead of fetching it from `tauri::State` each loop.
+
+### Internal
+
+- [#79](https://github.com/WSH032/pytauri/pull/79) - `ffi.ipc.JavaScriptChannelId.from_str` becomes `staticmethod` from `classmethod`.
 
 ## [0.2.0]
 

@@ -19,7 +19,9 @@ pub mod ext_mod {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{App, AppHandle, Context, Event, Listener, Manager, Position, RunEvent};
+    pub use ext_mod_impl::{
+        App, AppHandle, Context, Event, Listener, Manager, Position, Rect, RunEvent, Size,
+    };
 
     pub use ext_mod_impl::{
         EventId, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
@@ -94,5 +96,16 @@ pub mod ext_mod {
 
         #[pymodule_export]
         pub use ext_mod_impl::window::Window;
+    }
+
+    /// see also: [tauri::tray]
+    #[pymodule]
+    pub mod tray {
+        use super::*;
+
+        #[pymodule_export]
+        pub use ext_mod_impl::tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent};
+
+        pub use ext_mod_impl::tray::TrayIconId;
     }
 }

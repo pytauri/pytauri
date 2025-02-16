@@ -182,7 +182,7 @@ impl NotificationExt {
             ($wrapper:expr) => {{
                 let py_ref = $wrapper.borrow(py);
                 let guard = py_ref.0.inner_ref_semver()??;
-                let builder = guard.notification().builder();
+                let builder = guard.notification().builder(); // it's short enough, so we don't release the GIL
                 Ok(NotificationBuilder::new(builder))
             }};
         }

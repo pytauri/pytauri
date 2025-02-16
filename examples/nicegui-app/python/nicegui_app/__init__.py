@@ -29,6 +29,8 @@ from pytauri.webview import WebviewWindow
 from pytauri_plugin_notification import NotificationExt
 from typing_extensions import override
 
+from nicegui_app._tray_menu import init_menu, init_tray
+
 
 class FrontServer(uvicorn.Server):
     """Override `uvicorn.Server` to set events on startup and shutdown."""
@@ -137,33 +139,41 @@ def main() -> None:
             """Add a callback to show the main window after the server is started and
             shutdown the server when the app is going to exit."""
 
-            # show the main window after the server is started,
-            # and set the global variable `webview_window`.
-            if isinstance(run_event, RunEvent.Ready):
-                webview_window_ = Manager.get_webview_window(app_handle, "main")
-                assert (
-                    webview_window_ is not None
-                ), "you forgot to set the unvisible 'main' window in `tauri.conf.json`"
-                global webview_window
-                webview_window = webview_window_
+            match run_event:
+                # show the main window after the server is started,
+                # and set the global variable `webview_window`.
+                case RunEvent.Ready():
+                    webview_window_ = Manager.get_webview_window(app_handle, "main")
+                    assert (
+                        webview_window_ is not None
+                    ), "you forgot to set the unvisible 'main' window in `tauri.conf.json`"
+                    global webview_window
+                    webview_window = webview_window_
 
-                # wait for the front server to start and show the window
-                server_startup_event.wait()
-                webview_window_.show()
+                    # initialize the tray icon and menu
+                    init_tray(app_handle, webview_window_)
+                    init_menu(app_handle)
 
-                # check is the server failed to start, if so, show the error message.
-                if (
-                    server_exception is not None
-                    or server.should_exit  # server/nicegui_app startup failed
-                ):
-                    webview_window_.eval(
-                        "document.body.innerHTML = `failed to start front server, see backend logs for details`"
-                    )
+                    # wait for the front server to start and show the window
+                    server_startup_event.wait()
+                    webview_window_.show()
 
-            elif isinstance(run_event, RunEvent.Exit):
+                    # check is the server failed to start, if so, show the error message.
+                    if (
+                        server_exception is not None
+                        or server.should_exit  # server/nicegui_app startup failed
+                    ):
+                        webview_window_.eval(
+                            "document.body.innerHTML = `failed to start front server, see backend logs for details`"
+                        )
+
                 # user closed the window so the app is going to exit,
                 # we need shutdown the front server first.
-                server.request_shutdown()
-                server_shutdown_event.wait()
+                case RunEvent.Exit():
+                    server.request_shutdown()
+                    server_shutdown_event.wait()
+
+                case _:
+                    pass
 
         tauri_app.run(tauri_run_callback)

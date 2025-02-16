@@ -101,6 +101,9 @@ exclude = [
     "examples/**/pyembed/",
     "examples/**/frontend/",
 ]
+executionEnvironments = [
+    { root = "examples/nicegui-app", pythonVersion = "3.10" },
+]
 
 
 [tool.ruff.format]
