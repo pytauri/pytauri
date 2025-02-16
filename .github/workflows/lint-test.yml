@@ -56,6 +56,11 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           # see: <https://docs.astral.sh/uv/guides/integration/github/>
+
+          # NOTE: For matrix jobs, we must set `python-version`,
+          # otherwise `uv` may incorrectly use other Python versions cached in GitHub Actions.
+          # See: <https://github.com/astral-sh/uv/pull/9454>.
+          python-version: ${{ matrix.python-version }}
           version: ${{ steps.setup-envs-ver.outputs.uv }}
           enable-cache: true
       - name: Setup Python
