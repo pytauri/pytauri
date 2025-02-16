@@ -1027,6 +1027,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../reference/pytauri/ffi/tray/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tray
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../reference/pytauri/ffi/webview/" class="md-nav__link">
         
   
@@ -1124,6 +1145,27 @@
   
   <span class="md-ellipsis">
     menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/pytauri/tray/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tray
   </span>
   
 
@@ -1670,6 +1712,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1692,7 +1758,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docs" class="md-nav__link">
+  <a href="#docs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Docs
     </span>
@@ -1701,7 +1767,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     <span class="md-ellipsis">
       Changed
     </span>
@@ -1793,6 +1859,19 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - bump <code>rust-version = "1.82"</code></li>
+</ul>
+<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - <code>example/nicegui-app</code>:<ul>
+<li>use <code>tray</code> and <code>menu</code> feature</li>
+<li>use <code>python3.10</code> <code>match</code> statement instead of <code>if-else</code> statement</li>
+<li>bump <code>requires-python = "&gt;=3.10"</code></li>
+</ul>
+</li>
+</ul>
 <h2 id="020"><a href="https://github.com/WSH032/pytauri/releases/tag/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
@@ -1806,14 +1885,14 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
     Previously, you used <code>prepare_freethreaded_python_with_executable</code> and <code>append_ext_mod</code>. Now, you need to use <code>PythonInterpreterBuilder</code>.
     See the <code>pytauri</code> crate rust API docs and tutorial (examples/tauri-app) <code>main.rs</code> code for more information on how to migrate.</li>
 </ul>
-<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
+<h3 id="docs_1">Docs<a class="headerlink" href="#docs_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/WSH032/pytauri/pull/60">#60</a> - update <code>examples</code> <code>main.rs</code> to remove <code>resource_dir()</code> UNC path prefix <code>\\?\</code> for <code>PythonInterpreterEnv::Standalone</code>. Fix <a href="https://github.com/pallets/jinja/issues/1675#issuecomment-1323555773">pallets/jinja#1675</a> for <code>nicegui-app</code> standalone example.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/55">#55</a> - Add <code>integrate with nicegui</code> example <code>nicegui-app</code>. See <code>examples/nicegui-app</code>.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/52">#52</a> - update <code>examples/tauri-app</code> <code>main.rs</code> for new API to prepare python interpreter.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/52">#52</a> - add the usage of <code>multiprocessing.freeze_support</code> in <code>examples/tauri-app</code> <code>__main__.py</code>.</li>
 </ul>
-<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/WSH032/pytauri/pull/46">#46</a> - bump <code>tauri</code> to <code>v2.2</code></li>
 </ul>

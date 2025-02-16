@@ -1027,6 +1027,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../../../reference/pytauri/ffi/tray/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tray
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../../reference/pytauri/ffi/webview/" class="md-nav__link">
         
   
@@ -1124,6 +1145,27 @@
   
   <span class="md-ellipsis">
     menu
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pytauri/tray/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    tray
   </span>
   
 
@@ -1402,6 +1444,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1436,7 +1487,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -1817,6 +1868,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1851,7 +1911,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -1908,6 +1968,22 @@
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - feat: implement <a href="https://tauri.app/learn/system-tray/">tauri <code>tray</code> feature</a>:
+    enable <code>tauri/tray-icon</code> feature<ul>
+<li><code>mod tauri::</code><ul>
+<li><code>Rect</code></li>
+<li><code>Size</code></li>
+<li><code>enum RunEvent::{MenuEvent, TrayIconEvent}</code></li>
+<li><code>AppHandle::{run_on_main_thread, exit, restart, on_tray_icon_event, tray_by_id, remove_tray_by_id, default_window_icon, invoke_key}</code></li>
+</ul>
+</li>
+<li><code>mod tauri::tray</code></li>
+<li><code>mod webview::</code><ul>
+<li><code>WebviewWindow::{run_on_main_thread, set_icon}</code></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - feat: implement <a href="https://tauri.app/learn/window-menu/">tauri <code>menu</code> feature</a>:<ul>
 <li><code>mod tauri::</code><ul>
 <li><code>AppHandle::{on_menu_event, menu, set_menu, remove_menu, hide_menu, show_menu}</code></li>
@@ -1932,6 +2008,10 @@
 <li><a href="https://github.com/WSH032/pytauri/pull/76">#76</a> - perf: use <code>pyo3::intern!</code> in <code>Invoke::bind_to</code> for commands <code>IPC</code> performance.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - perf: all methods of <code>WebviewWindow</code> will release the <code>GIL</code> now.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - perf: <code>App::{run, run_iteration}</code> will use a singleton <code>Py&lt;AppHandle&gt;</code> as an argument instead of fetching it from <code>tauri::State</code> each loop.</li>
+</ul>
+<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - <code>ffi.ipc.JavaScriptChannelId.from_str</code> becomes <code>staticmethod</code> from <code>classmethod</code>.</li>
 </ul>
 <h2 id="020"><a href="https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
@@ -1965,7 +2045,7 @@
 <li><a href="https://github.com/WSH032/pytauri/pull/48">#48</a> - feat: accessing the <code>WebviewWindow</code> in <code>Commands</code>.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/49">#49</a> - feat: add <code>Event</code>, <code>EventId</code>, <code>Listener</code>, <code>ImplListener</code> for <a href="https://tauri.app/develop/calling-frontend/#event-system">Event System</a>.</li>
 </ul>
-<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/WSH032/pytauri/pull/54">#54</a><ul>
 <li>feat: import the extension module from <code>sys.modules["__pytauri_ext_mod__"]</code> if on standalone mode (<code>sys._pytauri_standalone</code>).</li>
