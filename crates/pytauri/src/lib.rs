@@ -15,12 +15,13 @@ mod pyembed;
 #[cfg(feature = "standalone")]
 pub mod standalone;
 
-use pyo3::prelude::*;
-use pyo3::types::{PyCFunction, PyDict, PyModule, PyTuple};
-use pyo3::wrap_pymodule;
+use pyo3::{
+    prelude::*,
+    types::{PyCFunction, PyDict, PyModule, PyTuple},
+    wrap_pymodule,
+};
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
-use pytauri_core::tauri_runtime::Runtime;
-use pytauri_core::utils::TauriError;
+use pytauri_core::{ext_mod::PyAppHandleExt as _, tauri_runtime::Runtime, utils::TauriError};
 use tauri::Context;
 
 /// Use [pymodule_export] instead of this `ext_mod` directly.
@@ -39,16 +40,23 @@ pub struct BuilderArgs {
     context: Py<ext_mod::Context>,
     /// see [`tauri_plugin_pytauri::init`] for `invoke_handler`
     invoke_handler: Option<PyObject>,
+    /// see [tauri::Builder::setup] and python side type hint.
+    setup: Option<PyObject>,
 }
 
 #[pymethods]
 impl BuilderArgs {
     #[new]
-    #[pyo3(signature = (*, context, invoke_handler = None))]
-    fn new(context: Py<ext_mod::Context>, invoke_handler: Option<PyObject>) -> Self {
+    #[pyo3(signature = (context, *, invoke_handler = None, setup = None))]
+    fn new(
+        context: Py<ext_mod::Context>,
+        invoke_handler: Option<PyObject>,
+        setup: Option<PyObject>,
+    ) -> Self {
         Self {
             context,
             invoke_handler,
+            setup,
         }
     }
 }
@@ -76,10 +84,23 @@ impl Builder {
         let BuilderArgs {
             context,
             invoke_handler,
+            setup,
         } = args.get();
 
         if let Some(invoke_handler) = invoke_handler {
             builder = builder.plugin(tauri_plugin_pytauri::init(invoke_handler.clone_ref(py)));
+        }
+
+        if let Some(setup) = setup {
+            let setup = setup.clone_ref(py);
+            builder = builder.setup(move |app| {
+                Python::with_gil(|py| {
+                    // we haven't called [ext_mod::App::try_build], so we need init the [PyAppHandle] before get it.
+                    let app_handle = app.get_or_init_py_app_handle(py)?;
+                    setup.call1(py, (app_handle,))?;
+                    Ok(())
+                })
+            });
         }
 
         let context = context.get().0.try_take_inner()??;

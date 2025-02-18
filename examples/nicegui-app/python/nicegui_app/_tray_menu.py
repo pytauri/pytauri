@@ -5,6 +5,8 @@ from pytauri.menu import Menu, MenuEvent, MenuItem, PredefinedMenuItem
 from pytauri.tray import MouseButton, TrayIcon, TrayIconEvent, TrayIconEventType
 from pytauri.webview import WebviewWindow
 
+__all__ = ["init_menu", "init_tray"]
+
 
 def init_tray(app_handle: AppHandle, webview_window: WebviewWindow) -> None:
     """Initialize the tray icon."""
@@ -25,6 +27,7 @@ def init_tray(app_handle: AppHandle, webview_window: WebviewWindow) -> None:
     )
 
     def on_menu_event(app_handle: AppHandle, menu_event: MenuEvent) -> None:
+        """Hide, show or quit the app when the tray menu is clicked."""
         match menu_event:
             case "Hide":
                 webview_window.hide()
@@ -52,7 +55,7 @@ def init_tray(app_handle: AppHandle, webview_window: WebviewWindow) -> None:
 
 
 def init_menu(app_handle: AppHandle) -> None:
-    """Initialize the app menu."""
+    """Initialize the default app menu."""
 
     menu = Menu.default(app_handle)
     menu.set_as_app_menu()

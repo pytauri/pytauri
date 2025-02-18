@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#80](https://github.com/WSH032/pytauri/pull/80) - feat: `BuilderArgs`:
+    - add `BuilderArgs::setup` to support tauri app setup hook.
+    - `BuilderArgs::context` now can be `Position and Keyword` arguments.
+
 ## [0.2.0]
 
 ### BREAKING

@@ -37,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- [#80](https://github.com/WSH032/pytauri/pull/80) - `example/nicegui-app`:
+    - Use `BuilderArgs.setup` for initialization instead of listening to the `RunEvent.Ready` event.
+    - Rewrite the `FrontServer` `startup`/`shutdown` event hook logic.
+    - Modularize the code.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - `example/nicegui-app`:
     - use `tray` and `menu` feature
     - use `python3.10` `match` statement instead of `if-else` statement

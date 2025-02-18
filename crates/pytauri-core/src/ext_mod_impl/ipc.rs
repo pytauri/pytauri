@@ -171,7 +171,7 @@ impl Invoke {
         let app_handle_key = intern!(py, Invoke::APP_HANDLE_KEY);
         if parameters.contains(app_handle_key)? {
             let py_app_handle = message.webview_ref().try_py_app_handle()?;
-            arguments.set_item(app_handle_key, &*py_app_handle)?;
+            arguments.set_item(app_handle_key, py_app_handle)?;
         }
 
         let webview_window_key = intern!(py, Invoke::WEBVIEW_WINDOW_KEY);

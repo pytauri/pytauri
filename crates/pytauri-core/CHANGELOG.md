@@ -4,10 +4,12 @@
 
 ### BREAKING
 
+- [#80](https://github.com/WSH032/pytauri/pull/80) - refactor: `trait PyAppHandleExt` is now sealed and no longer has generic parameters.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - pref: the fields of `enum RunEvent` `struct` variants become `Py<T>` types from rust types.
 
 ### Added
 
+- [#80](https://github.com/WSH032/pytauri/pull/80) - feat: add `PyAppHandleExt::get_or_init_py_app_handle`, and the methods return `&Py<AppHandle>` instead of `impl Deref<Target = Py<AppHandle>>` now.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - feat: implement [tauri `tray` feature](https://tauri.app/learn/system-tray/):
     enable `tauri/tray-icon` feature
     - `mod tauri::`

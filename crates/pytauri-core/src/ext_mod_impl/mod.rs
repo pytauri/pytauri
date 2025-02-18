@@ -11,7 +11,6 @@ use std::{
     convert::Infallible,
     error::Error,
     fmt::{Debug, Display},
-    ops::Deref,
 };
 
 use pyo3::{
@@ -131,7 +130,7 @@ fn debug_assert_app_handle_py_is_rs(py_app_handle: &Py<AppHandle>, rs_app_handle
         let py_app_handle_global = py_app_handle.py_app_handle();
         let rs_app_handle_global = rs_app_handle.py_app_handle();
         debug_assert!(
-            py_app_handle_global.is(&*rs_app_handle_global),
+            py_app_handle_global.is(rs_app_handle_global),
             "AppHandle pyobject instance is not the same as the rust instance"
         );
     }
@@ -281,22 +280,6 @@ impl AppHandle {
     }
 }
 
-struct PyAppHandle(Py<AppHandle>);
-
-impl PyAppHandle {
-    fn new(py_app_handle: Py<AppHandle>) -> Self {
-        Self(py_app_handle)
-    }
-}
-
-impl Deref for PyAppHandle {
-    type Target = Py<AppHandle>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
 /// This error indicates that the app was not initialized using [App::try_build],
 /// i.e. it was not created by pytauri.
 #[derive(Debug)]
@@ -321,23 +304,70 @@ impl From<PyAppHandleStateError> for PyErr {
 
 pub type PyAppHandleStateResult<T> = Result<T, PyAppHandleStateError>;
 
+mod sealed {
+    use super::*;
+
+    pub trait SealedPyAppHandleExt {}
+    impl<T: tauri::Manager<Runtime>> SealedPyAppHandleExt for T {}
+
+    pub(super) struct PyAppHandle(pub(crate) Py<AppHandle>);
+}
+
+use sealed::{PyAppHandle, SealedPyAppHandleExt};
+
 /// You can use this trait to get the global singleton [Py]<[AppHandle]>.
-pub trait PyAppHandleExt<R: tauri::Runtime>: tauri::Manager<R> {
+//
+// NOTE: due to the unsoundness of [Manager::unmanage], do not allow to unmanage `PyAppHandle`,
+// see: <https://github.com/tauri-apps/tauri/issues/12721>.
+pub trait PyAppHandleExt: tauri::Manager<Runtime> + SealedPyAppHandleExt {
+    /// See [PyAppHandleExt::try_py_app_handle] for details.
+    ///
     /// # Panics
     ///
     /// Panics if [PyAppHandleExt::try_py_app_handle] returns an error.
-    fn py_app_handle(&self) -> impl Deref<Target = Py<AppHandle>> {
+    fn py_app_handle(&self) -> &Py<AppHandle> {
         self.try_py_app_handle().unwrap()
     }
 
-    fn try_py_app_handle(&self) -> PyAppHandleStateResult<impl Deref<Target = Py<AppHandle>>> {
-        self.try_state::<PyAppHandle>()
-            .map(|state| state.inner().deref())
-            .ok_or(PyAppHandleStateError)
+    /// Get the global singleton [Py]<[AppHandle]>.
+    ///
+    /// If it has not been initialized, it will return an error.
+    /// Use [PyAppHandleExt::get_or_init_py_app_handle] to initialize.
+    fn try_py_app_handle(&self) -> PyAppHandleStateResult<&Py<AppHandle>> {
+        let state = self
+            .try_state::<PyAppHandle>()
+            .ok_or(PyAppHandleStateError)?;
+        Ok(&state.inner().0)
+    }
+
+    /// Get or initialize the global singleton [Py]<[AppHandle]>.
+    ///
+    /// It may return an error only during the first initialization.
+    /// Once successfully called for the first time, subsequent calls will always return [Ok].
+    ///
+    /// [App::try_build] will call this method, which means if you already have an [App] instance,
+    /// the [AppHandle] has also been initialized.
+    fn get_or_init_py_app_handle(&self, py: Python<'_>) -> PyResult<&Py<AppHandle>> {
+        match self.try_py_app_handle() {
+            Ok(py_app_handle) => Ok(py_app_handle),
+            Err(_) => {
+                let py_app_handle = AppHandle::new(self.app_handle().to_owned());
+                let py_app_handle = py_app_handle.into_pyobject(py)?.unbind();
+                let not_yet_managed = self.manage::<PyAppHandle>(PyAppHandle(py_app_handle));
+                debug_assert!(
+                    not_yet_managed,
+                    "`PyAppHandle` is private, so it is impossible for other crates to manage it, \
+                    and for self crate, it should be initialized only once."
+                );
+                Ok(self
+                    .try_py_app_handle()
+                    .expect("`PyAppHandle` has already been initialized, so this never fail"))
+            }
+        }
     }
 }
 
-impl<R: tauri::Runtime, T: tauri::Manager<R>> PyAppHandleExt<R> for T {}
+impl<T: tauri::Manager<Runtime>> PyAppHandleExt for T {}
 
 #[pyclass(frozen, unsendable)]
 #[non_exhaustive]
@@ -346,14 +376,8 @@ pub struct App(pub PyWrapper<PyWrapperT2<TauriApp>>);
 impl App {
     #[cfg(feature = "__private")]
     pub fn try_build(py: Python<'_>, app: TauriApp) -> PyResult<Self> {
-        let app_handle = AppHandle::new(app.handle().to_owned());
-        let py_app_handle = PyAppHandle::new(app_handle.into_pyobject(py)?.unbind());
-        // if false, there has already state set for the app instance.
-        if !app.manage(py_app_handle) {
-            unreachable!(
-                "`PyAppHandle` is private, so it is impossible for other crates to manage it"
-            )
-        }
+        // remember to initialize the global singleton [PyAppHandle], see it's doc
+        app.get_or_init_py_app_handle(py)?;
         Ok(Self(PyWrapper::new2(app)))
     }
 

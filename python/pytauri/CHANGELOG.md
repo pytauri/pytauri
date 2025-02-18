@@ -4,6 +4,9 @@
 
 ### Added
 
+- [#80](https://github.com/WSH032/pytauri/pull/80) - feat: `BuilderArgs`:
+    - add `BuilderArgs::setup` to support tauri app setup hook.
+    - `BuilderArgs::context` now can be `Position and Keyword` arguments.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - feat: implement [tauri `tray` feature](https://tauri.app/learn/system-tray/):
     enable `tauri/tray-icon` feature
     - `mod tauri::`

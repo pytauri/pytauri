@@ -165,9 +165,10 @@ if TYPE_CHECKING:
         def __new__(
             cls,
             /,
-            *,
             context: "Context",
+            *,
             invoke_handler: Optional[_InvokeHandlerProto] = None,
+            setup: Optional[Callable[[AppHandle], object]] = None,
         ) -> Self:
             """[tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)
 
@@ -179,6 +180,7 @@ if TYPE_CHECKING:
             Args:
                 context: use [context_factory][pytauri.context_factory] to get it.
                 invoke_handler: use [Commands][pytauri.ipc.Commands] to get it.
+                setup: see rust `tauri::Builder::setup`.
             """
             ...
 
