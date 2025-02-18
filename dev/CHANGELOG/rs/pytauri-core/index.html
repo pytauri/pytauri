@@ -1968,10 +1968,12 @@
 <h2 id="unreleased"><a href="https://github.com/WSH032/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/80">#80</a> - refactor: <code>trait PyAppHandleExt</code> is now sealed and no longer has generic parameters.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - pref: the fields of <code>enum RunEvent</code> <code>struct</code> variants become <code>Py&lt;T&gt;</code> types from rust types.</li>
 </ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/80">#80</a> - feat: add <code>PyAppHandleExt::get_or_init_py_app_handle</code>, and the methods return <code>&amp;Py&lt;AppHandle&gt;</code> instead of <code>impl Deref&lt;Target = Py&lt;AppHandle&gt;&gt;</code> now.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - feat: implement <a href="https://tauri.app/learn/system-tray/">tauri <code>tray</code> feature</a>:
     enable <code>tauri/tray-icon</code> feature<ul>
 <li><code>mod tauri::</code><ul>
