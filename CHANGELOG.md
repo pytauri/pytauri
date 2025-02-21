@@ -77,6 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Internal
 
+- [#83](https://github.com/WSH032/pytauri/pull/83) - chore: bump `pyo3` to `v0.23.4` in `Cargo.lock` to fix PyO3/pyo3#4828.
 - [#64](https://github.com/WSH032/pytauri/pull/64) - test: add integration tests for `command` and `channel` ipc
 
 ## [0.1.0-beta]
