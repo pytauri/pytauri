@@ -1,8 +1,11 @@
-use std::error::Error;
-use std::fmt::{Display, Formatter};
+use std::{
+    any::Any,
+    error::Error,
+    fmt::{Display, Formatter},
+    panic::panic_any,
+};
 
-use pyo3::exceptions::PyRuntimeError;
-use pyo3::prelude::*;
+use pyo3::{exceptions::PyRuntimeError, prelude::*};
 
 /// Utility for converting [tauri::Error] to [pyo3::PyErr].
 ///
@@ -57,3 +60,46 @@ impl From<tauri::Error> for TauriError {
 }
 
 pub type TauriResult<T> = Result<T, TauriError>;
+
+// keep it private, maybe we will refactor it in the future
+pub(crate) trait PyResultExt {
+    type Output;
+
+    fn unwrap_unraisable_py_result<M>(
+        self,
+        py: Python<'_>,
+        obj: Option<&Bound<'_, PyAny>>,
+        msg: impl FnOnce() -> M,
+    ) -> Self::Output
+    where
+        M: Any + Send + 'static;
+}
+
+impl<T> PyResultExt for PyResult<T> {
+    type Output = T;
+
+    #[inline] // `inline` to allow optimize the `FnOnce` lazy closure
+    fn unwrap_unraisable_py_result<M>(
+        self,
+        py: Python<'_>,
+        obj: Option<&Bound<'_, PyAny>>,
+        msg: impl FnOnce() -> M,
+    ) -> Self::Output
+    where
+        M: Any + Send + 'static,
+    {
+        match self {
+            Ok(v) => v,
+            Err(err) => {
+                // Use [write_unraisable] instead of [restore]:
+                // - Because we are about to panic, Python might abort
+                // - [restore] will not be handled in this case, so it will not be printed to stderr
+                err.write_unraisable(py, obj);
+                // `panic` allows Python to exit `app.run()`,
+                // otherwise the Python main thread will be blocked by `app.run()`
+                // and unable to raise an error
+                panic_any(msg());
+            }
+        }
+    }
+}

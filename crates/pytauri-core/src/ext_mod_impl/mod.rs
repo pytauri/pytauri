@@ -11,21 +11,26 @@ use std::{
     convert::Infallible,
     error::Error,
     fmt::{Debug, Display},
+    iter::Iterator,
 };
 
 use pyo3::{
     exceptions::PyNotImplementedError,
     exceptions::PyRuntimeError,
+    intern,
     marker::Ungil,
     prelude::*,
-    types::{PyInt, PyString},
+    types::{PyBytes, PyInt, PyIterator, PyString},
     IntoPyObject,
 };
 use pyo3_utils::{
     py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2},
     ungil::UnsafeUngilExt,
 };
-use tauri::{Listener as _, Manager as _};
+use tauri::{
+    utils::assets::{AssetKey as TauriAssetKey, AssetsIter, CspHash},
+    Assets, Listener as _, Manager as _,
+};
 
 use crate::{
     delegate_inner,
@@ -36,12 +41,17 @@ use crate::{
         webview::{TauriWebviewWindow, WebviewWindow},
     },
     tauri_runtime::Runtime,
-    utils::TauriError,
+    utils::{PyResultExt as _, TauriError},
 };
 
 type TauriApp = tauri::App<Runtime>;
 type TauriAppHandle = tauri::AppHandle<Runtime>;
 type TauriContext = tauri::Context<Runtime>;
+
+/// see also: [tauri::utils::assets::AssetKey]
+//
+// TODO: export this type in [ext_mod_impl::utils::assets] namespace
+type AssetKey = PyString;
 
 /// see also: [tauri::RunEvent]
 #[pyclass(frozen)]
@@ -159,10 +169,9 @@ impl AppHandle {
                 Python::with_gil(|py| {
                     let handler = handler.bind(py);
                     let result = handler.call0();
-                    if let Err(e) = result {
-                        e.write_unraisable(py, Some(handler));
-                        panic!("Python exception occurred in `AppHandle::run_on_main_thread`")
-                    }
+                    result.unwrap_unraisable_py_result(py, Some(handler), || {
+                        "Python exception occurred in `AppHandle::run_on_main_thread`"
+                    });
                 })
             })
         })
@@ -192,12 +201,9 @@ impl AppHandle {
 
                         let handler = handler.bind(py);
                         let result = handler.call1((app_handle, menu_event));
-                        if let Err(e) = result {
-                            e.write_unraisable(py, Some(handler));
-                            panic!(
-                                "Python exception occurred in `AppHandle::on_menu_event` handler"
-                            )
-                        }
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `AppHandle::on_menu_event` handler"
+                        });
                     })
                 })
         })
@@ -220,12 +226,9 @@ impl AppHandle {
 
                         let handler = handler.bind(py);
                         let result = handler.call1((app_handle, tray_icon_event));
-                        if let Err(e) = result {
-                            e.write_unraisable(py, Some(handler));
-                            panic!(
-                                "Python exception occurred in `AppHandle::on_tray_icon_event` handler"
-                            )
-                        }
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `AppHandle::on_tray_icon_event` handler"
+                        });
                     })
                 })
         })
@@ -396,16 +399,12 @@ impl App {
 
                 let callback = callback.bind(py);
                 let result = callback.call1((py_app_handle, py_run_event));
-                if let Err(e) = result {
-                    // Use [write_unraisable] instead of [restore]:
-                    // - Because we are about to panic, Python might abort
-                    // - [restore] will not be handled in this case, so it will not be printed to stderr
-                    e.write_unraisable(py, Some(callback));
-                    // `panic` allows Python to exit `app.run()`,
-                    // otherwise the Python main thread will be blocked by `app.run()`
-                    // and unable to raise an error
-                    panic!("Python exception occurred in callback")
-                }
+                // `panic` allows Python to exit `app.run()`,
+                // otherwise the Python main thread will be blocked by `app.run()`
+                // and unable to raise an error.
+                result.unwrap_unraisable_py_result(py, Some(callback), || {
+                    "Python exception occurred in `App` run callback"
+                });
             })
         }
     }
@@ -468,6 +467,115 @@ impl App {
     }
 }
 
+/// The [Iterator] is only implemented for [Bound], so we manually implement it for [Py] here.
+///
+/// Due to the lifetime constraints of `'a, 'py` in [FromPyObject]/[FromPyObjectBound],
+/// we cannot use generics to specify [Bound::extract<T>],
+/// so we have to use a macro to implement this generic struct.
+macro_rules! py_iter_ext_impl {
+    ($name:ident, $item:ty) => {
+        struct $name(Py<PyIterator>);
+
+        impl Iterator for $name {
+            type Item = $item;
+
+            fn next(&mut self) -> Option<Self::Item> {
+                let item: Option<Self::Item> = Python::with_gil(|py| {
+                    let mut slf = self
+                        .0
+                        .bind(py)
+                        // TODO, PERF, XXX: we can't iterate on `Borrowed`, so we have to convert into `Bound`,
+                        // this is pyo3 limitation, create a issue for it.
+                        .clone();
+                    let next_result = slf.next()?;
+                    let item_result = (|| {
+                        let item = next_result?;
+                        let item = item.extract::<Self::Item>()?;
+                        PyResult::Ok(item)
+                    })();
+                    let item = item_result.unwrap_unraisable_py_result(py, Some(&slf), || {
+                        "Python exception occurred during calling `PyIterator.next()`"
+                    });
+                    Some(item)
+                });
+                item
+            }
+        }
+    };
+}
+
+struct PyAssets(PyObject);
+
+impl Assets<Runtime> for PyAssets {
+    fn get(&self, key: &TauriAssetKey) -> Option<Cow<'_, [u8]>> {
+        const METHOD_NAME: &str = "get";
+
+        let result = Python::with_gil(|py| {
+            let key: Bound<AssetKey> = AssetKey::new(py, key.as_ref()); // intern it?
+            let slf = self.0.bind(py);
+
+            let result = (|| {
+                let ret = slf.call_method1(intern!(py, METHOD_NAME), (key,))?;
+                if ret.is_none() {
+                    return Ok(None);
+                }
+                let ret_py_bytes = ret.downcast_into::<PyBytes>()?.unbind();
+                let ret_bytes = ret_py_bytes.as_bytes(py);
+
+                // TODO, PERF: how to avoid copy?
+                let ret_bytes: Cow<'_, [u8]> = Cow::Owned(ret_bytes.to_vec());
+                PyResult::Ok(Some(ret_bytes))
+            })();
+            result.unwrap_unraisable_py_result(py, Some(slf), || {
+                "Python exception occurred during calling `Assets.get()`"
+            })
+        });
+        result
+    }
+
+    fn iter(&self) -> Box<AssetsIter<'_>> {
+        const METHOD_NAME: &str = "iter";
+
+        let assets_iter = Python::with_gil(|py| {
+            let slf = self.0.bind(py);
+            let result = (|| {
+                let ret = slf.call_method0(intern!(py, METHOD_NAME))?;
+                let ret_iter = ret.try_iter()?;
+                // TODO, PERF: how to avoid copy?
+                py_iter_ext_impl!(PyIterExt, (String, Vec<u8>));
+                let unbound_iter = PyIterExt(ret_iter.unbind());
+                let assets_iter = unbound_iter.map(|item| {
+                    let (key, bytes) = item;
+                    (Cow::Owned(key), Cow::Owned(bytes))
+                });
+                PyResult::Ok(assets_iter)
+            })();
+            result.unwrap_unraisable_py_result(py, Some(slf), || {
+                "Python exception occurred during calling `Assets.iter()`"
+            })
+        });
+        Box::new(assets_iter)
+    }
+
+    fn csp_hashes(&self, _html_path: &TauriAssetKey) -> Box<dyn Iterator<Item = CspHash<'_>> + '_> {
+        todo!("Blocked by: <https://github.com/tauri-apps/tauri/issues/12756>")
+    }
+
+    fn setup(&self, app: &TauriApp) {
+        const METHOD_NAME: &str = "setup";
+
+        let app_handle = app.py_app_handle();
+        Python::with_gil(|py| {
+            let slf = self.0.bind(py);
+            let result = slf.call_method1(intern!(py, METHOD_NAME), (app_handle,));
+            result.unwrap_unraisable_py_result(py, Some(slf), || {
+                "Python exception occurred during calling `Assets.setup()`"
+            });
+        })
+    }
+}
+
+/// see also: [tauri::Context]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Context(pub PyWrapper<PyWrapperT2<TauriContext>>);
@@ -475,6 +583,17 @@ pub struct Context(pub PyWrapper<PyWrapperT2<TauriContext>>);
 impl Context {
     pub fn new(context: TauriContext) -> Self {
         Self(PyWrapper::new2(context))
+    }
+}
+
+#[pymethods]
+impl Context {
+    fn set_assets(&self, py: Python<'_>, assets: PyObject) -> PyResult<()> {
+        py.allow_threads(|| {
+            let mut context = self.0.try_lock_inner_mut()??;
+            context.set_assets(Box::new(PyAssets(assets)));
+            Ok(())
+        })
     }
 }
 
@@ -656,10 +775,9 @@ impl Listener {
                 };
                 let pyobj = pyobj.bind(py);
                 let result = pyobj.call1((event,));
-                if let Err(e) = result {
-                    e.write_unraisable(py, Some(pyobj));
-                    panic!("Python exception occurred in Listener handler")
-                }
+                result.unwrap_unraisable_py_result(py, Some(pyobj), || {
+                    "Python exception occurred in `Listener` handler"
+                });
             })
         }
     }

@@ -4,6 +4,7 @@
 
 ### Added
 
+- [#83](https://github.com/WSH032/pytauri/pull/83) - feat: add `def Context.set_assets` and `class Assets` to allow using custom assets (e.g, loading from memory/disk).
 - [#80](https://github.com/WSH032/pytauri/pull/80) - feat: `BuilderArgs`:
     - add `BuilderArgs::setup` to support tauri app setup hook.
     - `BuilderArgs::context` now can be `Position and Keyword` arguments.

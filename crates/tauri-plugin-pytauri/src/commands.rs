@@ -31,6 +31,7 @@ fn pyfunc(invoke: IpcInvoke) {
         if let Err(e) = py_invoke_handler.call1((invoke,)) {
             let new_err = PyRuntimeError::new_err("`py_invoke_handler` raised an exception");
             new_err.set_cause(py, Some(e));
+            // TODO: use [pytauri_core::utils::PyResultExt::unwrap_unraisable_py_result]
             new_err.write_unraisable(py, Some(&py_invoke_handler));
             // TODO: use `log` instead of `panic!`,
             // it's because the joinhandle will never be awaited

@@ -9,6 +9,7 @@ from pytauri.ffi._ext_mod import EXT_MOD
 from pytauri.ffi.lib import (
     App,
     AppHandle,
+    Assets,
     Builder,
     BuilderArgs,
     Context,
@@ -33,6 +34,7 @@ __all__ = (
     "EXT_MOD",
     "App",
     "AppHandle",
+    "Assets",
     "Builder",
     "BuilderArgs",
     "Context",

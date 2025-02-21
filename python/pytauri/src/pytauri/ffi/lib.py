@@ -2,6 +2,8 @@
 
 """[tauri::self](https://docs.rs/tauri/latest/tauri/index.html)"""
 
+from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -22,6 +24,7 @@ from pytauri.ffi._ext_mod import pytauri_mod
 __all__ = [
     "App",
     "AppHandle",
+    "Assets",
     "Builder",
     "BuilderArgs",
     "Context",
@@ -53,6 +56,10 @@ class _InvokeHandlerProto(Protocol):
 _AppRunCallbackType = Callable[["AppHandle", "RunEventType"], None]
 
 _EventHandlerType = Callable[["Event"], None]
+
+# TODO: export this type in [ext_mod_impl::utils::assets] namespace
+_AssetKey = TypeAliasType("_AssetKey", str)
+"""[tauri::utils::assets::AssetKey](https://docs.rs/tauri-utils/latest/tauri_utils/assets/struct.AssetKey.html)"""
 
 
 if TYPE_CHECKING:
@@ -205,6 +212,27 @@ if TYPE_CHECKING:
     @final
     class Context:
         """[tauri::Context](https://docs.rs/tauri/latest/tauri/struct.Context.html)"""
+
+        def set_assets(self, assets: "Assets", /) -> None:
+            """Use custom assets instead of the assets bundled by Tauri.
+
+            To make this work:
+
+            - You need to enable the `tauri/custom-protocol` feature.
+                - Or build using `tauri build`.
+            - Set `frontendDist` in `tauri.conf.json` to an empty directory (do not set it to a URL).
+                - Or generate `Context` via:
+
+                    ```rust
+                    use tauri::{generate_context, test::noop_assets};
+
+                    let context = generate_context!(assets=noop_assets());
+                    ```
+
+                    then we will use this method to set the assets.
+
+                    see: <https://github.com/tauri-apps/tauri/pull/9141>
+            """
 
     @final
     class RunEvent:
@@ -515,3 +543,26 @@ PositionType = TypeAliasType("PositionType", Union[Position.Physical, Position.L
 
 SizeType = TypeAliasType("SizeType", Union[Size.Physical, Size.Logical])
 """See [Size][pytauri.ffi.Size] for details."""
+
+
+class Assets(ABC):
+    """[tauri::Assets](https://docs.rs/tauri/latest/tauri/trait.Assets.html)
+
+    This is an abstract class that you can subclass to implement a custom asset loader.
+
+    See `tauri::Assets` rust docs for more details.
+
+    !!! warning
+        The implement has the same restrictions as [App.run][pytauri.App.run].
+    """
+
+    @abstractmethod
+    def get(self, key: _AssetKey, /) -> Optional[bytes]: ...
+    @abstractmethod
+    def iter(self, /) -> Iterator[tuple[str, bytes]]: ...
+
+    # TODO: `def csp_hashes`
+    # blocked by: <https://github.com/tauri-apps/tauri/issues/12756>
+
+    def setup(self, _app: AppHandle, /) -> object:
+        return None
