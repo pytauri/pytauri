@@ -14,7 +14,7 @@
         <link rel="prev" href="../">
       
       
-        <link rel="next" href="../../../reference/pytauri_plugin_notification/">
+        <link rel="next" href="../mutiprocessing/">
       
       
       <link rel="icon" href="../../../images/rocket-24.svg">
@@ -22,7 +22,7 @@
     
     
       
-        <title>IPC Commands - pytauri</title>
+        <title>IPC - pytauri</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ipc-commands" class="md-skip">
+        <a href="#ipc" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              IPC Commands
+              IPC
             
           </span>
         </div>
@@ -697,16 +697,175 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    IPC
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
-    IPC Commands
+    IPC
   </span>
   
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#calling-python-from-the-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Python from the Frontend
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling Python from the Frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deserializing-the-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deserializing the Body
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-errors-to-the-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returning Errors to the Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calling-frontend-from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Frontend from Python
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling Frontend from Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluating-javascript" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluating JavaScript
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event System
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mutiprocessing/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using multiprocessing
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1711,6 +1870,122 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#calling-python-from-the-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Python from the Frontend
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling Python from the Frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registering Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deserializing-the-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deserializing the Body
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-errors-to-the-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      Returning Errors to the Frontend
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#calling-frontend-from-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Calling Frontend from Python
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling Frontend from Python">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#channels" class="md-nav__link">
+    <span class="md-ellipsis">
+      Channels
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evaluating-javascript" class="md-nav__link">
+    <span class="md-ellipsis">
+      Evaluating JavaScript
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Event System
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1740,17 +2015,188 @@
   
 
 
-<h1 id="ipc-commands">IPC Commands<a class="headerlink" href="#ipc-commands" title="Permanent link">&para;</a></h1>
+<h1 id="ipc">IPC<a class="headerlink" href="#ipc" title="Permanent link">&para;</a></h1>
+<h2 id="calling-python-from-the-frontend">Calling Python from the Frontend<a class="headerlink" href="#calling-python-from-the-frontend" title="Permanent link">&para;</a></h2>
+<p>Ref:</p>
+<ul>
+<li><a href="https://tauri.app/develop/calling-rust/">https://tauri.app/develop/calling-rust/</a></li>
+<li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.Commands">pytauri.ipc.Commands</a></li>
+</ul>
+<p>pytauri implements IPC API consistent with rust tauri. Reading tauri's documentation is like reading pytauri's documentation.</p>
+<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
+<h4 id="registering-commands">Registering Commands<a class="headerlink" href="#registering-commands" title="Permanent link">&para;</a></h4>
+<p>You can register a command handler using the decorator <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.Commands.command">@Commands.command</a>.</p>
+<p>Similar to <code>tauri::command!</code>, the <code>handler</code> signature can be arbitrary. We will use <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/inspect.html#inspect.signature">inspect.signature</a> to inspect its signature and dynamically pass the required parameters.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You might have seen this pattern in <code>FastAPI</code>🤓.</p>
+</div>
+<p>The currently supported signature pattern is <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.ArgumentsType">ArgumentsType</a>. You must ensure that the parameter names and type annotations are correct, and <code>@Commands.command</code> will check them.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># pyright: reportRedeclaration=none</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># ruff: noqa: F811</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Commands</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># ⭐ OK</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># ⭐ OK</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># 💥 ERROR: missing/wrong type annotation</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">app_handle</span><span class="p">,</span>  <span class="c1"># pyright: ignore[reportUnknownParameterType, reportMissingParameterType]  # noqa: ANN001</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="c1"># 💥 ERROR: wrong parameter name</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">foo</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># 💥 ERROR: not an async function</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>  <span class="c1"># pyright: ignore[reportArgumentType, reportUntypedFunctionDecorator]</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span></code></pre></div>
+<h4 id="deserializing-the-body">Deserializing the Body<a class="headerlink" href="#deserializing-the-body" title="Permanent link">&para;</a></h4>
+<p>For the <code>body</code> argument, it is of type <code>bytes</code>, allowing you to pass binary data such as files between the frontend and backend.</p>
+<p>However, in most cases, we want strong type checking when calling. Rust <code>tauri</code> achieves this through <code>serde</code>, while <code>pytauri</code> uses <a href="https://github.com/pydantic/pydantic">pydantic</a>.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p><code>pydantic</code> is a super-fast Python validation and serialization library written in <code>rust</code>/<code>pyo3</code> 🤓.</p>
+</div>
+<p>If you use <a class="autorefs autorefs-external" href="https://docs.pydantic.dev/latest/api/base_model/#pydantic.BaseModel">BaseModel</a>/<a class="autorefs autorefs-external" href="https://docs.pydantic.dev/latest/api/root_model/#pydantic.root_model.RootModel">RootModel</a> as the type annotation for the <code>body</code> parameter/return value, pytauri will automatically serialize/deserialize it for you:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># pyright: reportRedeclaration=none</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># ruff: noqa: F811</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">RootModel</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Commands</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">class</span> <span class="nc">Input</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">foo</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">bar</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">Output</span> <span class="o">=</span> <span class="n">RootModel</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># ⭐ OK</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">Input</span><span class="p">,</span> <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># ⭐ OK</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">Input</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># ⭐ OK</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Output</span><span class="p">:</span> <span class="o">...</span>
+</span></code></pre></div>
+<h4 id="calling-commands">Calling Commands<a class="headerlink" href="#calling-commands" title="Permanent link">&para;</a></h4>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pyInvoke</span><span class="p">,</span><span class="w"> </span><span class="nx">rawPyInvoke</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;tauri-plugin-pytauri-api&quot;</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// or if tauri config `app.withGlobalTauri = true`:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">//</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1">// ```js</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">// const { pyInvoke, rawPyInvoke } = window.__TAURI__.pytauri;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// ```</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pyInvoke</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">string</span><span class="p">]</span><span class="o">&gt;</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">foo</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;foo&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">bar</span><span class="o">:</span><span class="w"> </span><span class="kt">42</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>The difference between <code>rawPyInvoke</code> and <code>pyInvoke</code> is that the input and output of <code>rawPyInvoke</code> are both <code>ArrayBuffer</code>, allowing you to pass binary data.</p>
+<h4 id="returning-errors-to-the-frontend">Returning Errors to the Frontend<a class="headerlink" href="#returning-errors-to-the-frontend" title="Permanent link">&para;</a></h4>
+<p>Similar to <code>FastAPI</code>, as long as you throw an <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.InvokeException">InvokeException</a> in the <code>command</code>, the promise will reject with the error message.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">Commands</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">pytauri.ipc</span> <span class="kn">import</span> <span class="n">InvokeException</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="k">raise</span> <span class="n">InvokeException</span><span class="p">(</span><span class="s2">&quot;error message&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="calling-frontend-from-python">Calling Frontend from Python<a class="headerlink" href="#calling-frontend-from-python" title="Permanent link">&para;</a></h2>
 <p>Ref:</p>
 <ul>
 <li><a href="https://tauri.app/develop/calling-frontend/">https://tauri.app/develop/calling-frontend/</a></li>
-<li><a href="https://tauri.app/develop/calling-rust/">https://tauri.app/develop/calling-rust/</a></li>
-<li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.Commands">pytauri.ipc.Commands</a></li>
 <li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.JavaScriptChannelId">pytauri.ipc.JavaScriptChannelId</a> and <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.Channel">pytauri.ipc.Channel</a></li>
 <li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/webview/#pytauri.webview.WebviewWindow.eval">pytauri.webview.WebviewWindow.eval</a></li>
-<li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/#pytauri.Listener">pytauri.Listener</a></li>
 </ul>
-<p>TODO: details</p>
+<h3 id="channels">Channels<a class="headerlink" href="#channels" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Channels are designed to be fast and deliver ordered data. They are used internally for streaming operations such as download progress, child process output, and WebSocket messages.</p>
+</blockquote>
+<p>To use a <code>channel</code>, you only need to add the <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.JavaScriptChannelId">JavaScriptChannelId</a> field to the <code>BaseModel</code>/<code>RootModel</code>, and then use <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.JavaScriptChannelId.channel_on">JavaScriptChannelId.channel_on</a> to get a <a class="autorefs autorefs-internal" href="../../../reference/pytauri/ipc/#pytauri.ipc.Channel">Channel</a> instance.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p><code>JavaScriptChannelId</code> itself is a <code>RootModel</code>, so you can directly use it as the <code>body</code> parameter.</p>
+</div>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">RootModel</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">Commands</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">from</span> <span class="nn">pytauri.ipc</span> <span class="kn">import</span> <span class="n">Channel</span><span class="p">,</span> <span class="n">JavaScriptChannelId</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kn">from</span> <span class="nn">pytauri.webview</span> <span class="kn">import</span> <span class="n">WebviewWindow</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">Msg</span> <span class="o">=</span> <span class="n">RootModel</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command</span><span class="p">(</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="n">body</span><span class="p">:</span> <span class="n">JavaScriptChannelId</span><span class="p">[</span><span class="n">Msg</span><span class="p">],</span> <span class="n">webview_window</span><span class="p">:</span> <span class="n">WebviewWindow</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">channel</span><span class="p">:</span> <span class="n">Channel</span><span class="p">[</span><span class="n">Msg</span><span class="p">]</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">channel_on</span><span class="p">(</span><span class="n">webview_window</span><span class="o">.</span><span class="n">as_ref_webview</span><span class="p">())</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="c1"># 👇 you should do this as background task, here just keep it simple as a example</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">channel</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&quot;message&quot;&#39;</span><span class="p">)</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">channel</span><span class="o">.</span><span class="n">send_model</span><span class="p">(</span><span class="n">Msg</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">))</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;null&quot;</span>
+</span></code></pre></div>
+<div class="language-typescript highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">pyInvoke</span><span class="p">,</span><span class="w"> </span><span class="nx">Channel</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;tauri-plugin-pytauri-api&quot;</span><span class="p">;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1">// const { pyInvoke, Channel } = window.__TAURI__.pytauri;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Channel</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">();</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nx">channel</span><span class="p">.</span><span class="nx">addJsonListener</span><span class="p">((</span><span class="nx">msg</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">));</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">await</span><span class="w"> </span><span class="nx">pyInvoke</span><span class="p">(</span><span class="s2">&quot;command&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">channel</span><span class="p">);</span>
+</span></code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <code>Channel</code> in <code>tauri-plugin-pytauri-api</code> is just a subclass of the <code>Channel</code> in <code>@tauri-apps/api/event</code>.</p>
+<p>It adds the <code>addJsonListener</code> method to help serialize data. You can use <code>Channel.onmessage</code> to handle raw <code>ArrayBuffer</code> data.</p>
+</div>
+<h3 id="evaluating-javascript">Evaluating JavaScript<a class="headerlink" href="#evaluating-javascript" title="Permanent link">&para;</a></h3>
+<p>You can use <a class="autorefs autorefs-internal" href="../../../reference/pytauri/webview/#pytauri.webview.WebviewWindow.eval">WebviewWindow.eval</a> to evaluate JavaScript code in the frontend.</p>
+<h2 id="event-system">Event System<a class="headerlink" href="#event-system" title="Permanent link">&para;</a></h2>
+<p>Ref:</p>
+<ul>
+<li><a href="https://tauri.app/develop/calling-frontend/#event-system">https://tauri.app/develop/calling-frontend/#event-system</a></li>
+<li><a href="https://tauri.app/develop/calling-rust/#event-system">https://tauri.app/develop/calling-rust/#event-system</a></li>
+<li><a class="autorefs autorefs-internal" href="../../../reference/pytauri/#pytauri.Listener">pytauri.Listener</a></li>
+<li><code>pytauri.Emitter</code>: blocked on <a href="https://github.com/WSH032/pytauri/pull/61">#61</a></li>
+</ul>
+<blockquote>
+<p>Tauri ships a simple event system you can use to have bi-directional communication between Rust and your frontend.</p>
+<p>The event system was designed for situations where small amounts of data need to be streamed or you need to implement a multi consumer multi producer pattern (e.g. push notification system).</p>
+<p>The event system is not designed for low latency or high throughput situations. See the channels section for the implementation optimized for streaming data.</p>
+<p>The major differences between a Tauri command and a Tauri event are that events have no strong type support, event payloads are always JSON strings making them not suitable for bigger messages and there is no support of the capabilities system to fine grain control event data and channels.</p>
+</blockquote>
+<p>See <a class="autorefs autorefs-internal" href="../../../reference/pytauri/#pytauri.Listener--example">pytauri.Listener--example</a></p>
 
 
 
@@ -1773,7 +2219,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-02-05T15:59:05+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-02-05</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-02-22T11:00:50+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-02-22</span>
   </span>
 
     
@@ -1804,6 +2250,11 @@
         <a href="https://github.com/WSH032" class="md-author" title="@WSH032">
           
           <img src="https://avatars.githubusercontent.com/u/126865849?v=4&size=72" alt="WSH032">
+        </a>
+      
+        <a href="https://github.com/web-flow" class="md-author" title="@web-flow">
+          
+          <img src="https://avatars.githubusercontent.com/u/19864447?v=4&size=72" alt="web-flow">
         </a>
       
       
@@ -1860,13 +2311,13 @@
         
         
           
-          <a href="../../../reference/pytauri_plugin_notification/" class="md-footer__link md-footer__link--next" aria-label="Next: pytauri_plugin_notification">
+          <a href="../mutiprocessing/" class="md-footer__link md-footer__link--next" aria-label="Next: Using multiprocessing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                pytauri_plugin_notification
+                Using multiprocessing
               </div>
             </div>
             <div class="md-footer__button md-icon">
