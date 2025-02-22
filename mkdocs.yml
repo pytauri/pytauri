@@ -237,6 +237,7 @@ nav:
       - Concepts:
           - usage/concepts/index.md
           - usage/concepts/ipc.md
+          - usage/concepts/mutiprocessing.md
   # DO NOT change `reference/`, it's used in `utils/gen_ref_pages.py`
   - API Reference: reference/
   - CONTRIBUTING:

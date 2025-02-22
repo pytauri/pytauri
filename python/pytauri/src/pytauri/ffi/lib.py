@@ -350,6 +350,19 @@ if TYPE_CHECKING:
         """[tauri::Listener](https://docs.rs/tauri/latest/tauri/trait.Listener.html)
 
         See also: <https://tauri.app/develop/calling-rust/#event-system>
+
+        # Example
+
+        ```python
+        from pytauri import AppHandle, Event, Listener
+
+
+        def listen(app_handle: AppHandle) -> None:
+            def handler(event: Event):
+                print(event.id, event.payload)
+
+            Listener.listen(app_handle, "event_name", handler)
+        ```
         """
 
         @staticmethod

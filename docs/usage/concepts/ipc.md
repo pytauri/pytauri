@@ -1,12 +1,111 @@
-# IPC Commands
+# IPC
+
+## Calling Python from the Frontend
+
+Ref:
+
+- <https://tauri.app/develop/calling-rust/>
+- [pytauri.ipc.Commands][]
+
+pytauri implements IPC API consistent with rust tauri. Reading tauri's documentation is like reading pytauri's documentation.
+
+### Commands
+
+#### Registering Commands
+
+You can register a command handler using the decorator [@Commands.command][pytauri.ipc.Commands.command].
+
+Similar to `tauri::command!`, the `handler` signature can be arbitrary. We will use [inspect.signature][] to inspect its signature and dynamically pass the required parameters.
+
+!!! info
+    You might have seen this pattern in `FastAPI`🤓.
+
+The currently supported signature pattern is [ArgumentsType][pytauri.ipc.ArgumentsType]. You must ensure that the parameter names and type annotations are correct, and `@Commands.command` will check them.
+
+```python
+--8<-- "docs_src/concepts/ipc/reg_cmd.py"
+```
+
+#### Deserializing the Body
+
+For the `body` argument, it is of type `bytes`, allowing you to pass binary data such as files between the frontend and backend.
+
+However, in most cases, we want strong type checking when calling. Rust `tauri` achieves this through `serde`, while `pytauri` uses [pydantic](https://github.com/pydantic/pydantic).
+
+!!! info
+    `pydantic` is a super-fast Python validation and serialization library written in `rust`/`pyo3` 🤓.
+
+If you use [BaseModel][pydantic.BaseModel]/[RootModel][pydantic.RootModel] as the type annotation for the `body` parameter/return value, pytauri will automatically serialize/deserialize it for you:
+
+```python
+--8<-- "docs_src/concepts/ipc/serde_body.py"
+```
+
+#### Calling Commands
+
+```typescript
+--8<-- "docs_src/concepts/ipc/calling_cmd.ts"
+```
+
+The difference between `rawPyInvoke` and `pyInvoke` is that the input and output of `rawPyInvoke` are both `ArrayBuffer`, allowing you to pass binary data.
+
+#### Returning Errors to the Frontend
+
+Similar to `FastAPI`, as long as you throw an [InvokeException][pytauri.ipc.InvokeException] in the `command`, the promise will reject with the error message.
+
+```python
+--8<-- "docs_src/concepts/ipc/ret_exec.py"
+```
+
+## Calling Frontend from Python
 
 Ref:
 
 - <https://tauri.app/develop/calling-frontend/>
-- <https://tauri.app/develop/calling-rust/>
-- [pytauri.ipc.Commands][]
 - [pytauri.ipc.JavaScriptChannelId][] and [pytauri.ipc.Channel][]
 - [pytauri.webview.WebviewWindow.eval][]
-- [pytauri.Listener][]
 
-TODO: details
+### Channels
+
+> Channels are designed to be fast and deliver ordered data. They are used internally for streaming operations such as download progress, child process output, and WebSocket messages.
+
+To use a `channel`, you only need to add the [JavaScriptChannelId][pytauri.ipc.JavaScriptChannelId] field to the `BaseModel`/`RootModel`, and then use [JavaScriptChannelId.channel_on][pytauri.ipc.JavaScriptChannelId.channel_on] to get a [Channel][pytauri.ipc.Channel] instance.
+
+!!! info
+    `JavaScriptChannelId` itself is a `RootModel`, so you can directly use it as the `body` parameter.
+
+```python
+--8<-- "docs_src/concepts/ipc/py_channel.py"
+```
+
+```typescript
+--8<-- "docs_src/concepts/ipc/js_channel.ts"
+```
+
+!!! info
+    The `Channel` in `tauri-plugin-pytauri-api` is just a subclass of the `Channel` in `@tauri-apps/api/event`.
+
+    It adds the `addJsonListener` method to help serialize data. You can use `Channel.onmessage` to handle raw `ArrayBuffer` data.
+
+### Evaluating JavaScript
+
+You can use [WebviewWindow.eval][pytauri.webview.WebviewWindow.eval] to evaluate JavaScript code in the frontend.
+
+## Event System
+
+Ref:
+
+- <https://tauri.app/develop/calling-frontend/#event-system>
+- <https://tauri.app/develop/calling-rust/#event-system>
+- [pytauri.Listener][]
+- `pytauri.Emitter`: blocked on [#61](https://github.com/WSH032/pytauri/pull/61)
+
+> Tauri ships a simple event system you can use to have bi-directional communication between Rust and your frontend.
+>
+> The event system was designed for situations where small amounts of data need to be streamed or you need to implement a multi consumer multi producer pattern (e.g. push notification system).
+>
+> The event system is not designed for low latency or high throughput situations. See the channels section for the implementation optimized for streaming data.
+>
+> The major differences between a Tauri command and a Tauri event are that events have no strong type support, event payloads are always JSON strings making them not suitable for bigger messages and there is no support of the capabilities system to fine grain control event data and channels.
+
+See [pytauri.Listener--example][]
