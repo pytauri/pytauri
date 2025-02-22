@@ -1,5 +1,9 @@
 # IPC between Python and JavaScript
 
+**See [concepts/ipc](../concepts/ipc.md) for more information.**
+
+---
+
 pytauri implements the same IPC API as tauri. You can use it through [pytauri.Commands][].
 
 This tutorial will demonstrate how to use pytauri's IPC API by rewriting the `fn greet` command in `src-tauri/src/lib.rs` in Python.
