@@ -11,7 +11,7 @@ use crate::{
         Position,
     },
     tauri_runtime::Runtime,
-    utils::TauriError,
+    utils::{PyResultExt as _, TauriError},
 };
 
 pub(crate) type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
@@ -47,10 +47,9 @@ impl WebviewWindow {
                 Python::with_gil(|py| {
                     let handler = handler.bind(py);
                     let result = handler.call0();
-                    if let Err(e) = result {
-                        e.write_unraisable(py, Some(handler));
-                        panic!("Python exception occurred in `WebviewWindow::run_on_main_thread`")
-                    }
+                    result.unwrap_unraisable_py_result(py, Some(handler), || {
+                        "Python exception occurred in `WebviewWindow::run_on_main_thread`"
+                    });
                 })
             })
         })
@@ -73,18 +72,19 @@ impl WebviewWindow {
                         // See: <https://github.com/tauri-apps/tauri/blob/8e9339e8807338597132ffd8688fb9da00f4102b/crates/tauri/src/app.rs#L2168-L2184>,
                         // The `window` argument is always the `WebviewWindow` instance that calls this method,
                         // so we can directly use the same PyObject.
-                        let window: &Py<Self> = &moved_slf;  // TODO, XXX, FIXME: return `Window` instead of `WebviewWindow`?
-                        debug_assert_eq!(&*window.get().0.inner_ref().as_ref().window_ref(), _window);
-                        let menu_event: Bound<'_, MenuEvent> = MenuEvent::intern(py, &menu_event.id.0);
+                        let window: &Py<Self> = &moved_slf; // TODO, XXX, FIXME: return `Window` instead of `WebviewWindow`?
+                        debug_assert_eq!(
+                            &*window.get().0.inner_ref().as_ref().window_ref(),
+                            _window
+                        );
+                        let menu_event: Bound<'_, MenuEvent> =
+                            MenuEvent::intern(py, &menu_event.id.0);
 
                         let handler = handler.bind(py);
                         let result = handler.call1((window, menu_event));
-                        if let Err(e) = result {
-                            e.write_unraisable(py, Some(handler));
-                            panic!(
-                                "Python exception occurred in `WebviewWindow::on_menu_event` handler"
-                            )
-                        }
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `WebviewWindow::on_menu_event` handler"
+                        });
                     })
                 })
         })

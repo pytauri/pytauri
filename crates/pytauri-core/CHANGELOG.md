@@ -9,6 +9,7 @@
 
 ### Added
 
+- [#83](https://github.com/WSH032/pytauri/pull/83) - feat: add `Context::set_assets` to allow using custom assets (e.g, loading from memory/disk).
 - [#80](https://github.com/WSH032/pytauri/pull/80) - feat: add `PyAppHandleExt::get_or_init_py_app_handle`, and the methods return `&Py<AppHandle>` instead of `impl Deref<Target = Py<AppHandle>>` now.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - feat: implement [tauri `tray` feature](https://tauri.app/learn/system-tray/):
     enable `tauri/tray-icon` feature
@@ -38,6 +39,10 @@
 - [#76](https://github.com/WSH032/pytauri/pull/76) - perf: use `pyo3::intern!` in `Invoke::bind_to` for commands `IPC` performance.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: all methods of `WebviewWindow` will release the `GIL` now.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: `App::{run, run_iteration}` will use a singleton `Py<AppHandle>` as an argument instead of fetching it from `tauri::State` each loop.
+
+### Internal
+
+- [#83](https://github.com/WSH032/pytauri/pull/83) - refactor: add trait `utils::PyResultExt` to handle unraisable `PyErr`.
 
 ## [0.2.0]
 

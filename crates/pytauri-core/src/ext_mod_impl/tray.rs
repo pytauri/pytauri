@@ -17,7 +17,7 @@ use crate::{
     ext_mod_impl::{self, menu::ImplContextMenu, ImplManager, PyAppHandleExt as _, Rect},
     manager_method_impl,
     tauri_runtime::Runtime,
-    utils::TauriError,
+    utils::{PyResultExt as _, TauriError},
 };
 
 type TauriTrayIcon = tray::TrayIcon<Runtime>;
@@ -112,12 +112,9 @@ impl TrayIcon {
 
                         let handler = handler.bind(py);
                         let result = handler.call1((tray_icon, tray_icon_event));
-                        if let Err(e) = result {
-                            e.write_unraisable(py, Some(handler));
-                            panic!(
-                                "Python exception occurred in `TrayIcon::on_tray_icon_event` handler"
-                            )
-                        }
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `TrayIcon::on_tray_icon_event` handler"
+                        });
                     })
                 })
         })
