@@ -468,40 +468,41 @@ impl App {
 }
 
 /// The [Iterator] is only implemented for [Bound], so we manually implement it for [Py] here.
-///
-/// Due to the lifetime constraints of `'a, 'py` in [FromPyObject]/[FromPyObjectBound],
-/// we cannot use generics to specify [Bound::extract<T>],
-/// so we have to use a macro to implement this generic struct.
-macro_rules! py_iter_ext_impl {
-    ($name:ident, $item:ty) => {
-        struct $name(Py<PyIterator>);
+struct PyAssetsIter(Py<PyIterator>);
 
-        impl Iterator for $name {
-            type Item = $item;
+impl Iterator for PyAssetsIter {
+    type Item = (String, Vec<u8>);
 
-            fn next(&mut self) -> Option<Self::Item> {
-                let item: Option<Self::Item> = Python::with_gil(|py| {
-                    let mut slf = self
-                        .0
-                        .bind(py)
-                        // TODO, PERF, XXX: we can't iterate on `Borrowed`, so we have to convert into `Bound`,
-                        // this is pyo3 limitation, create a issue for it.
-                        .clone();
-                    let next_result = slf.next()?;
-                    let item_result = (|| {
-                        let item = next_result?;
-                        let item = item.extract::<Self::Item>()?;
-                        PyResult::Ok(item)
-                    })();
-                    let item = item_result.unwrap_unraisable_py_result(py, Some(&slf), || {
-                        "Python exception occurred during calling `PyIterator.next()`"
-                    });
-                    Some(item)
-                });
-                item
-            }
-        }
-    };
+    fn next(&mut self) -> Option<Self::Item> {
+        let item: Option<Self::Item> = Python::with_gil(|py| {
+            let mut slf = self
+                .0
+                // TODO, PERF, XXX: we can't iterate on [pyo3::Borrowed], so we have to convert into [Bound],
+                // this is pyo3 limitation, create a issue for it.
+                .bind(py)
+                .clone();
+            let next_result = slf.next()?;
+            let item_result = (|| {
+                let item = next_result?;
+                // TODO: support `PyByteArray` also, ref impl: <https://github.com/PyO3/pyo3/issues/2888#issuecomment-1398307069>.
+                //
+                // NOTE: DO NOT `extract::<Vec<u8>>` directly, use `Cow<[u8]>` instead,
+                // see: <https://github.com/PyO3/pyo3/issues/2888>.
+                let (key, bytes) = item.extract::<(Bound<'_, PyString>, Bound<'_, PyBytes>)>()?;
+                // TODO, PERF: once we drop py39, we can use `&str` instead of `Cow`
+                let key = key.to_cow()?;
+                let bytes = bytes.as_bytes();
+                // TODO, PERF: how to avoid copy?
+                let item = (key.into_owned(), bytes.to_vec());
+                PyResult::Ok(item)
+            })();
+            let item = item_result.unwrap_unraisable_py_result(py, Some(&slf), || {
+                "Python exception occurred during calling `PyIterator.next()`"
+            });
+            Some(item)
+        });
+        item
+    }
 }
 
 struct PyAssets(PyObject);
@@ -541,9 +542,7 @@ impl Assets<Runtime> for PyAssets {
             let result = (|| {
                 let ret = slf.call_method0(intern!(py, METHOD_NAME))?;
                 let ret_iter = ret.try_iter()?;
-                // TODO, PERF: how to avoid copy?
-                py_iter_ext_impl!(PyIterExt, (String, Vec<u8>));
-                let unbound_iter = PyIterExt(ret_iter.unbind());
+                let unbound_iter = PyAssetsIter(ret_iter.unbind());
                 let assets_iter = unbound_iter.map(|item| {
                     let (key, bytes) = item;
                     (Cow::Owned(key), Cow::Owned(bytes))

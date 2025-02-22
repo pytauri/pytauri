@@ -35,6 +35,8 @@
 
 ### Changed
 
+- [#86](https://github.com/WSH032/pytauri/pull/86) - pref: use `Cow<'_, [u8]>` instead of `Vec<u8>` as `pymehtods`/`pyfunction` and `extract` parameters to improve performance.
+    see [PyO3/pyo3#3310](https://github.com/PyO3/pyo3/issues/3310#issuecomment-2674022839) and [PyO3/pyo3#2888](https://github.com/PyO3/pyo3/issues/2888) for more details.
 - [#79](https://github.com/WSH032/pytauri/pull/79) - perf: almost all of pyo3 `pymethods` will release the `GIL` now.
 - [#76](https://github.com/WSH032/pytauri/pull/76) - perf: use `pyo3::intern!` in `Invoke::bind_to` for commands `IPC` performance.
 - [#75](https://github.com/WSH032/pytauri/pull/75) - perf: all methods of `WebviewWindow` will release the `GIL` now.

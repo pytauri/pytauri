@@ -47,17 +47,21 @@ impl InvokeResolver {
 #[pymethods]
 // NOTE: These pymethods implementation must not block
 impl InvokeResolver {
-    fn resolve(&self, py: Python<'_>, value: Vec<u8>) -> PyResult<()> {
+    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
+    // see: <https://github.com/PyO3/pyo3/issues/2888>
+    fn resolve(&self, py: Python<'_>, value: Cow<'_, [u8]>) -> PyResult<()> {
         // NOTE: This function implementation must not block
         py.allow_threads(|| {
             let resolver = self.inner.try_take_inner()??;
-            resolver.resolve(InvokeResponseBody::Raw(value));
+            resolver.resolve(InvokeResponseBody::Raw(value.into_owned()));
             Ok(())
         })
     }
 
     // TODO: Support more Python types. Tauri seems to only support `serde` types,
-    // and not `Raw: [u8]`. We should open an issue to ask them about this.
+    // and not support `Raw: Vec<[u8]>`. We should open an issue to ask them about this.
+    //
+    // TODO, PERF: once we drop py39, we can use `value: &str` instead of `Cow<'_, str>`.
     fn reject(&self, py: Python<'_>, value: Cow<'_, str>) -> PyResult<()> {
         // NOTE: This function implementation must not block
         py.allow_threads(|| {
@@ -198,18 +202,22 @@ impl Invoke {
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))
     }
 
-    fn resolve(&self, py: Python<'_>, value: Vec<u8>) -> PyResult<()> {
+    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
+    // see: <https://github.com/PyO3/pyo3/issues/2888>
+    fn resolve(&self, py: Python<'_>, value: Cow<'_, [u8]>) -> PyResult<()> {
         // NOTE: This function implementation must not block
 
         py.allow_threads(|| {
             let resolver = self.inner.try_take_inner()??.resolver;
-            resolver.resolve(InvokeResponseBody::Raw(value));
+            resolver.resolve(InvokeResponseBody::Raw(value.into_owned()));
             Ok(())
         })
     }
 
     // TODO: Support more Python types. Tauri seems to only support `serde` types,
-    // and not `Raw: [u8]`. We should open an issue to ask them about this.
+    // and not support `Raw: Vec<[u8]>`. We should open an issue to ask them about this.
+    //
+    // TODO, PERF: once we drop py39, we can use `value: &str` instead of `Cow<'_, str>`.
     fn reject(&self, py: Python<'_>, value: Cow<'_, str>) -> PyResult<()> {
         // NOTE: This function implementation must not block
 
@@ -282,13 +290,15 @@ impl Channel {
         self.0.inner_ref().id()
     }
 
-    fn send(&self, py: Python<'_>, data: Vec<u8>) -> PyResult<()> {
+    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
+    // see: <https://github.com/PyO3/pyo3/issues/2888>
+    fn send(&self, py: Python<'_>, data: Cow<'_, [u8]>) -> PyResult<()> {
         // [tauri::ipc::Channel::send] is not a very fast operation,
         // so we need to release the GIL
         py.allow_threads(|| {
             self.0
                 .inner_ref()
-                .send(InvokeResponseBody::Raw(data))
+                .send(InvokeResponseBody::Raw(data.into_owned()))
                 .map_err(TauriError::from)?;
             Ok(())
         })
