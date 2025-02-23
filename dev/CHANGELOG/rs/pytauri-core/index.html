@@ -2050,6 +2050,8 @@
 </ul>
 <h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/WSH032/pytauri/pull/86">#86</a> - pref: use <code>Cow&lt;'_, [u8]&gt;</code> instead of <code>Vec&lt;u8&gt;</code> as <code>pymehtods</code>/<code>pyfunction</code> and <code>extract</code> parameters to improve performance.
+    see <a href="https://github.com/PyO3/pyo3/issues/3310#issuecomment-2674022839">PyO3/pyo3#3310</a> and <a href="https://github.com/PyO3/pyo3/issues/2888">PyO3/pyo3#2888</a> for more details.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/79">#79</a> - perf: almost all of pyo3 <code>pymethods</code> will release the <code>GIL</code> now.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/76">#76</a> - perf: use <code>pyo3::intern!</code> in <code>Invoke::bind_to</code> for commands <code>IPC</code> performance.</li>
 <li><a href="https://github.com/WSH032/pytauri/pull/75">#75</a> - perf: all methods of <code>WebviewWindow</code> will release the <code>GIL</code> now.</li>
