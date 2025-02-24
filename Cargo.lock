@@ -2969,7 +2969,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri-core"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "pyo3",
  "pyo3-utils",
@@ -3930,7 +3930,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-pytauri"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "pyo3",
  "pyo3-build-config",
