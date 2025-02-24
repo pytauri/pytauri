@@ -2948,7 +2948,7 @@ dependencies = [
 
 [[package]]
 name = "pyo3-utils"
-version = "0.1.0-beta.0"
+version = "0.1.0"
 dependencies = [
  "parking_lot",
  "pyo3",
