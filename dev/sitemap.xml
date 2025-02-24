@@ -53,83 +53,87 @@
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/SUMMARY/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/rs/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/codelldb/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/SUMMARY/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pyo3_utils/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/codelldb/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pyo3_utils/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/image/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ipc/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/image/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/menu/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ipc/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/tray/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/menu/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/webview/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/tray/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/window/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/webview/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/window/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/image/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/ipc/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/image/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/lib/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/ipc/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/menu/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/lib/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/tray/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/menu/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/webview/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/tray/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri/ffi/window/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/webview/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri_plugin_notification/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri/ffi/window/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
-         <loc>https://WSH032.github.io/pytauri/dev/reference/pytauri_plugin_notification/ffi/</loc>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri_plugin_notification/</loc>
+         <lastmod>2025-02-24</lastmod>
+    </url>
+    <url>
+         <loc>https://WSH032.github.io/pytauri/dev/reference/py/pytauri_plugin_notification/ffi/</loc>
          <lastmod>2025-02-24</lastmod>
     </url>
     <url>
