@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Docs
 
+- [#88](https://github.com/WSH032/pytauri/pull/88) - docs: add rust api reference section.
 - [#85](https://github.com/WSH032/pytauri/pull/85) - docs: add concepts `IPC` and `using multiprocessing` sections.
 - [#80](https://github.com/WSH032/pytauri/pull/80) - `example/nicegui-app`:
     - Use `BuilderArgs.setup` for initialization instead of listening to the `RunEvent.Ready` event.
