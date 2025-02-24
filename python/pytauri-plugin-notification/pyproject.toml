@@ -1,6 +1,6 @@
 [project]
 name = "pytauri-plugin-notification"
-version = "0.2.0" # when bumping, remember to update workspace dependencies
+version = "0.3.0" # when bumping, remember to update workspace dependencies
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.9"
@@ -13,7 +13,7 @@ description = "tauri-plugin-notification binding for PyTauri."
 dependencies = [
     "typing-extensions >= 4",
     # workspaces, must use `==`
-    "pytauri == 0.2.*",
+    "pytauri == 0.3.*",
 ]
 
 [project.urls]
