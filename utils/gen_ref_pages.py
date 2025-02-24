@@ -25,6 +25,10 @@ import mkdocs_gen_files
 
 ROOT = Path(__file__).parent.parent
 
+# Don't change the name "reference/py",
+# it's also used in `mkdocs.yml`.
+REFERENCE_PREFIX = Path("reference/py")
+
 # matches strings that start with an underscore followed by any character except another underscore.
 # - exclude: _private
 # - but include: hello, __hello, or __hello__
@@ -52,9 +56,7 @@ for project in (ROOT / "python").iterdir():
         module_path = relative_path.with_suffix("")
         doc_path = relative_path.with_suffix(".md")
 
-        # Don't change the name "reference"
-        # It's used in mkdocs.yml
-        full_doc_path = Path("reference", doc_path)
+        full_doc_path = Path(REFERENCE_PREFIX, doc_path)
 
         parts = tuple(module_path.parts)
 
@@ -82,13 +84,12 @@ for project in (ROOT / "python").iterdir():
 
         # The base edit path is set in the `mkdocs.yml`:
         # e.g., `https://github.com/WSH032/pytauri/edit/main/docs/`.
-        # Since these reference pages are not actually in the `docs` directory,
+        # Since these api reference(code) are not actually in the `docs` directory,
         # but are inlined in the `*.py` code, we need `"../"` to remove the `docs/` path
         mkdocs_gen_files.set_edit_path(
             full_doc_path, Path("../") / path.relative_to(ROOT)
         )
 
-    # Don't change the name "reference/SUMMARY.md"
-    # It's used in mkdocs.yml
-    with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as nav_file:
+    # ref: <https://github.com/oprypin/mkdocs-literate-nav>
+    with mkdocs_gen_files.open(REFERENCE_PREFIX / "SUMMARY.md", "w") as nav_file:
         nav_file.writelines(nav.build_literate_nav())

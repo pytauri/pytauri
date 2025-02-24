@@ -24,7 +24,10 @@ Source Code: <https://github.com/WSH032/pytauri/>
 
 This is a completely free and open-source project, but it is difficult to maintain without incentives and contributions from the community.
 
-If you think this project is helpful, consider giving it a star ![GitHub Repo stars](https://img.shields.io/github/stars/wsh032/pytauri?style=social), it would be very helpful for my work and studies. 🥺👉👈
+If you think this project is helpful, consider giving it a star [![GitHub Repo stars]][Github Repo], it would be very helpful for my work and studies. 🥺👉👈
+
+[GitHub Repo stars]: https://img.shields.io/github/stars/wsh032/pytauri?style=social
+[Github Repo]: https://github.com/WSH032/pytauri
 
 ---
 
