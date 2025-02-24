@@ -41,6 +41,33 @@ If you use [BaseModel][pydantic.BaseModel]/[RootModel][pydantic.RootModel] as th
 --8<-- "docs_src/concepts/ipc/serde_body.py"
 ```
 
+#### Generate Invoke Handler for App
+
+To execute async commands, we need an async runtime. We use [anyio.from_thread.BlockingPortal][] as the async runtime in a child thread (the main thread is used for the Tauri app's event loop).
+
+Refer to the [anyio docs](https://anyio.readthedocs.io/en/stable/threads.html#calling-asynchronous-code-from-an-external-thread) for more information.
+
+You can obtain a `BlockingPortal` as follows:
+
+- [anyio.from_thread.start_blocking_portal][]
+- [anyio.from_thread.BlockingPortalProvider][]
+
+After that, you generate an `invoke_handler` and pass it to the `App`, similar to Rust's `tauri::generate_handler`:
+
+```python
+--8<-- "docs_src/concepts/ipc/gen_handler.py"
+```
+
+The key point here is that **you must not close the `BlockingPortal` (i.e., do not `exit` the context manager) while [App.run][pytauri.App.run] is still running**.
+
+If you want to obtain this `invoke_handler` and keep the `BlockingPortal` running, you can use [contextlib.ExitStack][] to achieve this:
+
+```python
+--8<-- "docs_src/concepts/ipc/exit_stack.py"
+```
+
+You can also spawn tasks in the async runtime (in the child thread) from the main thread in a thread-safe manner using the `portal`: <https://anyio.readthedocs.io/en/stable/threads.html#spawning-tasks-from-worker-threads>
+
 #### Calling Commands
 
 ```typescript
