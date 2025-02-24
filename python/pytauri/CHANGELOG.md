@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
 - [#83](https://github.com/WSH032/pytauri/pull/83) - feat: add `def Context.set_assets` and `class Assets` to allow using custom assets (e.g, loading from memory/disk).
@@ -85,5 +87,6 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/WSH032/pytauri/tree/HEAD
+[0.3.0]: https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.3.0
 [0.2.0]: https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.2.0
 [0.1.0-beta.0]: https://github.com/WSH032/pytauri/releases/tag/py/pytauri/v0.1.0-beta.0
