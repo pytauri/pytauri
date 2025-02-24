@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### BREAKING
 
 - [#80](https://github.com/WSH032/pytauri/pull/80) - refactor: `trait PyAppHandleExt` is now sealed and no longer has generic parameters.
@@ -65,6 +67,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/WSH032/pytauri/tree/HEAD
+[0.3.0]: https://github.com/WSH032/pytauri/releases/tag/rs/pytauri-core/v0.3.0
 [0.2.0]: https://github.com/WSH032/pytauri/releases/tag/rs/pytauri-core/v0.2.0
 [0.1.0-beta.1]: https://github.com/WSH032/pytauri/releases/tag/rs/pytauri-core/v0.1.0-beta.1
 [0.1.0-beta.0]: https://github.com/WSH032/pytauri/releases/tag/rs/pytauri-core/v0.1.0-beta.0
