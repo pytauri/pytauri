@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+- `Highlights` for the most attractive new features.
 - `BREAKING` for breaking changes.
 - `Added` for new features.
 - `Changed` for changes in existing functionality.
@@ -30,6 +31,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 ## [Unreleased]
+
+## [0.3.0]
+
+### Highlights
+
+- [menu](https://tauri.app/learn/window-menu/) and [tray](https://tauri.app/learn/system-tray/) python API bindings, see `pytauri` changelog for more details.
+
+    | tray | menu |
+    |:----:|:----:|
+    | ![tray](https://github.com/user-attachments/assets/28d69270-4c76-4b48-854f-764fd5996a27) | ![menu](https://github.com/user-attachments/assets/4b8fd7e0-8c65-4566-bb77-8cb1bcc4f014) |
 
 ### Changed
 
@@ -85,5 +96,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0-beta]
 
 [unreleased]: https://github.com/WSH032/pytauri/tree/HEAD
+[0.3.0]: https://github.com/WSH032/pytauri/releases/tag/v0.3.0
 [0.2.0]: https://github.com/WSH032/pytauri/releases/tag/v0.2.0
 [0.1.0-beta]: https://github.com/WSH032/pytauri/releases/tag/v0.1.0-beta
