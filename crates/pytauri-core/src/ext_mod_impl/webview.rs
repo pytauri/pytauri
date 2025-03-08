@@ -8,7 +8,7 @@ use crate::{
         image::Image,
         menu::{ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position,
+        Position, Url,
     },
     tauri_runtime::Runtime,
     utils::{PyResultExt as _, TauriError},
@@ -327,17 +327,14 @@ impl WebviewWindow {
         py.allow_threads(|| delegate_inner!(self, print,))
     }
 
-    fn url<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyString>> {
+    fn url(&self, py: Python<'_>) -> PyResult<Url> {
         let url = py.allow_threads(|| delegate_inner!(self, url,))?;
-        Ok(PyString::new(py, url.as_ref()))
+        Ok(url.into())
     }
 
-    // // TODO, FIXME: Why `navigate` need `mut self`? We should ask tauri developers.
-    // // see: <https://github.com/tauri-apps/tauri/issues/12430>
-    // fn navigate(&self, url: &str) -> PyResult<()> {
-    //     let url = Url::parse(url).map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
-    //     delegate_inner!(mut self, navigate, url)
-    // }
+    fn navigate(&self, py: Python<'_>, url: Url) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, navigate, url.into()))
+    }
 
     fn eval(&self, py: Python<'_>, js: &str) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, eval, js))

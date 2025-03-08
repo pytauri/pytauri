@@ -25,7 +25,7 @@ pub mod ext_mod {
 
     pub use ext_mod_impl::{
         EventId, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
-        PyAppHandleStateResult,
+        PyAppHandleStateResult, Url,
     };
 
     /// see also: [tauri::ipc]
