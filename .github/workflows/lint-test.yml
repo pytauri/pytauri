@@ -26,20 +26,21 @@ jobs:
     outputs:
       paths: ${{ steps.filter.outputs.paths }}
     steps:
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        predicate-quantifier: "every"
-        # 👇 see: <https://github.com/PyO3/pyo3/pull/3212>
-        base: ${{ github.event.pull_request.base.ref || github.event.merge_group.base_ref }}
-        ref: ${{ github.event.pull_request.head.ref || github.event.merge_group.head_ref }}
-        # 👆
-        filters: |
-          paths:
-            - "!docs/**"
-            - "!**/*.md"
-            - "!.github/ISSUE_TEMPLATE/**"
-            - "!.github/dependabot.yml"
+      - uses: actions/checkout@v4 # IMPORTANT: <https://github.com/dorny/paths-filter/issues/212#issuecomment-1960976719>
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          predicate-quantifier: "every"
+          # 👇 see: <https://github.com/PyO3/pyo3/pull/3212>
+          base: ${{ github.event.pull_request.base.ref || github.event.merge_group.base_ref }}
+          ref: ${{ github.event.pull_request.head.ref || github.event.merge_group.head_ref }}
+          # 👆
+          filters: |
+            paths:
+              - "!docs/**"
+              - "!**/*.md"
+              - "!.github/ISSUE_TEMPLATE/**"
+              - "!.github/dependabot.yml"
 
   pre-commit-run:
     needs: changes
@@ -123,6 +124,7 @@ jobs:
   lint-test-all-green: # This job does nothing and is only used for the branch protection
     if: always() # IMPORTANT: mandatory
     needs:
+      - changes
       - pre-commit-run
     runs-on: ubuntu-latest
     steps:
