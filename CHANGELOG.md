@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Internal
+
+- [#103](https://github.com/pytauri/pytauri/pull/103) - chore: transfer repo to `pytauri` org.
+
 ## [0.3.0]
 
 ### Highlights
