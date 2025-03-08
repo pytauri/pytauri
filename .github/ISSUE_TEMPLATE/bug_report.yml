@@ -11,7 +11,7 @@ body:
       value: |
         ## First of all
 
-        1. Please search for existing [tauri issues](https://github.com/tauri-apps/tauri/issues) and [pytauri issues](https://github.com/WSH032/pytauri/issues) about this problem first.
+        1. Please search for existing [tauri issues](https://github.com/tauri-apps/tauri/issues) and [pytauri issues](https://github.com/pytauri/pytauri/issues) about this problem first.
         2. Make sure `rustc` and all relevant Tauri/PyTauri packages are up to date.
         3. Make sure it's an **issue** with **PyTauri** and not something else you are using.
             - If it's a Tauri issue, please report it to Tauri's repository.

@@ -15,7 +15,7 @@ or you are hurry, just wanna see/run the demo:
 > You can find that in tutorial section in Documentation.
 
 ```bash
-git clone https://github.com/WSH032/pytauri.git
+git clone https://github.com/pytauri/pytauri.git
 cd pytauri
 
 cd examples/tauri-app

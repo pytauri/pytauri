@@ -336,7 +336,7 @@ impl PythonInterpreterEnv<'_> {
         //
         // But for `AppImage` packaging,
         // `libpython` will be [moved to `${APPDIR}/usr/lib/`](https://github.com/tauri-apps/tauri/issues/11898),
-        // instead of the expected [`${APPDIR}/usr/lib/{your-app-name}/lib`](https://wsh032.github.io/pytauri/latest/usage/tutorial/build-standalone/#unix_3).
+        // instead of the expected [`${APPDIR}/usr/lib/{your-app-name}/lib`](https://pytauri.github.io/pytauri/0.3/usage/tutorial/build-standalone/#unix_3).
         // So we need to manually set `prefix` and `exec_prefix`.
         // (as long as we set it correctly, it won't have much impact compared to automatic guessing).
         //

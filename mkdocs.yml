@@ -1,10 +1,10 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
 site_name: pytauri
-site_url: https://WSH032.github.io/pytauri/
+site_url: https://pytauri.github.io/pytauri/
 
-repo_url: https://github.com/WSH032/pytauri/
-repo_name: WSH032/pytauri
+repo_url: https://github.com/pytauri/pytauri/
+repo_name: pytauri/pytauri
 
 edit_uri: edit/main/docs/
 
@@ -184,13 +184,13 @@ plugins:
       enable_creation_date: true
       type: timeago
   - git-committers:
-      repository: WSH032/pytauri
+      repository: pytauri/pytauri
       branch: main
 
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/WSH032/
+      link: https://github.com/pytauri/
   # see: https://squidfunk.github.io/mkdocs-material/setup/setting-up-versioning/
   version:
     provider: mike

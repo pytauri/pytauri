@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "js api for crate tauri-plugin-pytauri",
   "license": "Apache-2.0",
-  "repository": "github:WSH032/pytauri",
+  "repository": "github:pytauri/pytauri",
   "contributors": [
     "Sean Wang <126865849+WSH032@users.noreply.github.com>"
   ],

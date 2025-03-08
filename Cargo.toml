@@ -13,8 +13,8 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 rust-version = "1.82"
-repository = "https://github.com/WSH032/pytauri/"
-homepage = "https://github.com/WSH032/pytauri/"
+repository = "https://github.com/pytauri/pytauri/"
+homepage = "https://github.com/pytauri/pytauri/"
 authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 
 
