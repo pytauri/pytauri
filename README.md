@@ -13,12 +13,12 @@
 
 [![CI: docs]][CI: docs#link]
 
-Documentation: <https://wsh032.github.io/pytauri/>
+Documentation: <https://pytauri.github.io/pytauri/>
 
-Source Code: <https://github.com/WSH032/pytauri/>
+Source Code: <https://github.com/pytauri/pytauri/>
 
-[CI: docs]: https://github.com/WSH032/pytauri/actions/workflows/docs.yml/badge.svg
-[CI: docs#link]: https://github.com/WSH032/pytauri/actions/workflows/docs.yml
+[CI: docs]: https://github.com/pytauri/pytauri/actions/workflows/docs.yml/badge.svg
+[CI: docs#link]: https://github.com/pytauri/pytauri/actions/workflows/docs.yml
 
 ---
 
@@ -26,8 +26,8 @@ This is a completely free and open-source project, but it is difficult to mainta
 
 If you think this project is helpful, consider giving it a star [![GitHub Repo stars]][Github Repo], it would be very helpful for my work and studies. 🥺👉👈
 
-[GitHub Repo stars]: https://img.shields.io/github/stars/wsh032/pytauri?style=social
-[Github Repo]: https://github.com/WSH032/pytauri
+[GitHub Repo stars]: https://img.shields.io/github/stars/pytauri/pytauri?style=social
+[Github Repo]: https://github.com/pytauri/pytauri
 
 ---
 
@@ -35,7 +35,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
 
 > **TL;DR**
 >
-> You are hurry and just wanna see/run the demo? See [examples/tauri-app](https://github.com/WSH032/pytauri/tree/main/examples/tauri-app).
+> You are hurry and just wanna see/run the demo? See [examples/tauri-app](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app).
 
 [notification]: https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/
 
@@ -101,7 +101,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
         }
         ```
 
-- Can be integrated with [nicegui]/[gradio]/[FastAPI] to achieve a full-stack Python development experience (i.g., without `Node.js`). See [examples/nicegui-app](https://github.com/WSH032/pytauri/tree/main/examples/nicegui-app).
+- Can be integrated with [nicegui]/[gradio]/[FastAPI] to achieve a full-stack Python development experience (i.g., without `Node.js`). See [examples/nicegui-app](https://github.com/pytauri/pytauri/tree/main/examples/nicegui-app).
 
 ## Release
 

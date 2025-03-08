@@ -125,7 +125,7 @@ Ref:
 - <https://tauri.app/develop/calling-frontend/#event-system>
 - <https://tauri.app/develop/calling-rust/#event-system>
 - [pytauri.Listener][]
-- `pytauri.Emitter`: blocked on [#61](https://github.com/WSH032/pytauri/pull/61)
+- `pytauri.Emitter`: blocked on [#61](https://github.com/pytauri/pytauri/pull/61)
 
 > Tauri ships a simple event system you can use to have bi-directional communication between Rust and your frontend.
 >

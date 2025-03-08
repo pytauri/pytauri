@@ -83,7 +83,7 @@ for project in (ROOT / "python").iterdir():
             fd.writelines(f"::: {ident}")
 
         # The base edit path is set in the `mkdocs.yml`:
-        # e.g., `https://github.com/WSH032/pytauri/edit/main/docs/`.
+        # e.g., `https://github.com/pytauri/pytauri/edit/main/docs/`.
         # Since these api reference(code) are not actually in the `docs` directory,
         # but are inlined in the `*.py` code, we need `"../"` to remove the `docs/` path
         mkdocs_gen_files.set_edit_path(

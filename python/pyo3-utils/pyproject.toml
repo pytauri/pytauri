@@ -14,8 +14,8 @@ dependencies = ["typing-extensions >= 4"]
 
 [project.urls]
 # see: <https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels>
-documentation = "https://wsh032.github.io/pytauri/"
-source = "https://github.com/WSH032/pytauri"
+documentation = "https://pytauri.github.io/pytauri/"
+source = "https://github.com/pytauri/pytauri"
 
 
 [build-system]

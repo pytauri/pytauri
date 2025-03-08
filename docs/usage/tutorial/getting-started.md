@@ -11,7 +11,7 @@ Before starting the tutorial, we recommend installing the following tools, which
 
 ## Full Example
 
-<https://github.com/WSH032/pytauri/tree/main/examples/tauri-app>
+<https://github.com/pytauri/pytauri/tree/main/examples/tauri-app>
 
 ## Create a new tauri project
 
