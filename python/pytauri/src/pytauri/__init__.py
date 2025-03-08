@@ -21,6 +21,7 @@ from pytauri.ffi import (
     RunEventType,
     Size,
     SizeType,
+    Url,
     builder_factory,
     context_factory,
 )
@@ -48,6 +49,7 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "Url",
     "builder_factory",
     "context_factory",
 ]

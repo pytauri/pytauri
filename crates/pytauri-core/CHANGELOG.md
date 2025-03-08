@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#63](https://github.com/pytauri/pytauri/pull/63) - feat: add `Url` and `webview::WebviewWindow::navigate`.
+
 ## [0.3.0]
 
 ### BREAKING

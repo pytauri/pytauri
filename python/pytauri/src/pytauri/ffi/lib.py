@@ -41,6 +41,7 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "Url",
     "builder_factory",
     "context_factory",
 ]
@@ -579,3 +580,7 @@ class Assets(ABC):
 
     def setup(self, _app: AppHandle, /) -> object:
         return None
+
+
+Url = TypeAliasType("Url", str)
+"""[tauri::Url](https://docs.rs/tauri/latest/tauri/struct.Url.html#method.parse)"""
