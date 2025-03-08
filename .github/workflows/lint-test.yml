@@ -7,6 +7,7 @@ name: Lint check and test
 # It is best to avoid direct commits to the main branch, instead make a PR for checks.
 on:
   pull_request:
+  merge_group: # needed for merge queue
   workflow_dispatch:
   # NOTE: set `secrets: inherit` when call this workflow from other workflow.
   workflow_call:
@@ -29,6 +30,10 @@ jobs:
       id: filter
       with:
         predicate-quantifier: "every"
+        # 👇 see: <https://github.com/PyO3/pyo3/pull/3212>
+        base: ${{ github.event.pull_request.base.ref || github.event.merge_group.base_ref }}
+        ref: ${{ github.event.pull_request.head.ref || github.event.merge_group.head_ref }}
+        # 👆
         filters: |
           paths:
             - "!docs/**"
@@ -88,7 +93,8 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          key: py-${{ matrix.python-version }}
+          key: py-${{ matrix.python-version }} # IMPORTANT: will link to different libpython
+          save-if: ${{ github.event_name != 'merge_group' }} # see: <https://github.com/PyO3/pyo3/pull/3886>
 
       - name: Cache pre-commit
         uses: ./.github/actions/cache-pre-commit
