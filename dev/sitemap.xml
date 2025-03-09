@@ -85,6 +85,10 @@
          <lastmod>2025-03-09</lastmod>
     </url>
     <url>
+         <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/path/</loc>
+         <lastmod>2025-03-09</lastmod>
+    </url>
+    <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/tray/</loc>
          <lastmod>2025-03-09</lastmod>
     </url>
@@ -114,6 +118,10 @@
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/menu/</loc>
+         <lastmod>2025-03-09</lastmod>
+    </url>
+    <url>
+         <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/path/</loc>
          <lastmod>2025-03-09</lastmod>
     </url>
     <url>
