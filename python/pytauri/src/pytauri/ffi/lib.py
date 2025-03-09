@@ -359,14 +359,23 @@ if TYPE_CHECKING:
         # Example
 
         ```python
+        from pydantic import BaseModel
         from pytauri import AppHandle, Event, Listener
+
+
+        class Payload(BaseModel):  # or `RootModel`
+            url: str
+            num: int
 
 
         def listen(app_handle: AppHandle) -> None:
             def handler(event: Event):
-                print(event.id, event.payload)
+                assert event.id == event_id
 
-            Listener.listen(app_handle, "event_name", handler)
+                serialized_event = Payload.model_validate_json(event.payload)
+                print(serialized_event.url, serialized_event.num)
+
+            event_id = Listener.listen(app_handle, "event_name", handler)
         ```
         """
 

@@ -71,7 +71,28 @@ __all__ = [
 
 @final
 class Emitter(_Emitter):
-    """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)"""
+    """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)
+
+    See also: <https://tauri.app/develop/calling-frontend/#event-system>
+
+    # Example
+
+    ```python
+    from pydantic import BaseModel
+    from pytauri import AppHandle, Emitter
+
+
+    class Payload(BaseModel):  # or `RootModel`
+        url: str
+        num: int
+
+
+    def emit(app_handle: AppHandle) -> None:
+        Emitter.emit(
+            app_handle, "event_name", Payload(url="https://example.com", num=42)
+        )
+    ```
+    """
 
     # `classmethod` instead of `staticmethod`, see: <https://github.com/python/cpython/issues/75301#issuecomment-1093755348>
 

@@ -125,7 +125,7 @@ Ref:
 - <https://tauri.app/develop/calling-frontend/#event-system>
 - <https://tauri.app/develop/calling-rust/#event-system>
 - [pytauri.Listener][]
-- `pytauri.Emitter`: blocked on [#61](https://github.com/pytauri/pytauri/pull/61)
+- [pytauri.Emitter][]
 
 > Tauri ships a simple event system you can use to have bi-directional communication between Rust and your frontend.
 >
@@ -135,4 +135,7 @@ Ref:
 >
 > The major differences between a Tauri command and a Tauri event are that events have no strong type support, event payloads are always JSON strings making them not suitable for bigger messages and there is no support of the capabilities system to fine grain control event data and channels.
 
-See [pytauri.Listener--example][]
+See:
+
+- [pytauri.Listener--example][]
+- [pytauri.Emitter--example][]
