@@ -30,7 +30,7 @@ use pyo3_utils::{
 };
 use tauri::{
     utils::assets::{AssetKey as TauriAssetKey, AssetsIter, CspHash},
-    Assets, Listener as _, Manager as _,
+    Assets, Emitter as _, Listener as _, Manager as _,
 };
 
 use crate::{
@@ -753,7 +753,7 @@ pub use tauri::EventId;
 #[non_exhaustive]
 pub struct Event {
     #[pyo3(get)]
-    pub id: EventId,
+    pub id: EventId, // TODO, PERF: use `Py<PyInt>` instead of `u32` for getter performance.
     #[pyo3(get)]
     pub payload: Py<PyString>,
 }
@@ -987,5 +987,134 @@ impl<'py> IntoPyObject<'py> for Url {
 
     fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
         (&self).into_pyobject(py)
+    }
+}
+
+/// See also: [tauri::EventTarget].
+//
+// NOTE: use `Py<T>` instead of `String` for getter performance.
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub enum EventTarget {
+    Any(),
+    AnyLabel { label: Py<PyString> },
+    App(),
+    Window { label: Py<PyString> },
+    Webview { label: Py<PyString> },
+    WebviewWindow { label: Py<PyString> },
+}
+
+impl EventTarget {
+    fn from_tauri(py: Python<'_>, value: &tauri::EventTarget) -> Self {
+        match value {
+            tauri::EventTarget::Any => Self::Any(),
+            tauri::EventTarget::AnyLabel { label } => Self::AnyLabel {
+                label: PyString::new(py, label).unbind(),
+            },
+            tauri::EventTarget::App => Self::App(),
+            tauri::EventTarget::Window { label } => Self::Window {
+                label: PyString::new(py, label).unbind(),
+            },
+            tauri::EventTarget::Webview { label } => Self::Webview {
+                label: PyString::new(py, label).unbind(),
+            },
+            tauri::EventTarget::WebviewWindow { label } => Self::WebviewWindow {
+                label: PyString::new(py, label).unbind(),
+            },
+            target => {
+                unimplemented!("Please make a issue for unimplemented EventTarget: {target:?}")
+            }
+        }
+    }
+
+    fn to_tauri(&self, py: Python<'_>) -> PyResult<tauri::EventTarget> {
+        // TODO, PERF: once we drop py39, we can use [PyStringMethods::to_str] instead of [PyStringMethods::to_cow]
+        let value = match self {
+            Self::Any() => tauri::EventTarget::Any,
+            Self::AnyLabel { label } => tauri::EventTarget::AnyLabel {
+                label: label.bind(py).to_cow()?.into_owned(),
+            },
+            Self::App() => tauri::EventTarget::App,
+            Self::Window { label } => tauri::EventTarget::Window {
+                label: label.bind(py).to_cow()?.into_owned(),
+            },
+            Self::Webview { label } => tauri::EventTarget::Webview {
+                label: label.bind(py).to_cow()?.into_owned(),
+            },
+            Self::WebviewWindow { label } => tauri::EventTarget::WebviewWindow {
+                label: label.bind(py).to_cow()?.into_owned(),
+            },
+        };
+        Ok(value)
+    }
+}
+
+/// The Implementers of [tauri::Emitter].
+pub type ImplEmitter = ImplManager;
+
+/// See also: [tauri::Emitter].
+//
+// `subclass` for implementing `emit`, `emit_to`, etc. methods from the Python side.
+#[pyclass(frozen, subclass)]
+#[non_exhaustive]
+pub struct Emitter;
+
+#[pymethods]
+impl Emitter {
+    #[staticmethod]
+    fn emit_str(py: Python<'_>, slf: ImplEmitter, event: &str, payload: String) -> PyResult<()> {
+        manager_method_impl!(py, &slf, [ungil], |manager| {
+            manager.emit_str(event, payload).map_err(TauriError::from)
+        })??;
+        Ok(())
+    }
+
+    #[staticmethod]
+    fn emit_str_to(
+        py: Python<'_>,
+        slf: ImplEmitter,
+        target: Py<EventTarget>,
+        event: &str,
+        payload: String,
+    ) -> PyResult<()> {
+        let target = target.get().to_tauri(py)?;
+
+        manager_method_impl!(py, &slf, [ungil], |manager| {
+            manager
+                .emit_str_to(target, event, payload)
+                .map_err(TauriError::from)
+        })??;
+        Ok(())
+    }
+
+    #[staticmethod]
+    fn emit_str_filter(
+        py: Python<'_>,
+        slf: ImplEmitter,
+        event: &str,
+        payload: String,
+        filter: Bound<PyAny>,
+    ) -> PyResult<()> {
+        // We can't release the GIL here, because `rs_filter` will be used as `iter.filter(|..| rs_filter(..))`;
+        // if we frequently release and acquire the GIL, maybe it will cause performance problems.
+        // TODO, PERF: only tauri itself can release GIL in `emit_str_filter`.
+        let rs_filter = |target: &tauri::EventTarget| -> bool {
+            let target = EventTarget::from_tauri(py, target);
+            let filter_result = filter.call1((target,));
+            let filter_ret = filter_result.unwrap_unraisable_py_result(py, Some(&filter), || {
+                "Python exception occurred in emitter filter"
+            });
+            let extract_result = filter_ret.extract::<bool>();
+            extract_result.unwrap_unraisable_py_result(py, Some(&filter_ret), || {
+                "emitter filter return non-bool value"
+            })
+        };
+
+        manager_method_impl!(py, &slf, |_py, manager| {
+            manager
+                .emit_str_filter(event, payload, rs_filter)
+                .map_err(TauriError::from)
+        })??;
+        Ok(())
     }
 }

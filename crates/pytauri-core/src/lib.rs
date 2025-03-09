@@ -20,11 +20,12 @@ pub mod ext_mod {
 
     #[pymodule_export]
     pub use ext_mod_impl::{
-        App, AppHandle, Context, Event, Listener, Manager, Position, Rect, RunEvent, Size,
+        App, AppHandle, Context, Emitter, Event, EventTarget, Listener, Manager, Position, Rect,
+        RunEvent, Size,
     };
 
     pub use ext_mod_impl::{
-        EventId, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
+        EventId, ImplEmitter, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
         PyAppHandleStateResult, Url,
     };
 

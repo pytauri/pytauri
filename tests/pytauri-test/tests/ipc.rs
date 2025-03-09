@@ -100,6 +100,10 @@ pub fn get_pytauri_ipc_response<D: DeserializeOwned>(
     serde_json::from_slice(&data).unwrap()
 }
 
+/// Test the command and channel IPC between Python and Frontend.
+//
+// TODO: Once we implement the Python bindings for `tauri::test::get_ipc_response`,
+// we can implement this test in pytest instead of Rust.
 #[test]
 fn test_ipc() -> Result<(), Box<dyn Error>> {
     app_handle_fixture(|app| {
