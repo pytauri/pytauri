@@ -753,7 +753,7 @@ pub use tauri::EventId;
 #[non_exhaustive]
 pub struct Event {
     #[pyo3(get)]
-    pub id: EventId,
+    pub id: EventId, // TODO, PERF: use `Py<PyInt>` instead of `u32` for getter performance.
     #[pyo3(get)]
     pub payload: Py<PyString>,
 }
