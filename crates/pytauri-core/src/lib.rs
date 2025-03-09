@@ -109,4 +109,13 @@ pub mod ext_mod {
 
         pub use ext_mod_impl::tray::TrayIconId;
     }
+
+    /// see also: [tauri::path]
+    #[pymodule]
+    pub mod path {
+        use super::*;
+
+        #[pymodule_export]
+        pub use ext_mod_impl::path::PathResolver;
+    }
 }
