@@ -141,6 +141,7 @@ plugins:
               - pyo3_utils
               - pytauri
               - pytauri_plugin_notification
+              - pytauri_wheel
             extensions:
               # https://mkdocstrings.github.io/griffe-inherited-docstrings/
               - griffe_inherited_docstrings
@@ -178,6 +179,7 @@ plugins:
             - python/pyo3-utils/src
             - python/pytauri/src
             - python/pytauri-plugin-notification/src
+            - python/pytauri-wheel/python/pytauri_wheel
 
   # Remember: https://github.com/timvink/mkdocs-git-revision-date-localized-plugin#note-when-using-build-environments
   - git-revision-date-localized:

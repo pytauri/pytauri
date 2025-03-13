@@ -10,6 +10,7 @@ members = [
     "pytauri",
     "pytauri-plugin-notification",
     "pytauri-test",
+    "pytauri-wheel",
     "pytauri-workspace",
     "tauri-app",
 ]
@@ -1830,6 +1831,17 @@ requires-dist = [
 ]
 
 [[package]]
+name = "pytauri-wheel"
+version = "0.3.0"
+source = { editable = "python/pytauri-wheel" }
+dependencies = [
+    { name = "pytauri" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pytauri", editable = "python/pytauri" }]
+
+[[package]]
 name = "pytauri-workspace"
 version = "0.1.0"
 source = { virtual = "." }
@@ -1855,6 +1867,7 @@ dev = [
     { name = "pytauri" },
     { name = "pytauri-plugin-notification" },
     { name = "pytauri-test" },
+    { name = "pytauri-wheel" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-timeout" },
@@ -1906,6 +1919,7 @@ workspaces = [
     { name = "pytauri" },
     { name = "pytauri-plugin-notification" },
     { name = "pytauri-test" },
+    { name = "pytauri-wheel" },
 ]
 
 [package.metadata]
@@ -1931,6 +1945,7 @@ dev = [
     { name = "pytauri", editable = "python/pytauri" },
     { name = "pytauri-plugin-notification", editable = "python/pytauri-plugin-notification" },
     { name = "pytauri-test", editable = "tests/pytauri-test" },
+    { name = "pytauri-wheel", editable = "python/pytauri-wheel" },
     { name = "pytest", specifier = "==8.3.*" },
     { name = "pytest-cov", specifier = "==6.0.*" },
     { name = "pytest-timeout", specifier = "==2.3.*" },
@@ -1980,6 +1995,7 @@ workspaces = [
     { name = "pytauri", editable = "python/pytauri" },
     { name = "pytauri-plugin-notification", editable = "python/pytauri-plugin-notification" },
     { name = "pytauri-test", editable = "tests/pytauri-test" },
+    { name = "pytauri-wheel", editable = "python/pytauri-wheel" },
 ]
 
 [[package]]
