@@ -1,0 +1,35 @@
+# 👉 NOTE: DO NOT use "workspace" syntax in this file,
+# or sdist will not work properly.
+
+[package]
+name = "pytauri-wheel"
+version = "0.3.0"
+description = "Precompiled wheels for PyTauri"
+authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "pytauri_wheel_lib"
+# `cdylib` is required for building python extension modules files
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+
+[build-dependencies]
+tauri-build = { version = "2" }
+
+[dependencies]
+tauri = { version = "2", features = ["config-toml", "config-json5", "devtools"] }
+tauri-plugin-opener = { version = "2" }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+pyo3 = { version = "0.23" }
+
+# workspace dependencies
+pytauri = { version = "0.3", path = "../../crates/pytauri" }
+pytauri-core = { version = "0.3", path = "../../crates/pytauri-core" }
+tauri-plugin-pytauri = { version = "0.3", path = "../../crates/tauri-plugin-pytauri" }

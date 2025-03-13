@@ -43,12 +43,14 @@ tools = ["pre-commit == 4.0.1"]
 # - `preload_modules` in `mkdocs.yml`
 # - `[tool.coverage.run.source]` in `pyproject.toml`
 # - `scripts/python-verifytypes.sh`
+# - `[tool.uv.workspace.members]` in `pyproject.toml`
 workspaces = [
     "codelldb",
     "pyfuture",
     "pyo3-utils",
     "pytauri",
     "pytauri-plugin-notification",
+    "pytauri-wheel",
     # tests
     "pytauri-test",
 ]
@@ -72,6 +74,7 @@ pyfuture = { workspace = true }
 pyo3-utils = { workspace = true }
 pytauri = { workspace = true }
 pytauri-plugin-notification = { workspace = true }
+pytauri-wheel = { workspace = true }
 pytauri-test = { workspace = true }
 
 # https://docs.astral.sh/uv/concepts/workspaces/
@@ -81,6 +84,7 @@ members = [
     "examples/tauri-app/src-tauri",
     "examples/nicegui-app",
     "tests/pytauri-test",
+    "python/pytauri-wheel",
 ]
 
 
@@ -187,6 +191,7 @@ source = [
     "pyo3_utils",
     "pytauri",
     "pytauri_plugin_notification",
+    "pytauri_wheel",
 ]
 
 # https://coverage.readthedocs.io/en/7.3.2/config.html#report

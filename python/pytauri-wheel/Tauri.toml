@@ -1,0 +1,6 @@
+# The following is the basic necessary configuration,
+# otherwise `tauri-build` will report an error.
+
+"$schema" = "https://schema.tauri.app/config/2"
+productName = "pytauri-wheel"
+identifier = "com.pytauri-wheel.app"
