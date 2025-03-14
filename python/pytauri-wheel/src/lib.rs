@@ -5,14 +5,23 @@ use pyo3::{
     prelude::*,
     types::{PyDict, PyTuple},
 };
-use pytauri_core::tauri_runtime::Runtime;
-use tauri::utils::{
-    self as tauri_utils,
-    assets::{AssetKey, AssetsIter, CspHash},
-    config::FrontendDist,
-    platform::Target,
+use pytauri_core::{tauri_runtime::Runtime, utils::TauriError};
+use tauri::{
+    ipc::RuntimeCapability,
+    utils::{
+        self as tauri_utils,
+        acl::{
+            build::parse_capabilities,
+            capability::{Capability, CapabilityFile},
+        },
+        assets::{AssetKey, AssetsIter, CspHash},
+        config::{CapabilityEntry, FrontendDist},
+        platform::Target,
+    },
+    Assets,
 };
-use tauri::Assets;
+
+const CAPABILITIES_FOLDER: &str = "capabilities";
 
 pub fn tauri_generate_context() -> tauri::Context {
     tauri::generate_context!()
@@ -43,9 +52,20 @@ impl Assets<Runtime> for DirAssets {
     }
 }
 
+/// [CapabilityFile] does not implement [RuntimeCapability], so we need to wrap it.
+struct RuntimeCapabilityFile(CapabilityFile);
+
+impl RuntimeCapability for RuntimeCapabilityFile {
+    fn build(self) -> CapabilityFile {
+        self.0
+    }
+}
+
 /// `def context_factory(src_tauri_dir: Path, /, *) -> tauri.Context`:
 ///
 /// - `src_tauri_dir` should be absolute path.
+//
+// TODO: better error handling
 pub fn context_factory(
     args: &Bound<'_, PyTuple>,
     _kwargs: Option<&Bound<'_, PyDict>>,
@@ -57,30 +77,31 @@ pub fn context_factory(
 
     // Load config from file dynamically.
     // TODO: unify the error type
-    // 👇 ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
+    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
     let config = tauri_utils::config::parse::read_from(Target::current(), src_tauri_dir.clone())
         .map_err(|e| PyValueError::new_err(e.to_string()))?
         .0;
     let config: tauri::Config =
         serde_json::from_value(config).map_err(|e| PyValueError::new_err(e.to_string()))?;
-    // 👆
+    // NOTE: modify the `config` field first, because following code will use it.
+    *ctx.config_mut() = config;
 
     // Patch `package_info` from `config`.
-    // 👇 ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L268-L287>
-    if let Some(product_name) = &config.product_name {
+    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L268-L287>
+    if let Some(product_name) = &ctx.config().product_name {
         ctx.package_info_mut().name = product_name.clone();
     }
-    if let Some(version) = &config.version {
+    if let Some(version) = &ctx.config().version {
         ctx.package_info_mut().version = version.parse().unwrap();
     }
-    // 👆
 
     // Supply custom Assets from disk dynamically.
-    // 👇 ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L176-L207>
-    if let Some(frontend_dist) = &config.build.frontend_dist {
+    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L176-L207>
+    if let Some(frontend_dist) = &ctx.config().build.frontend_dist {
         match frontend_dist {
             FrontendDist::Url(_) => {
-                // do nothing, we don't need supply custom Assets for URL frontend_dist
+                // do nothing, we don't need supply custom Assets for URL frontend_dist,
+                // because tauri will fetch the frontend from the URL.
             }
             FrontendDist::Directory(dir) => {
                 let abs_assert_dir = if dir.is_relative() {
@@ -98,9 +119,51 @@ pub fn context_factory(
             unknown => unimplemented!("unimplemented frontend_dist type: {:?}", unknown),
         }
     }
-    // 👆
 
-    *ctx.config_mut() = config;
+    // Load capabilities from disk dynamically.
+    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-build/src/acl.rs#L402-L407>
+    let capabilities_pattern_path = src_tauri_dir
+        // i.e., `cpabilities/**/*`
+        .join(format!("{}/**/*", CAPABILITIES_FOLDER));
+    let capabilities_pattern = capabilities_pattern_path.to_str().ok_or_else(|| {
+        PyValueError::new_err(format!(
+            "`{}` is not is valid unicode",
+            capabilities_pattern_path.display()
+        ))
+    })?;
+    let mut capabilities_from_files = parse_capabilities(capabilities_pattern)
+        // TODO: unify the error type
+        .map_err(|e| PyValueError::new_err(e.to_string()))?;
+
+    // Patch `capabilities` from `config`.
+    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L388-L416>
+    //      <https://tauri.app/security/capabilities/>
+    let capabilities: Vec<Capability> = if ctx.config().app.security.capabilities.is_empty() {
+        capabilities_from_files.into_values().collect()
+    } else {
+        let mut capabilities = Vec::new();
+        for capability_entry in &ctx.config().app.security.capabilities {
+            match capability_entry {
+                CapabilityEntry::Inlined(capability) => {
+                    capabilities.push(capability.clone());
+                }
+                CapabilityEntry::Reference(id) => {
+                    let capability = capabilities_from_files.remove(id).ok_or_else(|| {
+                        PyValueError::new_err(format!("capability with identifier {id} not found"))
+                    })?;
+                    capabilities.push(capability);
+                }
+            }
+        }
+        capabilities
+    };
+
+    // Add capabilities to `ctx`.
+    // TODO, FIXME: `runtime_authority_mut` currently is not public API,
+    // see: <https://github.com/tauri-apps/tauri/issues/12968>
+    ctx.runtime_authority_mut()
+        .add_capability(RuntimeCapabilityFile(CapabilityFile::List(capabilities)))
+        .map_err(TauriError::from)?;
 
     Ok(ctx)
 }
