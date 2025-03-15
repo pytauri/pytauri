@@ -3113,6 +3113,7 @@ dependencies = [
 name = "pytauri-wheel"
 version = "0.3.0"
 dependencies = [
+ "json-patch",
  "pyo3",
  "pytauri",
  "pytauri-core",

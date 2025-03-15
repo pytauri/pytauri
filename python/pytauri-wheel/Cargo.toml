@@ -36,6 +36,9 @@ tauri-utils = { version = "2", features = [
     "build",
 ] }
 tauri-plugin-opener = { version = "2" }
+# Keep it the same as the version specified in `tauri-utils`,
+# TODO, FIXME: or we can create a feature request to tauri to re-export it.
+json-patch = { version = "3" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 pyo3 = { version = "0.23" }

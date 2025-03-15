@@ -7,7 +7,7 @@ use std::{
 use pyo3::{
     exceptions::PyValueError,
     prelude::*,
-    types::{PyDict, PyTuple},
+    types::{PyDict, PyString, PyTuple},
 };
 use pytauri_core::{tauri_runtime::Runtime, utils::TauriError};
 use tauri::{
@@ -125,27 +125,50 @@ fn load_default_window_icon(
     icon.map(|icon| icon.map_err(TauriError::from).map_err(Into::into))
 }
 
-/// `def context_factory(src_tauri_dir: Path, /, *) -> tauri.Context`:
+#[derive(FromPyObject)]
+#[pyo3(from_item_all)]
+// TODO: once we upgrade to `pyo3 v0.24`, we can use `#[pyo3(default)]` for NotRequired fields.
+struct ContextFactoryKwargs {
+    // TODO: `FromPyObject` in `pyo3 v0.24` currently does not support `Cow<'_, str>`,
+    // need to wait for <https://github.com/PyO3/pyo3/pull/4390>.
+    tauri_config: Option<Py<PyString>>,
+}
+
+/// `def context_factory(src_tauri_dir: Path, /, **ContextFactoryKwargs) -> tauri.Context`:
 ///
 /// - `src_tauri_dir` should be absolute path.
 //
 // TODO: better error handling
 pub fn context_factory(
     args: &Bound<'_, PyTuple>,
-    _kwargs: Option<&Bound<'_, PyDict>>,
+    kwargs: Option<&Bound<'_, PyDict>>,
 ) -> PyResult<tauri::Context> {
     let mut ctx = tauri_generate_context();
     let target = Target::current();
 
+    let py = args.py();
     // TODO, PERF: avoid cloning the `PathBuf` data.
     let (src_tauri_dir,): (PathBuf,) = args.extract()?;
+
+    let ContextFactoryKwargs { tauri_config } = match kwargs {
+        Some(kwargs) => kwargs.extract()?,
+        None => return Err(PyValueError::new_err("missing keyword-only argument")),
+    };
 
     // Load config from file dynamically.
     // TODO: unify the error type
     // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
-    let config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
+    let mut config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
         .map_err(|e| PyValueError::new_err(e.to_string()))?
         .0;
+    if let Some(tauri_config) = tauri_config {
+        // TODO: once we drop py39, use `PyString::to_str` instead.
+        let tauri_config_str = tauri_config.to_cow(py)?;
+        let merge_config: serde_json::Value =
+            // TODO: unify the error type
+            serde_json::from_str(&tauri_config_str).map_err(|e| PyValueError::new_err(e.to_string()))?;
+        json_patch::merge(&mut config, &merge_config)
+    }
     let config: Config =
         serde_json::from_value(config).map_err(|e| PyValueError::new_err(e.to_string()))?;
     // NOTE: modify the `config` field first, because following code will use it.
