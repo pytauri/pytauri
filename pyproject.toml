@@ -63,12 +63,14 @@ examples = [
     "setuptools-rust == 1.*",
     "tauri-app",
     "nicegui-app",
+    "tauri-app-wheel",
 ]
 
 
 [tool.uv.sources]
 tauri-app = { workspace = true }
 nicegui-app = { workspace = true }
+tauri-app-wheel = { workspace = true }
 codelldb = { workspace = true }
 pyfuture = { workspace = true }
 pyo3-utils = { workspace = true }
@@ -83,6 +85,7 @@ members = [
     "python/*",
     "examples/tauri-app/src-tauri",
     "examples/nicegui-app",
+    "examples/tauri-app-wheel/python",
     "tests/pytauri-test",
     "python/pytauri-wheel",
 ]
