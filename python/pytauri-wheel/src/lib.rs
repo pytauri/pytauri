@@ -248,7 +248,7 @@ pub fn context_factory(
         }
     }
 
-    // TODO: `Context::app_icon`
+    // TODO: `Context::app_icon`, `Context::plugin_global_api_scripts`
 
     Ok(ctx)
 }
