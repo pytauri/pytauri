@@ -23,8 +23,18 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2" }
 
 [dependencies]
-tauri = { version = "2", features = ["config-toml", "config-json5", "devtools"] }
-tauri-utils = { version = "2", features = ["config-toml", "config-json5", "build"] }
+tauri = { version = "2", features = [
+    "config-toml",
+    "config-json5",
+    "devtools",
+    "image-ico",
+    "image-png",
+] }
+tauri-utils = { version = "2", features = [
+    "config-toml",
+    "config-json5",
+    "build",
+] }
 tauri-plugin-opener = { version = "2" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
