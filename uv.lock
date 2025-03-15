@@ -13,6 +13,7 @@ members = [
     "pytauri-wheel",
     "pytauri-workspace",
     "tauri-app",
+    "tauri-app-wheel",
 ]
 
 [[package]]
@@ -1876,6 +1877,7 @@ dev = [
     { name = "setuptools-rust" },
     { name = "setuptools-scm" },
     { name = "tauri-app" },
+    { name = "tauri-app-wheel" },
     { name = "trio" },
     { name = "typos" },
 ]
@@ -1898,6 +1900,7 @@ examples = [
     { name = "setuptools-rust" },
     { name = "setuptools-scm" },
     { name = "tauri-app" },
+    { name = "tauri-app-wheel" },
 ]
 lint = [
     { name = "ruff" },
@@ -1954,6 +1957,7 @@ dev = [
     { name = "setuptools-rust", specifier = "==1.*" },
     { name = "setuptools-scm", specifier = ">=8" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
+    { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
     { name = "trio", specifier = "==0.27.0" },
     { name = "typos", specifier = "==1.28.2" },
 ]
@@ -1976,6 +1980,7 @@ examples = [
     { name = "setuptools-rust", specifier = "==1.*" },
     { name = "setuptools-scm", specifier = ">=8" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
+    { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
 ]
 lint = [
     { name = "ruff", specifier = "==0.8.3" },
@@ -2423,6 +2428,25 @@ requires-dist = [
     { name = "pydantic", specifier = "==2.*" },
     { name = "pytauri", editable = "python/pytauri" },
     { name = "pytauri-plugin-notification", editable = "python/pytauri-plugin-notification" },
+]
+
+[[package]]
+name = "tauri-app-wheel"
+version = "0.1.0"
+source = { editable = "examples/tauri-app-wheel/python" }
+dependencies = [
+    { name = "anyio" },
+    { name = "pydantic" },
+    { name = "pytauri" },
+    { name = "pytauri-wheel" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anyio", specifier = "==4.*" },
+    { name = "pydantic", specifier = "==2.*" },
+    { name = "pytauri", editable = "python/pytauri" },
+    { name = "pytauri-wheel", editable = "python/pytauri-wheel" },
 ]
 
 [[package]]
