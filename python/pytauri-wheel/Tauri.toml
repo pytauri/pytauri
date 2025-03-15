@@ -1,0 +1,15 @@
+# The following is the basic necessary configuration,
+# otherwise `tauri-build` will report an error.
+
+"$schema" = "https://schema.tauri.app/config/2"
+productName = "pytauri-wheel"
+identifier = "com.pytauri-wheel.app"
+
+[app]
+# NOTE: IMPORTANT! We must enable `withGlobalTauri` when compile-time,
+# because it can't be enabled dynamically at runtime,
+# see: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L289-L299>
+#
+# TODO, FIXME: We need create a feature request to tauri for this,
+# at least allow us to disable `withGlobalTauri` at runtime.
+withGlobalTauri = true

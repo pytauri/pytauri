@@ -88,6 +88,25 @@ importers:
         specifier: ^6.0.3
         version: 6.0.5(@types/node@22.10.2)(terser@5.37.0)
 
+  examples/tauri-app-wheel:
+    dependencies:
+      '@tauri-apps/api':
+        specifier: ^2
+        version: 2.1.1
+      '@tauri-apps/plugin-opener':
+        specifier: ^2
+        version: 2.2.2
+      tauri-plugin-pytauri-api:
+        specifier: workspace:*
+        version: link:../../crates/tauri-plugin-pytauri/guest-js
+    devDependencies:
+      typescript:
+        specifier: ~5.6.2
+        version: 5.6.3
+      vite:
+        specifier: ^6.0.3
+        version: 6.0.5(@types/node@22.10.2)(terser@5.37.0)
+
 packages:
 
   '@commitlint/types@19.5.0':

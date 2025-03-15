@@ -337,7 +337,6 @@ if TYPE_CHECKING:
             """Fetch all managed webview windows."""
             ...
 
-
         @staticmethod
         def path(slf: "ImplManager", /) -> PathResolver:
             """The path resolver is a helper class for general and application-specific path APIs."""
@@ -656,9 +655,7 @@ RunEventType = TypeAliasType(
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
 
-ImplManager = TypeAliasType(
-    "ImplManager", Union[App, AppHandle, "WebviewWindow"]
-)
+ImplManager = TypeAliasType("ImplManager", Union[App, AppHandle, "WebviewWindow"])
 
 EventId = NewType("EventId", int)
 """[tauri::EventId](https://docs.rs/tauri/latest/tauri/type.EventId.html)"""
