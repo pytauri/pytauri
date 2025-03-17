@@ -2,7 +2,7 @@
 <!-- Do not use any **relative link** and  **GitHub-specific syntax** ！-->
 <!-- Do not rename or move the file -->
 
-# PyTauri
+![banner.png](docs/assets/banner.png)
 
 [Tauri] bindings for Python through [Pyo3]
 
