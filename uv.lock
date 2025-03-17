@@ -1778,7 +1778,7 @@ wheels = [
 
 [[package]]
 name = "pytauri"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "python/pytauri" }
 dependencies = [
     { name = "anyio" },
@@ -1799,7 +1799,7 @@ requires-dist = [
 
 [[package]]
 name = "pytauri-plugin-notification"
-version = "0.2.0"
+version = "0.3.0"
 source = { editable = "python/pytauri-plugin-notification" }
 dependencies = [
     { name = "pytauri" },
