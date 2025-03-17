@@ -14,9 +14,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-# ❗ NOTE: Must import `pytauri_wheel` before importing `pytauri`,
-# or you will get recursive import error.
-import pytauri_wheel as _  # noqa: F401
 from anyio import create_task_group, sleep
 from anyio.abc import TaskGroup
 from anyio.from_thread import start_blocking_portal
@@ -28,7 +25,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
-from pytauri_wheel import builder_factory, context_factory
+from pytauri_wheel.lib import builder_factory, context_factory
 
 SRC_TAURI_DIR = Path(__file__).parent.absolute()
 
