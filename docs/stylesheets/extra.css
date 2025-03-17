@@ -9,11 +9,11 @@
     --md-footer-bg-color: #1C1C1C;
     --md-footer-bg-color--dark: #181818;
 
-    --md-code-bg-color: #1C1C1C;
 }
 
 [data-md-color-scheme="slate"] {
     --md-default-bg-color: #232323;
+    --md-code-bg-color: #1C1C1C;
 }
 
 .md-header__title {
