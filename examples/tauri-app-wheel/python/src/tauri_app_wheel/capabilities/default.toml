@@ -2,4 +2,9 @@
 identifier = "default"
 description = "Capability for the main window"
 windows = ["main"]
-permissions = ["core:default", "opener:default", "pytauri:default"]
+permissions = [
+    "core:default",
+    "opener:default",
+    "dialog:default",
+    "pytauri:default",
+]

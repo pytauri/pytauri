@@ -1,7 +1,9 @@
+import { message } from '@tauri-apps/plugin-dialog';
 import { pyInvoke, Channel } from "tauri-plugin-pytauri-api";
 // or if tauri config `app.withGlobalTauri = true`:
 //
 // ```js
+// const { ask } = window.__TAURI__.dialog;
 // const { pyInvoke } = window.__TAURI__.pytauri;
 // ```
 
@@ -14,6 +16,9 @@ async function greet() {
     const pyGreeting = await pyInvoke<string>("greet", {
       name: greetInputEl.value,
     });
+
+    await message(pyGreeting, `Hi`);
+
     greetMsgEl.textContent = pyGreeting;
   }
 }

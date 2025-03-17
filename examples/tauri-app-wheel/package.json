@@ -11,6 +11,7 @@
   "dependencies": {
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
+    "@tauri-apps/plugin-dialog": "^2",
     "tauri-plugin-pytauri-api": "workspace:*"
   },
   "devDependencies": {
