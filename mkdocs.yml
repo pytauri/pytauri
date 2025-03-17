@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: pytauri
+site_name: PyTauri
 site_url: https://pytauri.github.io/pytauri/
 
 repo_url: https://github.com/pytauri/pytauri/
@@ -10,9 +10,8 @@ edit_uri: edit/main/docs/
 
 theme:
   name: material
-  icon:
-    logo: octicons/rocket-24 # TODO: new logo for pytauri
-  favicon: images/rocket-24.svg # TODO: new logo for pytauri
+  logo: assets/logo-white.svg
+  favicon: assets/favicon.png
   features:
     - content.code.copy
     - content.code.annotate
@@ -52,6 +51,8 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
+extra_css:
+  - stylesheets/extra.css
 
 markdown_extensions:
   # Python Markdown
@@ -244,9 +245,9 @@ nav:
       # - Note the trailing slash! see `mkdocs-literate-nav` docs.
       - py: reference/py/
       - rs: reference/rs.md
-  - CONTRIBUTING:
+  - Contributing:
       - CONTRIBUTING/index.md
-  - CHANGELOG:
+  - Changelog:
       - CHANGELOG/index.md
       # NOTE: must set the title for the first item, or it will be considered as `index`.
       # see: <https://github.com/oprypin/mkdocs-section-index/issues/6#issuecomment-914666358>
