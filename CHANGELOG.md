@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal
 
 - [#103](https://github.com/pytauri/pytauri/pull/103) - chore: transfer repo to `pytauri` org.
+- Added new logo and updated documentation colors
 
 ## [0.3.0]
 
@@ -66,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - use `tray` and `menu` feature
     - use `python3.10` `match` statement instead of `if-else` statement
     - bump `requires-python = ">=3.10"`
+- Updated theme and added a custom logo.
 
 ### Internal
 
