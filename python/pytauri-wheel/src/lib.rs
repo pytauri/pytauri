@@ -143,9 +143,6 @@ pub fn context_factory(
     args: &Bound<'_, PyTuple>,
     kwargs: Option<&Bound<'_, PyDict>>,
 ) -> PyResult<tauri::Context> {
-    let mut ctx = tauri_generate_context();
-    let target = Target::current();
-
     let py = args.py();
     // TODO, PERF: avoid cloning the `PathBuf` data.
     let (src_tauri_dir,): (PathBuf,) = args.extract()?;
@@ -154,126 +151,136 @@ pub fn context_factory(
         Some(kwargs) => kwargs.extract()?,
         None => return Err(PyValueError::new_err("missing keyword-only argument")),
     };
-
-    // Load config from file dynamically.
-    // TODO: unify the error type
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
-    let mut config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
-        .map_err(|e| PyValueError::new_err(e.to_string()))?
-        .0;
-    if let Some(tauri_config) = tauri_config {
+    let tauri_config = tauri_config
+        .as_ref()
         // TODO: once we drop py39, use `PyString::to_str` instead.
-        let tauri_config_str = tauri_config.to_cow(py)?;
-        let merge_config: serde_json::Value =
-            // TODO: unify the error type
-            serde_json::from_str(&tauri_config_str).map_err(|e| PyValueError::new_err(e.to_string()))?;
-        json_patch::merge(&mut config, &merge_config)
-    }
-    let config: Config =
-        serde_json::from_value(config).map_err(|e| PyValueError::new_err(e.to_string()))?;
-    // NOTE: modify the `config` field first, because following code will use it.
-    *ctx.config_mut() = config;
+        .map(|s| s.to_cow(py))
+        .transpose()?;
 
-    // Patch `package_info` from `config`.
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L268-L287>
-    if let Some(product_name) = &ctx.config().product_name {
-        ctx.package_info_mut().name = product_name.clone();
-    }
-    if let Some(version) = &ctx.config().version {
-        ctx.package_info_mut().version = version.parse().unwrap();
-    }
+    py.allow_threads(move || {
+        let mut ctx = tauri_generate_context();
+        let target = Target::current();
 
-    // Supply custom Assets from disk dynamically.
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L176-L207>
-    if let Some(frontend_dist) = &ctx.config().build.frontend_dist {
-        match frontend_dist {
-            FrontendDist::Url(_) => {
-                // do nothing, we don't need supply custom Assets for URL frontend_dist,
-                // because tauri will fetch the frontend from the URL.
-            }
-            FrontendDist::Directory(dir) => {
-                let abs_assert_dir = if dir.is_relative() {
-                    src_tauri_dir.join(dir)
-                } else {
-                    dir.clone()
-                };
-                ctx.set_assets(Box::new(DirAssets(abs_assert_dir)));
-            }
-            FrontendDist::Files(_) => {
-                return Err(PyValueError::new_err(
-                    "frontend_dist: Files is not supported yet",
-                ));
-            }
-            unknown => unimplemented!("unimplemented frontend_dist type: {:?}", unknown),
-        }
-    }
-
-    // Load capabilities from disk dynamically.
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-build/src/acl.rs#L402-L407>
-    let capabilities_pattern_path = src_tauri_dir
-        // i.e., `cpabilities/**/*`
-        .join(format!("{}/**/*", CAPABILITIES_FOLDER));
-    let capabilities_pattern = capabilities_pattern_path.to_str().ok_or_else(|| {
-        PyValueError::new_err(format!(
-            "`{}` is not is valid unicode",
-            capabilities_pattern_path.display()
-        ))
-    })?;
-    let mut capabilities_from_files = parse_capabilities(capabilities_pattern)
+        // Load config from file dynamically.
         // TODO: unify the error type
-        .map_err(|e| PyValueError::new_err(e.to_string()))?;
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
+        let mut config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
+            .map_err(|e| PyValueError::new_err(e.to_string()))?
+            .0;
+        if let Some(tauri_config) = tauri_config {
+            let merge_config: serde_json::Value =
+            // TODO: unify the error type
+            serde_json::from_str(&tauri_config).map_err(|e| PyValueError::new_err(e.to_string()))?;
+            json_patch::merge(&mut config, &merge_config)
+        }
+        let config: Config =
+            serde_json::from_value(config).map_err(|e| PyValueError::new_err(e.to_string()))?;
+        // NOTE: modify the `config` field first, because following code will use it.
+        *ctx.config_mut() = config;
 
-    // Patch `capabilities` from `config`.
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L388-L416>
-    //      <https://tauri.app/security/capabilities/>
-    let capabilities: Vec<Capability> = if ctx.config().app.security.capabilities.is_empty() {
-        capabilities_from_files.into_values().collect()
-    } else {
-        let mut capabilities = Vec::new();
-        for capability_entry in &ctx.config().app.security.capabilities {
-            match capability_entry {
-                CapabilityEntry::Inlined(capability) => {
-                    capabilities.push(capability.clone());
+        // Patch `package_info` from `config`.
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L268-L287>
+        if let Some(product_name) = &ctx.config().product_name {
+            ctx.package_info_mut().name = product_name.clone();
+        }
+        if let Some(version) = &ctx.config().version {
+            ctx.package_info_mut().version = version.parse().unwrap();
+        }
+
+        // Supply custom Assets from disk dynamically.
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L176-L207>
+        if let Some(frontend_dist) = &ctx.config().build.frontend_dist {
+            match frontend_dist {
+                FrontendDist::Url(_) => {
+                    // do nothing, we don't need supply custom Assets for URL frontend_dist,
+                    // because tauri will fetch the frontend from the URL.
                 }
-                CapabilityEntry::Reference(id) => {
-                    let capability = capabilities_from_files.remove(id).ok_or_else(|| {
-                        PyValueError::new_err(format!("capability with identifier {id} not found"))
-                    })?;
-                    capabilities.push(capability);
+                FrontendDist::Directory(dir) => {
+                    let abs_assert_dir = if dir.is_relative() {
+                        src_tauri_dir.join(dir)
+                    } else {
+                        dir.clone()
+                    };
+                    ctx.set_assets(Box::new(DirAssets(abs_assert_dir)));
                 }
+                FrontendDist::Files(_) => {
+                    return Err(PyValueError::new_err(
+                        "frontend_dist: Files is not supported yet",
+                    ));
+                }
+                unknown => unimplemented!("unimplemented frontend_dist type: {:?}", unknown),
             }
         }
-        capabilities
-    };
 
-    // Add capabilities to `ctx`.
-    // TODO, FIXME: `runtime_authority_mut` currently is not public API,
-    // see: <https://github.com/tauri-apps/tauri/issues/12968>
-    ctx.runtime_authority_mut()
-        .add_capability(RuntimeCapabilityFile(CapabilityFile::List(capabilities)))
-        .map_err(TauriError::from)?;
+        // Load capabilities from disk dynamically.
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-build/src/acl.rs#L402-L407>
+        let capabilities_pattern_path = src_tauri_dir
+            // i.e., `cpabilities/**/*`
+            .join(format!("{}/**/*", CAPABILITIES_FOLDER));
+        let capabilities_pattern = capabilities_pattern_path.to_str().ok_or_else(|| {
+            PyValueError::new_err(format!(
+                "`{}` is not is valid unicode",
+                capabilities_pattern_path.display()
+            ))
+        })?;
+        let mut capabilities_from_files = parse_capabilities(capabilities_pattern)
+            // TODO: unify the error type
+            .map_err(|e| PyValueError::new_err(e.to_string()))?;
 
-    // Set default window icon.
-    let default_window_icon = load_default_window_icon(ctx.config(), &src_tauri_dir, target);
-    // NOTE: Even if `default_window_icon` is `None`, we should not call `set_default_window_icon(default_window_icon)`,
-    // because we have bundled the `tauri-app` icon by default, and setting it to `None` will remove it.
-    if let Some(icon) = default_window_icon {
-        ctx.set_default_window_icon(Some(icon?));
-    }
+        // Patch `capabilities` from `config`.
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L388-L416>
+        //      <https://tauri.app/security/capabilities/>
+        let capabilities: Vec<Capability> = if ctx.config().app.security.capabilities.is_empty() {
+            capabilities_from_files.into_values().collect()
+        } else {
+            let mut capabilities = Vec::new();
+            for capability_entry in &ctx.config().app.security.capabilities {
+                match capability_entry {
+                    CapabilityEntry::Inlined(capability) => {
+                        capabilities.push(capability.clone());
+                    }
+                    CapabilityEntry::Reference(id) => {
+                        let capability = capabilities_from_files.remove(id).ok_or_else(|| {
+                            PyValueError::new_err(format!(
+                                "capability with identifier {id} not found"
+                            ))
+                        })?;
+                        capabilities.push(capability);
+                    }
+                }
+            }
+            capabilities
+        };
 
-    // Set tray icon.
-    // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L289-L299>
-    if target.is_desktop() {
-        if let Some(tray) = &ctx.config().app.tray_icon {
-            let tray_icon_icon_path = src_tauri_dir.join(&tray.icon_path);
-            let icon = Image::from_path(tray_icon_icon_path).map_err(TauriError::from)?;
-            ctx.set_tray_icon(Some(icon));
+        // Add capabilities to `ctx`.
+        // TODO, FIXME: `runtime_authority_mut` currently is not public API,
+        // see: <https://github.com/tauri-apps/tauri/issues/12968>
+        ctx.runtime_authority_mut()
+            .add_capability(RuntimeCapabilityFile(CapabilityFile::List(capabilities)))
+            .map_err(TauriError::from)?;
+
+        // Set default window icon.
+        let default_window_icon = load_default_window_icon(ctx.config(), &src_tauri_dir, target);
+        // NOTE: Even if `default_window_icon` is `None`, we should not call `set_default_window_icon(default_window_icon)`,
+        // because we have bundled the `tauri-app` icon by default, and setting it to `None` will remove it.
+        if let Some(icon) = default_window_icon {
+            ctx.set_default_window_icon(Some(icon?));
         }
-    }
 
-    // TODO: `Context::app_icon`, `Context::plugin_global_api_scripts`
+        // Set tray icon.
+        // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L289-L299>
+        if target.is_desktop() {
+            if let Some(tray) = &ctx.config().app.tray_icon {
+                let tray_icon_icon_path = src_tauri_dir.join(&tray.icon_path);
+                let icon = Image::from_path(tray_icon_icon_path).map_err(TauriError::from)?;
+                ctx.set_tray_icon(Some(icon));
+            }
+        }
 
-    Ok(ctx)
+        // TODO: `Context::app_icon`, `Context::plugin_global_api_scripts`
+
+        Ok(ctx)
+    })
 }
 
 #[derive(FromPyObject)]
@@ -298,6 +305,7 @@ pub fn builder_factory(
     _args: &Bound<'_, PyTuple>,
     kwargs: Option<&Bound<'_, PyDict>>,
 ) -> PyResult<tauri::Builder<Runtime>> {
+    let py = _args.py();
     let BuilderFactoryKwargs {
         opener,
         clipboard_manager,
@@ -308,23 +316,25 @@ pub fn builder_factory(
         None => return Err(PyValueError::new_err("missing keyword-only argument")),
     };
 
-    let mut builder = tauri::Builder::default();
+    py.allow_threads(move || {
+        let mut builder = tauri::Builder::default();
 
-    // TODO: more plugins
-    if opener {
-        builder = builder.plugin(tauri_plugin_opener::init());
-    }
-    if clipboard_manager {
-        builder = builder.plugin(tauri_plugin_clipboard_manager::init());
-    }
-    if dialog {
-        builder = builder.plugin(tauri_plugin_dialog::init());
-    }
-    if fs {
-        builder = builder.plugin(tauri_plugin_fs::init());
-    }
+        // TODO: more plugins
+        if opener {
+            builder = builder.plugin(tauri_plugin_opener::init());
+        }
+        if clipboard_manager {
+            builder = builder.plugin(tauri_plugin_clipboard_manager::init());
+        }
+        if dialog {
+            builder = builder.plugin(tauri_plugin_dialog::init());
+        }
+        if fs {
+            builder = builder.plugin(tauri_plugin_fs::init());
+        }
 
-    Ok(builder)
+        Ok(builder)
+    })
 }
 
 #[pymodule(gil_used = false)]
