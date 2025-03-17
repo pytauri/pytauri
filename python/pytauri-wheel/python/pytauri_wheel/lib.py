@@ -1,9 +1,18 @@
-"""PyTauri precompiled wheels."""
+"""PyTauri precompiled wheels.
+
+# Usage
+
+`pytauri-wheel` provides precompiled [pytauri.EXT_MOD][] for [pytauri][],
+which means you can normally use the `pytauri` API, except for the following APIs provided by `pytauri-wheel`:
+
+- [pytauri.builder_factory][] -> [pytauri_wheel.lib.builder_factory][]
+- [pytauri.context_factory][] -> [pytauri_wheel.lib.context_factory][]
+"""
 
 from pathlib import Path
 from typing import Optional
 
-from pytauri import Context
+from pytauri import Builder, Context
 from pytauri import (
     builder_factory as pytauri_builder_factory,
 )
@@ -13,18 +22,34 @@ from pytauri import (
 
 __all__ = ["builder_factory", "context_factory"]
 
-builder_factory = pytauri_builder_factory
+
+def builder_factory() -> Builder:
+    """A factory function for creating a [pytauri.Builder][] instance.
+
+    This is a type-hinted wrapper function for [pytauri.builder_factory][].
+    """
+    return pytauri_builder_factory()
 
 
 def context_factory(
     src_tauri_dir: Path, /, *, tauri_config: Optional[str] = None
 ) -> Context:
-    """Generate a `Context` from `tauri.conf.json` etc in the `src_tauri_dir` directory.
+    """Generate a `Context` based on `tauri.conf.json`, `capabilities/` and etc in the `src_tauri_dir` directory.
+
+    This type-hinted wrapper function for [pytauri.context_factory][].
 
     Args:
         src_tauri_dir: The **absolute** path of the pytauri project directory.
-            Usually it is the `src-tauri` directory.
-        tauri_config: The config JSON string to be merged, equivalent to the `--config` of `tauri-cli`.
+            In a typical Tauri project, it exists as the `src-tauri` directory;
+            in the `pytauri-wheel` project, you only need to provide a similar file layout to `src-tauri`:
+                ```text
+                src-tauri/
+                    __init__.py
+                    tauri.conf.json
+                    capabilities/
+                    ...
+                ```
+        tauri_config: The config JSON string to be merged with `tauri.conf.json`, equivalent to the `--config` of `tauri-cli`.
             See: <https://tauri.app/develop/configuration-files/#extending-the-configuration>.
     """
     if not src_tauri_dir.is_absolute():
