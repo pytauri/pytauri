@@ -23,12 +23,26 @@ from pytauri import (
 __all__ = ["builder_factory", "context_factory"]
 
 
-def builder_factory() -> Builder:
+def builder_factory(
+    *,
+    opener: bool = True,
+    clipboard_manager: bool = True,
+    dialog: bool = True,
+    fs: bool = True,
+) -> Builder:
     """A factory function for creating a [pytauri.Builder][] instance.
 
     This is a type-hinted wrapper function for [pytauri.builder_factory][].
+
+    Args:
+        opener: Whether to enable the plugin `opener`
+        clipboard_manager: Whether to enable the plugin `clipboard-manager`
+        dialog: Whether to enable the plugin `dialog`
+        fs: Whether to enable the plugin `fs`
     """
-    return pytauri_builder_factory()
+    return pytauri_builder_factory(
+        opener=opener, clipboard_manager=clipboard_manager, dialog=dialog, fs=fs
+    )
 
 
 def context_factory(

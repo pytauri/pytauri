@@ -134,7 +134,7 @@ struct ContextFactoryKwargs {
     tauri_config: Option<Py<PyString>>,
 }
 
-/// `def context_factory(src_tauri_dir: Path, /, **ContextFactoryKwargs) -> tauri.Context`:
+/// `def context_factory(src_tauri_dir: Path, /, **ContextFactoryKwargs) -> tauri.Context:`
 ///
 /// - `src_tauri_dir` should be absolute path.
 //
@@ -276,12 +276,54 @@ pub fn context_factory(
     Ok(ctx)
 }
 
+#[derive(FromPyObject)]
+#[pyo3(from_item_all)]
+// TODO: once we upgrade to `pyo3 v0.24`, we can use `#[pyo3(default)]` for `NotRequired` fields.
+struct BuilderFactoryKwargs {
+    opener: bool,
+    clipboard_manager: bool,
+    dialog: bool,
+    fs: bool,
+}
+
+// TODO: once we support `NotRequired` fields for `FromPyObject` in `pyo3 v0.24`,
+// move plugins config to a separate parameter:
+//     class PluginConfig(TypedDict):
+//         opener: NotRequired[bool]
+//         ...
+//     def builder_factory(..., *, plugins: Optional[PluginConfig] = None) -> tauri.Builder:
+//
+/// `def def builder_factory(**BuilderFactoryKwargs) -> tauri.Builder:`
 pub fn builder_factory(
     _args: &Bound<'_, PyTuple>,
-    _kwargs: Option<&Bound<'_, PyDict>>,
+    kwargs: Option<&Bound<'_, PyDict>>,
 ) -> PyResult<tauri::Builder<Runtime>> {
+    let BuilderFactoryKwargs {
+        opener,
+        clipboard_manager,
+        dialog,
+        fs,
+    } = match kwargs {
+        Some(kwargs) => kwargs.extract()?,
+        None => return Err(PyValueError::new_err("missing keyword-only argument")),
+    };
+
+    let mut builder = tauri::Builder::default();
+
     // TODO: more plugins
-    let builder = tauri::Builder::default().plugin(tauri_plugin_opener::init());
+    if opener {
+        builder = builder.plugin(tauri_plugin_opener::init());
+    }
+    if clipboard_manager {
+        builder = builder.plugin(tauri_plugin_clipboard_manager::init());
+    }
+    if dialog {
+        builder = builder.plugin(tauri_plugin_dialog::init());
+    }
+    if fs {
+        builder = builder.plugin(tauri_plugin_fs::init());
+    }
+
     Ok(builder)
 }
 
