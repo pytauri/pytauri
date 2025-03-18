@@ -2,7 +2,10 @@
 <!-- Do not use any **relative link** and  **GitHub-specific syntax** ！-->
 <!-- Do not rename or move the file -->
 
-![banner.png](docs/assets/banner.png)
+# PyTauri
+
+<!-- TODO: switch to `latest` once we release `v0.4` (the `assets/banner.png` is introduced in `v0.4-dev`) -->
+![banner.png](https://pytauri.github.io/pytauri/dev/assets/banner.png)
 
 [Tauri] bindings for Python through [Pyo3]
 
