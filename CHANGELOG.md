@@ -32,6 +32,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Highlights
+
+#### New logo for PyTauri
+
+Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pytauri/pytauri/pull/111)! PyTauri now has its own logo 🎉:
+
+![pytauri-banner](https://github.com/pytauri/pytauri/raw/06d468a851ad21268df458580fab327e4ab5a941/docs/assets/banner.png)
+
+> It is indeed a snake, but not eating a bean, or perhaps it was not intended to be. It is more so a combination of the Tauri logo (two dots with rings around them) and the Python logo (the snake, specifically the head). The left part is more intended to visualize the snake curling around. Perhaps it is a bit too abstract.
+
 ### Changed
 
 - [#63](https://github.com/pytauri/pytauri/pull/63) - chore: bump `tauri` to `v2.3`.
@@ -39,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Internal
 
 - [#103](https://github.com/pytauri/pytauri/pull/103) - chore: transfer repo to `pytauri` org.
+- [#111](https://github.com/pytauri/pytauri/pull/111) - docs: added PyTauri logo and updated documentation colors
 
 ## [0.3.0]
 
