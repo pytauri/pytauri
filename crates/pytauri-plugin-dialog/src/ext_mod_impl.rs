@@ -2,7 +2,7 @@ use std::error::Error;
 use std::fmt::{Debug, Display};
 
 use pyo3::prelude::*;
-use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
+use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperSemverExt, PyWrapperT2};
 use pytauri_core::{ext_mod::ImplManager, tauri_runtime::Runtime};
 use tauri_plugin_dialog::{self as plugin, MessageDialogButtons};
 
@@ -90,7 +90,7 @@ impl PyMessageDialogButtons {
 
 #[pyclass(frozen)]
 #[non_exhaustive]
-pub struct MessageDialogBuilder(pub PyWrapper<PyWrapperT2<plugin::MessageDialogBuilder<Runtime>>>);
+pub struct MessageDialogBuilder(pub PyWrapper<PyWrapperT2<plugin::MessageDialogBuilder<Runtime>>>); // Q: Why is this wrapped twice?
 
 impl MessageDialogBuilder {
     fn new(builder: plugin::MessageDialogBuilder<Runtime>) -> Self {
@@ -146,18 +146,32 @@ impl DialogExt {
     ))]
     fn message(
         slf: ImplDialogExt,
+        py: Python<'_>,
         message: String,
         title: Option<String>,
-        buttons: Option<Py<PyMessageDialogButtons>>,
+        buttons: Option<PyMessageDialogButtons>, // Q: This used to be  Option<Py<PyMessageDialogButtons>>, why do we need to wrap Py around it if it's already a python class?
         kind: Option<PyMessageDialogKind>,
     ) -> PyResult<MessageDialogBuilder> {
+        
+        let dialog_builder = plugin::Dialog::message(message) // Q: Wrong, we need a dialog instance, for which we need an apphandle.
+        let dialog_title = title; // TODO: Remove.
+        let dialog_buttons = buttons.unwrap_or(PyMessageDialogButtons::Ok()).to_tauri(py); // Q: Can we supply defaults in the python signature that are not none to make it more readable for python users?
+        let dialog_kind =
+            plugin::MessageDialogKind::from(kind.unwrap_or(PyMessageDialogKind::Info));
+
+
         // Macro to create a new message dialog builder based on which enum ImplDialogExt is.
         macro_rules! builder_impl {
             ($wrapper:expr) => {{
                 let py_ref = $wrapper.borrow(py);
                 let guard = py_ref.0.inner_ref_semver()??;
-                let builder = guard.dialog().builder(); // it's short enough, so we don't release the GIL
+                let builder: plugin::MessageDialogBuilder = guard.dialog().builder(); // it's short enough, so we don't release the GIL
                 // Q: How do I know above line works for dialog as well?
+                if let Some(title) = title {
+                    builder.title(title);
+                }
+                builder.buttons(dialog_buttons);
+                builder.kind(dialog_kind);
 
                 Ok(MessageDialogBuilder::new(builder))
             }};
