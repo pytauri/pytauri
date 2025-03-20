@@ -16,19 +16,19 @@ mod ext_mod_impl;
 
 use pyo3::prelude::*;
 
-/// You can access this module in Python via `pytuari.EXT_MOD.notification`.
+/// You can access this module in Python via `pytuari.EXT_MOD.dialog`.
 ///
 /// Please refer to the Python-side documentation.
 ///
-/// See also: [tauri_plugin_notification]
+/// See also: [tauri_plugin_dialog]
 #[pymodule(submodule, gil_used = false)]
-pub mod notification {
+pub mod dialog {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{NotificationBuilder, NotificationExt};
+    pub use ext_mod_impl::{DialogExt, MessageDialogBuilder};
 
-    pub use ext_mod_impl::ImplNotificationExt;
+    pub use ext_mod_impl::ImplDialogExt;
 }
 
-pub use notification as ext_mod;
+pub use dialog as ext_mod;

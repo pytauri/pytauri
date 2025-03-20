@@ -2,11 +2,11 @@ use std::error::Error;
 use std::fmt::{Debug, Display};
 
 use pyo3::prelude::*;
-use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT2};
+use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
 use pytauri_core::{ext_mod::ImplManager, tauri_runtime::Runtime};
-use tauri::AppHandle;
-use tauri_plugin_dialog::{self as plugin, MessageDialogButtons, MessageDialogKind};
+use tauri_plugin_dialog::{self as plugin, MessageDialogButtons};
 
+//region errors
 #[derive(Debug)]
 struct PluginError(plugin::Error);
 
@@ -32,6 +32,9 @@ impl From<plugin::Error> for PluginError {
         Self(value)
     }
 }
+//endregion
+
+//region message dialog kind
 #[pyclass(frozen, eq, eq_int)]
 #[derive(PartialEq, Clone)]
 #[non_exhaustive]
@@ -43,12 +46,19 @@ enum PyMessageDialogKind {
 
 impl From<PyMessageDialogKind> for plugin::MessageDialogKind {
     fn from(value: PyMessageDialogKind) -> Self {
-        todo!()
+        match value {
+            PyMessageDialogKind::Info => Self::Info,
+            PyMessageDialogKind::Warning => Self::Warning,
+            PyMessageDialogKind::Error => Self::Error,
+        }
     }
 }
+//endregion
 
+//region message dialog buttons
 use pyo3::types::PyString;
 
+// Q: Can we have args for python enums?
 #[pyclass(frozen)]
 enum PyMessageDialogButtons {
     Ok(),
@@ -59,10 +69,24 @@ enum PyMessageDialogButtons {
 }
 
 impl PyMessageDialogButtons {
-    fn to_tauri(py: Python<'_>) -> plugin::MessageDialogButtons {
-        todo!()
+    fn to_tauri(&self, py: Python<'_>) -> MessageDialogButtons {
+        match self {
+            PyMessageDialogButtons::Ok() => MessageDialogButtons::Ok,
+            PyMessageDialogButtons::OkCancel() => MessageDialogButtons::OkCancel,
+            PyMessageDialogButtons::YesNo() => MessageDialogButtons::YesNo,
+            PyMessageDialogButtons::OkCustom(custom_ok) => {
+                MessageDialogButtons::OkCustom(custom_ok.to_string())
+            }
+            PyMessageDialogButtons::OkCancelCustom(custom_ok_py, custom_cancel_py) => {
+                MessageDialogButtons::OkCancelCustom(
+                    custom_ok_py.to_string(),
+                    custom_cancel_py.to_string(),
+                )
+            }
+        }
     }
 }
+//endregion
 
 #[pyclass(frozen)]
 #[non_exhaustive]
@@ -98,6 +122,18 @@ pub struct DialogExt;
 
 pub type ImplDialogExt = ImplManager;
 
+// Macro to call a correct macro based on the ImplManager type.
+macro_rules! dialog_ext_method_impl {
+    ($slf:expr, $macro:ident) => {
+        match $slf {
+            ImplDialogExt::App(v) => $macro!(v),
+            ImplDialogExt::AppHandle(v) => $macro!(v),
+            ImplDialogExt::WebviewWindow(v) => $macro!(v),
+            _ => unimplemented!("please create an feature request to pytauri"),
+        }
+    };
+}
+
 #[pymethods]
 impl DialogExt {
     #[staticmethod]
@@ -115,6 +151,17 @@ impl DialogExt {
         buttons: Option<Py<PyMessageDialogButtons>>,
         kind: Option<PyMessageDialogKind>,
     ) -> PyResult<MessageDialogBuilder> {
-        todo!()
+        // Macro to create a new message dialog builder based on which enum ImplDialogExt is.
+        macro_rules! builder_impl {
+            ($wrapper:expr) => {{
+                let py_ref = $wrapper.borrow(py);
+                let guard = py_ref.0.inner_ref_semver()??;
+                let builder = guard.dialog().builder(); // it's short enough, so we don't release the GIL
+                // Q: How do I know above line works for dialog as well?
+
+                Ok(MessageDialogBuilder::new(builder))
+            }};
+        }
+        dialog_ext_method_impl!(slf, builder_impl)
     }
 }
