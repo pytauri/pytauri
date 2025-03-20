@@ -27,6 +27,7 @@ tauri-build = { version = "2" }
 tauri-plugin = { version = "2" }
 
 tauri-plugin-notification = { version = "2" }
+tauri-plugin-dialog = { version = "2" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }
@@ -40,7 +41,10 @@ tokio = { version = "1", default-features = false }
 tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.3.0" }
 pytauri-core = { path = "crates/pytauri-core", version = "0.3.0" }
 pytauri = { path = "crates/pytauri", version = "0.3.0" }
+
 pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification", version = "0.3.0" }
+pytauri-plugin-dialog = { path = "crates/pytauri-plugin-dialog", version = "0.3.0" }
+
 pyo3-utils = { path = "crates/pyo3-utils", version = "0.1.0" }
 
 [profile.release]
