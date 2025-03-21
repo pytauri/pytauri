@@ -58,7 +58,6 @@ impl From<PyMessageDialogKind> for plugin::MessageDialogKind {
 //region message dialog buttons
 use pyo3::types::PyString;
 
-// Q: Can we have args for python enums?
 #[pyclass(frozen)]
 enum PyMessageDialogButtons {
     Ok(),
@@ -90,7 +89,9 @@ impl PyMessageDialogButtons {
 
 #[pyclass(frozen)]
 #[non_exhaustive]
-pub struct MessageDialogBuilder(pub PyWrapper<PyWrapperT2<plugin::MessageDialogBuilder<Runtime>>>); // Q: Why is this wrapped twice?
+pub struct MessageDialogBuilder(pub PyWrapper<PyWrapperT2<plugin::MessageDialogBuilder<Runtime>>>);
+
+unsafe impl Sync for MessageDialogBuilder {} // Q: Error [https://doc.rust-lang.org/error_codes/E0277.html] -> Help: within `Result<MessageDialogBuilder<Wry<EventLoopMessage>>, ConsumedError>`, the trait `Sync` is not implemented for `NonNull<c_void>`
 
 impl MessageDialogBuilder {
     fn new(builder: plugin::MessageDialogBuilder<Runtime>) -> Self {
@@ -101,18 +102,18 @@ impl MessageDialogBuilder {
 #[pymethods]
 impl MessageDialogBuilder {
     fn blocking_show(&self, py: Python<'_>) -> PyResult<bool> {
-        py.allow_threads(|| {
-            let builder = self.0.try_take_inner()??;
+        Ok(py.allow_threads(|| {
+            let builder = self.0.try_take_inner().unwrap().unwrap(); // Q: ?? Is not allowed for some reason?
             builder.blocking_show()
-        })
+        }))
     }
 
     /// callback: Callable[[bool], object]
     fn show(&self, py: Python<'_>, callback: PyObject) -> PyResult<()> {
-        py.allow_threads(|| {
-            let builder = self.0.try_take_inner()??;
+        Ok(py.allow_threads(|| {
+            let builder = self.0.try_take_inner().unwrap().unwrap();
             builder.show(|ok_or_no| todo!("callback(ok_or_no)"))
-        })
+        }))
     }
 }
 
@@ -149,33 +150,28 @@ impl DialogExt {
         py: Python<'_>,
         message: String,
         title: Option<String>,
-        buttons: Option<PyMessageDialogButtons>, // Q: This used to be  Option<Py<PyMessageDialogButtons>>, why do we need to wrap Py around it if it's already a python class?
+        buttons: Option<Py<PyMessageDialogButtons>>,
         kind: Option<PyMessageDialogKind>,
     ) -> PyResult<MessageDialogBuilder> {
-        
-        let dialog_builder = plugin::Dialog::message(message) // Q: Wrong, we need a dialog instance, for which we need an apphandle.
-        let dialog_title = title; // TODO: Remove.
-        let dialog_buttons = buttons.unwrap_or(PyMessageDialogButtons::Ok()).to_tauri(py); // Q: Can we supply defaults in the python signature that are not none to make it more readable for python users?
+        let dialog_buttons = buttons.unwrap().borrow(py).to_tauri(py); // Q: Is this the correct way to unwrap a Py<>?
         let dialog_kind =
             plugin::MessageDialogKind::from(kind.unwrap_or(PyMessageDialogKind::Info));
-
 
         // Macro to create a new message dialog builder based on which enum ImplDialogExt is.
         macro_rules! builder_impl {
             ($wrapper:expr) => {{
                 let py_ref = $wrapper.borrow(py);
                 let guard = py_ref.0.inner_ref_semver()??;
-                let builder: plugin::MessageDialogBuilder = guard.dialog().builder(); // it's short enough, so we don't release the GIL
-                // Q: How do I know above line works for dialog as well?
+                let builder: plugin::MessageDialogBuilder = guard.dialog().message(message);
                 if let Some(title) = title {
                     builder.title(title);
                 }
-                builder.buttons(dialog_buttons);
+                builder.buttons(dialog_buttons); // Q: Do macros have access to variables outside of its scope?
                 builder.kind(dialog_kind);
 
                 Ok(MessageDialogBuilder::new(builder))
             }};
         }
-        dialog_ext_method_impl!(slf, builder_impl)
+        dialog_ext_method_impl!(slf, builder_impl) // This still has plenty of errors
     }
 }
