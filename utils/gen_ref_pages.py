@@ -10,9 +10,17 @@ NOTE: Keep the following directory structure:
 ├── 📁 utils/
 │   └── 📄 gen_ref_pages.py
 ├── 📁 python/
-│   └── 📁 project/
-│       └── 📁 src/
-│           └── 📁 project/
+│   ├── 📁 pure-py/
+│   │   ├── 📄 pyproject.toml
+│   │   └── 📁 src/
+│   │       └── 📁 pure_py/
+│   │           ├── 📄 __init__.py
+│   │           └ ...
+│   └── 📁 pyo3-py/
+│       ├── 📄 Cargo.toml
+│       ├── 📄 pyproject.toml
+│       └── 📁 python/
+│           └── 📁 pyo3_py/
 │               ├── 📄 __init__.py
 │               └ ...
 └── 📄 mkdocs.yml
@@ -23,6 +31,7 @@ from pathlib import Path
 
 import mkdocs_gen_files
 
+# i.e., the root directory of the repository.
 ROOT = Path(__file__).parent.parent
 
 # Don't change the name "reference/py",
@@ -48,7 +57,13 @@ for project in (ROOT / "python").iterdir():
     if project.parts[-1] == "pyfuture":
         continue
 
-    project_src = project / "src"
+    if (project / "Cargo.toml").exists():
+        # pyo3 py project
+        project_src = project / "python"
+    else:
+        # pure py project
+        project_src = project / "src"
+
     for path in sorted(project_src.rglob("*.py")):
         # e.g., `pytauri/__init__.py`
         relative_path = path.relative_to(project_src)

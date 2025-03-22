@@ -1,4 +1,5 @@
 packages:
   - "packages/*"
   - "examples/tauri-app"
+  - "examples/tauri-app-wheel"
   - "crates/tauri-plugin-pytauri/guest-js"

@@ -1,0 +1,28 @@
+[project]
+name = "tauri-app-wheel"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.9"
+dependencies = [
+    "pydantic == 2.*",
+    "anyio == 4.*",
+    # workspace members
+    "pytauri == 0.3.*",
+    "pytauri-wheel == 0.3.*",
+]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+# See: <https://hatch.pypa.io/latest/config/build/#artifacts>
+# we don't track the `frontend` directory in git,
+# so we need to manually tell hatch to include it in the sdist.
+artifacts = ["src/tauri_app_wheel/frontend/"]
+
+
+[tool.uv.sources]
+pytauri = { workspace = true }
+pytauri-wheel = { workspace = true }

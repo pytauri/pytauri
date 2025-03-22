@@ -1,0 +1,21 @@
+"$schema" = "https://schema.tauri.app/config/2"
+productName = "tauri-app-wheel"
+version = "0.1.0"
+identifier = "com.tauri-app-wheel.app"
+
+[build]
+frontendDist = "./frontend"
+
+[app]
+withGlobalTauri = true
+
+[[app.windows]]
+title = "tauri-app-wheel"
+width = 800
+height = 600
+
+[bundle]
+icon = [
+    "icons/icon.png",
+    "icons/icon.ico",
+]

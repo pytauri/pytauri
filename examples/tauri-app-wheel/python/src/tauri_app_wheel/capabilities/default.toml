@@ -1,0 +1,10 @@
+# "$schema" = "../gen/schemas/desktop-schema.json"  # we do not support this feature yet
+identifier = "default"
+description = "Capability for the main window"
+windows = ["main"]
+permissions = [
+    "core:default",
+    "opener:default",
+    "dialog:default",
+    "pytauri:default",
+]

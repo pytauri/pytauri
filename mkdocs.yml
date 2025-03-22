@@ -141,6 +141,7 @@ plugins:
               - pyo3_utils
               - pytauri
               - pytauri_plugin_notification
+              - pytauri_wheel
             extensions:
               # https://mkdocstrings.github.io/griffe-inherited-docstrings/
               - griffe_inherited_docstrings
@@ -178,6 +179,7 @@ plugins:
             - python/pyo3-utils/src
             - python/pytauri/src
             - python/pytauri-plugin-notification/src
+            - python/pytauri-wheel/python/pytauri_wheel
 
   # Remember: https://github.com/timvink/mkdocs-git-revision-date-localized-plugin#note-when-using-build-environments
   - git-revision-date-localized:
@@ -253,6 +255,7 @@ nav:
       # see: <https://github.com/oprypin/mkdocs-section-index/issues/6#issuecomment-914666358>
       - py:
           - pytauri: CHANGELOG/py/pytauri.md
+          - pytauri-wheel: CHANGELOG/py/pytauri-wheel.md
           - pytauri-plugin-notification: CHANGELOG/py/pytauri-plugin-notification.md
           - pyo3-utils: CHANGELOG/py/pyo3-utils.md
           - codelldb: CHANGELOG/py/codelldb.md

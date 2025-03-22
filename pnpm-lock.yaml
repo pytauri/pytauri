@@ -88,6 +88,28 @@ importers:
         specifier: ^6.0.3
         version: 6.0.5(@types/node@22.10.2)(terser@5.37.0)
 
+  examples/tauri-app-wheel:
+    dependencies:
+      '@tauri-apps/api':
+        specifier: ^2
+        version: 2.1.1
+      '@tauri-apps/plugin-dialog':
+        specifier: ^2
+        version: 2.2.0
+      '@tauri-apps/plugin-opener':
+        specifier: ^2
+        version: 2.2.2
+      tauri-plugin-pytauri-api:
+        specifier: workspace:*
+        version: link:../../crates/tauri-plugin-pytauri/guest-js
+    devDependencies:
+      typescript:
+        specifier: ~5.6.2
+        version: 5.6.3
+      vite:
+        specifier: ^6.0.3
+        version: 6.0.5(@types/node@22.10.2)(terser@5.37.0)
+
 packages:
 
   '@commitlint/types@19.5.0':
@@ -550,6 +572,9 @@ packages:
     resolution: {integrity: sha512-K2VhcKqBhAeS5pNOVdnR/xQRU6jwpgmkSL2ejHXcl0m+kaTggT0WRDQnFtPq6NljA7aE03cvwsbCAoFG7vtkJw==, tarball: https://registry.npmmirror.com/@tauri-apps/cli/-/cli-2.1.0.tgz}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@tauri-apps/plugin-dialog@2.2.0':
+    resolution: {integrity: sha512-6bLkYK68zyK31418AK5fNccCdVuRnNpbxquCl8IqgFByOgWFivbiIlvb79wpSXi0O+8k8RCSsIpOquebusRVSg==, tarball: https://registry.npmmirror.com/@tauri-apps/plugin-dialog/-/plugin-dialog-2.2.0.tgz}
 
   '@tauri-apps/plugin-opener@2.2.2':
     resolution: {integrity: sha512-E/XIHKqGV+FT8PDdkfMETmgPUxcR79Rk8USuzbadD/ZdvsKCfQR5q+6rpZC9zEnG2wzi9lVQM4D3xwrtGGIB8A==, tarball: https://registry.npmmirror.com/@tauri-apps/plugin-opener/-/plugin-opener-2.2.2.tgz}
@@ -1464,6 +1489,10 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.1.0
       '@tauri-apps/cli-win32-ia32-msvc': 2.1.0
       '@tauri-apps/cli-win32-x64-msvc': 2.1.0
+
+  '@tauri-apps/plugin-dialog@2.2.0':
+    dependencies:
+      '@tauri-apps/api': 2.1.1
 
   '@tauri-apps/plugin-opener@2.2.2':
     dependencies:
