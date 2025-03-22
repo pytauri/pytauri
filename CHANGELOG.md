@@ -48,8 +48,9 @@ Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pyta
 
 ### Internal
 
-- [#103](https://github.com/pytauri/pytauri/pull/103) - chore: transfer repo to `pytauri` org.
+- [#113](https://github.com/pytauri/pytauri/pull/113) ci: add `macos-latest` os in `lint-test` CI.
 - [#111](https://github.com/pytauri/pytauri/pull/111) - docs: added PyTauri logo and updated documentation colors
+- [#103](https://github.com/pytauri/pytauri/pull/103) - chore: transfer repo to `pytauri` org.
 
 ## [0.3.0]
 
