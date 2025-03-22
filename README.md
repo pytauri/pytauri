@@ -119,6 +119,8 @@ Rust and its Python bindings, PyTauri core and its plugins will keep the same `M
 | pytauri | [![pytauri-pypi-v]][pytauri-pypi] | [![pytauri-crates-v]][pytauri-crates] | |
 | pytauri-core | | [![pytauri-core-crates-v]][pytauri-core-crates] | |
 | tauri-plugin-pytauri | | [![tauri-plugin-pytauri-crates-v]][tauri-plugin-pytauri-crates] | [![tauri-plugin-pytauri-api-npm-v]][tauri-plugin-pytauri-api-npm] |
+| 👉 **wheel** | - | - | - |
+| pytauri-wheel | [![pytauri-wheel-pypi-v]][pytauri-wheel-pypi] | | |
 | 👉 **plugins** | - | - | - |
 | pytauri-plugin-notification | [![pytauri-plugin-notification-pypi-v]][pytauri-plugin-notification-pypi] | [![pytauri-plugin-notification-crates-v]][pytauri-plugin-notification-crates] | |
 | 👉 **utils** | - | - | - |
@@ -131,6 +133,8 @@ Rust and its Python bindings, PyTauri core and its plugins will keep the same `M
 [pytauri-crates]: https://crates.io/crates/pytauri
 [pytauri-core-crates-v]: https://img.shields.io/crates/v/pytauri-core
 [pytauri-core-crates]: https://crates.io/crates/pytauri-core
+[pytauri-wheel-pypi-v]: https://img.shields.io/pypi/v/pytauri-wheel
+[pytauri-wheel-pypi]: https://pypi.org/project/pytauri-wheel
 [tauri-plugin-pytauri-crates-v]: https://img.shields.io/crates/v/tauri-plugin-pytauri
 [tauri-plugin-pytauri-crates]: https://crates.io/crates/tauri-plugin-pytauri
 [tauri-plugin-pytauri-api-npm-v]:https://img.shields.io/npm/v/tauri-plugin-pytauri-api

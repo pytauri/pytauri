@@ -255,6 +255,7 @@ nav:
       # see: <https://github.com/oprypin/mkdocs-section-index/issues/6#issuecomment-914666358>
       - py:
           - pytauri: CHANGELOG/py/pytauri.md
+          - pytauri-wheel: CHANGELOG/py/pytauri-wheel.md
           - pytauri-plugin-notification: CHANGELOG/py/pytauri-plugin-notification.md
           - pyo3-utils: CHANGELOG/py/pyo3-utils.md
           - codelldb: CHANGELOG/py/codelldb.md

@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Precompiled python wheel (goodbye Rust compiler)
+
+**WIP**: `pytauri-wheel`
+
+- [#108](https://github.com/pytauri/pytauri/pull/108) - feat: initial precompiled python wheel support
+
 #### New logo for PyTauri
 
 Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pytauri/pytauri/pull/111)! PyTauri now has its own logo 🎉:
