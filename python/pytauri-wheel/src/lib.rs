@@ -72,16 +72,32 @@ fn find_icon(
     config_parent: &Path,
     predicate: impl Fn(&&String) -> bool,
     default: &str,
-) -> Option<tauri::Result<Image<'static>>> {
+) -> Option<PyResult<Image<'static>>> {
     let icon_path = config.bundle.icon.iter().find(predicate);
 
+    // if user specifies a icon, we will load it whether it exists or not.
     if let Some(icon_path) = icon_path {
-        return Some(Image::from_path(config_parent.join(icon_path)));
+        let icon_path = config_parent.join(icon_path); // in case of relative path
+        let icon = Image::from_path(&icon_path).map_err(|e| {
+            PyValueError::new_err(format!(
+                "Failed to load specific icon at {}",
+                icon_path.display()
+            ))
+            .set_tauri_cause(e, None)
+        });
+        return Some(icon);
     }
 
     let icon_path = config_parent.join(default);
     if icon_path.exists() {
-        return Some(Image::from_path(icon_path));
+        let icon = Image::from_path(&icon_path).map_err(|e| {
+            PyValueError::new_err(format!(
+                "Failed to load default icon at {}",
+                icon_path.display()
+            ))
+            .set_tauri_cause(e, None)
+        });
+        return Some(icon);
     }
 
     None
@@ -93,7 +109,7 @@ fn load_default_window_icon(
     config_parent: &Path,
     target: Target,
 ) -> Option<PyResult<Image<'static>>> {
-    let icon = match target {
+    match target {
         Target::Windows => {
             // handle default window icons for Windows targets
             find_icon(
@@ -120,9 +136,7 @@ fn load_default_window_icon(
                 "icons/icon.png",
             )
         }
-    };
-
-    icon.map(|icon| icon.map_err(TauriError::from).map_err(Into::into))
+    }
 }
 
 #[derive(FromPyObject)]
@@ -165,16 +179,16 @@ pub fn context_factory(
         // TODO: unify the error type
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
         let mut config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
-            .map_err(|e| PyValueError::new_err(e.to_string()))?
+            .map_err(|e| PyValueError::new_err(format!("Failed to read tauri config: {e}")))?
             .0;
         if let Some(tauri_config) = tauri_config {
             let merge_config: serde_json::Value =
             // TODO: unify the error type
-            serde_json::from_str(&tauri_config).map_err(|e| PyValueError::new_err(e.to_string()))?;
+            serde_json::from_str(&tauri_config).map_err(|e| PyValueError::new_err(format!("Failed to serialize argument `tauri_config`: {e}")))?;
             json_patch::merge(&mut config, &merge_config)
         }
         let config: Config =
-            serde_json::from_value(config).map_err(|e| PyValueError::new_err(e.to_string()))?;
+            serde_json::from_value(config).map_err(|e| PyValueError::new_err(format!("Failed to serialize merged tauri config: {e}")))?;
         // NOTE: modify the `config` field first, because following code will use it.
         *ctx.config_mut() = config;
 
@@ -225,7 +239,7 @@ pub fn context_factory(
         })?;
         let mut capabilities_from_files = parse_capabilities(capabilities_pattern)
             // TODO: unify the error type
-            .map_err(|e| PyValueError::new_err(e.to_string()))?;
+            .map_err(|e| PyValueError::new_err(format!("Failed to parse capabilities files: {e}")))?;
 
         // Patch `capabilities` from `config`.
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L388-L416>
@@ -257,23 +271,31 @@ pub fn context_factory(
         // see: <https://github.com/tauri-apps/tauri/issues/12968>
         ctx.runtime_authority_mut()
             .add_capability(RuntimeCapabilityFile(CapabilityFile::List(capabilities)))
-            .map_err(TauriError::from)?;
+            .map_err(|e| PyValueError::new_err("Failed to add capability").set_tauri_cause(e, None))?;
 
         // Set default window icon.
         let default_window_icon = load_default_window_icon(ctx.config(), &src_tauri_dir, target);
         // NOTE: Even if `default_window_icon` is `None`, we should not call `set_default_window_icon(default_window_icon)`,
         // because we have bundled the `tauri-app` icon by default, and setting it to `None` will remove it.
         if let Some(icon) = default_window_icon {
-            ctx.set_default_window_icon(Some(icon?));
+            let icon = icon?;
+            ctx.set_default_window_icon(Some(icon));
         }
 
         // Set tray icon.
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L289-L299>
         if target.is_desktop() {
             if let Some(tray) = &ctx.config().app.tray_icon {
-                let tray_icon_icon_path = src_tauri_dir.join(&tray.icon_path);
-                let icon = Image::from_path(tray_icon_icon_path).map_err(TauriError::from)?;
-                ctx.set_tray_icon(Some(icon));
+                let tray_icon_path = src_tauri_dir.join(&tray.icon_path);
+                let icon = Image::from_path(&tray_icon_path)
+                    .map_err(|e| {
+                        let msg = format!(
+                            "Failed to load tray icon at {}",
+                            tray_icon_path.display()
+                        );
+                        PyValueError::new_err(msg).set_tauri_cause(e, None)
+                    })?;
+                    ctx.set_tray_icon(Some(icon));
             }
         }
 
@@ -335,6 +357,23 @@ pub fn builder_factory(
 
         Ok(builder)
     })
+}
+
+trait TauriErrorCauseExt {
+    fn set_tauri_cause(self, tauri_err: tauri::Error, py: Option<Python<'_>>) -> Self;
+}
+
+impl TauriErrorCauseExt for PyErr {
+    #[inline] // inline for `py: Option<Python<'_>`
+    fn set_tauri_cause(self, tauri_err: tauri::Error, py: Option<Python<'_>>) -> Self {
+        let tauri_err = PyErr::from(TauriError::from(tauri_err));
+        match py {
+            Some(py) => self.set_cause(py, Some(tauri_err)),
+            // TODO, FIXME, PERF: how to avoid call `Python::with_gil` inside `Python::allow_threads`?
+            None => Python::with_gil(|py| self.set_cause(py, Some(tauri_err))),
+        }
+        self
+    }
 }
 
 #[pymodule(gil_used = false)]
