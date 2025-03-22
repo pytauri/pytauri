@@ -27,11 +27,8 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "../../../python/pytauri-wheel/icons/32x32.png",
-      "../../../python/pytauri-wheel/icons/128x128.png",
-      "../../../python/pytauri-wheel/icons/128x128@2x.png",
-      "../../../python/pytauri-wheel/icons/icon.icns",
-      "../../../python/pytauri-wheel/icons/icon.ico"
+      "../../tauri-app-wheel/python/src/tauri_app_wheel/icons/icon.png",
+      "../../tauri-app-wheel/python/src/tauri_app_wheel/icons/icon.ico"
     ]
   }
 }
