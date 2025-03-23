@@ -30,7 +30,9 @@ tauri = { version = "2.3", features = [
     "image-ico",
     "image-png",
 ] }
-tauri-utils = { version = "2.2", features = [
+# NOTE: pin the minor version of `tauri-utils` because it's unstable,
+# see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
+tauri-utils = { version = "~2.2", features = [
     "config-toml",
     "config-json5",
     "build",
