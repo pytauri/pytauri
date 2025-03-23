@@ -10,6 +10,15 @@ on:
     tags:
       # e.g., py/pyo3-utils/v0.1.0
       - py/*/v*
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag
+        required: true
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref }}
 
 defaults:
   run:
@@ -40,7 +49,7 @@ jobs:
 
       - name: Build a binary wheel and a source tarball (e.g., dry-run)
         id: dry-run
-        run: python ./release.py ${{ github.ref }}
+        run: python ./release.py ${{ env.RELEASE_TAG }}
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
