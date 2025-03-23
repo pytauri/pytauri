@@ -1,4 +1,4 @@
-# 👉 NOTE: DO NOT use "workspace" syntax in this file,
+# 👉 NOTE: DO NOT use "workspace = true" or "pach = ..." syntax in this file,
 # or sdist will not work properly.
 
 [package]
@@ -45,7 +45,8 @@ json-patch = { version = "3" }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
 pyo3 = { version = "0.23" }
-# workspace dependencies
-pytauri = { version = "0.3", path = "../../crates/pytauri" }
-pytauri-core = { version = "0.3", path = "../../crates/pytauri-core" }
-tauri-plugin-pytauri = { version = "0.3", path = "../../crates/tauri-plugin-pytauri" }
+# 👇 when adding new workspace dependencies,
+# remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
+pytauri = { version = "0.3" }
+pytauri-core = { version = "0.3" }
+tauri-plugin-pytauri = { version = "0.3" }
