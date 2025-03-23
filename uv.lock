@@ -1848,6 +1848,12 @@ version = "0.1.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]
+build-system = [
+    { name = "packaging" },
+    { name = "setuptools" },
+    { name = "setuptools-rust" },
+    { name = "setuptools-scm" },
+]
 dev = [
     { name = "codelldb" },
     { name = "griffe-inherited-docstrings" },
@@ -1862,6 +1868,7 @@ dev = [
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings", extra = ["python"] },
     { name = "nicegui-app" },
+    { name = "packaging" },
     { name = "pre-commit" },
     { name = "pyfuture" },
     { name = "pyo3-utils" },
@@ -1896,9 +1903,6 @@ docs = [
 ]
 examples = [
     { name = "nicegui-app" },
-    { name = "setuptools" },
-    { name = "setuptools-rust" },
-    { name = "setuptools-scm" },
     { name = "tauri-app" },
     { name = "tauri-app-wheel" },
 ]
@@ -1928,6 +1932,12 @@ workspaces = [
 [package.metadata]
 
 [package.metadata.requires-dev]
+build-system = [
+    { name = "packaging", specifier = ">=24" },
+    { name = "setuptools", specifier = ">=64" },
+    { name = "setuptools-rust", specifier = "==1.*" },
+    { name = "setuptools-scm", specifier = ">=8" },
+]
 dev = [
     { name = "codelldb", editable = "python/codelldb" },
     { name = "griffe-inherited-docstrings", specifier = "==1.1.*" },
@@ -1942,6 +1952,7 @@ dev = [
     { name = "mkdocs-section-index", specifier = "==0.3.*" },
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.27.*" },
     { name = "nicegui-app", editable = "examples/nicegui-app" },
+    { name = "packaging", specifier = ">=24" },
     { name = "pre-commit", specifier = "==4.0.1" },
     { name = "pyfuture", editable = "python/pyfuture" },
     { name = "pyo3-utils", editable = "python/pyo3-utils" },
@@ -1976,9 +1987,6 @@ docs = [
 ]
 examples = [
     { name = "nicegui-app", editable = "examples/nicegui-app" },
-    { name = "setuptools", specifier = ">=64" },
-    { name = "setuptools-rust", specifier = "==1.*" },
-    { name = "setuptools-scm", specifier = ">=8" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
     { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
 ]

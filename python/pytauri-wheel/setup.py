@@ -2,6 +2,7 @@
 
 from os import getenv
 
+from packaging.tags import sys_tags
 from setuptools import setup
 from setuptools_rust import RustExtension
 
@@ -26,4 +27,18 @@ setup(
     ]
     if not PYTAURI_STANDALONE
     else [],
+    # ref:
+    # - <https://stackoverflow.com/a/75010995>
+    # - <https://github.com/pypa/setuptools/blob/e7c42a0efab982c355667f7cf7ced3bc72f3c7c7/setuptools/command/bdist_wheel.py#L146-L150>
+    # - <https://setuptools-rust.readthedocs.io/en/v1.11.0/building_wheels.html#building-for-abi3>
+    options={
+        "bdist_wheel": {
+            # `next(sys_tags()).platform` is usually `manylinux_x_y_{arch}`.
+            #
+            # `setuptools` usually only assigns `linux_{arch}`, so we need to specify it manually.
+            # Although `pytauri-wheel` does not actually comply with the manylinux policy (it link to system webkit lib),
+            # we will document these system libs in the README, so it's not a problem.
+            "plat_name": next(sys_tags()).platform,
+        },
+    },
 )

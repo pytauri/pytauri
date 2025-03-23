@@ -10,6 +10,7 @@ dev = [
     { include-group = "docs" },
     { include-group = "test" },
     { include-group = "tools" },
+    { include-group = "build-system" },
     { include-group = "workspaces" },
     { include-group = "examples" },
 ]
@@ -38,6 +39,12 @@ test = [
     "trio == 0.27.0",          # for `pyfuture`
 ]
 tools = ["pre-commit == 4.0.1"]
+"build-system" = [
+    "setuptools >= 64",
+    "setuptools-scm >= 8",
+    "setuptools-rust == 1.*",
+    "packaging >= 24",
+]
 # NOTE: when adding workspace members,
 # remember to update:
 # - `preload_modules` in `mkdocs.yml`
@@ -57,14 +64,7 @@ workspaces = [
 # NOTE: when adding examples,
 # remember to update `[tool.uv.sources]` and `[tool.uv.workspace.members]`
 # and [tool.coverage.run.source] in `pyproject.toml`.
-examples = [
-    "setuptools >= 64",
-    "setuptools-scm >= 8",
-    "setuptools-rust == 1.*",
-    "tauri-app",
-    "nicegui-app",
-    "tauri-app-wheel",
-]
+examples = ["tauri-app", "nicegui-app", "tauri-app-wheel"]
 
 
 [tool.uv.sources]

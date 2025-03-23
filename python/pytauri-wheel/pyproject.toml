@@ -13,7 +13,12 @@ dependencies = [
 ext_mod = "pytauri_wheel.ext_mod"
 
 [build-system]
-requires = ["setuptools>=61", "setuptools-rust==1.*", "setuptools_scm>=8"]
+requires = [
+    "setuptools>=61",
+    "setuptools-rust==1.*",
+    "setuptools_scm>=8",
+    "packaging>=24",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages]
