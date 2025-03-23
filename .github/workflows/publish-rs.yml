@@ -5,6 +5,15 @@ on:
     tags:
       # e.g., rs/pyo3-utils/v0.1.0
       - rs/*/v*
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag
+        required: true
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref }}
 
 defaults:
   run:
@@ -50,7 +59,7 @@ jobs:
 
       - name: Dry-run release
         id: dry-run
-        run: python ./release.py ${{ github.ref }}
+        run: python ./release.py ${{ env.RELEASE_TAG }}
 
       - name: Store the .crate file
         uses: actions/upload-artifact@v4
@@ -94,7 +103,7 @@ jobs:
       - name: release
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: python ./release.py --no-dry-run ${{ github.ref }}
+        run: python ./release.py --no-dry-run ${{ env.RELEASE_TAG }}
 
   github-release:
     needs:

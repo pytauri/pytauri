@@ -10,6 +10,15 @@ on:
     tags:
       # e.g., py/pyo3-utils/v0.1.0
       - py/*/v*
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag
+        required: true
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref }}
 
 defaults:
   run:
@@ -19,7 +28,23 @@ defaults:
 jobs:
   build-dist:
     name: Build distribution 📦
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # TODO, FIXME: 3.13t, need wait for <https://github.com/actions/setup-python/pull/973>
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        # Use the oldest possible system to compile extension wheels
+        # (note: the system dependencies of tauri v2 requires at least Ubuntu 22.04)
+        os:
+          # NOTE: if edit linux os, remember to edit `if` statement in `setup-sys-deps` step.
+          - ubuntu-22.04
+          - ubuntu-22.04-arm
+          - windows-2022
+          # TODO, FIXME: <https://github.com/github/roadmap/issues/1098>
+          # - windows-2022-arm
+          - macos-13 # Intel
+          - macos-14 # arm64
     outputs:
       package: ${{ steps.dry-run.outputs.package }}
     steps:
@@ -32,20 +57,34 @@ jobs:
         uses: astral-sh/setup-uv@v4
         with:
           # see: <https://docs.astral.sh/uv/guides/integration/github/>
+          #
+          # NOTE: For matrix jobs, we must set `python-version`,
+          # otherwise `uv` may incorrectly use other Python versions cached in GitHub Actions.
+          # See: <https://github.com/astral-sh/uv/pull/9454>.
+          python-version: ${{ matrix.python-version }}
           version: ${{ steps.setup-envs-ver.outputs.uv }}
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: "pyproject.toml"
+          python-version: ${{ matrix.python-version }}
+
+      # see: <https://github.com/dtolnay/rust-toolchain>
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      # needed for build tauri
+      - name: setup-sys-deps
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        uses: ./.github/actions/setup-sys-deps
 
       - name: Build a binary wheel and a source tarball (e.g., dry-run)
         id: dry-run
-        run: python ./release.py ${{ github.ref }}
+        run: python ./release.py ${{ env.RELEASE_TAG }}
 
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
-          name: python-package-distributions
+          name: python-package-distributions-${{ matrix.os }}-py${{ matrix.python-version }}
           path: dist/
           if-no-files-found: error
 
@@ -63,8 +102,12 @@ jobs:
       - name: Download all the dists
         uses: actions/download-artifact@v4
         with:
-          name: python-package-distributions
+          # see: <https://github.com/actions/upload-artifact/blob/v4.6.2/docs/MIGRATION.md#multiple-uploads-to-the-same-named-artifact>
+          pattern: python-package-distributions-*
           path: dist/
+          # `wheel` and `sdist` with the same name will be overwritten,
+          # so it's ok for matrix jobs.
+          merge-multiple: true
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
@@ -79,8 +122,12 @@ jobs:
       - name: Download all the dists
         uses: actions/download-artifact@v4
         with:
-          name: python-package-distributions
+          # see: <https://github.com/actions/upload-artifact/blob/v4.6.2/docs/MIGRATION.md#multiple-uploads-to-the-same-named-artifact>
+          pattern: python-package-distributions-*
           path: dist/
+          # `wheel` and `sdist` with the same name will be overwritten,
+          # so it's ok for matrix jobs.
+          merge-multiple: true
       - name: Create release
         uses: ncipollo/release-action@v1
         with:

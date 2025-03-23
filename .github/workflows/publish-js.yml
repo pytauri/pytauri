@@ -5,6 +5,15 @@ on:
     tags:
       # e.g., js/tauri-plugin-pytauri-api/v0.1.0
       - js/*/v*
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag
+        required: true
+        type: string
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref }}
 
 defaults:
   run:
@@ -41,7 +50,7 @@ jobs:
 
       - name: Dry-run release
         id: dry-run
-        run: python ./release.py ${{ github.ref }}
+        run: python ./release.py ${{ env.RELEASE_TAG }}
 
   publish:
     needs:
@@ -83,7 +92,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           # issue: <https://github.com/pnpm/pnpm/issues/6607#issuecomment-2075092418>
           NPM_CONFIG_PROVENANCE: true
-        run: python ./release.py --no-dry-run ${{ github.ref }}
+        run: python ./release.py --no-dry-run ${{ env.RELEASE_TAG }}
 
   github-release:
     needs:
