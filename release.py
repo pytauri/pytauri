@@ -107,6 +107,10 @@ async def release_rs(package: str, no_dry_run: bool) -> int:
 
 async def release_py(package: str, no_dry_run: bool) -> int:
     # <https://docs.astral.sh/uv/guides/publish/>
+    #
+    # NOTE: use `uv build`(without `--wheel` and `--sdist`) to build `wheel` from `sdist`,
+    # so that we can notice broken `sdist`. This is important for wheel with extension modules.
+    # ref: <https://docs.astral.sh/uv/concepts/projects/build/#using-uv-build>
     args = ["build", "--package", package, "--no-sources", "--color", "always"]
     if no_dry_run:
         raise RuntimeError(
