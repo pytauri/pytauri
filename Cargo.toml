@@ -44,9 +44,22 @@ pytauri = { path = "crates/pytauri", version = "0.3" }
 pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification", version = "0.3" }
 pyo3-utils = { path = "crates/pyo3-utils", version = "0.1" }
 
+[patch.crates-io]
+# 👇 for `pytauri-wheel` workspace dependencies.
+#
+# # Why don't we use `path` directly in `pytauri-wheel/Cargo.toml`:
+#
+# This is because when building `wheel` from `sdist`, Cargo will follow these `path`,
+# but these workspace dependencies are not packaged in `sdist`.
+# By patching outside the `pytauri-wheel` crate, we ensure that `path` is only effective during development.
+pytauri = { path = "crates/pytauri" }
+pytauri-core = { path = "crates/pytauri-core" }
+tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri" }
+# 👆
+
+
 [profile.release]
 lto = "thin"
-
 
 # for standalone app bundle python example
 [profile.bundle-dev]
