@@ -67,7 +67,11 @@ jobs:
           git fetch origin gh-pages --depth=1
       - name: Deploy docs
         env:
-            DOC_TAG: ${{ steps.version_tag.outputs.major && steps.version_tag.outputs.minor && format('{0}.{1} latest', steps.version_tag.outputs.major, steps.version_tag.outputs.minor) || 'dev' }}
+          DOC_TAG: ${{ steps.version_tag.outputs.major && steps.version_tag.outputs.minor && format('{0}.{1} latest', steps.version_tag.outputs.major, steps.version_tag.outputs.minor) || 'dev' }}
+          # skip building pytauri extension module file, see `python/pytauri-wheel/setup.py`
+          # (because we don't need running these workspaces python packages when building docs,
+          # and we don't have tauri system dependencies in the Linux CI)
+          PYTAURI_STANDALONE: 1
         run: |
           uv run --only-group=docs --only-group=workspaces --all-extras -- \
               mike deploy --push --update-aliases ${{ env.DOC_TAG }}
