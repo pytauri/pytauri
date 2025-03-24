@@ -237,6 +237,8 @@ nav:
           - usage/tutorial/build-sdist.md
           - usage/tutorial/build-wheel.md
           - usage/tutorial/build-standalone.md
+      - PyTauri Wheel:
+          - usage/pytauri-wheel/index.md
       - Concepts:
           - usage/concepts/index.md
           - usage/concepts/ipc.md

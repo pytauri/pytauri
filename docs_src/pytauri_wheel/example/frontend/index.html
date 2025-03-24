@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PyTauri-Wheel-App</title>
+    </head>
+    <body>
+        <button onclick="greet()">Click me</button>
+        <script>
+            // 🤓 NOTE: you must set `[app.withGlobalTauri] = true` in `Tauri.toml,
+            // or you can't use `window.__TAURI__` in the frontend.
+            async function greet() {
+                const message =
+                    await window.__TAURI__.pytauri.pyInvoke("greet");
+                alert(message);
+            }
+        </script>
+    </body>
+</html>

@@ -36,9 +36,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Precompiled python wheel (goodbye Rust compiler)
 
-**WIP**: `pytauri-wheel`
+> - [#117](https://github.com/pytauri/pytauri/pull/117) - docs: add usage docs for `pytauri-wheel`
+> - [#108](https://github.com/pytauri/pytauri/pull/108) - feat: initial precompiled python wheel support
 
-- [#108](https://github.com/pytauri/pytauri/pull/108) - feat: initial precompiled python wheel support
+In `v0.4.0`, we have introduced an exciting new feature: precompiled Python wheel support! 🎉
+
+This means you can use PyTauri without writing any Rust code or needing a Rust compiler.
+
+This allows you to perform full-stack development in pure Python (like [`pywebview`](https://github.com/r0x0r/pywebview) but battery-included 🤓).
+
+Please refer to the [PyTauri Wheel documentation](https://pytauri.github.io/pytauri/0.4/usage/pytauri-wheel/) for more information.
 
 #### New logo for PyTauri
 
