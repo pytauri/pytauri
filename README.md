@@ -178,6 +178,10 @@ Although Rust's lifetime and ownership system makes Rust code safer, Python's ga
 
 PyTauri is a project that aims to provide Python bindings for [Tauri], a cross-platform webview GUI library. `Tauri` is a trademark of the Tauri Program within the Commons Conservancy and PyTauri is not officially endorsed or supported by them. PyTauri is an independent and community-driven effort that respects the original goals and values of Tauri. PyTauri does not claim any ownership or affiliation with the Tauri Program.
 
+## Used By
+
+- [Digger Solo](https://solo.digger.lol/) - AI powered file manager
+
 ## License
 
 This project is licensed under the terms of the *Apache License 2.0*.
