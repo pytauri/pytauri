@@ -38,10 +38,11 @@ dunce = { version = "1", default-features = false }
 
 tokio = { version = "1", default-features = false }
 
-tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.3" }
-pytauri-core = { path = "crates/pytauri-core", version = "0.3" }
-pytauri = { path = "crates/pytauri", version = "0.3" }
-pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification", version = "0.3" }
+# ❗ when bumping, remember to update workspace dependencies
+tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.4" }
+pytauri-core = { path = "crates/pytauri-core", version = "0.4" }
+pytauri = { path = "crates/pytauri", version = "0.4" }
+pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification", version = "0.4" }
 pyo3-utils = { path = "crates/pyo3-utils", version = "0.1" }
 
 [patch.crates-io]

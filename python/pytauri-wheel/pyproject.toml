@@ -1,11 +1,25 @@
 [project]
 name = "pytauri-wheel"
-version = "0.3.0"
-description = "Precompiled wheels for pytauri"
-requires-python = ">=3.9"
-dependencies = [
-    "pytauri == 0.3.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
+version = "0.4.0" # ❗ when bumping, remember to update workspace dependencies
+readme = "README.md"
+license = "Apache-2.0"
+authors = [
+    { name = "Sean Wang", email = "126865849+WSH032@users.noreply.github.com" },
 ]
+requires-python = ">=3.9"
+description = "Precompiled wheels for pytauri"
+
+# <https://iscinumpy.dev/post/bound-version-constraints/>
+dependencies = [
+    # ❗ workspaces, must use `==`
+    "pytauri == 0.4.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
+]
+
+[project.urls]
+# see: <https://packaging.python.org/en/latest/specifications/well-known-project-urls/#well-known-labels>
+documentation = "https://pytauri.github.io/pytauri/"
+source = "https://github.com/pytauri/pytauri"
+
 
 [project.entry-points.pytauri]
 # - "pytauri_wheel" -> `python/pytauri_wheel/`

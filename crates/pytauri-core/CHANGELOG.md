@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ### Added
 
 - [#62](https://github.com/WSH032/pytauri/pull/62) - feat: add `path::PathResolver`, `Manager::path`.
@@ -73,6 +75,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.4.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.3.0
 [0.2.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.2.0
 [0.1.0-beta.1]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.1.0-beta.1
