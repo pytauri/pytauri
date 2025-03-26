@@ -87,11 +87,9 @@ impl PyMessageDialogButtons {
 }
 //endregion
 
-#[pyclass(frozen)]
+#[pyclass(frozen, unsendable)]
 #[non_exhaustive]
 pub struct MessageDialogBuilder(pub PyWrapper<PyWrapperT2<plugin::MessageDialogBuilder<Runtime>>>);
-
-unsafe impl Sync for MessageDialogBuilder {} // Q: Error [https://doc.rust-lang.org/error_codes/E0277.html] -> Help: within `Result<MessageDialogBuilder<Wry<EventLoopMessage>>, ConsumedError>`, the trait `Sync` is not implemented for `NonNull<c_void>`
 
 impl MessageDialogBuilder {
     fn new(builder: plugin::MessageDialogBuilder<Runtime>) -> Self {
@@ -153,7 +151,7 @@ impl DialogExt {
         buttons: Option<Py<PyMessageDialogButtons>>,
         kind: Option<PyMessageDialogKind>,
     ) -> PyResult<MessageDialogBuilder> {
-        let dialog_buttons = buttons.unwrap().borrow(py).to_tauri(py); // Q: Is this the correct way to unwrap a Py<>?
+        let dialog_buttons = buttons.map(|btn| btn.get().to_tauri(py)).expect("Error converting python to rust buttons");
         let dialog_kind =
             plugin::MessageDialogKind::from(kind.unwrap_or(PyMessageDialogKind::Info));
 
@@ -166,12 +164,13 @@ impl DialogExt {
                 if let Some(title) = title {
                     builder.title(title);
                 }
-                builder.buttons(dialog_buttons); // Q: Do macros have access to variables outside of its scope?
+                builder.buttons(dialog_buttons); 
                 builder.kind(dialog_kind);
 
                 Ok(MessageDialogBuilder::new(builder))
             }};
         }
+        // TODO: pass the buttons, message etc. into the macro (macro cant access values outside of its scope)
         dialog_ext_method_impl!(slf, builder_impl) // This still has plenty of errors
     }
 }
