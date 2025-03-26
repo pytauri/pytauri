@@ -1,0 +1,9 @@
+# "$schema" = "..."  # we do not support this feature yet
+identifier = "default"
+description = "Capability for the main window"
+windows = ["main"]
+permissions = [
+    "core:default",
+    "pytauri:default", # need for pytauri ipc
+    "dialog:default"
+]

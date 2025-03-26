@@ -1,5 +1,10 @@
 # Prerequisites
 
+!!! info "For Pythoneer"
+    For pure Python (i.e., without Rust) development, you might prefer to use [pytauri-wheel](../pytauri-wheel/index.md) ✨.
+
+---
+
 ## Platforms
 
 - Tier 1: my(author's) primary development environment
