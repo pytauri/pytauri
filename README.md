@@ -174,6 +174,12 @@ Although Rust's lifetime and ownership system makes Rust code safer, Python's ga
 [nicegui]: https://github.com/zauberzeug/nicegui
 [gradio]: https://github.com/gradio-app/gradio
 
+## Used By
+
+Although PyTauri is a fairly young project, a few people have used it to make cool projects:
+
+- [Digger Solo](https://solo.digger.lol/) - AI powered file manager
+
 ## Credits
 
 PyTauri is a project that aims to provide Python bindings for [Tauri], a cross-platform webview GUI library. `Tauri` is a trademark of the Tauri Program within the Commons Conservancy and PyTauri is not officially endorsed or supported by them. PyTauri is an independent and community-driven effort that respects the original goals and values of Tauri. PyTauri does not claim any ownership or affiliation with the Tauri Program.
