@@ -87,10 +87,20 @@ def _assert_never(arg: NoReturn, /) -> NoReturn:
 
 async def release_rs(package: str, no_dry_run: bool) -> int:
     # <https://doc.rust-lang.org/cargo/reference/publishing.html>
-    args = ["publish", "--all-features", "--package", package, "--color", "always"]
-    if no_dry_run:
-        args.append("--no-verify")
-    else:
+    args = [
+        "publish",
+        "--all-features",
+        "--package",
+        package,
+        "--color",
+        "always",
+        # We need to release crates in parallel, so add `--no-verify`.
+        # TODO, FIXME: But the downside is that we cannot verify if
+        # the versions of workspace dependencies crate are correctly updated.
+        "--no-verify",
+    ]
+
+    if not no_dry_run:
         args.append("--dry-run")
 
     if package == "tauri-plugin-pytauri":
