@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.4.0]
+
+bump workspace version
+
 ## [0.3.0]
 
 bump workspace version
@@ -19,6 +23,7 @@ bump workspace version
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.4.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.3.0
 [0.2.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.2.0
 [0.1.0-beta.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.1.0-beta.0
