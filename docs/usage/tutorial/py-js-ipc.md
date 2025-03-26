@@ -18,7 +18,7 @@ You need to add it to the dependencies so that you can enable its permission in 
 
 [dependencies]
 # ...
-tauri-plugin-pytauri = { version = "0.3" }  # (1)!
+tauri-plugin-pytauri = { version = "0.4" }  # (1)!
 ```
 
 1. This is the version at the time of writing this tutorial. There may be a newer version of pytauri available when you use it.

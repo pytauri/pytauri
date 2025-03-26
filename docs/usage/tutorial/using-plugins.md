@@ -33,7 +33,7 @@ Add the rust dependency:
 
 ```bash
 cd src-tauri
-cargo add pytauri-plugin-notification@0.3  # (1)!
+cargo add pytauri-plugin-notification@0.4  # (1)!
 cd ..
 ```
 
@@ -67,7 +67,7 @@ Add the python dependency:
 # ...
 dependencies = [
     # ...
-    "pytauri-plugin-notification == 0.3.*",  # (1)!
+    "pytauri-plugin-notification == 0.4.*",  # (1)!
 ]
 ```
 
