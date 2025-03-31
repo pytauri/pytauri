@@ -180,7 +180,7 @@ pub fn context_factory(
         // Load config from file dynamically.
         // TODO: unify the error type
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/lib.rs#L57-L99>
-        let mut config = tauri_utils::config::parse::read_from(target, src_tauri_dir.clone())
+        let mut config = tauri_utils::config::parse::read_from(target, &src_tauri_dir)
             .map_err(|e| PyValueError::new_err(format!("Failed to read tauri config: {e}")))?
             .0;
         if let Some(tauri_config) = tauri_config {

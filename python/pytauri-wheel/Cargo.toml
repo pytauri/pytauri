@@ -20,10 +20,10 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 
 [build-dependencies]
-tauri-build = { version = "2" }
+tauri-build = { version = "2.1" }
 
 [dependencies]
-tauri = { version = "2.3", features = [
+tauri = { version = "2.4", features = [
     "config-toml",
     "config-json5",
     "devtools",
@@ -32,7 +32,7 @@ tauri = { version = "2.3", features = [
 ] }
 # NOTE: pin the minor version of `tauri-utils` because it's unstable,
 # see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
-tauri-utils = { version = "~2.2", features = [
+tauri-utils = { version = "~2.3", features = [
     "config-toml",
     "config-json5",
     "build",
