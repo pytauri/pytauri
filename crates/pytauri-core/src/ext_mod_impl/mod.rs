@@ -434,6 +434,7 @@ impl App {
         }
     }
 
+    #[expect(deprecated)]
     #[pyo3(signature = (callback = None, /))]
     fn run_iteration(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<()> {
         let app = self.0.try_lock_inner_mut()??;

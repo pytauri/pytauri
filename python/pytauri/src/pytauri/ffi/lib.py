@@ -17,7 +17,7 @@ from typing import (
 )
 
 from pydantic import NonNegativeInt
-from typing_extensions import Never, Self, TypeAliasType
+from typing_extensions import Never, Self, TypeAliasType, deprecated
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
@@ -99,6 +99,13 @@ if TYPE_CHECKING:
                 otherwise it is undefined behavior, and in most cases, the program will panic.
             """
 
+        @deprecated(
+            """When called in a loop (as suggested by the name), this function will busy-loop.
+            To re-gain control of control flow after the app has exited, use `App::run_return` instead.
+
+            See <docs.rs/tauri> for more details.""",
+            category=None,
+        )
         def run_iteration(
             self, callback: Optional[_AppRunCallbackType] = None, /
         ) -> None:
