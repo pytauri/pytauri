@@ -32,7 +32,7 @@ async def greet(body: Person) -> Greeting:
 # --8<-- [end:command]
 
 
-def main() -> None:
+def main() -> int:
     with start_blocking_portal("asyncio") as portal:  # or `trio`
         app = builder_factory().build(
             BuilderArgs(
@@ -42,4 +42,5 @@ def main() -> None:
                 # 👆
             )
         )
-        app.run()
+        exit_code = app.run_return()
+        return exit_code

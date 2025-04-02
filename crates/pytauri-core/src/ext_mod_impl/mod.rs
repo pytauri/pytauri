@@ -434,6 +434,22 @@ impl App {
         }
     }
 
+    #[pyo3(signature = (callback = None, /))]
+    fn run_return(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<i32> {
+        let app = self.0.try_take_inner()??;
+        let py_app_handle = app.py_app_handle().clone_ref(py);
+        unsafe {
+            // `tauri::App` does not hold the GIL, so this is safe
+            py.allow_threads_unsend(app, move |app| {
+                let exit_code = match callback {
+                    Some(callback) => app.run_return(Self::py_cb_to_rs_cb(callback, py_app_handle)),
+                    None => app.run_return(Self::noop_callback),
+                };
+                Ok(exit_code)
+            })
+        }
+    }
+
     #[expect(deprecated)]
     #[pyo3(signature = (callback = None, /))]
     fn run_iteration(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<()> {

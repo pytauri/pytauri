@@ -13,4 +13,4 @@ with start_blocking_portal("asyncio") as portal:  # or "trio"
             invoke_handler=commands.generate_handler(portal),
         )
     )
-    app.run()
+    exit_code = app.run_return()

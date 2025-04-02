@@ -17,8 +17,6 @@ from pytauri import (
     AppHandle,
     BuilderArgs,
     Manager,
-    RunEvent,
-    RunEventType,
     builder_factory,
     context_factory,
 )
@@ -89,7 +87,7 @@ def app_setup_hook(front_server: FrontServer) -> Callable[[AppHandle], None]:
     return _app_setup_hook
 
 
-def main() -> None:
+def main() -> int:
     nicegui_app = FastAPI()
     ui.run_with(nicegui_app)
     front_server = FrontServer(
@@ -108,17 +106,9 @@ def main() -> None:
                 setup=app_setup_hook(front_server),
             )
         )
+        exit_code = tauri_app.run_return()
 
-        def tauri_run_callback(_: AppHandle, run_event: RunEventType) -> None:
-            """Add a callback to show the main window after the server is started and
-            shutdown the server when the app is going to exit."""
-
-            match run_event:
-                # user closed the window so the app is going to exit,
-                # we need shutdown the front server first.
-                case RunEvent.Exit():
-                    front_server.request_shutdown()
-                case _:
-                    pass
-
-        tauri_app.run(tauri_run_callback)
+        # user closed the window so the app is going to exit,
+        # we need shutdown the front server first.
+        front_server.request_shutdown()
+        return exit_code

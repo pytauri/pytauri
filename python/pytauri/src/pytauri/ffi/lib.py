@@ -10,6 +10,7 @@ from typing import (
     Callable,
     NamedTuple,
     NewType,
+    NoReturn,
     Optional,
     Protocol,
     Union,
@@ -86,7 +87,7 @@ if TYPE_CHECKING:
                 otherwise it will cause memory leaks.
         """
 
-        def run(self, callback: Optional[_AppRunCallbackType] = None, /) -> None:
+        def run(self, callback: Optional[_AppRunCallbackType] = None, /) -> NoReturn:
             """Consume and run this app, will block until the app is exited.
 
             Args:
@@ -94,16 +95,29 @@ if TYPE_CHECKING:
                     It will be called on the same thread that the app was created on,
                     so you should not block in this function.
 
+            !!! note
+                This function will call `std::process::exit` at the end to terminate the entire process,
+                which means the Python interpreter cannot be properly finalized.
+                If this is a problem for you, please use [pytauri.App.run_return][].
+
             !!! warning
                 If `callback` is specified, it must not raise an exception,
-                otherwise it is undefined behavior, and in most cases, the program will panic.
+                otherwise it is logical undefined behavior, and in most cases, the program will panic.
             """
+            ...
+
+        def run_return(self, callback: Optional[_AppRunCallbackType] = None, /) -> int:
+            """Consume and run this application, returning its intended exit code.
+
+            !!! warning
+                `callback` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
 
         @deprecated(
             """When called in a loop (as suggested by the name), this function will busy-loop.
             To re-gain control of control flow after the app has exited, use `App::run_return` instead.
-
-            See <docs.rs/tauri> for more details.""",
+            See <https://docs.rs/tauri/latest/tauri/struct.App.html#method.run_iteration> for more details.""",
             category=None,
         )
         def run_iteration(
