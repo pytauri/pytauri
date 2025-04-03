@@ -2383,7 +2383,7 @@
 </span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="n">invoke_handler</span><span class="o">=</span><span class="n">commands</span><span class="o">.</span><span class="n">generate_handler</span><span class="p">(</span><span class="n">portal</span><span class="p">),</span>
 </span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="p">)</span>
 </span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="p">)</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">exit_code</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">run_return</span><span class="p">()</span>
 </span></code></pre></div>
 <p>The key point here is that <strong>you must not close the <code>BlockingPortal</code> (i.e., do not <code>exit</code> the context manager) while <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/#pytauri.App.run">App.run</a> is still running</strong>.</p>
 <p>If you want to obtain this <code>invoke_handler</code> and keep the <code>BlockingPortal</code> running, you can use <a class="autorefs autorefs-external" href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack">contextlib.ExitStack</a> to achieve this:</p>
