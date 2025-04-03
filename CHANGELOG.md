@@ -32,6 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - chore: bump `tauri` dependencies:
+    - `tauri` to `2.4`
+    - `tauri-utils` to `~2.3`
+    - `tauri-build` to `2.1`
+    - `tauri-plugin` to `2.1`
+    - `tauri-plugin-notification` to `2.2`
+    - `tauri-plugin-opener` to `2.2`
+
+### Docs
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - docs: update example to use `App.run_return` instead of `App.run`, allowing cleanup tasks to be performed after the app exits (e.g., shutting down the `nicegui` server) and retrieving the exit code.
+
 ## [0.4.0]
 
 ### Highlights

@@ -105,7 +105,7 @@ async def greet(body: Person, webview_window: WebviewWindow) -> Greeting:
 task_group: TaskGroup
 
 
-def main() -> None:
+def main() -> int:
     """Run the tauri-app."""
     global task_group
     with (
@@ -130,4 +130,5 @@ def main() -> None:
                 invoke_handler=commands.generate_handler(portal),
             )
         )
-        app.run()
+        exit_code = app.run_return()
+        return exit_code

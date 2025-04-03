@@ -1,5 +1,6 @@
 """The main entry point for the Tauri app."""
 
+import sys
 from multiprocessing import freeze_support
 
 from tauri_app import main
@@ -10,4 +11,4 @@ from tauri_app import main
 #   See: <https://pyinstaller.org/en/v6.11.1/common-issues-and-pitfalls.html#multi-processing>.
 freeze_support()
 
-main()
+sys.exit(main())

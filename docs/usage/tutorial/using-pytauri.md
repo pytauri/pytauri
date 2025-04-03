@@ -78,14 +78,15 @@ from pytauri import (
 )
 
 
-def main() -> None:
+def main() -> int:
     """Run the tauri-app."""
     app = builder_factory().build(
         BuilderArgs(
             context=context_factory(),
         )
     )
-    app.run()
+    exit_code = app.run_return()
+    return exit_code
 ```
 
 ```python title="src-tauri/python/tauri_app/__main__.py"

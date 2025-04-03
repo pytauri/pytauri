@@ -53,7 +53,7 @@ else:
     tauri_config = None
 
 
-def main() -> None:
+def main() -> int:
     with start_blocking_portal("asyncio") as portal:  # or `trio`
         app = builder_factory().build(
             BuilderArgs(
@@ -61,10 +61,11 @@ def main() -> None:
                 invoke_handler=commands.generate_handler(portal),
             )
         )
-        app.run()
+        exit_code = app.run_return()
+        return exit_code
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
 
 # --8<-- [end:code]

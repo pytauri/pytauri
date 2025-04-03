@@ -23,4 +23,4 @@ if getattr(sys, "frozen", False):  # noqa: SIM102
         if sys.stdout is None:
             sys.stdout = _output
 
-main()
+sys.exit(main())
