@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`:
+
+    Unlike `App::run`, which terminates the entire process, `App::run_return` allows you to perform cleanup tasks after the app exits.
+    For example, you can use `sys.exit(app.run_return())` to gracefully finalize the Python interpreter with an exit code.
+
+### Deprecated
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - fix: deprecate `App::run_iteration`.
+
 ## [0.4.0]
 
 ### Added

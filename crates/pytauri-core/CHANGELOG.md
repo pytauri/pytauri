@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`.
+
+### Deprecated
+
+- [#124](https://github.com/pytauri/pytauri/pull/124) - fix: deprecate `App::run_iteration`.
+
 ## [0.4.0]
 
 ### Added
