@@ -103,6 +103,7 @@ def main() -> int:
         tauri_app = builder_factory().build(
             BuilderArgs(
                 context_factory(),
+                invoke_handler=None,
                 setup=app_setup_hook(front_server),
             )
         )

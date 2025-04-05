@@ -83,6 +83,7 @@ def main() -> int:
     app = builder_factory().build(
         BuilderArgs(
             context=context_factory(),
+            invoke_handler=None,  # TODO
         )
     )
     exit_code = app.run_return()
