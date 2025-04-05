@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
+
 ### Added
 
 - [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`:

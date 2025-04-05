@@ -32,6 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
+
+    If you do not specify `invoke_handler`,
+    `pytauri` will not register the `tauri-plugin-pytauri` plugin,
+    which means you cannot use `pyInvoke` in the frontend to call `Commands`
+    (you will receive an error like ["plugin pytauri not found"]).
+    If this is indeed the behavior you expect, explicitly pass `None`.
+
+    ["plugin pytauri not found"]: https://github.com/pytauri/pytauri/issues/110
+
 ### Added
 
 - [#124](https://github.com/pytauri/pytauri/pull/124) - chore: bump `tauri` dependencies:

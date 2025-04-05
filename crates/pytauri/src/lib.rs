@@ -47,7 +47,7 @@ pub struct BuilderArgs {
 #[pymethods]
 impl BuilderArgs {
     #[new]
-    #[pyo3(signature = (context, *, invoke_handler = None, setup = None))]
+    #[pyo3(signature = (context, *, invoke_handler, setup = None))]
     fn new(
         context: Py<ext_mod::Context>,
         invoke_handler: Option<PyObject>,

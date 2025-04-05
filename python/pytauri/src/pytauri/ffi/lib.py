@@ -201,15 +201,24 @@ if TYPE_CHECKING:
             /,
             context: "Context",
             *,
-            invoke_handler: Optional[_InvokeHandlerProto] = None,
+            invoke_handler: Optional[_InvokeHandlerProto],
             setup: Optional[Callable[[AppHandle], object]] = None,
         ) -> Self:
             """[tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)
 
             !!! warning
-                The implementer of `invoke_handler` must never raise an exception,
-                otherwise it is considered undefined behavior.
+                The implementer of [invoke_handler][pytauri.ffi.lib.BuilderArgs.__new__(invoke_handler)] must never raise an exception,
+                otherwise it is considered logical undefined behavior.
                 Additionally, `invoke_handler` must not block.
+
+            !!! warning
+                If you do not specify [invoke_handler][pytauri.ffi.lib.BuilderArgs.__new__(invoke_handler)],
+                `pytauri` will not register the `tauri-plugin-pytauri` plugin,
+                which means you cannot use `pyInvoke` in the frontend to call `Commands`
+                (you will receive an error like ["plugin pytauri not found"]).
+                If this is indeed the behavior you expect, explicitly pass [None][].
+
+                ["plugin pytauri not found"]: https://github.com/pytauri/pytauri/issues/110
 
             Args:
                 context: use [context_factory][pytauri.context_factory] to get it.
