@@ -1972,6 +1972,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      BREAKING
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#added" class="md-nav__link">
     <span class="md-ellipsis">
       Added
@@ -2122,7 +2131,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#breaking" class="md-nav__link">
+  <a href="#breaking_1" class="md-nav__link">
     <span class="md-ellipsis">
       BREAKING
     </span>
@@ -2233,6 +2242,17 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/113">#133</a> - fix(pytauri)!: make <code>BuilderArgs.invoke_handler</code> as required parameter for #110.</p>
+<p>If you do not specify <code>invoke_handler</code>,
+<code>pytauri</code> will not register the <code>tauri-plugin-pytauri</code> plugin,
+which means you cannot use <code>pyInvoke</code> in the frontend to call <code>Commands</code>
+(you will receive an error like <a href="https://github.com/pytauri/pytauri/issues/110">"plugin pytauri not found"</a>).
+If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p>
+</li>
+</ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - chore: bump <code>tauri</code> dependencies:<ul>
@@ -2326,7 +2346,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <li><a href="https://github.com/pytauri/pytauri/pull/81">#81</a> - ci: add <code>clear-cache.yml</code> workflow.</li>
 </ul>
 <h2 id="020"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
-<h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
+<h3 id="breaking_1">BREAKING<a class="headerlink" href="#breaking_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/70">#70</a> - feat(notification): removed <code>NotificationBuilderArgs</code>.
     See <code>CHANGELOG.md</code> of <code>py/pytauri-plugin-notification</code> for how to migrate.</li>
