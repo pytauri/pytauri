@@ -25,6 +25,8 @@ from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
 from pytauri_plugin_notification import NotificationExt
 
+from tauri_app.private import private_algorithm
+
 commands = Commands()
 
 
@@ -106,6 +108,10 @@ task_group: TaskGroup
 
 def main() -> int:
     """Run the tauri-app."""
+
+    # test if the code protected by Cython is working correctly
+    assert private_algorithm(42) == 84, "private_algorithm is not working!"
+
     global task_group
     with (
         start_blocking_portal("asyncio") as portal,  # or `trio`
