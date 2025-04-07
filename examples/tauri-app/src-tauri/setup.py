@@ -60,8 +60,9 @@ class install(_install):  # noqa: N801
         super().run()  # pyright: ignore[reportUnknownMemberType]
 
         # skip if `pip install -e`
-        editable_mode = self.distribution.get_command_obj("build_py").editable_mode
-        if editable_mode:
+        build_py_obj = self.distribution.get_command_obj("build_py")
+        build_py_obj.ensure_finalized()
+        if build_py_obj.editable_mode:
             return
 
         # ref: <https://github.com/pypa/setuptools/blob/6ead555c5fb29bc57fe6105b1bffc163f56fd558/setuptools/_distutils/command/install_lib.py#L115-L124>
