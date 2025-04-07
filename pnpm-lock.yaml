@@ -42,8 +42,8 @@ importers:
         specifier: ^3.3.3
         version: 3.4.2
       pyright:
-        specifier: ^1
-        version: 1.1.391
+        specifier: ^1.1.398
+        version: 1.1.398
       rollup:
         specifier: ^4.9.6
         version: 4.29.1
@@ -997,8 +997,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==, tarball: https://registry.npmmirror.com/punycode/-/punycode-2.3.1.tgz}
     engines: {node: '>=6'}
 
-  pyright@1.1.391:
-    resolution: {integrity: sha512-3enWmLlS02oyiGR/A7yaGk4FD2v+CRshJ+kS8pRezJWlW3En4FUUMRKmfChHeVGaxUctj3hceT+PG8FYZSDz8A==, tarball: https://registry.npmmirror.com/pyright/-/pyright-1.1.391.tgz}
+  pyright@1.1.398:
+    resolution: {integrity: sha512-KrqCYCw+p+mtoQ7kOiIKyEvfJxi4rMbJAvjSGjtScMaOHVqHVKYOFlchgiePj9AbjmkR/iNzWOodYJfXLjpHtQ==, tarball: https://registry.npmmirror.com/pyright/-/pyright-1.1.398.tgz}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -1944,7 +1944,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  pyright@1.1.391:
+  pyright@1.1.398:
     optionalDependencies:
       fsevents: 2.3.3
 
