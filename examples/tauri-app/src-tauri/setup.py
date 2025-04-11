@@ -27,8 +27,8 @@ SRC_PREFIX = "python/"
 # The glob pattern of the source files you want to protect,
 # or you can set it to `"tauri_app/**/*.py"` to protect all Python files in the project.
 INCLUDE_FILE_PATTERNS = ("tauri_app/private.py",)
-# Usually we dont need to protect the `__init__.py` and `__main__.py` files,
-# if you really want to protect them, you can set `exclude` to `[]`
+# Usually we dont need to protect the `**/__init__.py` files.
+# NOTE: you must exclude `**/__main__.py`: <https://groups.google.com/g/cython-users/c/V-i0a8r-x00>.
 EXCLUDE_FILE_PATTERNS = ("tauri_app/**/__init__.py", "tauri_app/**/__main__.py")
 
 ##############################
