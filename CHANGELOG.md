@@ -32,6 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Highlights
+
+- [#134](https://github.com/pytauri/pytauri/pull/134) - docs: add tutorial on using `Cython` to protect source code.
+
+    ![cythonized](https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead)
+
+    See: <https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/>
+
 ### BREAKING
 
 - [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.

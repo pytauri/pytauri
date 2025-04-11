@@ -6,6 +6,8 @@ If you want to protect your source code, you can use [`Cython`](https://github.c
 
 We recommend `Cython` because it integrates well with the `setuptools` used by PyTauri.
 
+![cythonized](https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead)
+
 ## Usage
 
 First, add `Cython` as a build dependency:
