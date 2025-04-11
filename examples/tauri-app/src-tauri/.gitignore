@@ -80,3 +80,6 @@ docs/_build/
 
 /frontend/
 /pyembed/
+
+# Cyhton
+*.c
