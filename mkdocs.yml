@@ -236,7 +236,9 @@ nav:
           - usage/tutorial/using-plugins.md
           - usage/tutorial/build-sdist.md
           - usage/tutorial/build-wheel.md
-          - usage/tutorial/build-standalone.md
+          - Build standalone binary:
+              - usage/tutorial/build-standalone.md
+              - usage/tutorial/build-standalone-cython.md
       - PyTauri Wheel:
           - usage/pytauri-wheel/index.md
       - Concepts:
