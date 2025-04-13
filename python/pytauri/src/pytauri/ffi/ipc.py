@@ -8,13 +8,14 @@ from typing import (
     final,
 )
 
-from typing_extensions import ReadOnly, TypedDict, TypeVar
+from typing_extensions import ReadOnly, TypeAliasType, TypedDict, TypeVar
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
 __all__ = [
     "ArgumentsType",
     "Channel",
+    "Headers",
     "Invoke",
     "InvokeResolver",
     "JavaScriptChannelId",
@@ -26,6 +27,19 @@ _ipc_mod = pytauri_mod.ipc
 if TYPE_CHECKING:
     from pytauri.ffi.lib import AppHandle
     from pytauri.ffi.webview import Webview, WebviewWindow
+
+Headers = TypeAliasType("Headers", list[tuple[bytes, bytes]])
+"""[http::header::HeaderMap::iter](https://docs.rs/http/latest/http/header/struct.HeaderMap.html#method.iter)
+
+`(key, value)` pairs of headers.
+
+> Each key will be yielded once per associated value.
+> So, if a key has 3 associated values, it will be yielded 3 times.
+
+```python
+[(b"key0", b"value00"), (b"key0", b"value01"), (b"key1", b"value1")]
+```
+"""
 
 
 class ParametersType(TypedDict, total=False):
@@ -41,6 +55,8 @@ class ParametersType(TypedDict, total=False):
     """Whatever. We just use the `key`, not the `value`."""
     webview_window: ReadOnly[Any]
     """Whatever. We just use the `key`, not the `value`."""
+    headers: ReadOnly[Any]
+    """Whatever. We just use the `key`, not the `value`."""
 
 
 class ArgumentsType(TypedDict, total=False):
@@ -52,11 +68,13 @@ class ArgumentsType(TypedDict, total=False):
     """
 
     body: bytes
-    """The body of ipc message."""
+    """The body of this ipc message."""
     app_handle: "AppHandle"
     """The handle of the app."""
     webview_window: "WebviewWindow"
     """The `WebviewWindow` of this `Invoke`."""
+    headers: Headers
+    """The headers of this ipc message."""
 
 
 _ArgumentsTypeVar = TypeVar("_ArgumentsTypeVar", default=dict[str, Any])

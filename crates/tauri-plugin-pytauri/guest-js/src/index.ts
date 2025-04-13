@@ -1,4 +1,4 @@
-import { invoke, Channel as TauriChannel } from "@tauri-apps/api/core";
+import { invoke, Channel as TauriChannel, InvokeOptions } from "@tauri-apps/api/core";
 
 const PY_INVOKE_TAURI_CMD = "plugin:pytauri|pyfunc";
 const PY_INVOKE_HEADER = "pyfunc";
@@ -15,14 +15,29 @@ type RawHandlerReturnType = ArrayBuffer;
  *
  * @param funcName - The name of the Python function to invoke.
  * @param body - The body to send to the Python function.
+ * @param options - See {@link invoke} for more details.
+ *     NOTE: `"pyfunc"` header is reserved for pytauri, so you should not set it in the options.
  * @returns A promise resolving or rejecting to the backend response.
  */
 export async function rawPyInvoke(
     funcName: string,
-    body: RawHandlerBodyType
+    body?: RawHandlerBodyType,
+    options?: InvokeOptions
 ): Promise<RawHandlerReturnType> {
+    const headers = new Headers(options?.headers);
+    if (headers.has(PY_INVOKE_HEADER)) {
+        throw new Error(
+            `The header "${PY_INVOKE_HEADER}" is reserved for pytauri.`
+        );
+    }
+    headers.set(PY_INVOKE_HEADER, funcName);
+
     const invokePromise = invoke(PY_INVOKE_TAURI_CMD, body, {
-        headers: { [PY_INVOKE_HEADER]: funcName },
+        ...options,
+        // FIXME, XXX: This is a bug in Tauri, it does not correctly handle the argument of `Headers` type,
+        // so we need to use `Object.fromEntries` instead of directly passing `headers`.
+        // see: <https://github.com/tauri-apps/tauri/blob/8a1d49082033cc0bae2258fed3c3aeb539665acf/crates/tauri/scripts/ipc-protocol.js#L38>
+        headers: Object.fromEntries(headers.entries()),
     });
 
     if (process.env.NODE_ENV === "development") {
@@ -49,12 +64,15 @@ it's a bug for pytauri, please report this issue."
  * @template T - The expected return type of the Python function.
  * @param funcName - The name of the Python function to invoke.
  * @param body - The body to send to the Python function. It will be JSON serialized.
+ * @param options - See {@link invoke} for more details.
+ *     NOTE: `"pyfunc"` header is reserved for pytauri, so you should not set it in the options.
  * @returns A promise resolving or rejecting to the backend response. It will be JSON deserialized.
  * If you dont want JSON deserialization, use `rawPyInvoke` instead.
  */
 export async function pyInvoke<T>(
     funcName: string,
-    body: object | RawHandlerBodyType
+    body?: RawHandlerBodyType | any,
+    options?: InvokeOptions
 ): Promise<T> {
     let bodyEncoded: RawHandlerBodyType;
 
@@ -65,7 +83,7 @@ export async function pyInvoke<T>(
         bodyEncoded = body;
     }
 
-    const resp = await rawPyInvoke(funcName, bodyEncoded);
+    const resp = await rawPyInvoke(funcName, bodyEncoded, options);
 
     const respJson = textDecoder.decode(resp);
     return JSON.parse(respJson);
@@ -83,10 +101,6 @@ type RawChannelMsg = ArrayBuffer;
  * @template T - The expected return type from Python.
  */
 export class Channel<T = unknown> extends TauriChannel<RawChannelMsg> {
-    constructor() {
-        super();
-    }
-
     /**
      * Equivalent to {@link TauriChannel.onmessage}, but it JSON deserializes the message as object.
      */
