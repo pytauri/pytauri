@@ -3,7 +3,7 @@
 from collections import UserDict
 from collections.abc import Awaitable
 from functools import partial, wraps
-from inspect import signature
+from inspect import Parameter, signature
 from logging import getLogger
 from typing import (
     Annotated,
@@ -34,6 +34,7 @@ from typing_extensions import Self, TypeVar
 
 from pytauri.ffi.ipc import (
     ArgumentsType,
+    Headers,
     Invoke,
     InvokeResolver,
     ParametersType,
@@ -50,6 +51,7 @@ __all__ = [
     "ArgumentsType",
     "Channel",
     "Commands",
+    "Headers",
     "Invoke",
     "InvokeException",
     "InvokeResolver",
@@ -215,15 +217,17 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         body_param = parameters.get(body_key)
         if body_param is not None:
             if body_param.kind not in {
-                body_param.KEYWORD_ONLY,
-                body_param.POSITIONAL_OR_KEYWORD,
+                Parameter.KEYWORD_ONLY,
+                Parameter.POSITIONAL_OR_KEYWORD,
             }:
-                raise ValueError(f"Expected `{body_key}` to be KEYWORD_ONLY")
+                raise ValueError(
+                    f"Expected `{body_key}` to be KEYWORD parameter, but got `{body_param.kind}` parameter"
+                )
             body_type = body_param.annotation
             if issubclass(body_type, BaseModel):
                 serializer = body_type.model_validate_json
             else:
-                if not issubclass(body_type, bytes):
+                if body_type is not bytes:
                     raise ValueError(
                         f"Expected `{body_key}` to be subclass of {BaseModel} or {bytes}, "
                         f"got {body_type}"
@@ -232,7 +236,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         if issubclass(return_annotation, BaseModel):
             deserializer = return_annotation.__pydantic_serializer__.to_json
         else:
-            if not issubclass(return_annotation, bytes):
+            if return_annotation is not bytes:
                 raise ValueError(
                     f"Expected `return_annotation` to be subclass of {BaseModel} or {bytes}, "
                     f"got {return_annotation}"
@@ -312,6 +316,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             "body": bytes,
             "app_handle": AppHandle,
             "webview_window": WebviewWindow,
+            "headers": Headers,
         }
 
         for name, param in parameters.items():
@@ -322,17 +327,24 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 raise ValueError(
                     f"Unexpected parameter `{name}`, expected one of {list(arguments_type.keys())}"
                 )
-            if not issubclass(param.annotation, correct_anna):
+            if param.annotation is not correct_anna:
                 raise ValueError(
-                    f"Expected `{name}` to be subclass of `{correct_anna}`, got `{param.annotation}`"
+                    f"Expected `{name}` to be `{correct_anna}`, but got `{param.annotation}`"
+                )
+            if param.kind not in {
+                Parameter.KEYWORD_ONLY,
+                Parameter.POSITIONAL_OR_KEYWORD,
+            }:
+                raise ValueError(
+                    f"Expected `{name}` to be KEYWORD parameter, but got `{param.kind}` parameter"
                 )
         else:
             # after checking, we are sure that the `parameters` are valid
             parameters = cast(ParametersType, parameters)
 
-        if not issubclass(return_annotation, bytes):
+        if return_annotation is not bytes:
             raise ValueError(
-                f"Expected return_annotation to be subclass of {bytes}, got `{return_annotation}`"
+                f"Expected `return_annotation` to be {bytes}, got `{return_annotation}`"
             )
 
         return parameters
