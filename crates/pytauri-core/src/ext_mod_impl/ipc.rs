@@ -4,7 +4,7 @@ use pyo3::{
     exceptions::PyValueError,
     intern,
     prelude::*,
-    types::{PyBytes, PyDict, PyMapping, PyString},
+    types::{PyBytes, PyDict, PyList, PyMapping, PyString},
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
 use tauri::ipc::{
@@ -105,14 +105,14 @@ impl Invoke {
         Some(slf)
     }
 
+    const PYFUNC_HEADER_KEY: &str = "pyfunc";
+
     #[inline]
     fn get_func_name_from_message(message: &InvokeMessage<Runtime>) -> Result<&str, String> {
-        const PYFUNC_HEADER_KEY: &str = "pyfunc";
-
         let func_name = message
             .headers()
-            .get(PYFUNC_HEADER_KEY)
-            .ok_or_else(|| format!("There is no {PYFUNC_HEADER_KEY} header"))?
+            .get(Self::PYFUNC_HEADER_KEY)
+            .ok_or_else(|| format!("There is no {} header", Self::PYFUNC_HEADER_KEY))?
             .to_str()
             .map_err(|e| format!("{e}"))?;
         Ok(func_name)
@@ -127,6 +127,7 @@ impl Invoke {
     const BODY_KEY: &str = "body";
     const APP_HANDLE_KEY: &str = "app_handle";
     const WEBVIEW_WINDOW_KEY: &str = "webview_window";
+    const HEADERS_KEY: &str = "headers";
 
     /// Pass in a Python dictionary, which can contain the following
     /// optional keys (values are arbitrary):
@@ -197,6 +198,32 @@ impl Invoke {
                 }
             };
             arguments.set_item(webview_window_key, WebviewWindow::new(webview_window))?;
+        }
+
+        let headers_key = intern!(py, Invoke::HEADERS_KEY);
+        if parameters.contains(headers_key)? {
+            let headers: Vec<(&[u8], &[u8])> = message
+                .headers()
+                // PERF:
+                // > Each key will be yielded once per associated value.
+                // > So, if a key has 3 associated values, it will be yielded 3 times.
+                //
+                // This means the same key may generate multiple PyBytes objects
+                // (although this is consistent with the Python `h11` implementation).
+                // We need to use [HeaderMap::into_iter] to improve this (but this requires ownership, need a Tauri feature request):
+                // when get [None], we only need to clone the previous PyBytes.
+                .iter()
+                // PERF: Perhaps we don't need to filter out [PYFUNC_HEADER_KEY], just pass it to Python as is.
+                //
+                // TODO: Ideally, we should use [HeaderMap::remove] in [Self::get_func_name_from_message]
+                // to pop [PYFUNC_HEADER_KEY], but currently, we cannot obtain ownership/mutable reference
+                // of `headers` from `invoke`. We should submit a feature request to Tauri.
+                .filter(|(key, _)| **key != Self::PYFUNC_HEADER_KEY)
+                .map(|(key, value)| (key.as_ref(), value.as_bytes()))
+                .collect();
+            // TODO: Unify and export this type in [crate::ext_mod::ipc], see Python [pytauri.ipc.Headers] type.
+            let py_headers = PyList::new(py, headers)?;
+            arguments.set_item(headers_key, py_headers)?;
         }
 
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))
