@@ -39,6 +39,12 @@ Headers = TypeAliasType("Headers", list[tuple[bytes, bytes]])
 ```python
 [(b"key0", b"value00"), (b"key0", b"value01"), (b"key1", b"value1")]
 ```
+
+!!! tip
+    You can use libraries like [multidict][] or [httpx.Headers] to convert it into dict
+    for more efficient retrieval of a specific header.
+
+    [httpx.Headers]: https://www.python-httpx.org/api/#headers
 """
 
 
