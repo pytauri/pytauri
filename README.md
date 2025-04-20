@@ -45,6 +45,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
 - Need Rust compiler, but **almost don't need to write Rust code**!
 - Or use `pytauri-wheel`, **you won't need the Rust compiler, everything can be done in Python**! Check out [examples/tauri-app-wheel](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel).
 - Can be integrated with `tauri-cli` to build and package standalone executables!
+    - Use `Cython` to protect your source code!
 - No IPC (inter-process communication) overhead, secure and fast, thanks to [Pyo3]!
 - Support Tauri official plugins(e.g., [notification]), and you can write your own plugins!
 
