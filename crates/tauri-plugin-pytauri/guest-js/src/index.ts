@@ -16,7 +16,13 @@ type RawHandlerReturnType = ArrayBuffer;
  * @param funcName - The name of the Python function to invoke.
  * @param body - The body to send to the Python function.
  * @param options - See {@link invoke} for more details.
- *     NOTE: `"pyfunc"` header is reserved for pytauri, so you should not set it in the options.
+ *
+ *     ### NOTE
+ *
+ *     The following headers are reserved and you should not set them in the options:
+ *         - `pyfunc`
+ *         - `__PYTAURI*`
+ *         - `PyTauri*`
  * @returns A promise resolving or rejecting to the backend response.
  */
 export async function rawPyInvoke(
@@ -25,11 +31,8 @@ export async function rawPyInvoke(
     options?: InvokeOptions
 ): Promise<RawHandlerReturnType> {
     const headers = new Headers(options?.headers);
-    if (headers.has(PY_INVOKE_HEADER)) {
-        throw new Error(
-            `The header "${PY_INVOKE_HEADER}" is reserved for pytauri.`
-        );
-    }
+    // We silently override it without throwing an exception, because Tauri does the same:
+    // ref: <https://github.com/tauri-apps/tauri/pull/13227#discussion_r2041442439>
     headers.set(PY_INVOKE_HEADER, funcName);
 
     const invokePromise = invoke(PY_INVOKE_TAURI_CMD, body, {
