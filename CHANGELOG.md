@@ -70,6 +70,7 @@ See: <https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cyth
 
 ### Added
 
+- [#139](https://github.com/pytauri/pytauri/pull/139) - feat: add support for the `windows-11-arm` platform wheel.
 - [#141](https://github.com/pytauri/pytauri/pull/141) - chore: bump `pyo3` to `0.24.1`.
 - [#124](https://github.com/pytauri/pytauri/pull/124) - [#136](https://github.com/pytauri/pytauri/pull/136) - chore: bump `tauri` dependencies:
     - `tauri` to `2.5.1`
