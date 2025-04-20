@@ -392,7 +392,7 @@ if TYPE_CHECKING:
 
         See also: <https://tauri.app/develop/calling-rust/#event-system>
 
-        # Example
+        # Examples
 
         ```python
         from pydantic import BaseModel
