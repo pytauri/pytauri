@@ -41,8 +41,7 @@ jobs:
           - ubuntu-22.04
           - ubuntu-22.04-arm
           - windows-2022
-          # TODO, FIXME: <https://github.com/github/roadmap/issues/1098>
-          # - windows-2022-arm
+          - windows-11-arm
           - macos-13 # Intel
           - macos-14 # arm64
     outputs:
