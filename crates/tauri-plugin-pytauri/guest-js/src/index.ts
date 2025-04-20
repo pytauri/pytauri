@@ -34,10 +34,7 @@ export async function rawPyInvoke(
 
     const invokePromise = invoke(PY_INVOKE_TAURI_CMD, body, {
         ...options,
-        // FIXME, XXX: This is a bug in Tauri, it does not correctly handle the argument of `Headers` type,
-        // so we need to use `Object.fromEntries` instead of directly passing `headers`.
-        // see: <https://github.com/tauri-apps/tauri/blob/8a1d49082033cc0bae2258fed3c3aeb539665acf/crates/tauri/scripts/ipc-protocol.js#L38>
-        headers: Object.fromEntries(headers.entries()),
+        headers,
     });
 
     if (process.env.NODE_ENV === "development") {
