@@ -44,6 +44,7 @@ tools = ["pre-commit == 4.0.1"]
     "setuptools-scm >= 8",
     "setuptools-rust == 1.*",
     "packaging >= 24",
+    "Cython >= 3",
 ]
 # NOTE: when adding workspace members,
 # remember to update:
