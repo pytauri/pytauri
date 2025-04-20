@@ -730,16 +730,70 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="usage/tutorial/build-standalone/" class="md-nav__link">
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="usage/tutorial/build-standalone/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Build standalone binary
   </span>
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_7" id="__nav_2_1_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_7">
+            <span class="md-nav__icon md-icon"></span>
+            Build standalone binary
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="usage/tutorial/build-standalone-cython/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Use Cython to Protect Source Code
+  </span>
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2205,7 +2259,10 @@
 <ul>
 <li>Need Rust compiler, but <strong>almost don't need to write Rust code</strong>!</li>
 <li>Or use <code>pytauri-wheel</code>, <strong>you won't need the Rust compiler, everything can be done in Python</strong>! Check out <a href="https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel">examples/tauri-app-wheel</a>.</li>
-<li>Can be integrated with <code>tauri-cli</code> to build and package standalone executables!</li>
+<li>Can be integrated with <code>tauri-cli</code> to build and package standalone executables!<ul>
+<li>Use <code>Cython</code> to protect your source code!</li>
+</ul>
+</li>
 <li>No IPC (inter-process communication) overhead, secure and fast, thanks to <a href="https://github.com/PyO3/pyo3">Pyo3</a>!</li>
 <li>
 <p>Support Tauri official plugins(e.g., <a href="https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/">notification</a>), and you can write your own plugins!</p>

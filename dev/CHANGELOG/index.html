@@ -614,16 +614,70 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../usage/tutorial/build-standalone/" class="md-nav__link">
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_7" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../usage/tutorial/build-standalone/" class="md-nav__link ">
+              
   
   <span class="md-ellipsis">
     Build standalone binary
   </span>
   
 
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_7" id="__nav_2_1_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_7">
+            <span class="md-nav__icon md-icon"></span>
+            Build standalone binary
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/tutorial/build-standalone-cython/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Use Cython to Protect Source Code
+  </span>
+  
+
       </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -1972,6 +2026,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Highlights
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#breaking" class="md-nav__link">
     <span class="md-ellipsis">
       BREAKING
@@ -2014,7 +2077,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights" class="md-nav__link">
+  <a href="#highlights_1" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2080,7 +2143,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights_1" class="md-nav__link">
+  <a href="#highlights_2" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2242,6 +2305,14 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/134">#134</a> - docs: add tutorial on using <code>Cython</code> to protect source code.</p>
+<p><img alt="cythonized" src="https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead" /></p>
+<p>See: <a href="https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/">https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/</a></p>
+</li>
+</ul>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
@@ -2270,7 +2341,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - docs: update example to use <code>App.run_return</code> instead of <code>App.run</code>, allowing cleanup tasks to be performed after the app exits (e.g., shutting down the <code>nicegui</code> server) and retrieving the exit code.</li>
 </ul>
 <h2 id="040"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.4.0">0.4.0</a><a class="headerlink" href="#040" title="Permanent link">&para;</a></h2>
-<h3 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_1">Highlights<a class="headerlink" href="#highlights_1" title="Permanent link">&para;</a></h3>
 <h4 id="precompiled-python-wheel-goodbye-rust-compiler">Precompiled python wheel (goodbye Rust compiler)<a class="headerlink" href="#precompiled-python-wheel-goodbye-rust-compiler" title="Permanent link">&para;</a></h4>
 <blockquote>
 <ul>
@@ -2300,7 +2371,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <li><a href="https://github.com/pytauri/pytauri/pull/103">#103</a> - chore: transfer repo to <code>pytauri</code> org.</li>
 </ul>
 <h2 id="030"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.3.0">0.3.0</a><a class="headerlink" href="#030" title="Permanent link">&para;</a></h2>
-<h3 id="highlights_1">Highlights<a class="headerlink" href="#highlights_1" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_2">Highlights<a class="headerlink" href="#highlights_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><a href="https://tauri.app/learn/window-menu/">menu</a> and <a href="https://tauri.app/learn/system-tray/">tray</a> python API bindings, see <code>pytauri</code> changelog for more details.</p>
