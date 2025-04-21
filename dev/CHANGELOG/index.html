@@ -2032,6 +2032,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#accessing-the-request-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Accessing the request headers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#protect-source-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Protect source code
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2306,15 +2330,24 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
 <h3 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h3>
+<h4 id="accessing-the-request-headers">Accessing the request headers<a class="headerlink" href="#accessing-the-request-headers" title="Permanent link">&para;</a></h4>
+<blockquote>
 <ul>
-<li>
-<p><a href="https://github.com/pytauri/pytauri/pull/134">#134</a> - docs: add tutorial on using <code>Cython</code> to protect source code.</p>
+<li><a href="https://github.com/pytauri/pytauri/pull/136">#136</a> - feat(pytauri): accessing the request headers in <code>Commands</code>.</li>
+</ul>
+</blockquote>
+<p>See: <a href="https://pytauri.github.io/pytauri/0.5/usage/concepts/ipc/#accessing-request-headers">https://pytauri.github.io/pytauri/0.5/usage/concepts/ipc/#accessing-request-headers</a></p>
+<h4 id="protect-source-code">Protect source code<a class="headerlink" href="#protect-source-code" title="Permanent link">&para;</a></h4>
+<blockquote>
+<ul>
+<li><a href="https://github.com/pytauri/pytauri/pull/134">#134</a> - docs: add tutorial on using <code>Cython</code> to protect source code.</li>
+</ul>
+</blockquote>
 <p><img alt="cythonized" src="https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead" /></p>
 <p>See: <a href="https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/">https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/</a></p>
-</li>
-</ul>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
+<li><a href="https://github.com/pytauri/pytauri/pull/136">#136</a> - <code>tauri v2.5</code> requires upgrading <code>@tauri-apps/api: ^2.5</code> and <code>tauri-plugin-pytauri-api: ^0.5</code>.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/141">#141</a> - feat(pytauri)!: <code>pytauri.path.PathResolver</code> now returns a <code>pathlib.Path</code> object instead of a <code>str</code>.</li>
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/113">#133</a> - fix(pytauri)!: make <code>BuilderArgs.invoke_handler</code> as required parameter for #110.</p>
@@ -2328,13 +2361,16 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/141">#141</a> - chore: bump <code>pyo3</code> to <code>0.24.1</code>.</li>
-<li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - chore: bump <code>tauri</code> dependencies:<ul>
-<li><code>tauri</code> to <code>2.4</code></li>
-<li><code>tauri-utils</code> to <code>~2.3</code></li>
-<li><code>tauri-build</code> to <code>2.1</code></li>
-<li><code>tauri-plugin</code> to <code>2.1</code></li>
+<li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - <a href="https://github.com/pytauri/pytauri/pull/136">#136</a> - chore: bump <code>tauri</code> dependencies:<ul>
+<li><code>tauri</code> to <code>2.5.1</code></li>
+<li><code>tauri-utils</code> to <code>~2.4</code></li>
+<li><code>tauri-build</code> to <code>2.2</code></li>
+<li><code>tauri-plugin</code> to <code>2.2</code></li>
 <li><code>tauri-plugin-notification</code> to <code>2.2</code></li>
 <li><code>tauri-plugin-opener</code> to <code>2.2</code></li>
+<li><code>@tauri-apps/api</code> to <code>^2.5</code></li>
+<li><code>@tauri-apps/plugin-opener</code> to <code>^2.2</code></li>
+<li><code>@tauri-apps/plugin-dialog</code> to <code>^2.2</code></li>
 </ul>
 </li>
 </ul>
