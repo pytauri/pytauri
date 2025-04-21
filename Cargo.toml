@@ -23,7 +23,7 @@ authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 pyo3 = { version = "0.24.1" }
 pyo3-build-config = { version = "0.24.1" }
 
-tauri = { version = "2.5" }
+tauri = { version = "2.5.1" }
 tauri-build = { version = "2.2" }
 tauri-plugin = { version = "2.2" }
 
