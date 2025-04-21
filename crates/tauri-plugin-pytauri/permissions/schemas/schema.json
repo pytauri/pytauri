@@ -297,17 +297,20 @@
         {
           "description": "Enables the pyfunc command without any pre-configured scope.",
           "type": "string",
-          "const": "allow-pyfunc"
+          "const": "allow-pyfunc",
+          "markdownDescription": "Enables the pyfunc command without any pre-configured scope."
         },
         {
           "description": "Denies the pyfunc command without any pre-configured scope.",
           "type": "string",
-          "const": "deny-pyfunc"
+          "const": "deny-pyfunc",
+          "markdownDescription": "Denies the pyfunc command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-pyfunc`",
           "type": "string",
-          "const": "default"
+          "const": "default",
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-pyfunc`"
         }
       ]
     }

@@ -34,14 +34,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
-- [#134](https://github.com/pytauri/pytauri/pull/134) - docs: add tutorial on using `Cython` to protect source code.
+#### Accessing the request headers
 
-    ![cythonized](https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead)
+> - [#136](https://github.com/pytauri/pytauri/pull/136) - feat(pytauri): accessing the request headers in `Commands`.
 
-    See: <https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/>
+See: <https://pytauri.github.io/pytauri/0.5/usage/concepts/ipc/#accessing-request-headers>
+
+#### Protect source code
+
+> - [#134](https://github.com/pytauri/pytauri/pull/134) - docs: add tutorial on using `Cython` to protect source code.
+
+![cythonized](https://github.com/user-attachments/assets/d4ecc6ae-b27f-4b8a-ad3e-28d406cd6ead)
+
+See: <https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cython/>
 
 ### BREAKING
 
+- [#136](https://github.com/pytauri/pytauri/pull/136) - `tauri v2.5` requires upgrading `@tauri-apps/api: ^2.5` and `tauri-plugin-pytauri-api: ^0.5`.
 - [#141](https://github.com/pytauri/pytauri/pull/141) - feat(pytauri)!: `pytauri.path.PathResolver` now returns a `pathlib.Path` object instead of a `str`.
 - [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
 
@@ -56,13 +65,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [#141](https://github.com/pytauri/pytauri/pull/141) - chore: bump `pyo3` to `0.24.1`.
-- [#124](https://github.com/pytauri/pytauri/pull/124) - chore: bump `tauri` dependencies:
-    - `tauri` to `2.4`
-    - `tauri-utils` to `~2.3`
-    - `tauri-build` to `2.1`
-    - `tauri-plugin` to `2.1`
+- [#124](https://github.com/pytauri/pytauri/pull/124) - [#136](https://github.com/pytauri/pytauri/pull/136) - chore: bump `tauri` dependencies:
+    - `tauri` to `2.5.1`
+    - `tauri-utils` to `~2.4`
+    - `tauri-build` to `2.2`
+    - `tauri-plugin` to `2.2`
     - `tauri-plugin-notification` to `2.2`
     - `tauri-plugin-opener` to `2.2`
+    - `@tauri-apps/api` to `^2.5`
+    - `@tauri-apps/plugin-opener` to `^2.2`
+    - `@tauri-apps/plugin-dialog` to `^2.2`
 
 ### Docs
 

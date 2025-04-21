@@ -9,6 +9,10 @@
 
 ### Added
 
+- [#136](https://github.com/pytauri/pytauri/pull/136) - feat(pytauri): accessing the request headers in `Commands`:
+
+    Added `ipc.Headers`, `ipc.ParametersType.headers` and `ipc.ArgumentsType.headers`.
+
 - [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`:
 
     Unlike `App::run`, which terminates the entire process, `App::run_return` allows you to perform cleanup tasks after the app exits.

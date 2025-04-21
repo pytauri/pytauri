@@ -22,6 +22,6 @@
     "build": "rollup -c --configPlugin typescript"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.0"
+    "@tauri-apps/api": "^2.5"
   }
 }

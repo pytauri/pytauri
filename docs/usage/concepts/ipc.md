@@ -84,6 +84,20 @@ Similar to `FastAPI`, as long as you throw an [InvokeException][pytauri.ipc.Invo
 --8<-- "docs_src/concepts/ipc/ret_exec.py"
 ```
 
+#### Accessing Request Headers
+
+ref: <https://tauri.app/develop/calling-rust/#accessing-raw-request>
+
+When passing binary data, you may find it useful to send and access custom request headers:
+
+```python
+--8<-- "docs_src/concepts/ipc/accessing_headers.py"
+```
+
+```typescript
+--8<-- "docs_src/concepts/ipc/accessing_headers.ts"
+```
+
 ## Calling Frontend from Python
 
 Ref:

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+- [#136](https://github.com/pytauri/pytauri/pull/136) - feat(pytauri): accessing the request headers in `Commands`:
+
+    Added `options?: InvokeOptions` parameter to `rawPyInvoke` and `pyInvoke`.
+
 ## [0.4.0]
 
 bump workspace version

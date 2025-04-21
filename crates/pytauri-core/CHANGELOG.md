@@ -8,6 +8,7 @@
 
 ### Added
 
+- [#136](https://github.com/pytauri/pytauri/pull/136) - feat(pytauri): accessing the request headers in `Commands`.
 - [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`.
 
 ### Deprecated
