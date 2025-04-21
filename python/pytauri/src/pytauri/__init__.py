@@ -75,7 +75,7 @@ class Emitter(_Emitter):
 
     See also: <https://tauri.app/develop/calling-frontend/#event-system>
 
-    # Example
+    # Examples
 
     ```python
     from pydantic import BaseModel

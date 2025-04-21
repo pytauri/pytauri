@@ -4,6 +4,7 @@
 
 ### BREAKING
 
+- [#141](https://github.com/pytauri/pytauri/pull/141) - feat!: `pytauri.path.PathResolver` now returns a `pathlib.Path` object instead of a `str`.
 - [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
 
 ### Added

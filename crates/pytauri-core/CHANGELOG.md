@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#141](https://github.com/pytauri/pytauri/pull/141) - feat!: `pytauri.path.PathResolver` now returns a `pathlib.Path` object instead of a `str`.
+
 ### Added
 
 - [#124](https://github.com/pytauri/pytauri/pull/124) - feat: introduce `App::run_return`.
