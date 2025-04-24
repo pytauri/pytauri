@@ -9,9 +9,7 @@ on:
   pull_request:
   push:
     branches:
-      - "**"
-    tags:
-      - "!**"
+      - main
   workflow_dispatch:
 
 defaults:
