@@ -1,0 +1,3 @@
+# Auto detect text files and perform LF normalization,
+# needed for pre-commit to check diff.
+* text=auto
