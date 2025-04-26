@@ -246,6 +246,7 @@ nav:
           - usage/concepts/index.md
           - usage/concepts/ipc.md
           - usage/concepts/mutiprocessing.md
+      - Using Unreleased Commits: usage/using-unreleased-commits.md
   - API Reference:
       # NOTE:
       # - DO NOT change `reference/py/`, it's also used in `utils/gen_ref_pages.py`.
