@@ -12,11 +12,7 @@ and follow the tutorial section in Documentation.
 
 or you are hurry, just wanna see/run the demo:
 
-> Make sure you have already installed `rust`, `uv`, `pnpm`, `node.js` and Tauri Prerequisites.
->
-> > Because you have directly pulled the development repository, you need `pnpm` to manually build frontend assets.
-> >
-> > In actual use, this step has already been completed for `pytauri` on `crates.io`, which means only `rust` and `python` are required.
+> Make sure you have already installed `rust`, `uv` and Tauri Prerequisites.
 >
 > You can find that in tutorial section in Documentation.
 
@@ -25,10 +21,6 @@ git clone https://github.com/pytauri/pytauri.git
 cd pytauri
 
 cd examples/nicegui-app
-
-# build frontend assets
-pnpm install
-pnpm -r run build
 
 # activate virtual environment
 uv venv
