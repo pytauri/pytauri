@@ -2,13 +2,11 @@
 
 ## [Unreleased]
 
+## [0.5.0]
+
 ## [0.4.0]
 
-bump workspace version
-
 ## [0.3.0]
-
-bump workspace version
 
 ## [0.2.0]
 
@@ -57,6 +55,7 @@ bump workspace version
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.5.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-plugin-notification/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-plugin-notification/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-plugin-notification/v0.3.0
 [0.2.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-plugin-notification/v0.2.0

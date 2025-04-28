@@ -1,6 +1,6 @@
 [project]
 name = "pytauri-wheel"
-version = "0.4.0" # ❗ when bumping, remember to update workspace dependencies
+version = "0.5.0" # ❗ when bumping, remember to update workspace dependencies
 readme = "README.md"
 license = "Apache-2.0"
 authors = [
@@ -12,7 +12,7 @@ description = "Precompiled wheels for pytauri"
 # <https://iscinumpy.dev/post/bound-version-constraints/>
 dependencies = [
     # ❗ workspaces, must use `==`
-    "pytauri == 0.4.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
+    "pytauri == 0.5.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
 ]
 
 [project.urls]

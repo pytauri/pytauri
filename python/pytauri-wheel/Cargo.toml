@@ -3,7 +3,7 @@
 
 [package]
 name = "pytauri-wheel"
-version = "0.4.0" # ❗ when bumping, remember to update workspace dependencies
+version = "0.5.0" # ❗ when bumping, remember to update workspace dependencies
 description = "Precompiled wheels for PyTauri"
 authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 edition = "2021"
@@ -50,6 +50,6 @@ pyo3 = { version = "0.24.1" }
 # ❗ when bumping, remember to update workspace dependencies.
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
-pytauri = { version = "0.4" }
-pytauri-core = { version = "0.4" }
-tauri-plugin-pytauri = { version = "0.4" }
+pytauri = { version = "0.5" }
+pytauri-core = { version = "0.5" }
+tauri-plugin-pytauri = { version = "0.5" }
