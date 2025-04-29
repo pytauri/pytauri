@@ -61,6 +61,8 @@ repos:
         entry: pnpm pyright .
         pass_filenames: false
 
+      # TODO, FIXME: typescript fmt
+
       - id: python-verifytypes
         stages: [manual] # because it's slow
         name: python type check
@@ -74,6 +76,19 @@ repos:
         language: system
         types: [rust]
         entry: cargo clippy --workspace --exclude=pytauri-test --all-features -- -D warnings
+        pass_filenames: false
+
+      # 1. Check if TypeScript can compile successfully (typescript check).
+      # 2. Check if the JS build dist snapshot tracked for the crate is updated,
+      #    such as `tauri-plugin-pytauri/guest-js/dist/api-iife.*.js`.
+      # NOTE: Keep this step after `cargo build` to check that
+      # all dist snapshot required for the crate are tracked.
+      - id: pnpm-build-snapshot
+        stages: [manual] # because it's slow
+        name: pnpm build snapshot
+        language: system
+        types_or: [javascript, jsx, ts, tsx]
+        entry: pnpm -r build
         pass_filenames: false
 
       - id: python-test
@@ -99,6 +114,4 @@ repos:
         entry: cargo test -p pytauri-test --features="test"
         pass_filenames: false
 
-      # TODO, FIXME: typescript fmt
-      # TODO, FIXME: typescript check
       # TODO, FIXME: rust doc check

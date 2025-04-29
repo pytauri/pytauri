@@ -107,8 +107,9 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
-      - name: pnpm build frontend
-        run: pnpm -r build
+      # # 👇 skip here: it will be executed in `pre-commit run`
+      # - name: pnpm build frontend
+      #   run: pnpm -r build
 
       - name: pre-commit run
         env:

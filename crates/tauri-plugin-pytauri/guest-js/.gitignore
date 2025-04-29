@@ -1,2 +1,6 @@
 /node_modules/
-/dist/
+
+/dist/**/*
+# needed for crate,
+# see: <https://github.com/rust-lang/cargo/issues/5073>
+!/dist/api-iife.*.js

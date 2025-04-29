@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Using Unreleased Commits
+
+> - [#147](https://github.com/pytauri/pytauri/pull/147) - feat: support installation from git repository.
+
+See: <https://pytauri.github.io/pytauri/0.5/usage/using-unreleased-commits/>
+
 #### Accessing the request headers
 
 > - [#136](https://github.com/pytauri/pytauri/pull/136) - feat(pytauri): accessing the request headers in `Commands`.

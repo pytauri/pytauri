@@ -1,0 +1,49 @@
+# refer to:
+#   - <https://github.com/stackblitz-labs/pkg.pr.new/tree/v0.0.43>
+#   - <https://github.com/vitejs/vite/blob/96f73d16c8501013be57aee1c8a2353a56460281/.github/workflows/preview-release.yml>
+
+name: JS packages preview publish
+
+# avoid publishing on tags: <https://github.com/stackblitz-labs/pkg.pr.new/tree/v0.0.43?tab=readme-ov-file#avoid-publishing-on-tags>
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # see: <https://github.com/pnpm/action-setup>
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      # see: <https://github.com/actions/setup-node>
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: "pnpm"
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+      - name: pnpm build frontend
+        run: |
+          pnpm --fail-if-no-match \
+              -F ./crates/tauri-plugin-pytauri/guest-js \
+              build
+
+      - name: preview-publish
+        run: |
+          pnpm dlx pkg-pr-new publish --compact --pnpm \
+              ./crates/tauri-plugin-pytauri/guest-js
