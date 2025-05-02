@@ -12,7 +12,7 @@ Please [download the Python version](https://gregoryszorc.com/docs/python-build-
 
 - `cpython-*-x86_64-pc-windows-msvc-install_only_stripped.tar.gz`
 - `cpython-*-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz`
-- `cpython-*-x86_64-apple-darwin-install_only_stripped.tar.gz`
+- `cpython-*-aarch64-apple-darwin-install_only_stripped.tar.gz`
 
 Extract it to `src-tauri/pyembed`, make sure the file layout is as follows:
 

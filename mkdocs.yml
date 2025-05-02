@@ -32,6 +32,7 @@ theme:
     - content.action.view
     - content.tabs.link
     - content.tooltips
+    - content.footnote.tooltips
   # https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/#system-preference
   palette:
     # Palette toggle for automatic mode
