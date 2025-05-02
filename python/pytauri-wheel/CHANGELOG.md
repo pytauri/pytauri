@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 
-- [#139](https://github.com/pytauri/pytauri/pull/139) - feat: add support for the `windows-11-arm` platform wheel
+### Highlights
+
+- [#139](https://github.com/pytauri/pytauri/pull/139) - feat: add support for the `windows-11-arm` platform wheel.
 
 ## [0.4.0]
 
