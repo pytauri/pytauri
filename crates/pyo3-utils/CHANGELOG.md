@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [0.2.0]
+
+### Added
+
+- [#141](https://github.com/pytauri/pytauri/pull/141) - chore: bump `pyo3` to `0.24.1`.
+
 ## [0.1.0]
 
 ### Docs
@@ -15,5 +21,6 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.2.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.2.0
 [0.1.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.1.0
 [0.1.0-beta.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.1.0-beta.0
