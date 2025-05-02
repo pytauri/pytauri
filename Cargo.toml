@@ -44,7 +44,7 @@ tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.5" }
 pytauri-core = { path = "crates/pytauri-core", version = "0.5" }
 pytauri = { path = "crates/pytauri", version = "0.5" }
 pytauri-plugin-notification = { path = "crates/pytauri-plugin-notification", version = "0.5" }
-pyo3-utils = { path = "crates/pyo3-utils", version = "0.1" }
+pyo3-utils = { path = "crates/pyo3-utils", version = "0.2" }
 
 [patch.crates-io]
 # 👇 for `pytauri-wheel` workspace dependencies.
