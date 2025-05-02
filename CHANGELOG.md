@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Wheel on Windows Arm64
+
+> - [#139](https://github.com/pytauri/pytauri/pull/139) - feat: add support for the `windows-11-arm` platform wheel.
+
+You can now install `pytauri-wheel` from PyPI on Windows 11 Arm64.
+
 #### Using Unreleased Commits
 
 > - [#147](https://github.com/pytauri/pytauri/pull/147) - feat: support installation from git repository.

@@ -31,11 +31,13 @@ We provide precompiled Wheels for the following platforms and supported Python v
 | OS | Arch |
 | --- | --- |
 | windows-2022 | x64 |
-| manylinux_2_35 | X64, arm64 |
+| windows-11 | arm64[^py-win-arm] |
+| manylinux_2_35 | x64, arm64 |
 | macOS-13 | intel |
 | macOS-14 | arm64 |
 
-*win-arm64 need to wait for <https://github.com/github/roadmap/issues/1098>*
+[^py-win-arm]:
+    Only Python >= 3.11 supports arm64 on Windows, refer to [setup-python](https://github.com/actions/setup-python/issues/715#issue-1846474433) and [python-build-standalone](https://github.com/astral-sh/python-build-standalone/pull/387#issuecomment-2818671913).
 
 ```bash
 pip install "pytauri-wheel == 0.4.*"  # (1)!

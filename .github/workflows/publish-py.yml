@@ -41,10 +41,18 @@ jobs:
           - ubuntu-22.04
           - ubuntu-22.04-arm
           - windows-2022
-          # TODO, FIXME: <https://github.com/github/roadmap/issues/1098>
-          # - windows-2022-arm
+          - windows-11-arm
           - macos-13 # Intel
           - macos-14 # arm64
+        exclude:
+          # Only Python >= 3.11 supports arm64 on Windows,
+          # see:
+          #   - <https://github.com/actions/setup-python/issues/715#issuecomment-2307075309>
+          #   - <https://github.com/astral-sh/python-build-standalone/pull/387#issuecomment-2818671913>
+          - os: windows-11-arm
+            python-version: 3.9
+          - os: windows-11-arm
+            python-version: 3.10
     outputs:
       package: ${{ steps.dry-run.outputs.package }}
     steps:
