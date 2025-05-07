@@ -103,3 +103,15 @@ impl<T> PyResultExt for PyResult<T> {
         }
     }
 }
+
+macro_rules! delegate_inner {
+    ($slf:expr, $func:ident, $($arg:expr),*) => {
+        $slf.0
+            .inner_ref()
+            .$func($($arg),*)
+            .map_err($crate::utils::TauriError::from)
+            .map_err(pyo3::PyErr::from)
+    };
+}
+
+pub(crate) use delegate_inner;

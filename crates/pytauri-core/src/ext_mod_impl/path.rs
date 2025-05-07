@@ -4,7 +4,7 @@ use pyo3::prelude::*;
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 use tauri::path;
 
-use crate::{delegate_inner, tauri_runtime::Runtime, utils::TauriError};
+use crate::{tauri_runtime::Runtime, utils::delegate_inner};
 
 type TauriPathResolver = path::PathResolver<Runtime>;
 

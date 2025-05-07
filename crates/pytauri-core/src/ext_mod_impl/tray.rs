@@ -13,14 +13,13 @@ use pyo3_utils::{
 use tauri::tray;
 
 use crate::{
-    delegate_inner,
     ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _, Rect},
     ext_mod_impl::{
         self,
         menu::{context_menu_impl, ImplContextMenu},
     },
     tauri_runtime::Runtime,
-    utils::{PyResultExt as _, TauriError},
+    utils::{delegate_inner, PyResultExt as _, TauriError},
 };
 
 type TauriTrayIcon = tray::TrayIcon<Runtime>;

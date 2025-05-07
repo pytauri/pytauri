@@ -8,14 +8,13 @@ use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
 use crate::{
-    delegate_inner,
     ext_mod_impl::{
         image::Image,
         menu::{Menu, MenuEvent},
         tray::{TrayIcon, TrayIconEvent},
     },
     tauri_runtime::Runtime,
-    utils::{PyResultExt as _, TauriError},
+    utils::{delegate_inner, PyResultExt as _},
 };
 
 pub(crate) type TauriAppHandle = tauri::AppHandle<Runtime>;
