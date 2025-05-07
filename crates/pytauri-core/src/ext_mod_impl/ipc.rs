@@ -12,10 +12,8 @@ use tauri::ipc::{
 };
 
 use crate::{
-    ext_mod_impl::{
-        webview::{Webview, WebviewWindow},
-        PyAppHandleExt as _,
-    },
+    ext_mod::PyAppHandleExt as _,
+    ext_mod_impl::webview::{Webview, WebviewWindow},
     tauri_runtime::Runtime,
     utils::TauriError,
 };

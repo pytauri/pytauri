@@ -14,8 +14,8 @@ use tauri::tray;
 
 use crate::{
     context_menu_impl, delegate_inner,
-    ext_mod_impl::{self, menu::ImplContextMenu, ImplManager, PyAppHandleExt as _, Rect},
-    manager_method_impl,
+    ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _, Rect},
+    ext_mod_impl::{self, menu::ImplContextMenu},
     tauri_runtime::Runtime,
     utils::{PyResultExt as _, TauriError},
 };
@@ -77,7 +77,7 @@ impl TrayIcon {
         })?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let tray_icon = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = tray_icon.app_handle().py_app_handle().clone_ref(py);
@@ -89,7 +89,7 @@ impl TrayIcon {
         // - <https://docs.rs/tauri/2.2.5/tauri/tray/struct.TrayIcon.html#method.on_menu_event>
         // - <https://docs.rs/tauri/2.2.5/tauri/struct.AppHandle.html#method.on_menu_event>
         let app_handle = self.app_handle(py);
-        ext_mod_impl::AppHandle::on_menu_event(app_handle, py, handler);
+        ext_mod::AppHandle::on_menu_event(app_handle, py, handler);
     }
 
     fn on_tray_icon_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {

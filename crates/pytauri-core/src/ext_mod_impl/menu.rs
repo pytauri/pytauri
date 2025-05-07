@@ -8,8 +8,8 @@ use pyo3_utils::{
 use tauri::menu::{self, ContextMenu as _, IsMenuItem, MenuId};
 
 use crate::{
-    ext_mod_impl::{self, ImplManager, PyAppHandleExt as _},
-    manager_method_impl,
+    ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _},
+    ext_mod_impl,
     tauri_runtime::Runtime,
     utils::TauriError,
 };
@@ -273,7 +273,7 @@ impl Menu {
     }
 
     #[staticmethod]
-    fn default(py: Python<'_>, app_handle: Py<ext_mod_impl::AppHandle>) -> PyResult<Self> {
+    fn default(py: Python<'_>, app_handle: Py<ext_mod::AppHandle>) -> PyResult<Self> {
         py.allow_threads(|| {
             let app_handle = app_handle.get().0.inner_ref();
             let menu = TauriMenu::default(app_handle.deref()).map_err(TauriError::from)?;
@@ -281,7 +281,7 @@ impl Menu {
         })
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -535,7 +535,7 @@ impl Submenu {
         ))?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -767,7 +767,7 @@ impl MenuItem {
         ))?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -1030,7 +1030,7 @@ impl PredefinedMenuItem {
         ))?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -1140,7 +1140,7 @@ impl CheckMenuItem {
         ))?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -1504,7 +1504,7 @@ impl IconMenuItem {
         ))?
     }
 
-    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod_impl::AppHandle> {
+    fn app_handle(&self, py: Python<'_>) -> Py<ext_mod::AppHandle> {
         let menu = self.0.inner_ref();
         // TODO, PERF: release the GIL?
         let app_handle = menu.app_handle().py_app_handle().clone_ref(py);
@@ -1742,7 +1742,7 @@ impl ContextMenu {
         py: Python<'_>,
         slf: ImplContextMenu,
         window: Py<ext_mod_impl::window::Window>,
-        position: ext_mod_impl::Position,
+        position: ext_mod::Position,
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let window = window.get().0.inner_ref().to_owned();

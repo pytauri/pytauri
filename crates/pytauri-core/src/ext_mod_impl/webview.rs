@@ -4,11 +4,11 @@ use tauri::webview;
 
 use crate::{
     context_menu_impl,
+    ext_mod::{Position, Url},
     ext_mod_impl::{
         image::Image,
         menu::{ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position, Url,
     },
     tauri_runtime::Runtime,
     utils::{PyResultExt as _, TauriError},

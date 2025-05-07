@@ -6,5 +6,4 @@ pub mod tray;
 pub mod webview;
 pub mod window;
 
-mod lib;
-pub use lib::*;
+pub(crate) mod lib;

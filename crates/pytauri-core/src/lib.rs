@@ -19,14 +19,32 @@ pub mod ext_mod {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{
-        App, AppHandle, Context, Emitter, Event, EventTarget, Listener, Manager, Position, Rect,
-        RunEvent, Size,
+    pub use ext_mod_impl::lib::{
+        app::App,
+        app_handle::AppHandle,
+        context::Context,
+        emitter::Emitter,
+        event::{Event, EventTarget},
+        listener::Listener,
+        manager::Manager,
+        rect::{Position, Rect, Size},
+        run_event::RunEvent,
     };
 
-    pub use ext_mod_impl::{
-        EventId, ImplEmitter, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
-        PyAppHandleStateResult, Url,
+    pub use ext_mod_impl::lib::{
+        app_handle::{PyAppHandleExt, PyAppHandleStateError, PyAppHandleStateResult},
+        emitter::ImplEmitter,
+        event::EventId,
+        listener::ImplListener,
+        manager::ImplManager,
+        url::Url,
+    };
+
+    pub(crate) use ext_mod_impl::lib::{
+        app::TauriApp,
+        app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
+        assets::PyAssets,
+        manager::manager_method_impl,
     };
 
     /// see also: [tauri::ipc]
