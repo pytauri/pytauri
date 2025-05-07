@@ -172,7 +172,7 @@ impl AppHandle {
     }
 }
 
-/// This error indicates that the app was not initialized using [App::try_build],
+/// This error indicates that the app was not initialized using [crate::ext_mod::App::try_build],
 /// i.e. it was not created by pytauri.
 #[derive(Debug)]
 pub struct PyAppHandleStateError;
@@ -237,7 +237,8 @@ pub trait PyAppHandleExt: tauri::Manager<Runtime> + SealedPyAppHandleExt {
     /// It may return an error only during the first initialization.
     /// Once successfully called for the first time, subsequent calls will always return [Ok].
     ///
-    /// [App::try_build] will call this method, which means if you already have an [App] instance,
+    /// [crate::ext_mod::App::try_build] will call this method,
+    /// which means if you already have an [crate::ext_mod::App] instance,
     /// the [AppHandle] has also been initialized.
     fn get_or_init_py_app_handle(&self, py: Python<'_>) -> PyResult<&Py<AppHandle>> {
         match self.try_py_app_handle() {

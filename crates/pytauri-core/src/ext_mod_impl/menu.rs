@@ -1684,7 +1684,7 @@ impl ImplContextMenu {
     }
 }
 
-/// see [crate::manager_method_impl]
+/// see [crate::ext_mod::manager_method_impl]
 macro_rules! context_menu_impl {
     // impl
     ($menu:expr, $f0:expr, $f1:expr) => {{
