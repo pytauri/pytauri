@@ -13,10 +13,10 @@ use pyo3_utils::{
 use tauri::tray;
 
 use crate::{
-    ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _, Rect},
-    ext_mod_impl::{
-        self,
+    ext_mod::{
+        self, manager_method_impl,
         menu::{context_menu_impl, ImplContextMenu},
+        ImplManager, PyAppHandleExt as _, Rect,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _, TauriError},
@@ -87,7 +87,7 @@ impl TrayIcon {
     }
 
     fn on_menu_event(&self, py: Python<'_>, handler: PyObject) {
-        // Delegate to [ext_mod_impl::AppHandle::on_menu_event] as their implementation is the same:
+        // Delegate to [ext_mod::AppHandle::on_menu_event] as their implementation is the same:
         // - <https://docs.rs/tauri/2.2.5/tauri/tray/struct.TrayIcon.html#method.on_menu_event>
         // - <https://docs.rs/tauri/2.2.5/tauri/struct.AppHandle.html#method.on_menu_event>
         let app_handle = self.app_handle(py);
@@ -128,11 +128,7 @@ impl TrayIcon {
     }
 
     #[pyo3(signature = (icon))]
-    fn set_icon(
-        &self,
-        py: Python<'_>,
-        icon: Option<Py<ext_mod_impl::image::Image>>,
-    ) -> PyResult<()> {
+    fn set_icon(&self, py: Python<'_>, icon: Option<Py<ext_mod::image::Image>>) -> PyResult<()> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
         py.allow_threads(|| delegate_inner!(self, set_icon, icon))
     }
@@ -185,10 +181,11 @@ impl TrayIcon {
     }
 }
 
+// TODO: unify with [ext_mod::rect::Position::Physical] before exporting.
 /// see also: [tauri::tray::TrayIconEvent::Click::position]
 ///
 /// `tuple[x: float, y: float]`
-pub struct PyPhysicalPositionF64(Py<PyTuple>);
+struct PyPhysicalPositionF64(Py<PyTuple>);
 
 impl PyPhysicalPositionF64 {
     pub(crate) fn from_tauri(
@@ -234,6 +231,7 @@ pub enum TrayIconEvent {
     // see: <https://pyo3.rs/v0.23.4/faq.html#pyo3get-clones-my-field>
     Click {
         id: Py<TrayIconId>,
+        #[expect(private_interfaces)]
         position: PyPhysicalPositionF64,
         rect: Py<Rect>,
         button: Py<MouseButton>,
@@ -241,22 +239,26 @@ pub enum TrayIconEvent {
     },
     DoubleClick {
         id: Py<TrayIconId>,
+        #[expect(private_interfaces)]
         position: PyPhysicalPositionF64,
         rect: Py<Rect>,
         button: Py<MouseButton>,
     },
     Enter {
         id: Py<TrayIconId>,
+        #[expect(private_interfaces)]
         position: PyPhysicalPositionF64,
         rect: Py<Rect>,
     },
     Move {
         id: Py<TrayIconId>,
+        #[expect(private_interfaces)]
         position: PyPhysicalPositionF64,
         rect: Py<Rect>,
     },
     Leave {
         id: Py<TrayIconId>,
+        #[expect(private_interfaces)]
         position: PyPhysicalPositionF64,
         rect: Py<Rect>,
     },

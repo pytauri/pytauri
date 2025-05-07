@@ -18,7 +18,7 @@ use crate::{
 
 /// see also: [tauri::utils::assets::AssetKey]
 //
-// TODO: export this type in [ext_mod_impl::utils::assets] namespace
+// TODO: export this type in [ext_mod::utils::assets] namespace
 type AssetKey = PyString;
 
 /// The [Iterator] is only implemented for [Bound], so we manually implement it for [Py] here.

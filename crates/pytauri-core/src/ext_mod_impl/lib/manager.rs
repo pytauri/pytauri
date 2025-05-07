@@ -5,10 +5,10 @@ use pyo3_utils::ungil::UnsafeUngilExt;
 use tauri::Manager as _;
 
 use crate::{
-    ext_mod::{App, AppHandle, PyAppHandleExt, TauriApp, TauriAppHandle},
-    ext_mod_impl::{
+    ext_mod::{
         path::PathResolver,
         webview::{TauriWebviewWindow, WebviewWindow},
+        App, AppHandle, PyAppHandleExt, TauriApp, TauriAppHandle,
     },
     tauri_runtime::Runtime,
 };

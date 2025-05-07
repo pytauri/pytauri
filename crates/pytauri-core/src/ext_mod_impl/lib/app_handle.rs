@@ -8,7 +8,7 @@ use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
 use crate::{
-    ext_mod_impl::{
+    ext_mod::{
         image::Image,
         menu::{Menu, MenuEvent},
         tray::{TrayIcon, TrayIconEvent},

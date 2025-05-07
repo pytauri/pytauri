@@ -9,7 +9,6 @@ use tauri::menu::{self, ContextMenu as _, IsMenuItem, MenuId};
 
 use crate::{
     ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _},
-    ext_mod_impl,
     tauri_runtime::Runtime,
     utils::TauriError,
 };
@@ -415,7 +414,7 @@ impl Menu {
     fn set_as_window_menu(
         &self,
         py: Python<'_>,
-        window: Py<ext_mod_impl::window::Window>,
+        window: Py<ext_mod::window::Window>,
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let menu = self.0.inner_ref();
@@ -1264,7 +1263,7 @@ pub struct AboutMetadata {
     website: Option<Py<PyString>>,
     website_label: Option<Py<PyString>>,
     credits: Option<Py<PyString>>,
-    icon: Option<Py<ext_mod_impl::image::Image>>,
+    icon: Option<Py<ext_mod::image::Image>>,
 }
 
 impl AboutMetadata {
@@ -1315,7 +1314,7 @@ impl AboutMetadata {
         website: Option<Py<PyString>>,
         website_label: Option<Py<PyString>>,
         credits: Option<Py<PyString>>,
-        icon: Option<Py<ext_mod_impl::image::Image>>,
+        icon: Option<Py<ext_mod::image::Image>>,
     ) -> Self {
         Self {
             name,
@@ -1413,7 +1412,7 @@ impl IconMenuItem {
         manager: ImplManager,
         text: &str,
         enabled: bool,
-        icon: Option<Py<ext_mod_impl::image::Image>>,
+        icon: Option<Py<ext_mod::image::Image>>,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
@@ -1438,7 +1437,7 @@ impl IconMenuItem {
         id: String,
         text: &str,
         enabled: bool,
-        icon: Option<Py<ext_mod_impl::image::Image>>,
+        icon: Option<Py<ext_mod::image::Image>>,
         accelerator: Option<&str>,
     ) -> PyResult<Self> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
@@ -1559,11 +1558,7 @@ impl IconMenuItem {
     }
 
     #[pyo3(signature = (icon))]
-    fn set_icon(
-        &self,
-        py: Python<'_>,
-        icon: Option<Py<ext_mod_impl::image::Image>>,
-    ) -> PyResult<()> {
+    fn set_icon(&self, py: Python<'_>, icon: Option<Py<ext_mod::image::Image>>) -> PyResult<()> {
         let icon = icon.as_ref().map(|icon| icon.get().to_tauri(py));
         py.allow_threads(|| {
             let menu = self.0.inner_ref();
@@ -1693,7 +1688,7 @@ impl ImplContextMenu {
 macro_rules! context_menu_impl {
     // impl
     ($menu:expr, $f0:expr, $f1:expr) => {{
-        use $crate::ext_mod_impl::menu::ImplContextMenu;
+        use $crate::ext_mod::menu::ImplContextMenu;
 
         let menu: &ImplContextMenu = $menu;
         match menu {
@@ -1725,7 +1720,7 @@ impl ContextMenu {
     fn popup(
         py: Python<'_>,
         slf: ImplContextMenu,
-        window: Py<ext_mod_impl::window::Window>,
+        window: Py<ext_mod::window::Window>,
     ) -> PyResult<()> {
         py.allow_threads(|| {
             let window = window.get().0.inner_ref().to_owned();
@@ -1741,7 +1736,7 @@ impl ContextMenu {
     fn popup_at(
         py: Python<'_>,
         slf: ImplContextMenu,
-        window: Py<ext_mod_impl::window::Window>,
+        window: Py<ext_mod::window::Window>,
         position: ext_mod::Position,
     ) -> PyResult<()> {
         py.allow_threads(|| {

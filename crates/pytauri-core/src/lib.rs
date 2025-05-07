@@ -63,6 +63,8 @@ pub mod ext_mod {
 
         #[pymodule_export]
         pub use ext_mod_impl::webview::{Webview, WebviewWindow};
+
+        pub(crate) use ext_mod_impl::webview::TauriWebviewWindow;
     }
 
     /// see also: [tauri::menu]
@@ -79,6 +81,8 @@ pub mod ext_mod {
         pub use ext_mod_impl::menu::{
             ImplContextMenu, MenuEvent, MenuID, MenuItemKind, HELP_SUBMENU_ID, WINDOW_SUBMENU_ID,
         };
+
+        pub(crate) use ext_mod_impl::menu::context_menu_impl;
 
         // TODO: see also <https://github.com/PyO3/pyo3/issues/3900#issue-2153617797> to export `const &str` to python.
         macro_rules! intern_var_to_mod {

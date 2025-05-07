@@ -5,7 +5,7 @@ use pyo3::{
     IntoPyObject,
 };
 
-use crate::ext_mod_impl::{menu::MenuEvent, tray::TrayIconEvent};
+use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent};
 
 /// see also: [tauri::RunEvent]
 #[pyclass(frozen)]
