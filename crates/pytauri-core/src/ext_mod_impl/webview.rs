@@ -3,11 +3,10 @@ use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 use tauri::webview;
 
 use crate::{
-    context_menu_impl,
     ext_mod::{Position, Url},
     ext_mod_impl::{
         image::Image,
-        menu::{ImplContextMenu, Menu, MenuEvent},
+        menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
     },
     tauri_runtime::Runtime,

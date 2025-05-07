@@ -13,9 +13,12 @@ use pyo3_utils::{
 use tauri::tray;
 
 use crate::{
-    context_menu_impl, delegate_inner,
+    delegate_inner,
     ext_mod::{self, manager_method_impl, ImplManager, PyAppHandleExt as _, Rect},
-    ext_mod_impl::{self, menu::ImplContextMenu},
+    ext_mod_impl::{
+        self,
+        menu::{context_menu_impl, ImplContextMenu},
+    },
     tauri_runtime::Runtime,
     utils::{PyResultExt as _, TauriError},
 };

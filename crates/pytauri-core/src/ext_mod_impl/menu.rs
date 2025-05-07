@@ -1690,8 +1690,6 @@ impl ImplContextMenu {
 }
 
 /// see [crate::manager_method_impl]
-#[doc(hidden)]
-#[macro_export]
 macro_rules! context_menu_impl {
     // impl
     ($menu:expr, $f0:expr, $f1:expr) => {{
@@ -1713,6 +1711,8 @@ macro_rules! context_menu_impl {
         context_menu_impl!($menu, $($f)*, $($f)*)
     };
 }
+
+pub(crate) use context_menu_impl;
 
 /// See also: [tauri::menu::ContextMenu].
 #[pyclass(frozen)]
