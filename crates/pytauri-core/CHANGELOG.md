@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Internal
+
+- [#155](https://github.com/pytauri/pytauri/pull/155) - refactor: modularize `ext_mod_impl::self`.
+
 ## [0.5.0]
 
 ### BREAKING
