@@ -19,14 +19,32 @@ pub mod ext_mod {
     use super::*;
 
     #[pymodule_export]
-    pub use ext_mod_impl::{
-        App, AppHandle, Context, Emitter, Event, EventTarget, Listener, Manager, Position, Rect,
-        RunEvent, Size,
+    pub use ext_mod_impl::lib::{
+        app::App,
+        app_handle::AppHandle,
+        context::Context,
+        emitter::Emitter,
+        event::{Event, EventTarget},
+        listener::Listener,
+        manager::Manager,
+        rect::{Position, Rect, Size},
+        run_event::RunEvent,
     };
 
-    pub use ext_mod_impl::{
-        EventId, ImplEmitter, ImplListener, ImplManager, PyAppHandleExt, PyAppHandleStateError,
-        PyAppHandleStateResult, Url,
+    pub use ext_mod_impl::lib::{
+        app_handle::{PyAppHandleExt, PyAppHandleStateError, PyAppHandleStateResult},
+        emitter::ImplEmitter,
+        event::EventId,
+        listener::ImplListener,
+        manager::ImplManager,
+        url::Url,
+    };
+
+    pub(crate) use ext_mod_impl::lib::{
+        app::TauriApp,
+        app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
+        assets::PyAssets,
+        manager::manager_method_impl,
     };
 
     /// see also: [tauri::ipc]
@@ -45,6 +63,8 @@ pub mod ext_mod {
 
         #[pymodule_export]
         pub use ext_mod_impl::webview::{Webview, WebviewWindow};
+
+        pub(crate) use ext_mod_impl::webview::TauriWebviewWindow;
     }
 
     /// see also: [tauri::menu]
@@ -61,6 +81,8 @@ pub mod ext_mod {
         pub use ext_mod_impl::menu::{
             ImplContextMenu, MenuEvent, MenuID, MenuItemKind, HELP_SUBMENU_ID, WINDOW_SUBMENU_ID,
         };
+
+        pub(crate) use ext_mod_impl::menu::context_menu_impl;
 
         // TODO: see also <https://github.com/PyO3/pyo3/issues/3900#issue-2153617797> to export `const &str` to python.
         macro_rules! intern_var_to_mod {

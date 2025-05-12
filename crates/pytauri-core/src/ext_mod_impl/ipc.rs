@@ -12,7 +12,7 @@ use tauri::ipc::{
 };
 
 use crate::{
-    ext_mod_impl::{
+    ext_mod::{
         webview::{Webview, WebviewWindow},
         PyAppHandleExt as _,
     },

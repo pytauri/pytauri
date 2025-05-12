@@ -3,15 +3,14 @@ use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 use tauri::webview;
 
 use crate::{
-    context_menu_impl,
-    ext_mod_impl::{
+    ext_mod::{
         image::Image,
-        menu::{ImplContextMenu, Menu, MenuEvent},
+        menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
         Position, Url,
     },
     tauri_runtime::Runtime,
-    utils::{PyResultExt as _, TauriError},
+    utils::{delegate_inner, PyResultExt as _},
 };
 
 pub(crate) type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
@@ -26,17 +25,6 @@ impl WebviewWindow {
     pub(crate) fn new(webview_window: TauriWebviewWindow) -> Self {
         Self(PyWrapper::new0(webview_window))
     }
-}
-
-#[macro_export]
-#[doc(hidden)]
-macro_rules! delegate_inner {
-    ($slf:expr, $func:ident, $($arg:expr),*) => {
-        $slf.0
-            .inner_ref()
-            .$func($($arg),*)
-            .map_err(|e| PyErr::from(TauriError::from(e)))
-    };
 }
 
 #[pymethods]
