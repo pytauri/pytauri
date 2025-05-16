@@ -34,6 +34,7 @@ __all__ = [
     "EventId",
     "EventTarget",
     "EventTargetType",
+    "ExitRequestApi",
     "ImplEmitter",
     "ImplListener",
     "ImplManager",
@@ -283,6 +284,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::ExitRequested](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.ExitRequested)"""
 
             code: Optional[int]
+            api: "ExitRequestApi"
 
         @final
         class WindowEvent:
@@ -329,6 +331,12 @@ if TYPE_CHECKING:
             _0: TrayIconEventType
 
         # When adding new variants, remember to update `RunEventType`.
+
+    @final
+    class ExitRequestApi:
+        """[tauri::ExitRequestApi](https://docs.rs/tauri/latest/tauri/struct.ExitRequestApi.html)"""
+
+        def prevent_exit(self, /) -> None: ...
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -658,6 +666,7 @@ else:
     BuilderArgs = pytauri_mod.BuilderArgs
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
+    ExitRequestApi = pytauri_mod.ExitRequestApi
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager

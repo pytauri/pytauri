@@ -28,7 +28,7 @@ pub mod ext_mod {
         listener::Listener,
         manager::Manager,
         rect::{Position, Rect, Size},
-        run_event::RunEvent,
+        run_event::{ExitRequestApi, RunEvent},
     };
 
     pub use ext_mod_impl::lib::{
