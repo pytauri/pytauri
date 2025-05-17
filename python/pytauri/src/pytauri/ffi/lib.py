@@ -28,6 +28,7 @@ __all__ = [
     "Assets",
     "Builder",
     "BuilderArgs",
+    "CloseRequestApi",
     "Context",
     "Emitter",
     "Event",
@@ -340,6 +341,12 @@ if TYPE_CHECKING:
         """[tauri::ExitRequestApi](https://docs.rs/tauri/latest/tauri/struct.ExitRequestApi.html)"""
 
         def prevent_exit(self, /) -> None: ...
+
+    @final
+    class CloseRequestApi:
+        """[tauri::CloseRequestApi](https://docs.rs/tauri/latest/tauri/struct.CloseRequestApi.html)"""
+
+        def prevent_close(self, /) -> None: ...
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -670,6 +677,7 @@ else:
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
     ExitRequestApi = pytauri_mod.ExitRequestApi
+    CloseRequestApi = pytauri_mod.CloseRequestApi
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager

@@ -87,6 +87,26 @@ impl RunEvent {
     }
 }
 
+/// See also: [tauri::CloseRequestApi]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct CloseRequestApi(pub PyWrapper<PyWrapperT0<tauri::CloseRequestApi>>);
+
+impl CloseRequestApi {
+    fn new(value: tauri::CloseRequestApi) -> Self {
+        Self(PyWrapper::new0(value))
+    }
+}
+
+#[pymethods]
+impl CloseRequestApi {
+    // PERF: [Sender::send] is quick enough and never blocks,
+    // so we don't need to release the GIL.
+    fn prevent_close(&self) {
+        self.0.inner_ref().prevent_close();
+    }
+}
+
 /// See also: [tauri::ExitRequestApi]
 #[pyclass(frozen)]
 #[non_exhaustive]
