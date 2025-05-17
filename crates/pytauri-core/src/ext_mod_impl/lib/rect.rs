@@ -98,7 +98,7 @@ impl From<tauri::Size> for Size {
 }
 
 macro_rules! physical_position {
-    ($vis:vis, $name:ident, $ty:ty) => {
+    ($vis:vis, $name:ident, $ty:ty => $from_tauri:ident) => {
         /// See also: [tauri::PhysicalPosition]
         ///
         /// `(x, y)`
@@ -107,7 +107,8 @@ macro_rules! physical_position {
         $vis struct $name($vis Py<PyTuple>);
 
         impl $name {
-            $vis fn from_tauri(
+            #[inline]
+            $vis fn $from_tauri(
                 py: Python<'_>,
                 position: tauri::PhysicalPosition<$ty>,
             ) -> PyResult<Self> {
@@ -118,4 +119,4 @@ macro_rules! physical_position {
     };
 }
 
-physical_position!(pub(crate), PhysicalPositionF64, f64);
+physical_position!(pub(crate), PhysicalPositionF64, f64 => from_tauri);

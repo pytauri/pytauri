@@ -28,7 +28,7 @@ pub mod ext_mod {
         listener::Listener,
         manager::Manager,
         rect::{Position, Rect, Size},
-        run_event::{CloseRequestApi, ExitRequestApi, RunEvent},
+        run_event::{CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent},
         theme::Theme,
     };
 

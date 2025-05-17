@@ -5,6 +5,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from enum import Enum, auto
+from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -31,6 +32,8 @@ __all__ = [
     "BuilderArgs",
     "CloseRequestApi",
     "Context",
+    "DragDropEvent",
+    "DragDropEventType",
     "Emitter",
     "Event",
     "EventId",
@@ -69,6 +72,9 @@ _EventHandlerType = Callable[["Event"], None]
 
 _PhysicalPositionF64 = tuple[float, float]
 """[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+
+_VecPathBuf = list[Path]
+"""[tauri::DragDropEvent::Enter::paths](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Enter.field.paths)"""
 
 # TODO: export this type in rust [ext_mod::utils::assets] namespace
 _AssetKey = TypeAliasType("_AssetKey", str)
@@ -354,6 +360,40 @@ if TYPE_CHECKING:
         """[tauri::CloseRequestApi](https://docs.rs/tauri/latest/tauri/struct.CloseRequestApi.html)"""
 
         def prevent_close(self, /) -> None: ...
+
+    @final
+    class DragDropEvent:
+        """[tauri::DragDropEvent](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html)"""
+
+        @final
+        class Enter:
+            """[tauri::DragDropEvent::Enter](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Enter)"""
+
+            paths: _VecPathBuf
+            position: _PhysicalPositionF64
+
+        @final
+        class Over:
+            """[tauri::DragDropEvent::Over](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Over)"""
+
+            position: _PhysicalPositionF64
+
+        @final
+        class Drop:
+            """[tauri::DragDropEvent::Drop](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Drop)"""
+
+            paths: _VecPathBuf
+            position: _PhysicalPositionF64
+
+        @final
+        class Leave:
+            """[tauri::DragDropEvent::Leave](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Leave)"""
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `DragDropEventType`.
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -703,6 +743,7 @@ else:
     RunEvent = pytauri_mod.RunEvent
     ExitRequestApi = pytauri_mod.ExitRequestApi
     CloseRequestApi = pytauri_mod.CloseRequestApi
+    DragDropEvent = pytauri_mod.DragDropEvent
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -731,6 +772,18 @@ RunEventType = TypeAliasType(
     ],
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
+
+DragDropEventType = TypeAliasType(
+    "DragDropEventType",
+    Union[
+        DragDropEvent.Enter,
+        DragDropEvent.Over,
+        DragDropEvent.Drop,
+        DragDropEvent.Leave,
+        DragDropEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [DragDropEvent][pytauri.ffi.DragDropEvent] for details."""
 
 ImplManager = TypeAliasType("ImplManager", Union[App, AppHandle, "WebviewWindow"])
 

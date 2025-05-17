@@ -1,11 +1,13 @@
+use std::path::PathBuf;
+
 use pyo3::{
     prelude::*,
-    types::{PyInt, PyString},
+    types::{PyInt, PyList, PyString},
     IntoPyObject,
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
-use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent};
+use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent, PhysicalPositionF64};
 
 /// see also: [tauri::RunEvent]
 #[pyclass(frozen)]
@@ -120,5 +122,67 @@ impl ExitRequestApi {
     // so we don't need to release the GIL.
     fn prevent_exit(&self) {
         self.0.inner_ref().prevent_exit();
+    }
+}
+
+/// See also: [tauri::DragDropEvent::Enter::paths]
+///
+/// `list[pathlib.Path]`
+#[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
+#[pyo3(transparent)]
+struct VecPathBuf(Py<PyList>);
+
+impl VecPathBuf {
+    #[inline]
+    fn from_tauri(py: Python<'_>, paths: Vec<PathBuf>) -> PyResult<Self> {
+        let lst = PyList::new(py, paths)?;
+        Ok(Self(lst.unbind()))
+    }
+}
+
+/// see also: [tauri::DragDropEvent]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub enum DragDropEvent {
+    // use `Py<T>` to avoid creating new obj every time visiting the field,
+    // see: <https://pyo3.rs/v0.23.4/faq.html#pyo3get-clones-my-field>
+    Enter {
+        #[expect(private_interfaces)]
+        paths: VecPathBuf,
+        #[expect(private_interfaces)]
+        position: PhysicalPositionF64,
+    },
+    Over {
+        #[expect(private_interfaces)]
+        position: PhysicalPositionF64,
+    },
+    Drop {
+        #[expect(private_interfaces)]
+        paths: VecPathBuf,
+        #[expect(private_interfaces)]
+        position: PhysicalPositionF64,
+    },
+    Leave(),
+    _NonExhaustive(),
+}
+
+impl DragDropEvent {
+    fn from_tauri(py: Python<'_>, value: tauri::DragDropEvent) -> PyResult<Self> {
+        let ret = match value {
+            tauri::DragDropEvent::Enter { paths, position } => Self::Enter {
+                paths: VecPathBuf::from_tauri(py, paths)?,
+                position: PhysicalPositionF64::from_tauri(py, position)?,
+            },
+            tauri::DragDropEvent::Over { position } => Self::Over {
+                position: PhysicalPositionF64::from_tauri(py, position)?,
+            },
+            tauri::DragDropEvent::Drop { paths, position } => Self::Drop {
+                paths: VecPathBuf::from_tauri(py, paths)?,
+                position: PhysicalPositionF64::from_tauri(py, position)?,
+            },
+            tauri::DragDropEvent::Leave => Self::Leave(),
+            _ => Self::_NonExhaustive(),
+        };
+        Ok(ret)
     }
 }
