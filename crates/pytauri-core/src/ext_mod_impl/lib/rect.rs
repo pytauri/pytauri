@@ -1,4 +1,4 @@
-use pyo3::{prelude::*, IntoPyObject};
+use pyo3::{prelude::*, types::PyTuple};
 
 /// see also: [tauri::Rect]
 #[pyclass(frozen)]
@@ -96,3 +96,26 @@ impl From<tauri::Size> for Size {
         }
     }
 }
+
+macro_rules! physical_position {
+    ($vis:vis, $name:ident, $ty:ty) => {
+        #[doc = "See also: [tauri::PhysicalPosition]"]
+        #[doc = ""]
+        #[doc = "`(x, y)`"]
+        #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
+        #[pyo3(transparent)]
+        $vis struct $name($vis Py<PyTuple>);
+
+        impl $name {
+            $vis fn from_tauri(
+                py: Python<'_>,
+                position: tauri::PhysicalPosition<$ty>,
+            ) -> PyResult<Self> {
+                let x_y: ($ty, $ty) = (position.x, position.y); // typing assertion
+                Ok(Self(x_y.into_pyobject(py)?.unbind()))
+            }
+        }
+    };
+}
+
+physical_position!(pub(crate), PhysicalPositionF64, f64);

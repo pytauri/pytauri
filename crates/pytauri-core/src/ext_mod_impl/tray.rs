@@ -1,11 +1,6 @@
 use std::path::PathBuf;
 
-use pyo3::{
-    exceptions::PyNotImplementedError,
-    prelude::*,
-    types::{PyString, PyTuple},
-    FromPyObject, IntoPyObject,
-};
+use pyo3::{exceptions::PyNotImplementedError, prelude::*, types::PyString};
 use pyo3_utils::{
     py_wrapper::{PyWrapper, PyWrapperT0},
     ungil::UnsafeUngilExt,
@@ -16,7 +11,7 @@ use crate::{
     ext_mod::{
         self, manager_method_impl,
         menu::{context_menu_impl, ImplContextMenu},
-        ImplManager, PyAppHandleExt as _, Rect,
+        ImplManager, PhysicalPositionF64, PyAppHandleExt as _, Rect,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _, TauriError},
@@ -181,48 +176,6 @@ impl TrayIcon {
     }
 }
 
-// TODO: unify with [ext_mod::rect::Position::Physical] before exporting.
-/// see also: [tauri::tray::TrayIconEvent::Click::position]
-///
-/// `tuple[x: float, y: float]`
-struct PyPhysicalPositionF64(Py<PyTuple>);
-
-impl PyPhysicalPositionF64 {
-    pub(crate) fn from_tauri(
-        py: Python<'_>,
-        position: tauri::PhysicalPosition<f64>,
-    ) -> PyResult<Self> {
-        let x_y: (f64, f64) = (position.x, position.y);
-        Ok(Self(x_y.into_pyobject(py)?.unbind()))
-    }
-}
-
-impl FromPyObject<'_> for PyPhysicalPositionF64 {
-    fn extract_bound(_: &Bound<'_, PyAny>) -> PyResult<Self> {
-        unimplemented!("[TrayIconEvent::position] can't be constructed from Python")
-    }
-}
-
-impl<'py> IntoPyObject<'py> for PyPhysicalPositionF64 {
-    type Target = PyTuple;
-    type Output = Bound<'py, Self::Target>;
-    type Error = std::convert::Infallible;
-
-    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-        Ok(self.0.into_bound(py))
-    }
-}
-
-impl<'a, 'py> IntoPyObject<'py> for &'a PyPhysicalPositionF64 {
-    type Target = PyTuple;
-    type Output = Borrowed<'a, 'py, Self::Target>;
-    type Error = std::convert::Infallible;
-
-    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-        Ok(self.0.bind_borrowed(py))
-    }
-}
-
 /// see also: [tauri::tray::TrayIconEvent]
 #[pyclass(frozen)]
 #[non_exhaustive]
@@ -232,7 +185,7 @@ pub enum TrayIconEvent {
     Click {
         id: Py<TrayIconId>,
         #[expect(private_interfaces)]
-        position: PyPhysicalPositionF64,
+        position: PhysicalPositionF64,
         rect: Py<Rect>,
         button: Py<MouseButton>,
         button_state: Py<MouseButtonState>,
@@ -240,26 +193,26 @@ pub enum TrayIconEvent {
     DoubleClick {
         id: Py<TrayIconId>,
         #[expect(private_interfaces)]
-        position: PyPhysicalPositionF64,
+        position: PhysicalPositionF64,
         rect: Py<Rect>,
         button: Py<MouseButton>,
     },
     Enter {
         id: Py<TrayIconId>,
         #[expect(private_interfaces)]
-        position: PyPhysicalPositionF64,
+        position: PhysicalPositionF64,
         rect: Py<Rect>,
     },
     Move {
         id: Py<TrayIconId>,
         #[expect(private_interfaces)]
-        position: PyPhysicalPositionF64,
+        position: PhysicalPositionF64,
         rect: Py<Rect>,
     },
     Leave {
         id: Py<TrayIconId>,
         #[expect(private_interfaces)]
-        position: PyPhysicalPositionF64,
+        position: PhysicalPositionF64,
         rect: Py<Rect>,
     },
 }
@@ -272,8 +225,8 @@ impl TrayIconEvent {
         fn from_rs_position(
             py: Python<'_>,
             position: tauri::PhysicalPosition<f64>,
-        ) -> PyResult<PyPhysicalPositionF64> {
-            PyPhysicalPositionF64::from_tauri(py, position)
+        ) -> PyResult<PhysicalPositionF64> {
+            PhysicalPositionF64::from_tauri(py, position)
         }
         fn from_rs_rect(py: Python<'_>, rect: tauri::Rect) -> PyResult<Py<Rect>> {
             Ok(Rect::from_tauri(py, rect)?.into_pyobject(py)?.unbind())

@@ -64,6 +64,9 @@ _AppRunCallbackType = Callable[["AppHandle", "RunEventType"], None]
 
 _EventHandlerType = Callable[["Event"], None]
 
+_PhysicalPositionF64 = tuple[float, float]
+"""[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+
 # TODO: export this type in rust [ext_mod::utils::assets] namespace
 _AssetKey = TypeAliasType("_AssetKey", str)
 """[tauri::utils::assets::AssetKey](https://docs.rs/tauri-utils/latest/tauri_utils/assets/struct.AssetKey.html)"""

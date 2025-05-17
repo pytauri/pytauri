@@ -20,6 +20,8 @@ pub enum RunEvent {
         code: Option<Py<PyInt>>,
         api: Py<ExitRequestApi>,
     },
+    // TODO, PERF: maybe we should remove `WindowEvent` and `WebviewEvent` fields,
+    // use `on_window_event` and `on_webview_event` instead.
     #[non_exhaustive]
     WindowEvent {
         label: Py<PyString>,
