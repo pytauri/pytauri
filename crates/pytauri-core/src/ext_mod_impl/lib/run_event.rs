@@ -1,9 +1,9 @@
 use pyo3::{
-    exceptions::PyNotImplementedError,
     prelude::*,
     types::{PyInt, PyString},
     IntoPyObject,
 };
+use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
 use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent};
 
@@ -17,11 +17,10 @@ pub enum RunEvent {
     #[non_exhaustive]
     ExitRequested {
         code: Option<Py<PyInt>>,
-        // TODO, XXX, FIXME: `ExitRequestApi` is a private type in `tauri`,
-        // we need create a issue to `tauri`, or we cant implement this.
-        // See: <https://github.com/tauri-apps/tauri/pull/12701>
-        // api: ExitRequestApi,
+        api: Py<ExitRequestApi>,
     },
+    // TODO, PERF: maybe we should remove `WindowEvent` and `WebviewEvent` fields,
+    // use `on_window_event` and `on_webview_event` instead.
     #[non_exhaustive]
     WindowEvent {
         label: Py<PyString>,
@@ -41,20 +40,20 @@ pub enum RunEvent {
     // use `on_menu_event` and `on_tray_icon_event` instead.
     MenuEvent(Py<MenuEvent>),
     TrayIconEvent(Py<TrayIconEvent>),
+    _NonExhaustive(),
 }
 
 impl RunEvent {
-    pub(crate) fn new(py: Python<'_>, value: tauri::RunEvent) -> PyResult<Self> {
+    pub(crate) fn from_tauri(py: Python<'_>, value: tauri::RunEvent) -> PyResult<Self> {
         let ret = match value {
             tauri::RunEvent::Exit => Self::Exit(),
-            tauri::RunEvent::ExitRequested {
-                code, /* TODO */ ..
-            } => {
+            tauri::RunEvent::ExitRequested { code, api, .. } => {
                 let code = code.map(|code| {
                     let Ok(code) = code.into_pyobject(py);
                     code.unbind()
                 });
-                Self::ExitRequested { code }
+                let api = ExitRequestApi::new(api).into_pyobject(py)?.unbind();
+                Self::ExitRequested { code, api }
             }
             tauri::RunEvent::WindowEvent {
                 label, /* TODO */ ..
@@ -78,12 +77,48 @@ impl RunEvent {
                     .into_pyobject(py)?
                     .unbind(),
             ),
-            event => {
-                return Err(PyNotImplementedError::new_err(format!(
-                    "Please make a issue for unimplemented RunEvent: {event:?}",
-                )))
-            }
+            _ => Self::_NonExhaustive(),
         };
         Ok(ret)
+    }
+}
+
+/// See also: [tauri::CloseRequestApi]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct CloseRequestApi(pub PyWrapper<PyWrapperT0<tauri::CloseRequestApi>>);
+
+impl CloseRequestApi {
+    fn new(value: tauri::CloseRequestApi) -> Self {
+        Self(PyWrapper::new0(value))
+    }
+}
+
+#[pymethods]
+impl CloseRequestApi {
+    // PERF: [Sender::send] is quick enough and never blocks,
+    // so we don't need to release the GIL.
+    fn prevent_close(&self) {
+        self.0.inner_ref().prevent_close();
+    }
+}
+
+/// See also: [tauri::ExitRequestApi]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct ExitRequestApi(pub PyWrapper<PyWrapperT0<tauri::ExitRequestApi>>);
+
+impl ExitRequestApi {
+    fn new(value: tauri::ExitRequestApi) -> Self {
+        Self(PyWrapper::new0(value))
+    }
+}
+
+#[pymethods]
+impl ExitRequestApi {
+    // PERF: [Sender::send] is quick enough and never blocks,
+    // so we don't need to release the GIL.
+    fn prevent_exit(&self) {
+        self.0.inner_ref().prevent_exit();
     }
 }

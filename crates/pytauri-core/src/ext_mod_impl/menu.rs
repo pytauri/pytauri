@@ -33,7 +33,6 @@ pub use menu::{HELP_SUBMENU_ID, WINDOW_SUBMENU_ID};
 
 /// See also: [tauri::menu::MenuItemKind].
 #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
-#[non_exhaustive]
 pub enum MenuItemKind {
     MenuItem(Py<MenuItem>),
     Submenu(Py<Submenu>),

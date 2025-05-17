@@ -12,6 +12,7 @@ use crate::{
         image::Image,
         menu::{Menu, MenuEvent},
         tray::{TrayIcon, TrayIconEvent},
+        Theme,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -129,6 +130,10 @@ impl AppHandle {
 
     fn remove_tray_by_id(&self, py: Python<'_>, id: &str) -> Option<TrayIcon> {
         py.allow_threads(|| self.0.inner_ref().remove_tray_by_id(id).map(TrayIcon::new))
+    }
+
+    fn set_theme(&self, py: Python<'_>, theme: Option<Theme>) {
+        py.allow_threads(|| self.0.inner_ref().set_theme(theme.map(Into::into)))
     }
 
     fn default_window_icon(&self, py: Python<'_>) -> Option<Image> {

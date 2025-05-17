@@ -4,6 +4,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from enum import Enum, auto
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -28,12 +29,14 @@ __all__ = [
     "Assets",
     "Builder",
     "BuilderArgs",
+    "CloseRequestApi",
     "Context",
     "Emitter",
     "Event",
     "EventId",
     "EventTarget",
     "EventTargetType",
+    "ExitRequestApi",
     "ImplEmitter",
     "ImplListener",
     "ImplManager",
@@ -46,6 +49,7 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "Theme",
     "Url",
     "builder_factory",
     "context_factory",
@@ -62,6 +66,9 @@ class _InvokeHandlerProto(Protocol):
 _AppRunCallbackType = Callable[["AppHandle", "RunEventType"], None]
 
 _EventHandlerType = Callable[["Event"], None]
+
+_PhysicalPositionF64 = tuple[float, float]
+"""[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
 
 # TODO: export this type in rust [ext_mod::utils::assets] namespace
 _AssetKey = TypeAliasType("_AssetKey", str)
@@ -179,6 +186,7 @@ if TYPE_CHECKING:
 
         def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
         def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def set_theme(self, theme: Optional["Theme"], /) -> None: ...
         def default_window_icon(self, /) -> Optional[Image]:
             """Returns the default window icon.
 
@@ -283,6 +291,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::ExitRequested](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.ExitRequested)"""
 
             code: Optional[int]
+            api: "ExitRequestApi"
 
         @final
         class WindowEvent:
@@ -328,7 +337,23 @@ if TYPE_CHECKING:
 
             _0: TrayIconEventType
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
         # When adding new variants, remember to update `RunEventType`.
+
+    @final
+    class ExitRequestApi:
+        """[tauri::ExitRequestApi](https://docs.rs/tauri/latest/tauri/struct.ExitRequestApi.html)"""
+
+        def prevent_exit(self, /) -> None: ...
+
+    @final
+    class CloseRequestApi:
+        """[tauri::CloseRequestApi](https://docs.rs/tauri/latest/tauri/struct.CloseRequestApi.html)"""
+
+        def prevent_close(self, /) -> None: ...
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -611,6 +636,12 @@ if TYPE_CHECKING:
 
             def __new__(cls, label: str, /) -> Self: ...
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `EventTargetType`.
+
     class Emitter:
         """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)"""
 
@@ -650,6 +681,18 @@ if TYPE_CHECKING:
             """
             ...
 
+    @final
+    class Theme(Enum):
+        """[tauri::Theme](https://docs.rs/tauri/latest/tauri/enum.Theme.html)
+
+        !!! warning
+            See [pytauri.ffi.menu.NativeIcon][].
+        """
+
+        Light = auto()
+        Dark = auto()
+        _NonExhaustive = object()
+
 
 else:
     App = pytauri_mod.App
@@ -658,6 +701,8 @@ else:
     BuilderArgs = pytauri_mod.BuilderArgs
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
+    ExitRequestApi = pytauri_mod.ExitRequestApi
+    CloseRequestApi = pytauri_mod.CloseRequestApi
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -668,6 +713,7 @@ else:
     Rect = pytauri_mod.Rect
     EventTarget = pytauri_mod.EventTarget
     Emitter = pytauri_mod.Emitter
+    Theme = pytauri_mod.Theme
 
 RunEventType = TypeAliasType(
     "RunEventType",
@@ -681,6 +727,7 @@ RunEventType = TypeAliasType(
         RunEvent.MainEventsCleared,
         RunEvent.MenuEvent,
         RunEvent.TrayIconEvent,
+        RunEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
@@ -736,6 +783,7 @@ EventTargetType = TypeAliasType(
         EventTarget.Window,
         EventTarget.Webview,
         EventTarget.WebviewWindow,
+        EventTarget._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [EventTarget][pytauri.ffi.EventTarget] for details."""
