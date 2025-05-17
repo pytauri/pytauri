@@ -25,6 +25,7 @@ pub enum EventTarget {
     Window { label: Py<PyString> },
     Webview { label: Py<PyString> },
     WebviewWindow { label: Py<PyString> },
+    _NonExhaustive(),
 }
 
 impl EventTarget {
@@ -44,9 +45,7 @@ impl EventTarget {
             tauri::EventTarget::WebviewWindow { label } => Self::WebviewWindow {
                 label: PyString::new(py, label).unbind(),
             },
-            target => {
-                unimplemented!("Please make a issue for unimplemented EventTarget: {target:?}")
-            }
+            _ => Self::_NonExhaustive(),
         }
     }
 
@@ -67,6 +66,7 @@ impl EventTarget {
             Self::WebviewWindow { label } => tauri::EventTarget::WebviewWindow {
                 label: label.bind(py).to_cow()?.into_owned(),
             },
+            Self::_NonExhaustive() => panic!("NonExhaustive is reserved for `#[non_exhaustive]`"),
         };
         Ok(value)
     }

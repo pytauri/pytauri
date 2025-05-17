@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use pyo3::{exceptions::PyNotImplementedError, prelude::*, types::PyString};
+use pyo3::{prelude::*, types::PyString};
 use pyo3_utils::{
     py_wrapper::{PyWrapper, PyWrapperT0},
     ungil::UnsafeUngilExt,
@@ -215,6 +215,7 @@ pub enum TrayIconEvent {
         position: PhysicalPositionF64,
         rect: Py<Rect>,
     },
+    _NonExhaustive(),
 }
 
 impl TrayIconEvent {
@@ -283,11 +284,7 @@ impl TrayIconEvent {
                 position: from_rs_position(py, position)?,
                 rect: from_rs_rect(py, rect)?,
             },
-            event => {
-                return Err(PyNotImplementedError::new_err(format!(
-                    "Please make a issue for unimplemented TrayIconEvent: {event:?}",
-                )))
-            }
+            _ => Self::_NonExhaustive(),
         };
         Ok(event)
     }

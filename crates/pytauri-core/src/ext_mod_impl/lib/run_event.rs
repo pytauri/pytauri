@@ -1,5 +1,4 @@
 use pyo3::{
-    exceptions::PyNotImplementedError,
     prelude::*,
     types::{PyInt, PyString},
     IntoPyObject,
@@ -41,10 +40,11 @@ pub enum RunEvent {
     // use `on_menu_event` and `on_tray_icon_event` instead.
     MenuEvent(Py<MenuEvent>),
     TrayIconEvent(Py<TrayIconEvent>),
+    _NonExhaustive(),
 }
 
 impl RunEvent {
-    pub(crate) fn new(py: Python<'_>, value: tauri::RunEvent) -> PyResult<Self> {
+    pub(crate) fn from_tauri(py: Python<'_>, value: tauri::RunEvent) -> PyResult<Self> {
         let ret = match value {
             tauri::RunEvent::Exit => Self::Exit(),
             tauri::RunEvent::ExitRequested { code, api, .. } => {
@@ -77,11 +77,7 @@ impl RunEvent {
                     .into_pyobject(py)?
                     .unbind(),
             ),
-            event => {
-                return Err(PyNotImplementedError::new_err(format!(
-                    "Please make a issue for unimplemented RunEvent: {event:?}",
-                )))
-            }
+            _ => Self::_NonExhaustive(),
         };
         Ok(ret)
     }

@@ -337,6 +337,10 @@ if TYPE_CHECKING:
 
             _0: TrayIconEventType
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
         # When adding new variants, remember to update `RunEventType`.
 
     @final
@@ -632,6 +636,12 @@ if TYPE_CHECKING:
 
             def __new__(cls, label: str, /) -> Self: ...
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `EventTargetType`.
+
     class Emitter:
         """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)"""
 
@@ -717,6 +727,7 @@ RunEventType = TypeAliasType(
         RunEvent.MainEventsCleared,
         RunEvent.MenuEvent,
         RunEvent.TrayIconEvent,
+        RunEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
@@ -772,6 +783,7 @@ EventTargetType = TypeAliasType(
         EventTarget.Window,
         EventTarget.Webview,
         EventTarget.WebviewWindow,
+        EventTarget._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [EventTarget][pytauri.ffi.EventTarget] for details."""

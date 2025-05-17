@@ -99,9 +99,9 @@ impl From<tauri::Size> for Size {
 
 macro_rules! physical_position {
     ($vis:vis, $name:ident, $ty:ty) => {
-        #[doc = "See also: [tauri::PhysicalPosition]"]
-        #[doc = ""]
-        #[doc = "`(x, y)`"]
+        /// See also: [tauri::PhysicalPosition]
+        ///
+        /// `(x, y)`
         #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
         #[pyo3(transparent)]
         $vis struct $name($vis Py<PyTuple>);

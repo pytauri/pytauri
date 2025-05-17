@@ -143,6 +143,10 @@ if TYPE_CHECKING:
             @property
             def rect(self, /) -> Rect: ...
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
         # When adding new variants, remember to update `TrayIconEventType`.
 
     @final
@@ -183,6 +187,7 @@ TrayIconEventType = TypeAliasType(
         TrayIconEvent.Enter,
         TrayIconEvent.Move,
         TrayIconEvent.Leave,
+        TrayIconEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [TrayIconEvent][pytauri.ffi.tray.TrayIconEvent] for details."""
