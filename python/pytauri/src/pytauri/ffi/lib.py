@@ -4,6 +4,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from enum import Enum, auto
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -48,6 +49,7 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "Theme",
     "Url",
     "builder_factory",
     "context_factory",
@@ -184,6 +186,7 @@ if TYPE_CHECKING:
 
         def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
         def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def set_theme(self, theme: Optional["Theme"], /) -> None: ...
         def default_window_icon(self, /) -> Optional[Image]:
             """Returns the default window icon.
 
@@ -668,6 +671,18 @@ if TYPE_CHECKING:
             """
             ...
 
+    @final
+    class Theme(Enum):
+        """[tauri::Theme](https://docs.rs/tauri/latest/tauri/enum.Theme.html)
+
+        !!! warning
+            See [pytauri.ffi.menu.NativeIcon][].
+        """
+
+        Light = auto()
+        Dark = auto()
+        _NonExhaustive = object()
+
 
 else:
     App = pytauri_mod.App
@@ -688,6 +703,7 @@ else:
     Rect = pytauri_mod.Rect
     EventTarget = pytauri_mod.EventTarget
     Emitter = pytauri_mod.Emitter
+    Theme = pytauri_mod.Theme
 
 RunEventType = TypeAliasType(
     "RunEventType",

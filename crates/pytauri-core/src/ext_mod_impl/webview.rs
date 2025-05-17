@@ -7,7 +7,7 @@ use crate::{
         image::Image,
         menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position, Url,
+        Position, Theme, Url,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -179,6 +179,10 @@ impl WebviewWindow {
         py.allow_threads(|| delegate_inner!(self, title,))
     }
 
+    fn theme(&self, py: Python<'_>) -> PyResult<Theme> {
+        py.allow_threads(|| delegate_inner!(self, theme,).map(Into::into))
+    }
+
     fn center(&self, py: Python<'_>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, center,))
     }
@@ -309,6 +313,10 @@ impl WebviewWindow {
     #[pyo3(signature = (count))]
     fn set_badge_count(&self, py: Python<'_>, count: Option<i64>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, set_badge_count, count))
+    }
+
+    fn set_theme(&self, py: Python<'_>, theme: Option<Theme>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_theme, theme.map(Into::into)))
     }
 
     fn print(&self, py: Python<'_>) -> PyResult<()> {

@@ -29,6 +29,7 @@ pub mod ext_mod {
         manager::Manager,
         rect::{Position, Rect, Size},
         run_event::{CloseRequestApi, ExitRequestApi, RunEvent},
+        theme::Theme,
     };
 
     pub use ext_mod_impl::lib::{
