@@ -34,6 +34,8 @@ from pytauri.ffi import (
     SizeType,
     Theme,
     Url,
+    WebviewEvent,
+    WebviewEventType,
     builder_factory,
     context_factory,
 )
@@ -74,6 +76,8 @@ __all__ = [
     "SizeType",
     "Theme",
     "Url",
+    "WebviewEvent",
+    "WebviewEventType",
     "builder_factory",
     "context_factory",
 ]

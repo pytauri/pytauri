@@ -19,7 +19,7 @@ _webview_mod = pytauri_mod.webview
 
 
 if TYPE_CHECKING:
-    from pytauri.ffi import PositionType, Theme, Url
+    from pytauri.ffi import PositionType, Theme, Url, WebviewEventType
     from pytauri.ffi.menu import ImplContextMenu, Menu, MenuEvent
     from pytauri.ffi.window import Window
     from pytauri.image import Image
@@ -109,6 +109,14 @@ if TYPE_CHECKING:
         def set_zoom(self, scale_factor: float, /) -> None: ...
         def clear_all_browsing_data(self) -> None: ...
         def as_ref_webview(self) -> "Webview": ...
+        def on_webview_event(
+            self, handler: Callable[[WebviewEventType], None], /
+        ) -> None:
+            """Registers a window event listener.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
 
     @final
     class Webview:

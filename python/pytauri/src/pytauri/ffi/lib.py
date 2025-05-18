@@ -54,6 +54,8 @@ __all__ = [
     "SizeType",
     "Theme",
     "Url",
+    "WebviewEvent",
+    "WebviewEventType",
     "builder_factory",
     "context_factory",
 ]
@@ -318,6 +320,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::WebviewEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.WebviewEvent)"""
 
             label: str
+            event: "WebviewEventType"
 
         @final
         class Ready:
@@ -402,6 +405,26 @@ if TYPE_CHECKING:
             """Reserved for `#[non_exhaustive]`"""
 
         # When adding new variants, remember to update `DragDropEventType`.
+
+    @final
+    class WebviewEvent:
+        """[tauri::WebviewEvent](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html)"""
+
+        @final
+        class DragDrop(NamedTuple):
+            """[tauri::WebviewEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html#variant.DragDrop)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "DragDropEventType"
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `WebviewEventType`.
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -739,6 +762,7 @@ else:
     ExitRequestApi = pytauri_mod.ExitRequestApi
     CloseRequestApi = pytauri_mod.CloseRequestApi
     DragDropEvent = pytauri_mod.DragDropEvent
+    WebviewEvent = pytauri_mod.WebviewEvent
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -779,6 +803,15 @@ DragDropEventType = TypeAliasType(
     ],
 )
 """See [DragDropEvent][pytauri.ffi.DragDropEvent] for details."""
+
+WebviewEventType = TypeAliasType(
+    "WebviewEventType",
+    Union[
+        WebviewEvent.DragDrop,
+        WebviewEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [WebviewEvent][pytauri.ffi.WebviewEvent] for details."""
 
 ImplManager = TypeAliasType("ImplManager", Union[App, AppHandle, "WebviewWindow"])
 

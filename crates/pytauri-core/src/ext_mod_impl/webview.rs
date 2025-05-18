@@ -7,7 +7,7 @@ use crate::{
         image::Image,
         menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position, Theme, Url,
+        Position, Theme, Url, WebviewEvent,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -349,6 +349,30 @@ impl WebviewWindow {
     fn as_ref_webview(&self) -> Webview {
         let webview = self.0.inner_ref().as_ref().clone();
         Webview::new(webview)
+    }
+
+    /// TODO: This method only exists in [tauri::webview::Webview],
+    /// we should submit a PR to synchronize it to [tauri::webview::WebviewWindow].
+    fn on_webview_event(&self, py: Python<'_>, handler: PyObject) {
+        py.allow_threads(|| {
+            self.0
+                .inner_ref()
+                .as_ref()
+                .on_webview_event(move |webview_event| {
+                    Python::with_gil(|py| {
+                        let webview_event: WebviewEvent =
+                            WebviewEvent::from_tauri(py, webview_event)
+                                // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
+                                .expect("Failed to convert `WebviewEvent` to pyobject");
+
+                        let handler = handler.bind(py);
+                        let result = handler.call1((webview_event,));
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `WebviewWindow::on_webview_event` handler"
+                        });
+                    })
+                })
+        })
     }
 }
 

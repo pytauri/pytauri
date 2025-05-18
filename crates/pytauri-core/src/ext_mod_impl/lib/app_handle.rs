@@ -110,7 +110,7 @@ impl AppHandle {
                         let app_handle: &Py<Self> = &moved_slf;
                         debug_assert_app_handle_py_is_rs(app_handle, _app_handle);
                         let tray_icon_event: TrayIconEvent =
-                            TrayIconEvent::from_tauri(py, tray_icon_event)
+                            TrayIconEvent::from_tauri(py, &tray_icon_event)
                                 // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
                                 .expect("Failed to convert rust `TrayIconEvent` to pyobject");
 

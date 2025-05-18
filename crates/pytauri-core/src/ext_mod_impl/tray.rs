@@ -103,7 +103,7 @@ impl TrayIcon {
                         let tray_icon: &Py<Self> = &moved_slf;
                         debug_assert_eq!(tray_icon.get().0.inner_ref().id(), _tray_icon.id());
                         let tray_icon_event: TrayIconEvent =
-                            TrayIconEvent::from_tauri(py, tray_icon_event)
+                            TrayIconEvent::from_tauri(py, &tray_icon_event)
                                 // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
                                 .expect("Failed to convert rust `TrayIconEvent` to pyobject");
 
@@ -219,8 +219,8 @@ pub enum TrayIconEvent {
 }
 
 impl TrayIconEvent {
-    pub(crate) fn from_tauri(py: Python<'_>, event: tray::TrayIconEvent) -> PyResult<Self> {
-        fn from_rs_id(py: Python<'_>, id: tray::TrayIconId) -> Py<TrayIconId> {
+    pub(crate) fn from_tauri(py: Python<'_>, event: &tray::TrayIconEvent) -> PyResult<Self> {
+        fn from_rs_id(py: Python<'_>, id: &tray::TrayIconId) -> Py<TrayIconId> {
             TrayIconId::intern(py, &id.0).unbind()
         }
         fn from_rs_position(
@@ -253,10 +253,10 @@ impl TrayIconEvent {
                 button_state,
             } => Self::Click {
                 id: from_rs_id(py, id),
-                position: from_rs_position(py, position)?,
-                rect: from_rs_rect(py, rect)?,
-                button: from_rs_button(py, button)?,
-                button_state: from_rs_button_state(py, button_state)?,
+                position: from_rs_position(py, *position)?,
+                rect: from_rs_rect(py, *rect)?,
+                button: from_rs_button(py, *button)?,
+                button_state: from_rs_button_state(py, *button_state)?,
             },
             tray::TrayIconEvent::DoubleClick {
                 id,
@@ -265,24 +265,24 @@ impl TrayIconEvent {
                 button,
             } => Self::DoubleClick {
                 id: from_rs_id(py, id),
-                position: from_rs_position(py, position)?,
-                rect: from_rs_rect(py, rect)?,
-                button: from_rs_button(py, button)?,
+                position: from_rs_position(py, *position)?,
+                rect: from_rs_rect(py, *rect)?,
+                button: from_rs_button(py, *button)?,
             },
             tray::TrayIconEvent::Enter { id, position, rect } => Self::Enter {
                 id: from_rs_id(py, id),
-                position: from_rs_position(py, position)?,
-                rect: from_rs_rect(py, rect)?,
+                position: from_rs_position(py, *position)?,
+                rect: from_rs_rect(py, *rect)?,
             },
             tray::TrayIconEvent::Move { id, position, rect } => Self::Move {
                 id: from_rs_id(py, id),
-                position: from_rs_position(py, position)?,
-                rect: from_rs_rect(py, rect)?,
+                position: from_rs_position(py, *position)?,
+                rect: from_rs_rect(py, *rect)?,
             },
             tray::TrayIconEvent::Leave { id, position, rect } => Self::Leave {
                 id: from_rs_id(py, id),
-                position: from_rs_position(py, position)?,
-                rect: from_rs_rect(py, rect)?,
+                position: from_rs_position(py, *position)?,
+                rect: from_rs_rect(py, *rect)?,
             },
             _ => Self::_NonExhaustive(),
         };

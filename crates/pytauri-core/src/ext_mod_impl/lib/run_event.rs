@@ -9,7 +9,7 @@ use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
 use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent, PhysicalPositionF64};
 
-/// see also: [tauri::RunEvent]
+/// See also: [tauri::RunEvent]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub enum RunEvent {
@@ -32,8 +32,7 @@ pub enum RunEvent {
     #[non_exhaustive]
     WebviewEvent {
         label: Py<PyString>,
-        // TODO:
-        // event: WebviewEvent,
+        event: Py<WebviewEvent>,
     },
     Ready(),
     Resumed(),
@@ -63,10 +62,11 @@ impl RunEvent {
                 // if `label` is immutable, we can intern it to save memory.
                 label: PyString::intern(py, &label).unbind(),
             },
-            tauri::RunEvent::WebviewEvent {
-                label, /* TODO */ ..
-            } => Self::WebviewEvent {
+            tauri::RunEvent::WebviewEvent { label, event, .. } => Self::WebviewEvent {
                 label: PyString::intern(py, &label).unbind(),
+                event: WebviewEvent::from_tauri(py, &event)?
+                    .into_pyobject(py)?
+                    .unbind(),
             },
             tauri::RunEvent::Ready => Self::Ready(),
             tauri::RunEvent::Resumed => Self::Resumed(),
@@ -75,7 +75,7 @@ impl RunEvent {
                 Self::MenuEvent(MenuEvent::intern(py, &event.id.0).unbind())
             }
             tauri::RunEvent::TrayIconEvent(event) => Self::TrayIconEvent(
-                TrayIconEvent::from_tauri(py, event)?
+                TrayIconEvent::from_tauri(py, &event)?
                     .into_pyobject(py)?
                     .unbind(),
             ),
@@ -134,13 +134,13 @@ struct VecPathBuf(Py<PyList>);
 
 impl VecPathBuf {
     #[inline]
-    fn from_tauri(py: Python<'_>, paths: Vec<PathBuf>) -> PyResult<Self> {
+    fn from_tauri(py: Python<'_>, paths: &Vec<PathBuf>) -> PyResult<Self> {
         let lst = PyList::new(py, paths)?;
         Ok(Self(lst.unbind()))
     }
 }
 
-/// see also: [tauri::DragDropEvent]
+/// See also: [tauri::DragDropEvent]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub enum DragDropEvent {
@@ -167,20 +167,44 @@ pub enum DragDropEvent {
 }
 
 impl DragDropEvent {
-    fn from_tauri(py: Python<'_>, value: tauri::DragDropEvent) -> PyResult<Self> {
+    fn from_tauri(py: Python<'_>, value: &tauri::DragDropEvent) -> PyResult<Self> {
         let ret = match value {
             tauri::DragDropEvent::Enter { paths, position } => Self::Enter {
                 paths: VecPathBuf::from_tauri(py, paths)?,
-                position: PhysicalPositionF64::from_tauri(py, position)?,
+                position: PhysicalPositionF64::from_tauri(py, *position)?,
             },
             tauri::DragDropEvent::Over { position } => Self::Over {
-                position: PhysicalPositionF64::from_tauri(py, position)?,
+                position: PhysicalPositionF64::from_tauri(py, *position)?,
             },
             tauri::DragDropEvent::Drop { paths, position } => Self::Drop {
                 paths: VecPathBuf::from_tauri(py, paths)?,
-                position: PhysicalPositionF64::from_tauri(py, position)?,
+                position: PhysicalPositionF64::from_tauri(py, *position)?,
             },
             tauri::DragDropEvent::Leave => Self::Leave(),
+            _ => Self::_NonExhaustive(),
+        };
+        Ok(ret)
+    }
+}
+
+/// See also: [tauri::WebviewEvent]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub enum WebviewEvent {
+    // use `Py<T>` to avoid creating new obj every time visiting the field,
+    // see: <https://pyo3.rs/v0.23.4/faq.html#pyo3get-clones-my-field>
+    DragDrop(Py<DragDropEvent>),
+    _NonExhaustive(),
+}
+
+impl WebviewEvent {
+    pub(crate) fn from_tauri(py: Python<'_>, value: &tauri::WebviewEvent) -> PyResult<Self> {
+        let ret = match value {
+            tauri::WebviewEvent::DragDrop(event) => Self::DragDrop(
+                DragDropEvent::from_tauri(py, event)?
+                    .into_pyobject(py)?
+                    .unbind(),
+            ),
             _ => Self::_NonExhaustive(),
         };
         Ok(ret)
