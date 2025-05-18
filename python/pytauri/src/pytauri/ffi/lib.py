@@ -56,6 +56,8 @@ __all__ = [
     "Url",
     "WebviewEvent",
     "WebviewEventType",
+    "WindowEvent",
+    "WindowEventType",
     "builder_factory",
     "context_factory",
 ]
@@ -314,6 +316,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::WindowEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.WindowEvent)"""
 
             label: str
+            event: "WindowEventType"
 
         @final
         class WebviewEvent:
@@ -425,6 +428,83 @@ if TYPE_CHECKING:
             """Reserved for `#[non_exhaustive]`"""
 
         # When adding new variants, remember to update `WebviewEventType`.
+
+    @final
+    class WindowEvent:
+        """[tauri::WindowEvent](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html)"""
+
+        @final
+        class Resized(NamedTuple):
+            """[tauri::WindowEvent::Resized](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Resized)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "_PhysicalSizeU32"
+
+        @final
+        class Moved(NamedTuple):
+            """[tauri::WindowEvent::Moved](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Moved)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "_PhysicalPositionI32"
+
+        @final
+        class CloseRequested:
+            """[tauri::WindowEvent::CloseRequested](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.CloseRequested)"""
+
+            api: CloseRequestApi
+
+        @final
+        class Destroyed:
+            """[tauri::WindowEvent::Destroyed](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Destroyed)"""
+
+        @final
+        class Focused(NamedTuple):
+            """[tauri::WindowEvent::Focused](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Focused)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: bool
+
+        @final
+        class ScaleFactorChanged:
+            """[tauri::WindowEvent::ScaleFactorChanged](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.ScaleFactorChanged)"""
+
+            scale_factor: float
+            new_inner_size: _PhysicalSizeU32
+
+        @final
+        class DragDrop(NamedTuple):
+            """[tauri::WindowEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.DragDrop)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "DragDropEventType"
+
+        @final
+        class ThemeChanged(NamedTuple):
+            """[tauri::WindowEvent::ThemeChanged](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.ThemeChanged)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "Theme"
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `WindowEventType`.
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -763,6 +843,7 @@ else:
     CloseRequestApi = pytauri_mod.CloseRequestApi
     DragDropEvent = pytauri_mod.DragDropEvent
     WebviewEvent = pytauri_mod.WebviewEvent
+    WindowEvent = pytauri_mod.WindowEvent
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -812,6 +893,22 @@ WebviewEventType = TypeAliasType(
     ],
 )
 """See [WebviewEvent][pytauri.ffi.WebviewEvent] for details."""
+
+WindowEventType = TypeAliasType(
+    "WindowEventType",
+    Union[
+        WindowEvent.Resized,
+        WindowEvent.Moved,
+        WindowEvent.CloseRequested,
+        WindowEvent.Destroyed,
+        WindowEvent.Focused,
+        WindowEvent.ScaleFactorChanged,
+        WindowEvent.DragDrop,
+        WindowEvent.ThemeChanged,
+        WindowEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [WindowEvent][pytauri.ffi.WindowEvent] for details."""
 
 ImplManager = TypeAliasType("ImplManager", Union[App, AppHandle, "WebviewWindow"])
 

@@ -19,7 +19,7 @@ _webview_mod = pytauri_mod.webview
 
 
 if TYPE_CHECKING:
-    from pytauri.ffi import PositionType, Theme, Url, WebviewEventType
+    from pytauri.ffi import PositionType, Theme, Url, WebviewEventType, WindowEventType
     from pytauri.ffi.menu import ImplContextMenu, Menu, MenuEvent
     from pytauri.ffi.window import Window
     from pytauri.image import Image
@@ -37,6 +37,15 @@ if TYPE_CHECKING:
             ...
 
         def label(self) -> str: ...
+        def on_window_event(
+            self, handler: Callable[[WindowEventType], None], /
+        ) -> None:
+            """Registers a window event listener.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+
         def on_menu_event(
             self, handler: Callable[["Self", "MenuEvent"], None], /
         ) -> None:

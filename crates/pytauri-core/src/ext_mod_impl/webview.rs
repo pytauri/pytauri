@@ -7,7 +7,7 @@ use crate::{
         image::Image,
         menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position, Theme, Url, WebviewEvent,
+        Position, Theme, Url, WebviewEvent, WindowEvent,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -47,6 +47,24 @@ impl WebviewWindow {
         let webview_window = self.0.inner_ref();
         // if `label` is immutable, we can intern it to save memory.
         PyString::intern(py, webview_window.label())
+    }
+
+    fn on_window_event(&self, py: Python<'_>, handler: PyObject) {
+        py.allow_threads(|| {
+            self.0.inner_ref().on_window_event(move |window_event| {
+                Python::with_gil(|py| {
+                    let window_event: WindowEvent = WindowEvent::from_tauri(py, window_event)
+                        // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
+                        .expect("Failed to convert `WindowEvent` to pyobject");
+
+                    let handler = handler.bind(py);
+                    let result = handler.call1((window_event,));
+                    result.unwrap_unraisable_py_result(py, Some(handler), || {
+                        "Python exception occurred in `WebviewWindow::on_window_event` handler"
+                    });
+                })
+            })
+        })
     }
 
     fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {

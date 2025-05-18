@@ -2,12 +2,15 @@ use std::path::PathBuf;
 
 use pyo3::{
     prelude::*,
-    types::{PyInt, PyList, PyString},
-    IntoPyObject,
+    types::{PyBool, PyFloat, PyInt, PyList, PyString},
+    BoundObject as _, IntoPyObject,
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
 
-use crate::ext_mod::{menu::MenuEvent, tray::TrayIconEvent, PhysicalPositionF64};
+use crate::ext_mod::{
+    menu::MenuEvent, tray::TrayIconEvent, PhysicalPositionF64, PhysicalPositionI32,
+    PhysicalSizeU32, Theme,
+};
 
 /// See also: [tauri::RunEvent]
 #[pyclass(frozen)]
@@ -26,8 +29,7 @@ pub enum RunEvent {
     #[non_exhaustive]
     WindowEvent {
         label: Py<PyString>,
-        // TODO:
-        // event: WindowEvent,
+        event: Py<WindowEvent>,
     },
     #[non_exhaustive]
     WebviewEvent {
@@ -56,13 +58,15 @@ impl RunEvent {
                 let api = ExitRequestApi::new(api).into_pyobject(py)?.unbind();
                 Self::ExitRequested { code, api }
             }
-            tauri::RunEvent::WindowEvent {
-                label, /* TODO */ ..
-            } => Self::WindowEvent {
-                // if `label` is immutable, we can intern it to save memory.
+            tauri::RunEvent::WindowEvent { label, event, .. } => Self::WindowEvent {
+                // PERF: if `label` is immutable, we can intern it to save memory.
                 label: PyString::intern(py, &label).unbind(),
+                event: WindowEvent::from_tauri(py, &event)?
+                    .into_pyobject(py)?
+                    .unbind(),
             },
             tauri::RunEvent::WebviewEvent { label, event, .. } => Self::WebviewEvent {
+                // PERF: if `label` is immutable, we can intern it to save memory.
                 label: PyString::intern(py, &label).unbind(),
                 event: WebviewEvent::from_tauri(py, &event)?
                     .into_pyobject(py)?
@@ -205,6 +209,77 @@ impl WebviewEvent {
                     .into_pyobject(py)?
                     .unbind(),
             ),
+            _ => Self::_NonExhaustive(),
+        };
+        Ok(ret)
+    }
+}
+
+/// See also: [tauri::WindowEvent]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub enum WindowEvent {
+    // use `Py<T>` to avoid creating new obj every time visiting the field,
+    // see: <https://pyo3.rs/v0.23.4/faq.html#pyo3get-clones-my-field>
+    #[expect(private_interfaces)]
+    Resized(PhysicalSizeU32),
+    #[expect(private_interfaces)]
+    Moved(PhysicalPositionI32),
+    #[non_exhaustive]
+    CloseRequested {
+        api: Py<CloseRequestApi>,
+    },
+    Destroyed(),
+    Focused(Py<PyBool>),
+    #[non_exhaustive]
+    ScaleFactorChanged {
+        scale_factor: Py<PyFloat>,
+        #[expect(private_interfaces)]
+        new_inner_size: PhysicalSizeU32,
+    },
+    DragDrop(Py<DragDropEvent>),
+    ThemeChanged(Py<Theme>),
+    _NonExhaustive(),
+}
+
+impl WindowEvent {
+    // NOTE: Because the parameter of [tauri::webview::WebviewWindow::on_window_event] is `&WindowEvent`,
+    // and we do not want to clone [tauri::WindowEvent::DragDrop] (since it contains [Vec<PathBuf>]),
+    // we use `&tauri::WindowEvent` as the parameter here.
+    pub(crate) fn from_tauri(py: Python<'_>, value: &tauri::WindowEvent) -> PyResult<Self> {
+        let ret = match value {
+            tauri::WindowEvent::Resized(size) => {
+                Self::Resized(PhysicalSizeU32::from_tauri(py, *size)?)
+            }
+            tauri::WindowEvent::Moved(pos) => {
+                Self::Moved(PhysicalPositionI32::from_tauri(py, *pos)?)
+            }
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                let api = CloseRequestApi::new(api.clone())
+                    .into_pyobject(py)?
+                    .unbind();
+                Self::CloseRequested { api }
+            }
+            tauri::WindowEvent::Destroyed => Self::Destroyed(),
+            tauri::WindowEvent::Focused(focused) => {
+                Self::Focused(PyBool::new(py, *focused).unbind())
+            }
+            tauri::WindowEvent::ScaleFactorChanged {
+                scale_factor,
+                new_inner_size,
+                ..
+            } => Self::ScaleFactorChanged {
+                scale_factor: PyFloat::new(py, *scale_factor).unbind(),
+                new_inner_size: PhysicalSizeU32::from_tauri(py, *new_inner_size)?,
+            },
+            tauri::WindowEvent::DragDrop(event) => Self::DragDrop(
+                DragDropEvent::from_tauri(py, event)?
+                    .into_pyobject(py)?
+                    .unbind(),
+            ),
+            tauri::WindowEvent::ThemeChanged(theme) => {
+                Self::ThemeChanged(Theme::from(*theme).into_pyobject(py)?.unbind())
+            }
             _ => Self::_NonExhaustive(),
         };
         Ok(ret)
