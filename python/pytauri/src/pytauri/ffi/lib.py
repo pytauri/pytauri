@@ -10,7 +10,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    NamedTuple,
     NewType,
     NoReturn,
     Optional,
@@ -338,7 +337,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::MainEventsCleared](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MainEventsCleared)"""
 
         @final
-        class MenuEvent(NamedTuple):
+        class MenuEvent(tuple[MenuEvent]):
             """[tauri::RunEvent::MenuEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MenuEvent)
 
             !!! warning
@@ -346,9 +345,12 @@ if TYPE_CHECKING:
             """
 
             _0: MenuEvent
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: MenuEvent, /) -> Self: ...
 
         @final
-        class TrayIconEvent(NamedTuple):
+        class TrayIconEvent(tuple[TrayIconEventType]):
             """[tauri::RunEvent::TrayIconEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.TrayIconEvent)
 
             !!! warning
@@ -356,6 +358,9 @@ if TYPE_CHECKING:
             """
 
             _0: TrayIconEventType
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: TrayIconEventType, /) -> Self: ...
 
         @final
         class _NonExhaustive:
@@ -414,7 +419,7 @@ if TYPE_CHECKING:
         """[tauri::WebviewEvent](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html)"""
 
         @final
-        class DragDrop(NamedTuple):
+        class DragDrop(tuple["DragDropEventType"]):
             """[tauri::WebviewEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html#variant.DragDrop)
 
             !!! warning
@@ -422,6 +427,9 @@ if TYPE_CHECKING:
             """
 
             _0: "DragDropEventType"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "DragDropEventType", /) -> Self: ...
 
         @final
         class _NonExhaustive:
@@ -434,24 +442,30 @@ if TYPE_CHECKING:
         """[tauri::WindowEvent](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html)"""
 
         @final
-        class Resized(NamedTuple):
+        class Resized(tuple[_PhysicalSizeU32]):
             """[tauri::WindowEvent::Resized](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Resized)
 
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: "_PhysicalSizeU32"
+            _0: _PhysicalSizeU32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalSizeU32, /) -> Self: ...
 
         @final
-        class Moved(NamedTuple):
+        class Moved(tuple[_PhysicalPositionI32]):
             """[tauri::WindowEvent::Moved](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Moved)
 
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: "_PhysicalPositionI32"
+            _0: _PhysicalPositionI32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalPositionI32, /) -> Self: ...
 
         @final
         class CloseRequested:
@@ -464,7 +478,7 @@ if TYPE_CHECKING:
             """[tauri::WindowEvent::Destroyed](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Destroyed)"""
 
         @final
-        class Focused(NamedTuple):
+        class Focused(tuple[bool]):
             """[tauri::WindowEvent::Focused](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Focused)
 
             !!! warning
@@ -472,6 +486,9 @@ if TYPE_CHECKING:
             """
 
             _0: bool
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: bool, /) -> Self: ...
 
         @final
         class ScaleFactorChanged:
@@ -481,7 +498,7 @@ if TYPE_CHECKING:
             new_inner_size: _PhysicalSizeU32
 
         @final
-        class DragDrop(NamedTuple):
+        class DragDrop(tuple["DragDropEventType"]):
             """[tauri::WindowEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.DragDrop)
 
             !!! warning
@@ -489,9 +506,12 @@ if TYPE_CHECKING:
             """
 
             _0: "DragDropEventType"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "DragDropEventType", /) -> Self: ...
 
         @final
-        class ThemeChanged(NamedTuple):
+        class ThemeChanged(tuple["Theme"]):
             """[tauri::WindowEvent::ThemeChanged](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.ThemeChanged)
 
             !!! warning
@@ -499,6 +519,9 @@ if TYPE_CHECKING:
             """
 
             _0: "Theme"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "Theme", /) -> Self: ...
 
         @final
         class _NonExhaustive:
@@ -661,7 +684,7 @@ if TYPE_CHECKING:
         """[tauri::Position](https://docs.rs/tauri/latest/tauri/enum.Position.html)"""
 
         @final
-        class Physical(NamedTuple):
+        class Physical(tuple[_PhysicalPositionI32]):
             """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)
 
             !!! warning
@@ -670,9 +693,12 @@ if TYPE_CHECKING:
             """
 
             _0: _PhysicalPositionI32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalPositionI32, /) -> Self: ...
 
         @final
-        class Logical(NamedTuple):
+        class Logical(tuple[_LogicalPositionF64]):
             """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)
 
             !!! warning
@@ -680,13 +706,16 @@ if TYPE_CHECKING:
             """
 
             _0: _LogicalPositionF64
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _LogicalPositionF64, /) -> Self: ...
 
     @final
     class Size:
         """[tauri::Size](https://docs.rs/tauri/latest/tauri/enum.Size.html)"""
 
         @final
-        class Physical(NamedTuple):
+        class Physical(tuple[_PhysicalSizeU32]):
             """[tauri::Size::Physical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Physical)
 
             !!! warning
@@ -694,9 +723,12 @@ if TYPE_CHECKING:
             """
 
             _0: _PhysicalSizeU32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalSizeU32, /) -> Self: ...
 
         @final
-        class Logical(NamedTuple):
+        class Logical(tuple[_LogicalSizeF64]):
             """[tauri::Size::Logical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Logical)
 
             !!! warning
@@ -704,6 +736,9 @@ if TYPE_CHECKING:
             """
 
             _0: _LogicalSizeF64
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _LogicalSizeF64, /) -> Self: ...
 
     @final
     class Rect:
