@@ -12,19 +12,21 @@ pub struct Rect {
 }
 
 impl Rect {
-    #[expect(dead_code)] // TODO
-    pub(crate) fn to_tauri(&self) -> tauri::Rect {
-        tauri::Rect {
-            position: (*self.position.get()).into(),
-            size: (*self.size.get()).into(),
-        }
+    pub(crate) fn from_tauri(py: Python<'_>, rect: tauri::Rect) -> PyResult<Self> {
+        let position = Position::from_tauri(py, rect.position)?
+            .into_pyobject(py)?
+            .unbind();
+        let size = Size::from_tauri(py, rect.size)?.into_pyobject(py)?.unbind();
+        Ok(Self { position, size })
     }
 
-    pub(crate) fn from_tauri(py: Python<'_>, rect: tauri::Rect) -> PyResult<Self> {
-        Ok(Self {
-            position: Position::from(rect.position).into_pyobject(py)?.unbind(),
-            size: Size::from(rect.size).into_pyobject(py)?.unbind(),
-        })
+    #[expect(dead_code)] // TODO
+    pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<tauri::Rect> {
+        let ret = tauri::Rect {
+            position: self.position.get().to_tauri(py)?,
+            size: self.size.get().to_tauri(py)?,
+        };
+        Ok(ret)
     }
 }
 
@@ -37,69 +39,65 @@ impl Rect {
     }
 }
 
-/// see also: [tauri::Position]
-#[derive(Clone, Copy)]
+/// See also: [tauri::Position]
 #[pyclass(frozen)]
 pub enum Position {
-    /// `x, y`
-    Physical(i32, i32),
-    /// `x, y`
-    Logical(f64, f64),
+    #[expect(private_interfaces)]
+    Physical(PhysicalPositionI32),
+    #[expect(private_interfaces)]
+    Logical(LogicalPositionF64),
 }
 
-impl From<Position> for tauri::Position {
-    fn from(val: Position) -> Self {
-        match val {
-            Position::Physical(x, y) => tauri::PhysicalPosition::new(x, y).into(),
-            Position::Logical(x, y) => tauri::LogicalPosition::new(x, y).into(),
-        }
+impl Position {
+    pub(crate) fn from_tauri(py: Python<'_>, position: tauri::Position) -> PyResult<Self> {
+        let ret = match position {
+            tauri::Position::Physical(pos) => {
+                Position::Physical(PhysicalPositionI32::from_tauri(py, pos)?)
+            }
+            tauri::Position::Logical(pos) => {
+                Position::Logical(LogicalPositionF64::from_tauri(py, pos)?)
+            }
+        };
+        Ok(ret)
     }
-}
 
-impl From<tauri::Position> for Position {
-    fn from(val: tauri::Position) -> Self {
-        match val {
-            tauri::Position::Physical(tauri::PhysicalPosition { x, y }) => Position::Physical(x, y),
-            tauri::Position::Logical(tauri::LogicalPosition { x, y }) => Position::Logical(x, y),
+    pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<tauri::Position> {
+        match self {
+            Position::Physical(pos) => pos.to_tauri(py).map(tauri::Position::Physical),
+            Position::Logical(pos) => pos.to_tauri(py).map(tauri::Position::Logical),
         }
     }
 }
 
 /// see also: [tauri::Size]
-#[derive(Clone, Copy)]
 #[pyclass(frozen)]
 pub enum Size {
-    /// `width, height`
-    Physical(u32, u32),
-    /// `width, height`
-    Logical(f64, f64),
+    #[expect(private_interfaces)]
+    Physical(PhysicalSizeU32),
+    #[expect(private_interfaces)]
+    Logical(LogicalSizeF64),
 }
 
-impl From<Size> for tauri::Size {
-    fn from(val: Size) -> Self {
-        match val {
-            Size::Physical(width, height) => tauri::PhysicalSize::new(width, height).into(),
-            Size::Logical(width, height) => tauri::LogicalSize::new(width, height).into(),
+impl Size {
+    pub(crate) fn from_tauri(py: Python<'_>, size: tauri::Size) -> PyResult<Self> {
+        let ret = match size {
+            tauri::Size::Physical(size) => Size::Physical(PhysicalSizeU32::from_tauri(py, size)?),
+            tauri::Size::Logical(size) => Size::Logical(LogicalSizeF64::from_tauri(py, size)?),
+        };
+        Ok(ret)
+    }
+
+    pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<tauri::Size> {
+        match self {
+            Size::Physical(size) => size.to_tauri(py).map(tauri::Size::Physical),
+            Size::Logical(size) => size.to_tauri(py).map(tauri::Size::Logical),
         }
     }
 }
 
-impl From<tauri::Size> for Size {
-    fn from(val: tauri::Size) -> Self {
-        match val {
-            tauri::Size::Physical(tauri::PhysicalSize { width, height }) => {
-                Size::Physical(width, height)
-            }
-            tauri::Size::Logical(tauri::LogicalSize { width, height }) => {
-                Size::Logical(width, height)
-            }
-        }
-    }
-}
-
-macro_rules! physical_position {
-    ($vis:vis, $name:ident, $ty:ty => $from_tauri:ident) => {
-        /// See also: [tauri::PhysicalPosition]
+macro_rules! position {
+    ($vis:vis, $name:ident, $ty:ty => $from_tauri:ident, $to_tauri:ident, $tauri_ty:ty) => {
+        /// See also: [tauri::PhysicalPosition] and [tauri::LogicalPosition]
         ///
         /// `(x, y)`
         #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
@@ -107,16 +105,62 @@ macro_rules! physical_position {
         $vis struct $name($vis Py<PyTuple>);
 
         impl $name {
-            #[inline]
+            #[allow(dead_code)]
             $vis fn $from_tauri(
                 py: Python<'_>,
-                position: tauri::PhysicalPosition<$ty>,
+                value: $tauri_ty,
             ) -> PyResult<Self> {
-                let x_y: ($ty, $ty) = (position.x, position.y); // typing assertion
+                let x_y: ($ty, $ty) = (value.x, value.y); // typing assertion
                 Ok(Self(x_y.into_pyobject(py)?.unbind()))
+            }
+
+            #[allow(dead_code)]
+            $vis fn $to_tauri(
+                &self,
+                py: Python<'_>,
+            ) -> PyResult<$tauri_ty> {
+                let (x, y): ($ty, $ty) = self.0.extract(py)?;
+                type TauriTy = $tauri_ty; // convert to expr `TauriTy`
+                Ok(TauriTy { x, y })
             }
         }
     };
 }
 
-physical_position!(pub(crate), PhysicalPositionF64, f64 => from_tauri);
+macro_rules! size {
+    ($vis:vis, $name:ident, $ty:ty => $from_tauri:ident, $to_tauri:ident, $tauri_ty:ty) => {
+        /// See also: [tauri::PhysicalSize] and [tauri::LogicalSize]
+        ///
+        /// `(width, height)`
+        #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
+        #[pyo3(transparent)]
+        $vis struct $name($vis Py<PyTuple>);
+
+        impl $name {
+            #[allow(dead_code)]
+            $vis fn $from_tauri(
+                py: Python<'_>,
+                value: $tauri_ty,
+            ) -> PyResult<Self> {
+                let width_height: ($ty, $ty) = (value.width, value.height); // typing assertion
+                Ok(Self(width_height.into_pyobject(py)?.unbind()))
+            }
+
+            #[allow(dead_code)]
+            $vis fn $to_tauri(
+                &self,
+                py: Python<'_>,
+            ) -> PyResult<$tauri_ty> {
+                let (width, height): ($ty, $ty) = self.0.extract(py)?;
+                type TauriTy = $tauri_ty; // convert to expr `TauriTy`
+                Ok(TauriTy { width, height })
+            }
+        }
+    };
+}
+
+position!(pub(crate), PhysicalPositionF64, f64 => from_tauri, to_tauri, tauri::PhysicalPosition::<f64>);
+position!(pub(crate), PhysicalPositionI32, i32 => from_tauri, to_tauri, tauri::PhysicalPosition::<i32>);
+position!(pub(crate), LogicalPositionF64, f64 => from_tauri, to_tauri, tauri::LogicalPosition::<f64>);
+size!(pub(crate), PhysicalSizeU32, u32 => from_tauri, to_tauri, tauri::PhysicalSize::<u32>);
+size!(pub(crate), LogicalSizeF64, f64 => from_tauri, to_tauri, tauri::LogicalSize::<f64>);

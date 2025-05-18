@@ -119,8 +119,9 @@ impl WebviewWindow {
         &self,
         py: Python<'_>,
         menu: ImplContextMenu,
-        position: Position,
+        position: Py<Position>,
     ) -> PyResult<()> {
+        let position = position.get().to_tauri(py)?;
         py.allow_threads(|| {
             context_menu_impl!(&menu, |menu| delegate_inner!(
                 self,

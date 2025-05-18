@@ -1736,8 +1736,9 @@ impl ContextMenu {
         py: Python<'_>,
         slf: ImplContextMenu,
         window: Py<ext_mod::window::Window>,
-        position: ext_mod::Position,
+        position: Py<ext_mod::Position>,
     ) -> PyResult<()> {
+        let position = position.get().to_tauri(py)?;
         py.allow_threads(|| {
             let window = window.get().0.inner_ref().to_owned();
             context_menu_impl!(&slf, |menu| {

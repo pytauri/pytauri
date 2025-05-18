@@ -72,6 +72,14 @@ _EventHandlerType = Callable[["Event"], None]
 
 _PhysicalPositionF64 = tuple[float, float]
 """[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+_PhysicalPositionI32 = tuple[int, int]
+"""[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+_LogicalPositionF64 = tuple[float, float]
+"""[tauri::LogicalPosition](https://docs.rs/tauri/latest/tauri/struct.LogicalPosition.html)"""
+_PhysicalSizeU32 = tuple[NonNegativeInt, NonNegativeInt]
+"""[tauri::PhysicalSize](https://docs.rs/tauri/latest/tauri/struct.PhysicalSize.html)"""
+_LogicalSizeF64 = tuple[float, float]
+"""[tauri::PhysicalSize](https://docs.rs/tauri/latest/tauri/struct.LogicalSize.html)"""
 
 _VecPathBuf = list[Path]
 """[tauri::DragDropEvent::Enter::paths](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Enter.field.paths)"""
@@ -553,28 +561,22 @@ if TYPE_CHECKING:
         class Physical(NamedTuple):
             """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)
 
-            `[x, y]`
-
             !!! warning
                 This is actually a `Class` disguised as an `NamedTuple`.
                 See also: <https://pyo3.rs/v0.23.4/class.html#pyclass-enums>.
             """
 
-            _0: int
-            _1: int
+            _0: _PhysicalPositionI32
 
         @final
         class Logical(NamedTuple):
             """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)
 
-            `[x, y]`
-
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: float
-            _1: float
+            _0: _LogicalPositionF64
 
     @final
     class Size:
@@ -584,28 +586,21 @@ if TYPE_CHECKING:
         class Physical(NamedTuple):
             """[tauri::Size::Physical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Physical)
 
-            `[width, height]`
-
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            # (u32, u32)
-            _0: NonNegativeInt
-            _1: NonNegativeInt
+            _0: _PhysicalSizeU32
 
         @final
         class Logical(NamedTuple):
             """[tauri::Size::Logical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Logical)
 
-            `[width, height]`
-
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: float
-            _1: float
+            _0: _LogicalSizeF64
 
     @final
     class Rect:
