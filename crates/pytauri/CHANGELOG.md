@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- [#159](https://github.com/pytauri/pytauri/pull/159) - fix(standalone): explicitly pass `PyString` to `multiprocessing.set_executable`.
+
 ## [0.5.0]
 
 ### BREAKING

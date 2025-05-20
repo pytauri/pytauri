@@ -34,5 +34,5 @@ libc = { workspace = true, optional = true }
 dunce = { workspace = true, optional = true }
 
 # workspace dependencies
-pytauri-core = { workspace = true }
+pytauri-core = { workspace = true, features = ["__private"] }
 pyo3-utils = { workspace = true }

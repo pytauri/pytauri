@@ -12,6 +12,8 @@
 //!
 //! [pyembed]: https://crates.io/crates/pyembed
 
+mod pyembed;
+
 use std::{
     borrow::Cow,
     env::{args_os, current_exe},
@@ -23,11 +25,11 @@ use std::{
 use pyo3::{
     ffi::{self as pyffi, c_str},
     prelude::*,
-    types::{PyDict, PyModule},
+    types::{PyDict, PyModule, PyString},
 };
 
-use crate::pyembed::utils;
-pub use crate::pyembed::{NewInterpreterError, NewInterpreterResult};
+use self::pyembed::utils;
+pub use self::pyembed::{NewInterpreterError, NewInterpreterResult};
 
 #[non_exhaustive]
 enum PyConfigProfile {
@@ -234,9 +236,12 @@ pub fn is_forking() -> bool {
     }
 }
 
+// NOTE: Explicitly specify Python types instead of relying on pyo3 to automatically convert Rust types,
+// because pyo3 may change the type mapping between versions:
+// <https://github.com/PyO3/pyo3/pull/4925>
 fn _post_init_pyi(
     py: Python<'_>,
-    current_exe: &Path,
+    current_exe: Py<PyString>,
     ext_mod: Py<PyModule>,
 ) -> NewInterpreterResult<()> {
     let script = || {
@@ -504,7 +509,10 @@ where
         }
 
         let interpreter = PythonInterpreter::new(config)?;
-        interpreter.with_gil(|py| _post_init_pyi(py, &current_exe, (self.ext_mod)(py)))?;
+        interpreter.with_gil(|py| {
+            let Ok(current_exe) = current_exe.as_os_str().into_pyobject(py);
+            _post_init_pyi(py, current_exe.unbind(), (self.ext_mod)(py))
+        })?;
 
         Ok(interpreter)
     }
