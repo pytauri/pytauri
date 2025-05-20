@@ -11,8 +11,6 @@
 )]
 
 #[cfg(feature = "standalone")]
-mod pyembed;
-#[cfg(feature = "standalone")]
 pub mod standalone;
 
 use pyo3::{

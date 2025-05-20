@@ -12,6 +12,8 @@
 //!
 //! [pyembed]: https://crates.io/crates/pyembed
 
+mod pyembed;
+
 use std::{
     borrow::Cow,
     env::{args_os, current_exe},
@@ -26,8 +28,8 @@ use pyo3::{
     types::{PyDict, PyModule},
 };
 
-use crate::pyembed::utils;
-pub use crate::pyembed::{NewInterpreterError, NewInterpreterResult};
+use self::pyembed::utils;
+pub use self::pyembed::{NewInterpreterError, NewInterpreterResult};
 
 #[non_exhaustive]
 enum PyConfigProfile {
