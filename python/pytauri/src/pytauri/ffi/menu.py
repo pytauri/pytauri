@@ -16,6 +16,8 @@ from typing_extensions import LiteralString, Self, TypeAliasType
 from pytauri.ffi._ext_mod import pytauri_mod
 
 __all__ = [
+    "HELP_SUBMENU_ID",
+    "WINDOW_SUBMENU_ID",
     "AboutMetadata",
     "CheckMenuItem",
     "ContextMenu",

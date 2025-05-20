@@ -111,8 +111,8 @@ required-features = ["pytauri/standalone"]
 
 [dependencies]
 # ...
-pyo3 = { version = "0.24" }
 pytauri = { version = "0.5" }  # (1)!
+pyo3 = { version = "*" }
 ```
 
 1. This is the version at the time of writing this tutorial. There may be a newer version of pytauri available when you use it.

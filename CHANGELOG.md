@@ -114,6 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
             webview_window.on_window_event(window_event_handler)
         ```
 
+- [#158](https://github.com/pytauri/pytauri/pull/158) - chore: bump `pyo3` to `0.25`.
+
 ## [0.5.0]
 
 ### Highlights

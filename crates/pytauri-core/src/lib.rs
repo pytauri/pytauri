@@ -9,7 +9,7 @@ mod ext_mod_impl;
 pub mod tauri_runtime;
 pub mod utils;
 
-use pyo3::{prelude::*, types::PyString};
+use pyo3::prelude::*;
 
 /// You can access this module in Python via `pytuari.EXT_MOD.pytuari`.
 ///
@@ -82,29 +82,16 @@ pub mod ext_mod {
             PredefinedMenuItem, Submenu,
         };
 
-        pub use ext_mod_impl::menu::{
-            ImplContextMenu, MenuEvent, MenuID, MenuItemKind, HELP_SUBMENU_ID, WINDOW_SUBMENU_ID,
-        };
+        // TODO: constants defined outside a module and then re-exported are not supported,
+        // see <https://github.com/PyO3/pyo3/pull/5150#issuecomment-2889031243>.
+        #[pymodule_export]
+        pub const HELP_SUBMENU_ID: &str = ext_mod_impl::menu::HELP_SUBMENU_ID;
+        #[pymodule_export]
+        pub const WINDOW_SUBMENU_ID: &str = ext_mod_impl::menu::WINDOW_SUBMENU_ID;
+
+        pub use ext_mod_impl::menu::{ImplContextMenu, MenuEvent, MenuID, MenuItemKind};
 
         pub(crate) use ext_mod_impl::menu::context_menu_impl;
-
-        // TODO: see also <https://github.com/PyO3/pyo3/issues/3900#issue-2153617797> to export `const &str` to python.
-        macro_rules! intern_var_to_mod {
-            ($mod:expr, $py:expr, $var:ident) => {
-                // NOTE: use [PyString::intern] instead of [pyo3::intern!] to avoid retaining a reference to [PyString] in Rust
-                // ([pyo3::intern!] will create a new `static` variable in Rust).
-                // TODO, PERF: intern the `name` also?
-                $mod.add(stringify!($var), PyString::intern($py, $var))
-            };
-        }
-
-        #[pymodule_init]
-        fn module_init(m: &Bound<'_, PyModule>) -> PyResult<()> {
-            let py = m.py();
-            intern_var_to_mod!(m, py, HELP_SUBMENU_ID)?;
-            intern_var_to_mod!(m, py, WINDOW_SUBMENU_ID)?;
-            Ok(())
-        }
     }
 
     /// see also: [tauri::image]

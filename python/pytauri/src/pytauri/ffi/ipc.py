@@ -165,12 +165,6 @@ if TYPE_CHECKING:
 
 else:
     Invoke = _ipc_mod.Invoke
-
-    class _InvokeResolver(_ipc_mod.InvokeResolver, Generic[_ArgumentsTypeVar]): ...
-
-    # TODO, FIXME, XXX: It seems that `mkdocstrings` cannot correctly handle two `class InvokeResolver`,
-    # so we need this alias
-    InvokeResolver = _InvokeResolver
-
+    InvokeResolver = _ipc_mod.InvokeResolver
     JavaScriptChannelId = _ipc_mod.JavaScriptChannelId
     Channel = _ipc_mod.Channel
