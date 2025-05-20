@@ -28,7 +28,10 @@ pub mod ext_mod {
         listener::Listener,
         manager::Manager,
         rect::{Position, Rect, Size},
-        run_event::RunEvent,
+        run_event::{
+            CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent, WebviewEvent, WindowEvent,
+        },
+        theme::Theme,
     };
 
     pub use ext_mod_impl::lib::{
@@ -45,6 +48,7 @@ pub mod ext_mod {
         app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
         assets::PyAssets,
         manager::manager_method_impl,
+        rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32},
     };
 
     /// see also: [tauri::ipc]

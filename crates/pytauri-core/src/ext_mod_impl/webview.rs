@@ -7,7 +7,7 @@ use crate::{
         image::Image,
         menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::Window,
-        Position, Url,
+        Position, Theme, Url, WebviewEvent, WindowEvent,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -47,6 +47,24 @@ impl WebviewWindow {
         let webview_window = self.0.inner_ref();
         // if `label` is immutable, we can intern it to save memory.
         PyString::intern(py, webview_window.label())
+    }
+
+    fn on_window_event(&self, py: Python<'_>, handler: PyObject) {
+        py.allow_threads(|| {
+            self.0.inner_ref().on_window_event(move |window_event| {
+                Python::with_gil(|py| {
+                    let window_event: WindowEvent = WindowEvent::from_tauri(py, window_event)
+                        // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
+                        .expect("Failed to convert `WindowEvent` to pyobject");
+
+                    let handler = handler.bind(py);
+                    let result = handler.call1((window_event,));
+                    result.unwrap_unraisable_py_result(py, Some(handler), || {
+                        "Python exception occurred in `WebviewWindow::on_window_event` handler"
+                    });
+                })
+            })
+        })
     }
 
     fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {
@@ -119,8 +137,9 @@ impl WebviewWindow {
         &self,
         py: Python<'_>,
         menu: ImplContextMenu,
-        position: Position,
+        position: Py<Position>,
     ) -> PyResult<()> {
+        let position = position.get().to_tauri(py)?;
         py.allow_threads(|| {
             context_menu_impl!(&menu, |menu| delegate_inner!(
                 self,
@@ -177,6 +196,10 @@ impl WebviewWindow {
 
     fn title(&self, py: Python<'_>) -> PyResult<String> {
         py.allow_threads(|| delegate_inner!(self, title,))
+    }
+
+    fn theme(&self, py: Python<'_>) -> PyResult<Theme> {
+        py.allow_threads(|| delegate_inner!(self, theme,).map(Into::into))
     }
 
     fn center(&self, py: Python<'_>) -> PyResult<()> {
@@ -311,6 +334,10 @@ impl WebviewWindow {
         py.allow_threads(|| delegate_inner!(self, set_badge_count, count))
     }
 
+    fn set_theme(&self, py: Python<'_>, theme: Option<Theme>) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_theme, theme.map(Into::into)))
+    }
+
     fn print(&self, py: Python<'_>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, print,))
     }
@@ -340,6 +367,30 @@ impl WebviewWindow {
     fn as_ref_webview(&self) -> Webview {
         let webview = self.0.inner_ref().as_ref().clone();
         Webview::new(webview)
+    }
+
+    /// TODO: This method only exists in [tauri::webview::Webview],
+    /// we should submit a PR to synchronize it to [tauri::webview::WebviewWindow].
+    fn on_webview_event(&self, py: Python<'_>, handler: PyObject) {
+        py.allow_threads(|| {
+            self.0
+                .inner_ref()
+                .as_ref()
+                .on_webview_event(move |webview_event| {
+                    Python::with_gil(|py| {
+                        let webview_event: WebviewEvent =
+                            WebviewEvent::from_tauri(py, webview_event)
+                                // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
+                                .expect("Failed to convert `WebviewEvent` to pyobject");
+
+                        let handler = handler.bind(py);
+                        let result = handler.call1((webview_event,));
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `WebviewWindow::on_webview_event` handler"
+                        });
+                    })
+                })
+        })
     }
 }
 

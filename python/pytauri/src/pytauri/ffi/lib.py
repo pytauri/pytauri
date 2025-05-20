@@ -4,11 +4,12 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from enum import Enum, auto
+from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    NamedTuple,
     NewType,
     NoReturn,
     Optional,
@@ -28,12 +29,16 @@ __all__ = [
     "Assets",
     "Builder",
     "BuilderArgs",
+    "CloseRequestApi",
     "Context",
+    "DragDropEvent",
+    "DragDropEventType",
     "Emitter",
     "Event",
     "EventId",
     "EventTarget",
     "EventTargetType",
+    "ExitRequestApi",
     "ImplEmitter",
     "ImplListener",
     "ImplManager",
@@ -46,7 +51,12 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "Theme",
     "Url",
+    "WebviewEvent",
+    "WebviewEventType",
+    "WindowEvent",
+    "WindowEventType",
     "builder_factory",
     "context_factory",
 ]
@@ -62,6 +72,20 @@ class _InvokeHandlerProto(Protocol):
 _AppRunCallbackType = Callable[["AppHandle", "RunEventType"], None]
 
 _EventHandlerType = Callable[["Event"], None]
+
+_PhysicalPositionF64 = tuple[float, float]
+"""[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+_PhysicalPositionI32 = tuple[int, int]
+"""[tauri::PhysicalPosition](https://docs.rs/tauri/latest/tauri/struct.PhysicalPosition.html)"""
+_LogicalPositionF64 = tuple[float, float]
+"""[tauri::LogicalPosition](https://docs.rs/tauri/latest/tauri/struct.LogicalPosition.html)"""
+_PhysicalSizeU32 = tuple[NonNegativeInt, NonNegativeInt]
+"""[tauri::PhysicalSize](https://docs.rs/tauri/latest/tauri/struct.PhysicalSize.html)"""
+_LogicalSizeF64 = tuple[float, float]
+"""[tauri::PhysicalSize](https://docs.rs/tauri/latest/tauri/struct.LogicalSize.html)"""
+
+_VecPathBuf = list[Path]
+"""[tauri::DragDropEvent::Enter::paths](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Enter.field.paths)"""
 
 # TODO: export this type in rust [ext_mod::utils::assets] namespace
 _AssetKey = TypeAliasType("_AssetKey", str)
@@ -179,6 +203,7 @@ if TYPE_CHECKING:
 
         def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
         def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def set_theme(self, theme: Optional["Theme"], /) -> None: ...
         def default_window_icon(self, /) -> Optional[Image]:
             """Returns the default window icon.
 
@@ -283,18 +308,21 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::ExitRequested](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.ExitRequested)"""
 
             code: Optional[int]
+            api: "ExitRequestApi"
 
         @final
         class WindowEvent:
             """[tauri::RunEvent::WindowEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.WindowEvent)"""
 
             label: str
+            event: "WindowEventType"
 
         @final
         class WebviewEvent:
             """[tauri::RunEvent::WebviewEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.WebviewEvent)"""
 
             label: str
+            event: "WebviewEventType"
 
         @final
         class Ready:
@@ -309,7 +337,7 @@ if TYPE_CHECKING:
             """[tauri::RunEvent::MainEventsCleared](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MainEventsCleared)"""
 
         @final
-        class MenuEvent(NamedTuple):
+        class MenuEvent(tuple[MenuEvent]):
             """[tauri::RunEvent::MenuEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.MenuEvent)
 
             !!! warning
@@ -317,9 +345,12 @@ if TYPE_CHECKING:
             """
 
             _0: MenuEvent
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: MenuEvent, /) -> Self: ...
 
         @final
-        class TrayIconEvent(NamedTuple):
+        class TrayIconEvent(tuple[TrayIconEventType]):
             """[tauri::RunEvent::TrayIconEvent](https://docs.rs/tauri/latest/tauri/enum.RunEvent.html#variant.TrayIconEvent)
 
             !!! warning
@@ -327,8 +358,176 @@ if TYPE_CHECKING:
             """
 
             _0: TrayIconEventType
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: TrayIconEventType, /) -> Self: ...
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
 
         # When adding new variants, remember to update `RunEventType`.
+
+    @final
+    class ExitRequestApi:
+        """[tauri::ExitRequestApi](https://docs.rs/tauri/latest/tauri/struct.ExitRequestApi.html)"""
+
+        def prevent_exit(self, /) -> None: ...
+
+    @final
+    class CloseRequestApi:
+        """[tauri::CloseRequestApi](https://docs.rs/tauri/latest/tauri/struct.CloseRequestApi.html)"""
+
+        def prevent_close(self, /) -> None: ...
+
+    @final
+    class DragDropEvent:
+        """[tauri::DragDropEvent](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html)"""
+
+        @final
+        class Enter:
+            """[tauri::DragDropEvent::Enter](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Enter)"""
+
+            paths: _VecPathBuf
+            position: _PhysicalPositionF64
+
+        @final
+        class Over:
+            """[tauri::DragDropEvent::Over](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Over)"""
+
+            position: _PhysicalPositionF64
+
+        @final
+        class Drop:
+            """[tauri::DragDropEvent::Drop](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Drop)"""
+
+            paths: _VecPathBuf
+            position: _PhysicalPositionF64
+
+        @final
+        class Leave:
+            """[tauri::DragDropEvent::Leave](https://docs.rs/tauri/latest/tauri/enum.DragDropEvent.html#variant.Leave)"""
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `DragDropEventType`.
+
+    @final
+    class WebviewEvent:
+        """[tauri::WebviewEvent](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html)"""
+
+        @final
+        class DragDrop(tuple["DragDropEventType"]):
+            """[tauri::WebviewEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WebviewEvent.html#variant.DragDrop)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "DragDropEventType"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "DragDropEventType", /) -> Self: ...
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `WebviewEventType`.
+
+    @final
+    class WindowEvent:
+        """[tauri::WindowEvent](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html)"""
+
+        @final
+        class Resized(tuple[_PhysicalSizeU32]):
+            """[tauri::WindowEvent::Resized](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Resized)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: _PhysicalSizeU32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalSizeU32, /) -> Self: ...
+
+        @final
+        class Moved(tuple[_PhysicalPositionI32]):
+            """[tauri::WindowEvent::Moved](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Moved)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: _PhysicalPositionI32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalPositionI32, /) -> Self: ...
+
+        @final
+        class CloseRequested:
+            """[tauri::WindowEvent::CloseRequested](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.CloseRequested)"""
+
+            api: CloseRequestApi
+
+        @final
+        class Destroyed:
+            """[tauri::WindowEvent::Destroyed](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Destroyed)"""
+
+        @final
+        class Focused(tuple[bool]):
+            """[tauri::WindowEvent::Focused](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.Focused)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: bool
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: bool, /) -> Self: ...
+
+        @final
+        class ScaleFactorChanged:
+            """[tauri::WindowEvent::ScaleFactorChanged](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.ScaleFactorChanged)"""
+
+            scale_factor: float
+            new_inner_size: _PhysicalSizeU32
+
+        @final
+        class DragDrop(tuple["DragDropEventType"]):
+            """[tauri::WindowEvent::DragDrop](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.DragDrop)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "DragDropEventType"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "DragDropEventType", /) -> Self: ...
+
+        @final
+        class ThemeChanged(tuple["Theme"]):
+            """[tauri::WindowEvent::ThemeChanged](https://docs.rs/tauri/latest/tauri/enum.WindowEvent.html#variant.ThemeChanged)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "Theme"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "Theme", /) -> Self: ...
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `WindowEventType`.
 
     def builder_factory(*args: Any, **kwargs: Any) -> Builder:
         """A factory function for creating a `Builder` instance.
@@ -485,62 +684,61 @@ if TYPE_CHECKING:
         """[tauri::Position](https://docs.rs/tauri/latest/tauri/enum.Position.html)"""
 
         @final
-        class Physical(NamedTuple):
+        class Physical(tuple[_PhysicalPositionI32]):
             """[tauri::Position::Physical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Physical)
-
-            `[x, y]`
 
             !!! warning
                 This is actually a `Class` disguised as an `NamedTuple`.
                 See also: <https://pyo3.rs/v0.23.4/class.html#pyclass-enums>.
             """
 
-            _0: int
-            _1: int
+            _0: _PhysicalPositionI32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalPositionI32, /) -> Self: ...
 
         @final
-        class Logical(NamedTuple):
+        class Logical(tuple[_LogicalPositionF64]):
             """[tauri::Position::Logical](https://docs.rs/tauri/latest/tauri/enum.Position.html#variant.Logical)
-
-            `[x, y]`
 
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: float
-            _1: float
+            _0: _LogicalPositionF64
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _LogicalPositionF64, /) -> Self: ...
 
     @final
     class Size:
         """[tauri::Size](https://docs.rs/tauri/latest/tauri/enum.Size.html)"""
 
         @final
-        class Physical(NamedTuple):
+        class Physical(tuple[_PhysicalSizeU32]):
             """[tauri::Size::Physical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Physical)
 
-            `[width, height]`
-
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            # (u32, u32)
-            _0: NonNegativeInt
-            _1: NonNegativeInt
+            _0: _PhysicalSizeU32
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _PhysicalSizeU32, /) -> Self: ...
 
         @final
-        class Logical(NamedTuple):
+        class Logical(tuple[_LogicalSizeF64]):
             """[tauri::Size::Logical](https://docs.rs/tauri/latest/tauri/enum.Size.html#variant.Logical)
-
-            `[width, height]`
 
             !!! warning
                 See [pytauri.ffi.lib.Position.Physical][].
             """
 
-            _0: float
-            _1: float
+            _0: _LogicalSizeF64
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: _LogicalSizeF64, /) -> Self: ...
 
     @final
     class Rect:
@@ -611,6 +809,12 @@ if TYPE_CHECKING:
 
             def __new__(cls, label: str, /) -> Self: ...
 
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `EventTargetType`.
+
     class Emitter:
         """[tauri::Emitter](https://docs.rs/tauri/latest/tauri/trait.Emitter.html)"""
 
@@ -650,6 +854,18 @@ if TYPE_CHECKING:
             """
             ...
 
+    @final
+    class Theme(Enum):
+        """[tauri::Theme](https://docs.rs/tauri/latest/tauri/enum.Theme.html)
+
+        !!! warning
+            See [pytauri.ffi.menu.NativeIcon][].
+        """
+
+        Light = auto()
+        Dark = auto()
+        _NonExhaustive = object()
+
 
 else:
     App = pytauri_mod.App
@@ -658,6 +874,11 @@ else:
     BuilderArgs = pytauri_mod.BuilderArgs
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
+    ExitRequestApi = pytauri_mod.ExitRequestApi
+    CloseRequestApi = pytauri_mod.CloseRequestApi
+    DragDropEvent = pytauri_mod.DragDropEvent
+    WebviewEvent = pytauri_mod.WebviewEvent
+    WindowEvent = pytauri_mod.WindowEvent
     builder_factory = pytauri_mod.builder_factory
     context_factory = pytauri_mod.context_factory
     Manager = pytauri_mod.Manager
@@ -668,6 +889,7 @@ else:
     Rect = pytauri_mod.Rect
     EventTarget = pytauri_mod.EventTarget
     Emitter = pytauri_mod.Emitter
+    Theme = pytauri_mod.Theme
 
 RunEventType = TypeAliasType(
     "RunEventType",
@@ -681,9 +903,47 @@ RunEventType = TypeAliasType(
         RunEvent.MainEventsCleared,
         RunEvent.MenuEvent,
         RunEvent.TrayIconEvent,
+        RunEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [RunEvent][pytauri.ffi.RunEvent] for details."""
+
+DragDropEventType = TypeAliasType(
+    "DragDropEventType",
+    Union[
+        DragDropEvent.Enter,
+        DragDropEvent.Over,
+        DragDropEvent.Drop,
+        DragDropEvent.Leave,
+        DragDropEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [DragDropEvent][pytauri.ffi.DragDropEvent] for details."""
+
+WebviewEventType = TypeAliasType(
+    "WebviewEventType",
+    Union[
+        WebviewEvent.DragDrop,
+        WebviewEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [WebviewEvent][pytauri.ffi.WebviewEvent] for details."""
+
+WindowEventType = TypeAliasType(
+    "WindowEventType",
+    Union[
+        WindowEvent.Resized,
+        WindowEvent.Moved,
+        WindowEvent.CloseRequested,
+        WindowEvent.Destroyed,
+        WindowEvent.Focused,
+        WindowEvent.ScaleFactorChanged,
+        WindowEvent.DragDrop,
+        WindowEvent.ThemeChanged,
+        WindowEvent._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [WindowEvent][pytauri.ffi.WindowEvent] for details."""
 
 ImplManager = TypeAliasType("ImplManager", Union[App, AppHandle, "WebviewWindow"])
 
@@ -736,6 +996,7 @@ EventTargetType = TypeAliasType(
         EventTarget.Window,
         EventTarget.Webview,
         EventTarget.WebviewWindow,
+        EventTarget._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
     ],
 )
 """See [EventTarget][pytauri.ffi.EventTarget] for details."""

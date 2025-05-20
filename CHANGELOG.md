@@ -32,6 +32,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat(pytauri)!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`.
+
+    These APIs have changed:
+
+    - `Position.Physical`
+    - `Position.Logical`
+    - `Size.Physical`
+    - `Size.Logical`
+
+    ??? tip "Migration"
+
+        ```diff
+        from pytauri import Position, PositionType, Size, SizeType
+
+        def foo(pos: PositionType, size: SizeType) -> None:
+            match pos:
+        -        case Position.Physical(x, y):
+        +        case Position.Physical((x, y)):
+                    print(f"Physical position: {x}, {y}")
+        -        case Position.Logical(x, y):
+        +        case Position.Logical((x, y)):
+                    print(f"Logical position: {x}, {y}")
+            match size:
+        -        case Size.Physical(w, h):
+        +        case Size.Physical((w, h)):
+                    print(f"Physical size: {w}, {h}")
+        -        case Size.Logical(w, h):
+        +        case Size.Logical((w, h)):
+                    print(f"Logical size: {w}, {h}")
+
+        -foo(pos=Position.Physical(1, 2), size=Size.Physical(3, 4))
+        +foo(pos=Position.Physical((1, 2)), size=Size.Physical((3, 4)))
+        ```
+
+### Added
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat(pytauri): fully implement `tauri::RunEvent` bindings.
+    - `mod tauri::`
+        - `Theme`
+        - `CloseRequestApi`
+        - `ExitRequestApi`
+        - `DragDropEvent` (`DragDropEventType`)
+        - `WebviewEvent` (`WebviewEventType`)
+        - `WindowEvent` (`WindowEventType`)
+        - `RunEvent::{ExitRequested::api, WebviewEvent::event, WindowEvent::event}` fields
+        - `webview::WebviewWindow::{on_webview_event, on_window_event}` methods
+        - `AppHandle::set_theme` and `webview::WebviewWindow::{set_theme, theme}` methods
+
+    - add `_NonExhaustive` field to all `#[non_exhaustive]` `enum`s
+
+    ??? tip "Usage"
+
+        ```py
+        from pytauri import AppHandle, Manager, WindowEvent, WindowEventType
+
+
+        def register_window_event_handler(app_handle: AppHandle):
+            webview_window = Manager.get_webview_window(app_handle, "main")
+            assert webview_window is not None
+
+            close_requested = False
+
+            def window_event_handler(event: WindowEventType) -> None:
+                nonlocal close_requested
+                match event:
+                    case WindowEvent.CloseRequested(api=api):
+                        if not close_requested:
+                            print("Preventing window closing")
+                            api.prevent_close()
+                            close_requested = True
+                    case WindowEvent.Focused(focused):
+                        print(f"Window focused: {focused}")
+                    case WindowEvent.Moved((x, y)):
+                        print(f"Moved to ({x}, {y})")
+                    case _:
+                        pass
+
+            webview_window.on_window_event(window_event_handler)
+        ```
+
 ## [0.5.0]
 
 ### Highlights
@@ -66,7 +148,7 @@ See: <https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone-cyth
 
 - [#136](https://github.com/pytauri/pytauri/pull/136) - `tauri v2.5` requires upgrading `@tauri-apps/api: ^2.5` and `tauri-plugin-pytauri-api: ^0.5`.
 - [#141](https://github.com/pytauri/pytauri/pull/141) - feat(pytauri)!: `pytauri.path.PathResolver` now returns a `pathlib.Path` object instead of a `str`.
-- [#133](https://github.com/pytauri/pytauri/pull/113) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
+- [#133](https://github.com/pytauri/pytauri/pull/133) - fix(pytauri)!: make `BuilderArgs.invoke_handler` as required parameter for #110.
 
     If you do not specify `invoke_handler`,
     `pytauri` will not register the `tauri-plugin-pytauri` plugin,

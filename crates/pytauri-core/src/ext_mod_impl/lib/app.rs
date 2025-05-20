@@ -35,7 +35,7 @@ impl App {
             debug_assert_app_handle_py_is_rs(&app_handle, _app_handle);
 
             Python::with_gil(|py| {
-                let py_run_event: RunEvent = RunEvent::new(py, run_event)
+                let py_run_event: RunEvent = RunEvent::from_tauri(py, run_event)
                     // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
                     .expect("Failed to convert rust `RunEvent` to pyobject");
 

@@ -30,7 +30,7 @@ def _load_ext_mod() -> ModuleType:
         if not _SPECIFIC_DIST
         else distribution(_SPECIFIC_DIST).entry_points.select(group=group, name=name)  # pyright: ignore[reportUnknownMemberType]
     )
-    eps: tuple[EntryPoint, ...] = tuple(eps)
+    eps = tuple[EntryPoint, ...](eps)
 
     if len(eps) == 0:
         raise RuntimeError("No `pytauri` entry point is found")
