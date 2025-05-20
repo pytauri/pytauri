@@ -22,6 +22,9 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
 tauri = { workspace = true, features = ["wry", "tray-icon"] }
+# tauri plugins
+tauri-plugin-notification = { workspace = true, optional = true }
+
 pyo3 = { workspace = true }
 
 # workspace dependencies
@@ -32,3 +35,5 @@ pyo3-utils = { workspace = true }
 __private = []
 __test = ["tauri/test"]
 __no_test = []          # for allowing use `--all-features` without running tests
+
+plugin-notification = ["dep:tauri-plugin-notification"]

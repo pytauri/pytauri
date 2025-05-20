@@ -6,6 +6,7 @@
 )]
 
 mod ext_mod_impl;
+mod plugins;
 pub mod tauri_runtime;
 pub mod utils;
 
@@ -17,6 +18,9 @@ use pyo3::prelude::*;
 #[pymodule(submodule, gil_used = false, name = "pytauri")]
 pub mod ext_mod {
     use super::*;
+
+    #[pymodule_export]
+    pub use plugins::pytauri_plugins;
 
     #[pymodule_export]
     pub use ext_mod_impl::lib::{

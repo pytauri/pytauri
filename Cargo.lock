@@ -3273,6 +3273,7 @@ dependencies = [
  "pyo3",
  "pyo3-utils",
  "tauri",
+ "tauri-plugin-notification",
 ]
 
 [[package]]
