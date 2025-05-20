@@ -25,8 +25,7 @@ type IpcInvokeResolver = tauri::ipc::InvokeResolver<Runtime>;
 type TauriWebviewWindow = tauri::webview::WebviewWindow<Runtime>;
 
 /// Please refer to the Python-side documentation
-// `subclass` for Generic type hint
-#[pyclass(frozen, subclass)]
+#[pyclass(frozen, generic)]
 #[non_exhaustive]
 pub struct InvokeResolver {
     inner: PyWrapper<PyWrapperT2<IpcInvokeResolver>>,
