@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`. See home `/CHANGELOG` for more details.
+
+### Added
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat: fully implement `tauri::RunEvent` bindings.
+
+### Fixed
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - fix(typing): namedtuple member name can't start with underscore.
+
+    > ref: <https://github.com/python/typing/pull/1979#issuecomment-2889160095>
+
+    bump `pyright` to `^1.1.400`
+
 ## [0.5.0]
 
 ### BREAKING

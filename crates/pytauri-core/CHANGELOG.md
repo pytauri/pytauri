@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`. See home `/CHANGELOG` for more details.
+
+### Added
+
+- [#157](https://github.com/pytauri/pytauri/pull/157) - feat: fully implement `tauri::RunEvent` bindings.
+
 ### Internal
 
 - [#155](https://github.com/pytauri/pytauri/pull/155) - refactor: modularize `ext_mod_impl::self`.
