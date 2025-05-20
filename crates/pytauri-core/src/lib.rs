@@ -19,6 +19,12 @@ use pyo3::prelude::*;
 pub mod ext_mod {
     use super::*;
 
+    #[pymodule]
+    pub mod pytauri_config {
+        #[pymodule_export]
+        pub const PLUGIN_NOTIFICATION: bool = cfg!(feature = "plugin-notification");
+    }
+
     #[pymodule_export]
     pub use plugins::pytauri_plugins;
 
