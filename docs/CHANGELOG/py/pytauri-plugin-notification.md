@@ -1,1 +1,0 @@
---8<-- "python/pytauri-plugin-notification/CHANGELOG.md"

@@ -57,7 +57,6 @@ workspaces = [
     "pyfuture",
     "pyo3-utils",
     "pytauri",
-    "pytauri-plugin-notification",
     "pytauri-wheel",
     # tests
     "pytauri-test",
@@ -76,7 +75,6 @@ codelldb = { workspace = true }
 pyfuture = { workspace = true }
 pyo3-utils = { workspace = true }
 pytauri = { workspace = true }
-pytauri-plugin-notification = { workspace = true }
 pytauri-wheel = { workspace = true }
 pytauri-test = { workspace = true }
 
@@ -194,7 +192,6 @@ source = [
     "pyfuture",
     "pyo3_utils",
     "pytauri",
-    "pytauri_plugin_notification",
     "pytauri_wheel",
 ]
 

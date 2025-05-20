@@ -7,7 +7,6 @@ dependencies = [
     "pytauri == 0.1.*",
     "pydantic == 2.*",
     "anyio == 4.*",
-    "pytauri-plugin-notification == 0.1.*",
 ]
 
 [project.entry-points.pytauri]
@@ -44,4 +43,3 @@ include = [{ path = "frontend/**/*", format = "sdist" }]
 
 [tool.uv.sources]
 pytauri = { workspace = true }
-pytauri-plugin-notification = { workspace = true }
