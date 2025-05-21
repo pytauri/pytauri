@@ -37,6 +37,7 @@ impl From<plugin::Error> for PluginError {
     }
 }
 
+/// See also: [tauri_plugin_notification::NotificationBuilder]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct NotificationBuilder(pub PyWrapper<PyWrapperT2<plugin::NotificationBuilder<Runtime>>>);
@@ -160,10 +161,12 @@ impl NotificationBuilder {
     }
 }
 
+/// See also: [tauri_plugin_notification::NotificationExt]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct NotificationExt;
 
+/// The Implementers of [tauri_plugin_notification::NotificationExt].
 pub type ImplNotificationExt = ImplManager;
 
 #[pymethods]
@@ -181,6 +184,7 @@ impl NotificationExt {
     }
 }
 
+/// See also: [tauri_plugin_notification]
 #[pymodule(submodule, gil_used = false)]
 pub mod notification {
     #[pymodule_export]

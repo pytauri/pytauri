@@ -34,7 +34,7 @@ Enable the `pytauri` feature:
 
 ### use plugin api from python
 
-The PyTauri API maps very well to the original Rust API of the plugin. You can refer to the [Js docs](https://tauri.app/plugin/notification/), [Rust docs](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/) and [Python docs][pytauri.pytauri_plugins.notification] to understand how to use it:
+The PyTauri API maps very well to the original Rust API of the plugin. You can refer to the [Js docs](https://tauri.app/plugin/notification/), [Rust docs](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/) and [Python docs][pytauri_plugins.notification] to understand how to use it:
 
 ```python title="src-tauri/python/__init__.py"
 --8<-- "docs_src/tutorial/plugin.py"

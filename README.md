@@ -64,7 +64,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
             AppHandle,
             Commands,
         )
-        from pytauri.pytauri_plugins.notification import NotificationExt
+        from pytauri_plugins.notification import NotificationExt
 
         commands: Commands = Commands()
 

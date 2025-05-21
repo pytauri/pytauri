@@ -12,21 +12,14 @@ pub mod utils;
 
 use pyo3::prelude::*;
 
-/// You can access this module in Python via `pytuari.EXT_MOD.pytuari`.
-///
+pub use plugins::pytauri_plugins;
+
 /// See also: [tauri]
+///
+/// You can access this module in Python via `pytuari.EXT_MOD.pytuari`.
 #[pymodule(submodule, gil_used = false, name = "pytauri")]
 pub mod ext_mod {
     use super::*;
-
-    #[pymodule]
-    pub mod pytauri_config {
-        #[pymodule_export]
-        pub const PLUGIN_NOTIFICATION: bool = cfg!(feature = "plugin-notification");
-    }
-
-    #[pymodule_export]
-    pub use plugins::pytauri_plugins;
 
     #[pymodule_export]
     pub use ext_mod_impl::lib::{
