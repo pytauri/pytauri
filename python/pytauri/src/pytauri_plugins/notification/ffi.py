@@ -8,11 +8,11 @@
 from types import ModuleType
 from typing import TYPE_CHECKING, Optional, final
 
+from pytauri import ImplManager
 from typing_extensions import TypeAlias
 
-from pytauri.ffi import ImplManager
-from pytauri.ffi.pytauri_config import PLUGIN_NOTIFICATION
-from pytauri.pytauri_plugins import (
+from pytauri_plugins import (
+    PLUGIN_NOTIFICATION,
     _pytauri_plugins_mod,  # pyright: ignore[reportPrivateUsage]
 )
 
@@ -22,10 +22,12 @@ __all__ = [
     "NotificationExt",
 ]
 
-if not PLUGIN_NOTIFICATION:
-    raise ImportError("Enable the `plugin-notification` feature to use this plugin.")
-
-_notification_mod: ModuleType = _pytauri_plugins_mod.notification
+if PLUGIN_NOTIFICATION:
+    _notification_mod: ModuleType = _pytauri_plugins_mod.notification
+else:
+    raise ImportError(
+        "Enable the `plugin-notification` feature for `pytauri` crate to use this plugin."
+    )
 
 if TYPE_CHECKING:
 
