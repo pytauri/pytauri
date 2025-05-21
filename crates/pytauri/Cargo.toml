@@ -23,6 +23,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 [features]
 standalone = ["dep:libc", "dep:dunce"]
 
+plugin-notification = ["pytauri-core/plugin-notification"]
+
 
 [dependencies]
 tauri = { workspace = true }

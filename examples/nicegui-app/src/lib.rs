@@ -9,9 +9,6 @@ pub fn tauri_generate_context() -> tauri::Context {
 pub mod ext_mod {
     use super::*;
 
-    #[pymodule_export]
-    use pytauri_plugin_notification::notification;
-
     #[pymodule_init]
     fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
         pytauri::pymodule_export(

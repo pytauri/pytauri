@@ -8,8 +8,13 @@
 from types import ModuleType
 from typing import TYPE_CHECKING, Optional, final
 
-from pytauri import EXT_MOD, ImplManager
+from pytauri import ImplManager
 from typing_extensions import TypeAlias
+
+from pytauri_plugins import (
+    PLUGIN_NOTIFICATION,
+    _pytauri_plugins_mod,  # pyright: ignore[reportPrivateUsage]
+)
 
 __all__ = [
     "ImplNotificationExt",
@@ -17,20 +22,12 @@ __all__ = [
     "NotificationExt",
 ]
 
-
-def _load_notification_mod(ext_mod: ModuleType) -> ModuleType:
-    try:
-        notification_mod = ext_mod.notification
-    except AttributeError as e:
-        raise RuntimeError(
-            "Submodule `notification` is not found in the extension module"
-        ) from e
-
-    assert isinstance(notification_mod, ModuleType)
-    return notification_mod
-
-
-_notification_mod = _load_notification_mod(EXT_MOD)
+if PLUGIN_NOTIFICATION:
+    _notification_mod: ModuleType = _pytauri_plugins_mod.notification
+else:
+    raise ImportError(
+        "Enable the `plugin-notification` feature for `pytauri` crate to use this plugin."
+    )
 
 if TYPE_CHECKING:
 
@@ -86,4 +83,4 @@ else:
     NotificationExt = _notification_mod.NotificationExt
 
 ImplNotificationExt: TypeAlias = ImplManager
-"""The implementors of `NotificationExt`."""
+"""The implementers of `NotificationExt`."""

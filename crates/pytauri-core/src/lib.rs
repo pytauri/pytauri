@@ -6,14 +6,17 @@
 )]
 
 mod ext_mod_impl;
+mod plugins;
 pub mod tauri_runtime;
 pub mod utils;
 
 use pyo3::prelude::*;
 
-/// You can access this module in Python via `pytuari.EXT_MOD.pytuari`.
-///
+pub use plugins::pytauri_plugins;
+
 /// See also: [tauri]
+///
+/// You can access this module in Python via `pytuari.EXT_MOD.pytuari`.
 #[pymodule(submodule, gil_used = false, name = "pytauri")]
 pub mod ext_mod {
     use super::*;

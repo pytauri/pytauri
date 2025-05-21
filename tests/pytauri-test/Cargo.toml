@@ -6,6 +6,10 @@ edition = "2021"
 [[test]]
 name = "ipc"
 path = "tests/ipc.rs"
+# NOTE: Do not enable the `test` feature by default,
+# otherwise it will forcibly enable the`pytauri-core/__test`
+# feature for the entire workspace.
+# Use `cargo test -p pytauri-test --features="test"` instead.
 required-features = ["test"]
 
 

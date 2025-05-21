@@ -2321,7 +2321,6 @@ version = "0.1.0"
 dependencies = [
  "pyo3",
  "pytauri",
- "pytauri-plugin-notification",
  "serde",
  "serde_json",
  "tauri",
@@ -3273,16 +3272,6 @@ dependencies = [
  "pyo3",
  "pyo3-utils",
  "tauri",
-]
-
-[[package]]
-name = "pytauri-plugin-notification"
-version = "0.5.0"
-dependencies = [
- "pyo3",
- "pyo3-utils",
- "pytauri-core",
- "tauri",
  "tauri-plugin-notification",
 ]
 
@@ -4220,7 +4209,6 @@ version = "0.1.0"
 dependencies = [
  "pyo3",
  "pytauri",
- "pytauri-plugin-notification",
  "serde",
  "serde_json",
  "tauri",

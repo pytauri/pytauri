@@ -64,7 +64,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
             AppHandle,
             Commands,
         )
-        from pytauri_plugin_notification import NotificationExt
+        from pytauri_plugins.notification import NotificationExt
 
         commands: Commands = Commands()
 
@@ -122,8 +122,6 @@ Rust and its Python bindings, PyTauri core and its plugins will keep the same `M
 | tauri-plugin-pytauri | | [![tauri-plugin-pytauri-crates-v]][tauri-plugin-pytauri-crates] | [![tauri-plugin-pytauri-api-npm-v]][tauri-plugin-pytauri-api-npm] |
 | 👉 **wheel** | - | - | - |
 | pytauri-wheel | [![pytauri-wheel-pypi-v]][pytauri-wheel-pypi] | | |
-| 👉 **plugins** | - | - | - |
-| pytauri-plugin-notification | [![pytauri-plugin-notification-pypi-v]][pytauri-plugin-notification-pypi] | [![pytauri-plugin-notification-crates-v]][pytauri-plugin-notification-crates] | |
 | 👉 **utils** | - | - | - |
 | pyo3-utils | [![pyo3-utils-pypi-v]][pyo3-utils-pypi] | [![pyo3-utils-crates-v]][pyo3-utils-crates] | |
 | codelldb | [![codelldb-pypi-v]][codelldb-pypi] | | |
@@ -140,10 +138,6 @@ Rust and its Python bindings, PyTauri core and its plugins will keep the same `M
 [tauri-plugin-pytauri-crates]: https://crates.io/crates/tauri-plugin-pytauri
 [tauri-plugin-pytauri-api-npm-v]:https://img.shields.io/npm/v/tauri-plugin-pytauri-api
 [tauri-plugin-pytauri-api-npm]: https://www.npmjs.com/package/tauri-plugin-pytauri-api
-[pytauri-plugin-notification-pypi-v]: https://img.shields.io/pypi/v/pytauri-plugin-notification
-[pytauri-plugin-notification-pypi]: https://pypi.org/project/pytauri-plugin-notification
-[pytauri-plugin-notification-crates-v]: https://img.shields.io/crates/v/pytauri-plugin-notification
-[pytauri-plugin-notification-crates]: https://crates.io/crates/pytauri-plugin-notification
 [pyo3-utils-pypi-v]: https://img.shields.io/pypi/v/pyo3-utils
 [pyo3-utils-pypi]: https://pypi.org/project/pyo3-utils
 [pyo3-utils-crates-v]: https://img.shields.io/crates/v/pyo3-utils

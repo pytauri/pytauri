@@ -2,7 +2,7 @@ import sys
 
 from pydantic import BaseModel
 from pytauri import AppHandle, Commands
-from pytauri_plugin_notification import NotificationExt
+from pytauri_plugins.notification import NotificationExt
 
 commands: Commands = Commands()
 

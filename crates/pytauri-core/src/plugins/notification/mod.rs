@@ -1,17 +1,23 @@
-use std::error::Error;
-use std::fmt::{Debug, Display};
+use std::{
+    error::Error,
+    fmt::{Debug, Display, Formatter},
+};
 
 use pyo3::prelude::*;
-use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperSemverExt as _, PyWrapperT2};
-use pytauri_core::{ext_mod::ImplManager, tauri_runtime::Runtime};
+use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
 use tauri_plugin_notification::{self as plugin, NotificationExt as _};
+
+use crate::{
+    ext_mod::{manager_method_impl, ImplManager},
+    tauri_runtime::Runtime,
+};
 
 #[derive(Debug)]
 struct PluginError(plugin::Error);
 
 impl Display for PluginError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        <Self as Debug>::fmt(self, f)
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(&self.0, f)
     }
 }
 
@@ -31,6 +37,7 @@ impl From<plugin::Error> for PluginError {
     }
 }
 
+/// See also: [tauri_plugin_notification::NotificationBuilder]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct NotificationBuilder(pub PyWrapper<PyWrapperT2<plugin::NotificationBuilder<Runtime>>>);
@@ -154,22 +161,13 @@ impl NotificationBuilder {
     }
 }
 
+/// See also: [tauri_plugin_notification::NotificationExt]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct NotificationExt;
 
+/// The Implementers of [tauri_plugin_notification::NotificationExt].
 pub type ImplNotificationExt = ImplManager;
-
-macro_rules! notification_ext_method_impl {
-    ($slf:expr, $macro:ident) => {
-        match $slf {
-            ImplNotificationExt::App(v) => $macro!(v),
-            ImplNotificationExt::AppHandle(v) => $macro!(v),
-            ImplNotificationExt::WebviewWindow(v) => $macro!(v),
-            _ => unimplemented!("please create an feature request to pytauri"),
-        }
-    };
-}
 
 #[pymethods]
 impl NotificationExt {
@@ -178,14 +176,19 @@ impl NotificationExt {
 
     #[staticmethod]
     fn builder(slf: ImplNotificationExt, py: Python<'_>) -> PyResult<NotificationBuilder> {
-        macro_rules! builder_impl {
-            ($wrapper:expr) => {{
-                let py_ref = $wrapper.borrow(py);
-                let guard = py_ref.0.inner_ref_semver()??;
-                let builder = guard.notification().builder(); // it's short enough, so we don't release the GIL
-                Ok(NotificationBuilder::new(builder))
-            }};
-        }
-        notification_ext_method_impl!(slf, builder_impl)
+        manager_method_impl!(py, &slf, |_py, manager| {
+            // PERF: it's short enough, so we don't release the GIL
+            let builder = manager.notification().builder();
+            Ok(NotificationBuilder::new(builder))
+        })?
     }
+}
+
+/// See also: [tauri_plugin_notification]
+#[pymodule(submodule, gil_used = false)]
+pub mod notification {
+    #[pymodule_export]
+    pub use super::{NotificationBuilder, NotificationExt};
+
+    pub use super::ImplNotificationExt;
 }

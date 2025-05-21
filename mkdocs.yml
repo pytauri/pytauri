@@ -142,7 +142,7 @@ plugins:
               - codelldb
               - pyo3_utils
               - pytauri
-              - pytauri_plugin_notification
+              - pytauri_plugins  # it is shipped within the `pytauri` package on PyPI
               - pytauri_wheel
             extensions:
               # https://mkdocstrings.github.io/griffe-inherited-docstrings/
@@ -180,7 +180,6 @@ plugins:
             - python/codelldb/src
             - python/pyo3-utils/src
             - python/pytauri/src
-            - python/pytauri-plugin-notification/src
             - python/pytauri-wheel/python/pytauri_wheel
 
   # Remember: https://github.com/timvink/mkdocs-git-revision-date-localized-plugin#note-when-using-build-environments
@@ -208,14 +207,12 @@ watch:
   - CHANGELOG.md
   # py
   - python/pytauri/CHANGELOG.md
-  - python/pytauri-plugin-notification/CHANGELOG.md
   - python/pyo3-utils/CHANGELOG.md
   - python/codelldb/CHANGELOG.md
   # rs
   - crates/pytauri/CHANGELOG.md
   - crates/pytauri-core/CHANGELOG.md
   - crates/tauri-plugin-pytauri/CHANGELOG.md
-  - crates/pytauri-plugin-notification/CHANGELOG.md
   - crates/pyo3-utils/CHANGELOG.md
   # js
   - crates/tauri-plugin-pytauri/guest-js/CHANGELOG.md
@@ -263,14 +260,12 @@ nav:
       - py:
           - pytauri: CHANGELOG/py/pytauri.md
           - pytauri-wheel: CHANGELOG/py/pytauri-wheel.md
-          - pytauri-plugin-notification: CHANGELOG/py/pytauri-plugin-notification.md
           - pyo3-utils: CHANGELOG/py/pyo3-utils.md
           - codelldb: CHANGELOG/py/codelldb.md
       - rs:
           - pytauri: CHANGELOG/rs/pytauri.md
           - pytauri-core: CHANGELOG/rs/pytauri-core.md
           - tauri-plugin-pytauri: CHANGELOG/rs/tauri-plugin-pytauri.md
-          - pytauri-plugin-notification: CHANGELOG/rs/pytauri-plugin-notification.md
           - pyo3-utils: CHANGELOG/rs/pyo3-utils.md
       - js:
           - tauri-plugin-pytauri-api: CHANGELOG/js/tauri-plugin-pytauri-api.md
