@@ -32,6 +32,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Highlights
+
+#### Integrate plugins as features
+
+> - [#160](https://github.com/pytauri/pytauri/pull/160) - feat(pytauri)!: integrate `plugin-notification` as a gated-feature of `pytauri`.
+
+The `rs/pytauri-plugin-notification` crate and the `py/pytauri-plugin-notification` package have been removed. Instead, use the `plugin-notification` [feature](https://doc.rust-lang.org/cargo/reference/features.html) of the `rs/pytauri` crate.
+
+For details, compare the [`v0.5`](https://pytauri.github.io/pytauri/0.5/usage/tutorial/using-plugins/) and [`v0.6`](https://pytauri.github.io/pytauri/0.6/usage/tutorial/using-plugins/) "tutorial/using-plugins" documentation.
+
+??? tip "Migration"
+
+    ```diff
+    # src-tauri/Cargo.toml
+
+    [dependencies]
+    -pytauri-plugin-notification = ...
+    +pytauri = { version = "...", features = ["plugin-notification"] }
+    ```
+
+    ```diff
+    // src-tauri/src/lib.rs
+
+    mod ext_mod {
+    -    #[pymodule_export]
+    -    use pytauri_plugin_notification::notification;
+    }
+    ```
+
+    ```diff
+    # src-tauri/pyproject.toml
+
+    [project]
+    dependencies = [
+    -    pytauri-plugin-notification = ...
+    ]
+    ```
+
+    ```diff
+    # src-tauri/python/__init__.py
+
+    -from pytauri_plugin_notification import NotificationExt
+    +from pytauri_plugins.notification import NotificationExt
+    ```
+
 ### BREAKING
 
 - [#157](https://github.com/pytauri/pytauri/pull/157) - feat(pytauri)!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`.

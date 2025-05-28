@@ -23,6 +23,8 @@ rustdoc-args = ["--cfg", "docsrs"]
 [features]
 standalone = ["dep:libc", "dep:dunce"]
 
+plugin-notification = ["pytauri-core/plugin-notification"]
+
 
 [dependencies]
 tauri = { workspace = true }
@@ -35,4 +37,4 @@ dunce = { workspace = true, optional = true }
 
 # workspace dependencies
 pytauri-core = { workspace = true, features = ["__private"] }
-pyo3-utils = { workspace = true }
+pyo3-utils = { workspace = true, features = ["unstable"] }

@@ -21,7 +21,7 @@ from pytauri import (
     context_factory,
 )
 from pytauri.webview import WebviewWindow
-from pytauri_plugin_notification import NotificationExt
+from pytauri_plugins.notification import NotificationExt
 
 from nicegui_app._server import FrontServer
 from nicegui_app._tray_menu import init_menu, init_tray

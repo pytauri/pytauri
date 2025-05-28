@@ -4,6 +4,10 @@
 
 ### Added
 
+- [#160](https://github.com/pytauri/pytauri/pull/160) - feat: added unstable mod `from_py_dict`.
+
+    Refer to [PyO3/pyo3#5163](https://github.com/PyO3/pyo3/issues/5163).
+
 - [#158](https://github.com/pytauri/pytauri/pull/158) - chore: bump `pyo3` to `0.25`.
 
 ## [0.2.0]

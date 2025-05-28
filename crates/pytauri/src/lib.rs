@@ -22,8 +22,8 @@ use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
 use pytauri_core::{ext_mod::PyAppHandleExt as _, tauri_runtime::Runtime, utils::TauriError};
 use tauri::Context;
 
-/// Use [pymodule_export] instead of this `ext_mod` directly.
-pub use pytauri_core::ext_mod;
+/// Use [pymodule_export] instead of this [ext_mod] and [pytauri_plugins] directly.
+pub use pytauri_core::{ext_mod, pytauri_plugins};
 
 /// Please refer to the Python-side documentation
 #[pyclass(frozen)]
@@ -62,6 +62,7 @@ impl BuilderArgs {
 // TODO, FIXME, PERF, XXX: `tauri::Builder` is `!Sync`,
 // we need wait pyo3 `pyclass(unsync)` feature,
 // maybe we should file a issue to pyo3.
+/// See also: [tauri::Builder]
 #[pyclass(frozen, unsendable)]
 #[non_exhaustive]
 pub struct Builder(pub PyWrapper<PyWrapperT2<tauri::Builder<Runtime>>>);
@@ -107,7 +108,7 @@ impl Builder {
     }
 }
 
-/// Exports the [ext_mod] module to the `parent_module`.
+/// Exports the [ext_mod] and [pytauri_plugins] module to the `parent_module`.
 ///
 /// `context_factory` and `builder_factory` will be exported as the
 /// `pytauri.context_factory` and `pytauri.builder_factory` functions on the
@@ -162,14 +163,18 @@ pub fn pymodule_export(
 
     // TODO, FIXME: The return type of `wrap_pymodule` is a private detail.
     // We should file an issue with pyo3 to inquire about this matter.
-    let self_module: Py<PyModule> = wrap_pymodule!(ext_mod)(py);
-    let self_module = self_module.bind(py);
+    let pytauri_module: Py<PyModule> = wrap_pymodule!(ext_mod)(py);
+    let pytauri_module = pytauri_module.bind(py);
 
-    self_module.add_function(builder_factory)?;
-    self_module.add_function(context_factory)?;
-    self_module.add_class::<BuilderArgs>()?;
-    self_module.add_class::<Builder>()?;
+    pytauri_module.add_function(builder_factory)?;
+    pytauri_module.add_function(context_factory)?;
+    pytauri_module.add_class::<BuilderArgs>()?;
+    pytauri_module.add_class::<Builder>()?;
 
-    parent_module.add_submodule(self_module)?;
+    let pytauri_plugins_module = wrap_pymodule!(pytauri_plugins)(py);
+    let pytauri_plugins_module = pytauri_plugins_module.bind(py);
+
+    parent_module.add_submodule(pytauri_module)?;
+    parent_module.add_submodule(pytauri_plugins_module)?;
     Ok(())
 }

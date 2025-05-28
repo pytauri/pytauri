@@ -8,6 +8,10 @@
 
 ### Added
 
+- [#160](https://github.com/pytauri/pytauri/pull/160) - feat!: integrate `plugin-notification` as a gated-feature of `pytauri`.
+
+    Added: `pytauri_plugins::notification::NotificationBuilderArgs`.
+
 - [#157](https://github.com/pytauri/pytauri/pull/157) - feat: fully implement `tauri::RunEvent` bindings.
 
 ### Fixed

@@ -1,1 +1,0 @@
---8<-- "crates/pytauri-plugin-notification/CHANGELOG.md"

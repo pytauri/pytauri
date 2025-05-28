@@ -23,7 +23,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
-from pytauri_plugin_notification import NotificationExt
+from pytauri_plugins.notification import NotificationExt
 
 from tauri_app.private import private_algorithm
 
