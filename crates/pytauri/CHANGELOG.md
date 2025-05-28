@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#160](https://github.com/pytauri/pytauri/pull/160) - feat!: integrate `plugin-notification` as a gated-feature of `pytauri`.
+
 ### Fixed
 
 - [#159](https://github.com/pytauri/pytauri/pull/159) - fix(standalone): explicitly pass `PyString` to `multiprocessing.set_executable`.
