@@ -6,10 +6,10 @@
 """
 
 from types import ModuleType
-from typing import TYPE_CHECKING, Optional, final
+from typing import TYPE_CHECKING, final
 
 from pytauri import ImplManager
-from typing_extensions import TypeAlias
+from typing_extensions import TypeAlias, TypedDict, Unpack
 
 from pytauri_plugins import (
     PLUGIN_NOTIFICATION,
@@ -19,6 +19,7 @@ from pytauri_plugins import (
 __all__ = [
     "ImplNotificationExt",
     "NotificationBuilder",
+    "NotificationBuilderArgs",
     "NotificationExt",
 ]
 
@@ -29,34 +30,36 @@ else:
         "Enable the `plugin-notification` feature for `pytauri` crate to use this plugin."
     )
 
+
+class NotificationBuilderArgs(TypedDict, total=False):
+    """[tauri_plugin_notification::NotificationBuilder](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/struct.NotificationBuilder.html)"""
+
+    id: int
+    channel_id: str
+    title: str
+    body: str
+    large_body: str
+    summary: str
+    action_type_id: str
+    group: str
+    group_summary: bool
+    sound: str
+    inbox_line: str
+    icon: str
+    large_icon: str
+    icon_color: str
+    ongoing: bool
+    auto_cancel: bool
+    silent: bool
+
+
 if TYPE_CHECKING:
 
     @final
     class NotificationBuilder:
         """[tauri_plugin_notification::NotificationBuilder](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/struct.NotificationBuilder.html)"""
 
-        def show(
-            self,
-            /,
-            *,
-            id: Optional[int] = None,  # noqa: A002
-            channel_id: Optional[str] = None,
-            title: Optional[str] = None,
-            body: Optional[str] = None,
-            large_body: Optional[str] = None,
-            summary: Optional[str] = None,
-            action_type_id: Optional[str] = None,
-            group: Optional[str] = None,
-            group_summary: bool = False,
-            sound: Optional[str] = None,
-            inbox_line: Optional[str] = None,
-            icon: Optional[str] = None,
-            large_icon: Optional[str] = None,
-            icon_color: Optional[str] = None,
-            ongoing: bool = False,
-            auto_cancel: bool = False,
-            silent: bool = False,
-        ) -> None:
+        def show(self, /, **kwargs: Unpack[NotificationBuilderArgs]) -> None:
             """Consume this builder and show the notification.
 
             # FIXME, XXX, TODO:

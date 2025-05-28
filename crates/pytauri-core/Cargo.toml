@@ -28,7 +28,7 @@ tauri-plugin-notification = { workspace = true, optional = true }
 pyo3 = { workspace = true }
 
 # workspace dependencies
-pyo3-utils = { workspace = true }
+pyo3-utils = { workspace = true, features = ["unstable"] }
 
 
 [features]
