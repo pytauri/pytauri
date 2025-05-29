@@ -1,5 +1,5 @@
 from anyio.from_thread import start_blocking_portal
-from pytauri import BuilderArgs, Commands, builder_factory, context_factory
+from pytauri import Commands, builder_factory, context_factory
 
 commands = Commands()
 
@@ -7,10 +7,7 @@ commands = Commands()
 with start_blocking_portal("asyncio") as portal:  # or "trio"
     builder = builder_factory()
     app = builder.build(
-        BuilderArgs(
-            context_factory(),
-            # 👇
-            invoke_handler=commands.generate_handler(portal),
-        )
+        context_factory(),
+        invoke_handler=commands.generate_handler(portal),
     )
     exit_code = app.run_return()

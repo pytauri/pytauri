@@ -10,8 +10,15 @@ use pyo3::{
 /// Inspired by [`typing.NotRequired`](https://docs.python.org/3/library/typing.html#typing.NotRequired)
 ///
 /// See also: [derive_from_py_dict].
-#[derive(Default, Debug, Clone)]
+#[derive(Debug, Clone)]
 pub struct NotRequired<T>(pub Option<T>);
+
+// DO NOT use `#[derive(Default)]`, it requires `T: Default`.
+impl<T> Default for NotRequired<T> {
+    fn default() -> Self {
+        NotRequired(None)
+    }
+}
 
 impl<'py, T> FromPyObject<'py> for NotRequired<T>
 where

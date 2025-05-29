@@ -15,7 +15,6 @@ from fastapi import FastAPI
 from nicegui import ui
 from pytauri import (
     AppHandle,
-    BuilderArgs,
     Manager,
     builder_factory,
     context_factory,
@@ -101,11 +100,9 @@ def main() -> int:
 
         # launch the app
         tauri_app = builder_factory().build(
-            BuilderArgs(
-                context_factory(),
-                invoke_handler=None,
-                setup=app_setup_hook(front_server),
-            )
+            context_factory(),
+            invoke_handler=None,
+            setup=app_setup_hook(front_server),
         )
         exit_code = tauri_app.run_return()
 

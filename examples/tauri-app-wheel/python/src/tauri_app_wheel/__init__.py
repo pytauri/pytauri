@@ -20,7 +20,6 @@ from anyio.from_thread import start_blocking_portal
 from pydantic import BaseModel, ConfigDict, RootModel
 from pydantic.alias_generators import to_camel
 from pytauri import (
-    BuilderArgs,
     Commands,
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
@@ -125,10 +124,8 @@ def main() -> int:
             tauri_config = None
 
         app = builder_factory().build(
-            BuilderArgs(
-                context=context_factory(SRC_TAURI_DIR, tauri_config=tauri_config),
-                invoke_handler=commands.generate_handler(portal),
-            )
+            context=context_factory(SRC_TAURI_DIR, tauri_config=tauri_config),
+            invoke_handler=commands.generate_handler(portal),
         )
         exit_code = app.run_return()
         return exit_code

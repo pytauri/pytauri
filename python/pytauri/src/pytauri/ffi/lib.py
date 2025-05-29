@@ -19,7 +19,15 @@ from typing import (
 )
 
 from pydantic import NonNegativeInt
-from typing_extensions import Never, Self, TypeAliasType, deprecated
+from typing_extensions import (
+    Never,
+    Required,
+    Self,
+    TypeAliasType,
+    TypedDict,
+    Unpack,
+    deprecated,
+)
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
@@ -220,41 +228,8 @@ if TYPE_CHECKING:
         def invoke_key(self) -> str: ...
 
     @final
-    class BuilderArgs:  # noqa: D101
-        def __new__(
-            cls,
-            /,
-            context: "Context",
-            *,
-            invoke_handler: Optional[_InvokeHandlerProto],
-            setup: Optional[Callable[[AppHandle], object]] = None,
-        ) -> Self:
-            """[tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)
-
-            !!! warning
-                The implementer of [invoke_handler][pytauri.ffi.lib.BuilderArgs.__new__(invoke_handler)] must never raise an exception,
-                otherwise it is considered logical undefined behavior.
-                Additionally, `invoke_handler` must not block.
-
-            !!! warning
-                If you do not specify [invoke_handler][pytauri.ffi.lib.BuilderArgs.__new__(invoke_handler)],
-                `pytauri` will not register the `tauri-plugin-pytauri` plugin,
-                which means you cannot use `pyInvoke` in the frontend to call `Commands`
-                (you will receive an error like ["plugin pytauri not found"]).
-                If this is indeed the behavior you expect, explicitly pass [None][].
-
-                ["plugin pytauri not found"]: https://github.com/pytauri/pytauri/issues/110
-
-            Args:
-                context: use [context_factory][pytauri.context_factory] to get it.
-                invoke_handler: use [Commands][pytauri.ipc.Commands] to get it.
-                setup: see rust `tauri::Builder::setup`.
-            """
-            ...
-
-    @final
     class Builder:
-        """[Tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)
+        """[tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)
 
         use [builder_factory][pytauri.builder_factory] to instantiate this class.
 
@@ -266,8 +241,15 @@ if TYPE_CHECKING:
                 otherwise it will cause memory leaks.
         """
 
-        def build(self, args: BuilderArgs, /) -> App:
-            """Consume this builder and build an app with the given `BuilderArgs`."""
+        def build(self, context: "Context", **kwargs: Unpack["BuilderArgs"]) -> App:
+            """[tauri::Builder::build](https://docs.rs/tauri/latest/tauri/struct.Builder.html#method.build)
+
+            Consume this builder and build an app with the given `BuilderArgs`.
+
+            Args:
+                context: use [context_factory][pytauri.context_factory] to get it.
+                **kwargs: see [BuilderArgs][pytauri.BuilderArgs] for details.
+            """
             ...
 
     @final
@@ -871,7 +853,6 @@ else:
     App = pytauri_mod.App
     AppHandle = pytauri_mod.AppHandle
     Builder = pytauri_mod.Builder
-    BuilderArgs = pytauri_mod.BuilderArgs
     Context = pytauri_mod.Context
     RunEvent = pytauri_mod.RunEvent
     ExitRequestApi = pytauri_mod.ExitRequestApi
@@ -890,6 +871,31 @@ else:
     EventTarget = pytauri_mod.EventTarget
     Emitter = pytauri_mod.Emitter
     Theme = pytauri_mod.Theme
+
+
+class BuilderArgs(TypedDict, total=False):
+    """[tauri::Builder](https://docs.rs/tauri/latest/tauri/struct.Builder.html)"""
+
+    invoke_handler: Required[Optional[_InvokeHandlerProto]]
+    """ Use [Commands][pytauri.ipc.Commands] to get it.
+
+    !!! warning
+        The implement of `invoke_handler` must never raise an exception,
+        otherwise it is considered logical undefined behavior.
+        Additionally, `invoke_handler` must not block.
+
+    !!! warning
+        If you do not specify `invoke_handler`,
+        `pytauri` will not register the `tauri-plugin-pytauri` plugin,
+        which means you cannot use `pyInvoke` in the frontend to call `Commands`
+        (you will receive an error like ["plugin pytauri not found"]).
+        If this is indeed the behavior you expect, explicitly pass [None][].
+
+        ["plugin pytauri not found"]: https://github.com/pytauri/pytauri/issues/110
+    """
+    setup: Callable[[AppHandle], object]
+    """See rust `tauri::Builder::setup`"""
+
 
 RunEventType = TypeAliasType(
     "RunEventType",
