@@ -9,7 +9,6 @@ from pydantic import BaseModel, ConfigDict, RootModel
 from pydantic.alias_generators import to_camel
 from pytauri import (
     AppHandle,
-    BuilderArgs,
     Commands,
     Emitter,
     Event,
@@ -76,10 +75,8 @@ def app_handle_fixture() -> Iterator[AppHandle]:
         portal.wrap_async_context_manager(portal.call(create_task_group)) as task_group,
     ):
         app = builder_factory().build(
-            BuilderArgs(
-                context=context_factory(),
-                invoke_handler=commands.generate_handler(portal),
-            )
+            context=context_factory(),
+            invoke_handler=commands.generate_handler(portal),
         )
         yield app.handle()
 

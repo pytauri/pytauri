@@ -14,84 +14,62 @@
 pub mod standalone;
 
 use pyo3::{
+    exceptions::PyTypeError,
     prelude::*,
     types::{PyCFunction, PyDict, PyModule, PyTuple},
     wrap_pymodule,
 };
-use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT2};
+use pyo3_utils::{
+    from_py_dict::{derive_from_py_dict, FromPyDict as _, NotRequired},
+    py_wrapper::{PyWrapper, PyWrapperT2},
+};
 use pytauri_core::{ext_mod::PyAppHandleExt as _, tauri_runtime::Runtime, utils::TauriError};
-use tauri::Context;
 
 /// Use [pymodule_export] instead of this [ext_mod] and [pytauri_plugins] directly.
 pub use pytauri_core::{ext_mod, pytauri_plugins};
 
-/// Please refer to the Python-side documentation
-#[pyclass(frozen)]
+type TauriBuilder = tauri::Builder<Runtime>;
+type TauriContext = tauri::Context<Runtime>;
+
+/// See also: [tauri::Builder]. And please refer to the Python-side documentation.
 #[non_exhaustive]
-#[derive(Debug)]
-// Currently, we do not need to store large memory data,
-// so we do not need `PyWrapperT2` to take ownership;
-// Since we only store `pyobject`, `clone_ref` will be more efficient.
-// If we need to store large memory data in the future,
-// we can consider `PyWrapperT2` again.
 pub struct BuilderArgs {
-    context: Py<ext_mod::Context>,
-    /// see [`tauri_plugin_pytauri::init`] for `invoke_handler`
+    /// see [`tauri_plugin_pytauri::init`] for `invoke_handler`.
     invoke_handler: Option<PyObject>,
     /// see [tauri::Builder::setup] and python side type hint.
-    setup: Option<PyObject>,
+    setup: NotRequired<PyObject>,
 }
 
-#[pymethods]
+derive_from_py_dict!(BuilderArgs {
+    // We require `invoke_handler` as a required parameter,
+    // see: <https://github.com/pytauri/pytauri/pull/133>.
+    invoke_handler,
+    #[default]
+    setup,
+});
+
 impl BuilderArgs {
-    #[new]
-    #[pyo3(signature = (context, *, invoke_handler, setup = None))]
-    fn new(
-        context: Py<ext_mod::Context>,
-        invoke_handler: Option<PyObject>,
-        setup: Option<PyObject>,
-    ) -> Self {
-        Self {
-            context,
-            invoke_handler,
-            setup,
+    fn from_kwargs(kwargs: Option<&Bound<'_, PyDict>>) -> PyResult<Self> {
+        match kwargs {
+            Some(kwargs) => Ok(BuilderArgs::from_py_dict(kwargs)?),
+            // because [BuilderArgs::invoke_handler] is required,
+            // so we return [PyErr] if `kwargs` is [None].
+            None => Err(PyTypeError::new_err(
+                "Missing required `**kwargs` arguments `BuilderArgs`",
+            )),
         }
     }
-}
 
-// TODO, FIXME, PERF, XXX: `tauri::Builder` is `!Sync`,
-// we need wait pyo3 `pyclass(unsync)` feature,
-// maybe we should file a issue to pyo3.
-/// See also: [tauri::Builder]
-#[pyclass(frozen, unsendable)]
-#[non_exhaustive]
-pub struct Builder(pub PyWrapper<PyWrapperT2<tauri::Builder<Runtime>>>);
-
-impl Builder {
-    fn new(builder: tauri::Builder<Runtime>) -> Self {
-        Self(PyWrapper::new2(builder))
-    }
-}
-
-#[pymethods]
-impl Builder {
-    fn build(&self, args: Bound<BuilderArgs>) -> PyResult<ext_mod::App> {
-        let py = args.py();
-
-        let mut builder = self.0.try_take_inner()??;
-
-        let BuilderArgs {
-            context,
+    fn apply_to_builder(self, py: Python<'_>, mut builder: TauriBuilder) -> TauriBuilder {
+        let Self {
             invoke_handler,
             setup,
-        } = args.get();
+        } = self;
 
         if let Some(invoke_handler) = invoke_handler {
             builder = builder.plugin(tauri_plugin_pytauri::init(invoke_handler.clone_ref(py)));
         }
-
-        if let Some(setup) = setup {
-            let setup = setup.clone_ref(py);
+        if let Some(setup) = setup.0 {
             builder = builder.setup(move |app| {
                 Python::with_gil(|py| {
                     // we haven't called [ext_mod::App::try_build], so we need init the [PyAppHandle] before get it.
@@ -102,8 +80,40 @@ impl Builder {
             });
         }
 
+        builder
+    }
+}
+
+// TODO, FIXME, PERF, XXX: `tauri::Builder` is `!Sync`,
+// we need wait pyo3 `pyclass(unsync)` feature,
+// maybe we should file a issue to pyo3.
+/// See also: [tauri::Builder]
+#[pyclass(frozen, unsendable)]
+#[non_exhaustive]
+pub struct Builder(pub PyWrapper<PyWrapperT2<TauriBuilder>>);
+
+impl Builder {
+    fn new(builder: TauriBuilder) -> Self {
+        Self(PyWrapper::new2(builder))
+    }
+}
+
+#[pymethods]
+impl Builder {
+    #[pyo3(signature = (context, **kwargs))]
+    fn build(
+        &self,
+        py: Python<'_>,
+        context: Py<ext_mod::Context>,
+        kwargs: Option<&Bound<'_, PyDict>>,
+    ) -> PyResult<ext_mod::App> {
         let context = context.get().0.try_take_inner()??;
-        let app = builder.build(context).map_err(Into::<TauriError>::into)?;
+        let args = BuilderArgs::from_kwargs(kwargs)?;
+
+        let mut builder = self.0.try_take_inner()??;
+        builder = args.apply_to_builder(py, builder);
+
+        let app = builder.build(context).map_err(TauriError::from)?;
         ext_mod::App::try_build(py, app)
     }
 }
@@ -142,10 +152,10 @@ pub mod _ext_mod {
 pub fn pymodule_export(
     parent_module: &Bound<'_, PyModule>,
     // TODO: make `context_factory` optional and get `Context` from python side
-    context_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<Context<Runtime>>
+    context_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<TauriContext>
         + Send
         + 'static,
-    builder_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<tauri::Builder<Runtime>>
+    builder_factory: impl Fn(&Bound<'_, PyTuple>, Option<&Bound<'_, PyDict>>) -> PyResult<TauriBuilder>
         + Send
         + 'static,
 ) -> PyResult<()> {
@@ -168,7 +178,6 @@ pub fn pymodule_export(
 
     pytauri_module.add_function(builder_factory)?;
     pytauri_module.add_function(context_factory)?;
-    pytauri_module.add_class::<BuilderArgs>()?;
     pytauri_module.add_class::<Builder>()?;
 
     let pytauri_plugins_module = wrap_pymodule!(pytauri_plugins)(py);
