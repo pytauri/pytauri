@@ -79,6 +79,21 @@ For details, compare the [`v0.5`](https://pytauri.github.io/pytauri/0.5/usage/tu
 
 ### BREAKING
 
+- [#161](https://github.com/pytauri/pytauri/pull/161) - refactor(pytauri)!: refactor `BuilderArgs` to `TypedDict`.
+
+    ??? tip "Migration"
+
+        ```diff
+        app = builder_factory().build(
+        -    BuilderArgs(
+        -        context=context_factory(),
+        -        invoke_handler=commands.generate_handler(portal),
+        -    )
+        +    context=context_factory(),
+        +    invoke_handler=commands.generate_handler(portal),
+        )
+        ```
+
 - [#157](https://github.com/pytauri/pytauri/pull/157) - feat(pytauri)!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`.
 
     These APIs have changed:
