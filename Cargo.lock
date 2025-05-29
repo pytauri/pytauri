@@ -3272,6 +3272,7 @@ dependencies = [
  "pyo3",
  "pyo3-utils",
  "tauri",
+ "tauri-plugin-dialog",
  "tauri-plugin-notification",
 ]
 
