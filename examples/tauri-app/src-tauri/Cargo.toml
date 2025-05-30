@@ -32,6 +32,10 @@ serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
 pyo3 = { workspace = true }
-pytauri = { workspace = true, features = ["plugin-notification"] }
+pytauri = { workspace = true, features = [
+    "plugin-notification",
+    "plugin-dialog",
+] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
+tauri-plugin-dialog = { workspace = true }

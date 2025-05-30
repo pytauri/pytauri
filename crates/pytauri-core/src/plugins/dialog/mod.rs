@@ -227,19 +227,17 @@ impl MessageDialogBuilder {
             builder = args.apply_to_builder(py, builder)?;
         }
 
-        // TODO (perf): Do we really need `py.allow_threads` here?
-        // Maybe it's short enough?
-        py.allow_threads(|| {
-            builder.show(move |is_ok| {
-                Python::with_gil(|py| {
-                    let handler = handler.bind(py);
-                    let result = handler.call1((is_ok,));
-                    result.unwrap_unraisable_py_result(py, Some(handler), || {
-                        "Python exception occurred in `MessageDialogBuilder::show` handler"
-                    });
-                })
+        // PERF: it's short enough, so we don't release the GIL
+        builder.show(move |is_ok| {
+            Python::with_gil(|py| {
+                let handler = handler.bind(py);
+                let result = handler.call1((is_ok,));
+                result.unwrap_unraisable_py_result(py, Some(handler), || {
+                    "Python exception occurred in `MessageDialogBuilder::show` handler"
+                });
             })
         });
+
         Ok(())
     }
 }

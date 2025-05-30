@@ -22,6 +22,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
+from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
 
 from tauri_app.private import private_algorithm
@@ -90,7 +91,14 @@ async def greet(
     body: Person, app_handle: AppHandle, webview_window: WebviewWindow
 ) -> Greeting:
     notification_builder = NotificationExt.builder(app_handle)
-    notification_builder.show(title="Greeting", body=f"Hello, {body.name}!")
+
+    message_dialog_builder = DialogExt.message(app_handle, f"Hello {body.name}!")
+    message_dialog_builder.show(
+        lambda is_ok: notification_builder.show(body=f"Dialog closed with: {is_ok}"),
+        parent=webview_window,
+        buttons=MessageDialogButtons.OkCancelCustom("ok", "cancel"),
+        kind=MessageDialogKind.Info,
+    )
 
     webview_window.set_title(f"Hello {body.name}!")
 
