@@ -2,6 +2,9 @@
 
 from pytauri_plugins.dialog.ffi import (
     DialogExt,
+    FileDialogBuilder,
+    FileDialogBuilderArgs,
+    FilePath,
     ImplDialogExt,
     MessageDialogBuilder,
     MessageDialogBuilderArgs,
@@ -12,6 +15,9 @@ from pytauri_plugins.dialog.ffi import (
 
 __all__ = [
     "DialogExt",
+    "FileDialogBuilder",
+    "FileDialogBuilderArgs",
+    "FilePath",
     "ImplDialogExt",
     "MessageDialogBuilder",
     "MessageDialogBuilderArgs",

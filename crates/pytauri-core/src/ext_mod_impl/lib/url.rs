@@ -1,51 +1,38 @@
-use std::{
-    borrow::Cow,
-    convert::Infallible,
-    ops::{Deref, DerefMut},
-};
+use std::{borrow::Cow, convert::Infallible};
 
 use pyo3::{exceptions::PyValueError, prelude::*, types::PyString, FromPyObject, IntoPyObject};
 
 type TauriUrl = tauri::Url;
 
 /// See also: [tauri::Url]
-pub struct Url(TauriUrl);
+pub struct Url<'a>(Cow<'a, TauriUrl>);
 
-impl Deref for Url {
-    type Target = TauriUrl;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl DerefMut for Url {
-    fn deref_mut(&mut self) -> &mut Self::Target {
-        &mut self.0
-    }
-}
-
-impl From<TauriUrl> for Url {
+impl From<TauriUrl> for Url<'_> {
     fn from(url: TauriUrl) -> Self {
-        Self(url)
+        Self(Cow::Owned(url))
+    }
+}
+impl<'a> From<&'a TauriUrl> for Url<'a> {
+    fn from(url: &'a TauriUrl) -> Self {
+        Self(Cow::Borrowed(url))
     }
 }
 
-impl From<Url> for TauriUrl {
-    fn from(url: Url) -> Self {
-        url.0
+impl From<Url<'_>> for TauriUrl {
+    fn from(url: Url<'_>) -> Self {
+        url.0.into_owned()
     }
 }
 
-impl<'py> FromPyObject<'py> for Url {
+impl<'py> FromPyObject<'py> for Url<'_> {
     fn extract_bound(ob: &Bound<'py, PyAny>) -> PyResult<Self> {
         let url: Cow<'_, str> = ob.extract()?; // TODO, PERF: once we drop py39, we can use `&str` directly
         let url = TauriUrl::parse(&url).map_err(|e| PyValueError::new_err(e.to_string()))?;
-        Ok(Self(url))
+        Ok(Self::from(url))
     }
 }
 
-impl<'py> IntoPyObject<'py> for &Url {
+impl<'py> IntoPyObject<'py> for &Url<'_> {
     type Target = PyString;
     type Output = Bound<'py, Self::Target>;
     type Error = Infallible;
@@ -56,7 +43,7 @@ impl<'py> IntoPyObject<'py> for &Url {
     }
 }
 
-impl<'py> IntoPyObject<'py> for Url {
+impl<'py> IntoPyObject<'py> for Url<'_> {
     type Target = PyString;
     type Output = Bound<'py, Self::Target>;
     type Error = Infallible;

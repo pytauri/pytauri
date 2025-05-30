@@ -3,8 +3,6 @@
 """[tauri::tray](https://docs.rs/tauri/latest/tauri/tray/index.html)"""
 
 from enum import Enum, auto
-from os import PathLike
-from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Callable,
@@ -16,6 +14,7 @@ from typing import (
 from typing_extensions import Self, TypeAliasType
 
 from pytauri.ffi._ext_mod import pytauri_mod
+from pytauri.ffi._typing import Pyo3Path
 
 __all__ = [
     "MouseButton",
@@ -26,7 +25,6 @@ __all__ = [
     "TrayIconId",
 ]
 
-_ToPyo3Path = Union[str, PathLike[str], Path]
 
 _tray_mod = pytauri_mod.tray
 
@@ -73,7 +71,7 @@ if TYPE_CHECKING:
         def set_tooltip(self, tooltip: Optional[str], /) -> None: ...
         def set_title(self, title: Optional[str], /) -> None: ...
         def set_visible(self, visible: bool, /) -> None: ...
-        def set_temp_dir_path(self, path: Optional[_ToPyo3Path], /) -> None: ...
+        def set_temp_dir_path(self, path: Optional[Pyo3Path], /) -> None: ...
         def set_icon_as_template(self, is_template: bool, /) -> None: ...
         def set_show_menu_on_left_click(self, enable: bool, /) -> None: ...
         def rect(self, /) -> Optional[Rect]: ...
