@@ -34,6 +34,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### `tauri-plugin-dialog` bingings
+
+> - [#163](https://github.com/pytauri/pytauri/pull/163) - feat(plugin): implement `tauri-plugin-dialog` bindings.
+
+[`tauri-plugin-dialog`](https://tauri.app/plugin/dialog/) has now been integrated into `pytauri` as the `plugin-dialog` gated feature.
+
+??? tip "Usage"
+
+    ![dialog](https://github.com/user-attachments/assets/85cbf9f1-4203-4336-959a-499b3691bcd9)
+
+    ```py
+    from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
+
+    @commands.command()
+    async def greet(
+        app_handle: AppHandle, webview_window: WebviewWindow
+    ) -> bytes:
+        file_dialog_builder = DialogExt.file(app_handle)
+        file_dialog_builder.pick_files(
+            lambda files: print(f"Files selected: {files}"),
+            add_filter=("markdown", ["md"]),
+            set_parent=webview_window,
+            set_title="Select a Markdown file",
+        )
+
+        message_dialog_builder = DialogExt.message(app_handle, "Hello!")
+        message_dialog_builder.show(
+            lambda is_ok: print(f"Dialog closed with: {is_ok}"),
+            parent=webview_window,
+            buttons=MessageDialogButtons.OkCancelCustom("ok", "cancel"),
+            kind=MessageDialogKind.Info,
+        )
+
+        return b"null"
+    ```
+
 #### Integrate plugins as features
 
 > - [#160](https://github.com/pytauri/pytauri/pull/160) - feat(pytauri)!: integrate `plugin-notification` as a gated-feature of `pytauri`.

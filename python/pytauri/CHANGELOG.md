@@ -9,6 +9,7 @@
 
 ### Added
 
+- [#163](https://github.com/pytauri/pytauri/pull/163) - feat(plugin): implement `tauri-plugin-dialog` bindings.
 - [#160](https://github.com/pytauri/pytauri/pull/160) - feat!: integrate `plugin-notification` as a gated-feature of `pytauri`.
 
     Added: `pytauri_plugins::notification::NotificationBuilderArgs`.

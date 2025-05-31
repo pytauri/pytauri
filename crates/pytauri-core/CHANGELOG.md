@@ -4,10 +4,12 @@
 
 ### BREAKING
 
+- [#163](https://github.com/pytauri/pytauri/pull/163) - refactor: `ext_mod::Url` -> `ext_mod::Url<'a'>` and removed the implementations of `Deref` and `DerefMut`.
 - [#157](https://github.com/pytauri/pytauri/pull/157) - feat!: `Position.Physical(x, y)` -> `Position.Physical((x, y))`. See home `/CHANGELOG` for more details.
 
 ### Added
 
+- [#163](https://github.com/pytauri/pytauri/pull/163) - feat(plugin): implement `tauri-plugin-dialog` bindings.
 - [#160](https://github.com/pytauri/pytauri/pull/160) - feat!: integrate `plugin-notification` as a gated-feature of `pytauri`.
 
     Added: `pytauri_plugins::notification::NotificationBuilderArgs`.
