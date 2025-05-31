@@ -605,6 +605,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#all-plugins-we-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      All plugins we support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-the-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       Using the plugin
@@ -1492,11 +1501,11 @@
           
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/py/pytauri_plugins/notification/" class="md-nav__link ">
+            <a href="../../../reference/py/pytauri_plugins/dialog/" class="md-nav__link ">
               
   
   <span class="md-ellipsis">
-    notification
+    dialog
   </span>
   
 
@@ -1511,6 +1520,81 @@
         
         <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_2_1_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            dialog
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/py/pytauri_plugins/dialog/ffi/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    ffi
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_2_2" >
+        
+          
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/py/pytauri_plugins/notification/" class="md-nav__link ">
+              
+  
+  <span class="md-ellipsis">
+    notification
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1_2_2" id="__nav_3_1_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_3_1_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_2_2">
             <span class="md-nav__icon md-icon"></span>
             notification
           </label>
@@ -2133,6 +2217,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#all-plugins-we-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      All plugins we support
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#using-the-plugin" class="md-nav__link">
     <span class="md-ellipsis">
       Using the plugin
@@ -2215,6 +2308,31 @@
 </li>
 </ol>
 <p>In addition, PyTauri has already integrated some official Tauri plugins. Below, we use <a href="https://github.com/tauri-apps/tauri-plugin-notification">tauri-plugin-notification</a> as an example to demonstrate how to use a PyTauri-integrated plugins.</p>
+<h2 id="all-plugins-we-support">All plugins we support<a class="headerlink" href="#all-plugins-we-support" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Plugin</th>
+<th>JS Docs</th>
+<th>Rust Docs</th>
+<th>Python Docs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>plugin-notification</td>
+<td><a href="https://tauri.app/reference/javascript/notification/">JS docs</a></td>
+<td><a href="https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/">Rust docs</a></td>
+<td><a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_plugins/notification/#pytauri_plugins.notification">Python docs</a></td>
+</tr>
+<tr>
+<td>plugin-dialog</td>
+<td><a href="https://tauri.app/reference/javascript/dialog/">JS docs</a></td>
+<td><a href="https://docs.rs/tauri-plugin-dialog/latest/tauri_plugin_dialog/">Rust docs</a></td>
+<td><a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_plugins/dialog/#pytauri_plugins.dialog">Python docs</a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="using-the-plugin">Using the plugin<a class="headerlink" href="#using-the-plugin" title="Permanent link">&para;</a></h2>
 <h3 id="install-tauri-plugin">install tauri plugin<a class="headerlink" href="#install-tauri-plugin" title="Permanent link">&para;</a></h3>
 <p>All PyTauri plugins are just Python bindings, which means you need to <a href="https://github.com/tauri-apps/tauri-plugin-notification/blob/665d8f08bcf2e8af3c0f95af12ca1f06d71a0d6d/README.md#install">initialize the underlying Tauri extensions normally</a>:</p>
@@ -2282,7 +2400,7 @@ Therefore, running <code>pip install pytauri</code> will also install it.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-05-28T10:04:52+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-05-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago"><span class="timeago" datetime="2025-05-31T16:38:40+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date">2025-05-31</span>
   </span>
 
     
