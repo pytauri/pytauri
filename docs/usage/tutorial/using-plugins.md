@@ -11,6 +11,13 @@ In addition, PyTauri has already integrated some official Tauri plugins. Below, 
 
 [tauri-plugin-notification]: https://github.com/tauri-apps/tauri-plugin-notification
 
+## All plugins we support
+
+| Plugin | JS Docs | Rust Docs | Python Docs |
+|--------|---------|-----------|-------------|
+| plugin-notification | [JS docs](https://tauri.app/reference/javascript/notification/) | [Rust docs](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/) | [Python docs][pytauri_plugins.notification] |
+| plugin-dialog | [JS docs](https://tauri.app/reference/javascript/dialog/) | [Rust docs](https://docs.rs/tauri-plugin-dialog/latest/tauri_plugin_dialog/) | [Python docs][pytauri_plugins.dialog] |
+
 ## Using the plugin
 
 ### install tauri plugin

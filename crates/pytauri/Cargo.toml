@@ -24,6 +24,7 @@ rustdoc-args = ["--cfg", "docsrs"]
 standalone = ["dep:libc", "dep:dunce"]
 
 plugin-notification = ["pytauri-core/plugin-notification"]
+plugin-dialog = ["pytauri-core/plugin-dialog"]
 
 
 [dependencies]

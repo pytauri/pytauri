@@ -9,6 +9,7 @@
     "pytauri-core/__private",
     "pytauri/standalone",
     "pytauri/plugin-notification",
+    "pytauri/plugin-dialog",
     "pyo3-utils/unstable",
   ],
 }

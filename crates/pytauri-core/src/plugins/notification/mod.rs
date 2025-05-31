@@ -205,23 +205,20 @@ impl NotificationBuilder {
 #[pymethods]
 impl NotificationBuilder {
     #[pyo3(signature = (**kwargs))]
-    fn show(&self, py: Python<'_>, kwargs: Option<&Bound<'_, PyDict>>) -> PyResult<()> {
+    fn show(&self, kwargs: Option<&Bound<'_, PyDict>>) -> PyResult<()> {
         let args = NotificationBuilderArgs::from_kwargs(kwargs)?;
-        // TODO (perf): Do we really need `py.allow_threads` here?
-        // I mean, I don't know how long `NotificationBuilder::show` will take,
-        // maybe it's short enough?
-        py.allow_threads(|| {
-            let mut builder = self.0.try_take_inner()??;
 
-            if let Some(args) = args {
-                builder = args.apply_to_builder(builder);
-            }
+        let mut builder = self.0.try_take_inner()??;
 
-            builder
-                .show()
-                .map_err(PluginError::from)
-                .map_err(PyErr::from)
-        })
+        if let Some(args) = args {
+            builder = args.apply_to_builder(builder);
+        }
+
+        // PERF: it's short enough, so we don't release the GIL
+        builder
+            .show()
+            .map_err(PluginError::from)
+            .map_err(PyErr::from)
     }
 }
 

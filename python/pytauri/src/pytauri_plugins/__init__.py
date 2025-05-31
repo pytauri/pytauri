@@ -12,6 +12,7 @@ from typing import Final
 from pytauri import EXT_MOD
 
 __all__ = [
+    "PLUGIN_DIALOG",
     "PLUGIN_NOTIFICATION",
 ]
 
@@ -19,3 +20,5 @@ _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
 
 PLUGIN_NOTIFICATION: Final[bool] = _pytauri_plugins_mod.PLUGIN_NOTIFICATION
 """Whether the `plugin-notification` feature is enabled."""
+PLUGIN_DIALOG: Final[bool] = _pytauri_plugins_mod.PLUGIN_DIALOG
+"""Whether the `plugin-dialog` feature is enabled."""

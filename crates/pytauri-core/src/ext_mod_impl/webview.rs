@@ -347,7 +347,7 @@ impl WebviewWindow {
         Ok(url.into())
     }
 
-    fn navigate(&self, py: Python<'_>, url: Url) -> PyResult<()> {
+    fn navigate(&self, py: Python<'_>, url: Url<'_>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, navigate, url.into()))
     }
 

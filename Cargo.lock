@@ -3272,6 +3272,7 @@ dependencies = [
  "pyo3",
  "pyo3-utils",
  "tauri",
+ "tauri-plugin-dialog",
  "tauri-plugin-notification",
 ]
 
@@ -4213,6 +4214,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-plugin-dialog",
  "tauri-plugin-notification",
  "tauri-plugin-opener",
  "tauri-plugin-pytauri",

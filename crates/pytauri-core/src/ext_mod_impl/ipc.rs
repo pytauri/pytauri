@@ -270,7 +270,7 @@ impl JavaScriptChannelId {
 impl JavaScriptChannelId {
     #[staticmethod]
     fn from_str(py: Python<'_>, value: &str) -> PyResult<Self> {
-        // it's short enough, so we don't release the GIL
+        // PERF: it's short enough, so we don't release the GIL
         let result = ipc::JavaScriptChannelId::from_str(value);
         match result {
             Ok(js_channel_id) => Ok(Self::new(js_channel_id)),
