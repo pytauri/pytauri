@@ -41,6 +41,7 @@ tauri-plugin-opener = { version = "2.2" }
 tauri-plugin-clipboard-manager = { version = "2.2" }
 tauri-plugin-dialog = { version = "2.2" }
 tauri-plugin-fs = { version = "2.2" }
+tauri-plugin-notification = { version = "2.2" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -50,6 +51,6 @@ pyo3 = { version = "0.25" }
 # ❗ when bumping, remember to update workspace dependencies.
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
-pytauri = { version = "0.5" }
+pytauri = { version = "0.5", features = ["plugin-notification", "plugin-dialog"] }
 pytauri-core = { version = "0.5" }
 tauri-plugin-pytauri = { version = "0.5" }

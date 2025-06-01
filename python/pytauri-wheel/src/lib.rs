@@ -317,6 +317,7 @@ struct BuilderFactoryKwargs {
     clipboard_manager: bool,
     dialog: bool,
     fs: bool,
+    notification: bool,
 }
 
 // TODO: once we support `NotRequired` fields for `FromPyObject` in `pyo3 v0.24`,
@@ -337,6 +338,7 @@ pub fn builder_factory(
         clipboard_manager,
         dialog,
         fs,
+        notification,
     } = match kwargs {
         Some(kwargs) => kwargs.extract()?,
         None => return Err(PyValueError::new_err("missing keyword-only argument")),
@@ -357,6 +359,9 @@ pub fn builder_factory(
         }
         if fs {
             builder = builder.plugin(tauri_plugin_fs::init());
+        }
+        if notification {
+            builder = builder.plugin(tauri_plugin_notification::init());
         }
 
         Ok(builder)
