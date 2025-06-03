@@ -41,10 +41,10 @@ dunce = { version = "1", default-features = false }
 tokio = { version = "1", default-features = false }
 
 # ❗ when bumping, remember to update workspace dependencies
-tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.5" }
-pytauri-core = { path = "crates/pytauri-core", version = "0.5" }
-pytauri = { path = "crates/pytauri", version = "0.5" }
-pyo3-utils = { path = "crates/pyo3-utils", version = "0.2" }
+tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.6" }
+pytauri-core = { path = "crates/pytauri-core", version = "0.6" }
+pytauri = { path = "crates/pytauri", version = "0.6" }
+pyo3-utils = { path = "crates/pyo3-utils", version = "0.3" }
 
 [patch.crates-io]
 # 👇 for `pytauri-wheel` workspace dependencies.

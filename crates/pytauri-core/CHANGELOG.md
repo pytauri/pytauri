@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.6.0]
+
 ### BREAKING
 
 - [#163](https://github.com/pytauri/pytauri/pull/163) - refactor: `ext_mod::Url` -> `ext_mod::Url<'a'>` and removed the implementations of `Deref` and `DerefMut`.
@@ -108,6 +110,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.6.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.3.0

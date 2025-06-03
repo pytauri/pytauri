@@ -1,6 +1,6 @@
 {
   "name": "tauri-plugin-pytauri-api",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "js api for crate tauri-plugin-pytauri",
   "license": "Apache-2.0",
   "repository": "github:pytauri/pytauri",
