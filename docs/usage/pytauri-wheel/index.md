@@ -138,3 +138,5 @@ import { ask } from '@tauri-apps/plugin-dialog';
 
 !!! warning
     Remember to enable the permissions for these plugins in `/capabilities`, otherwise you will receive an error on the frontend.
+
+Additionally, `pytauri-wheel` has integrated all the plugins from [pytauri_plugins][], making it easy for you to use them through the Python API.

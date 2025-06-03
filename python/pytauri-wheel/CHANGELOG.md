@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#165](https://github.com/pytauri/pytauri/pull/165) - feat: enable `tauri-plugin-notification` and integrate `pytauri_plugins`.
+
 ## [0.5.0]
 
 ### Highlights
