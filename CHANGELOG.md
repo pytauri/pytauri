@@ -115,6 +115,32 @@ For details, compare the [`v0.5`](https://pytauri.github.io/pytauri/0.5/usage/tu
 
 ### BREAKING
 
+- [#166](https://github.com/pytauri/pytauri/pull/166) - fix(standalone)!: standalone binary not working on MacOS.
+
+    ??? bug "Patch `install_name` for `libpython3.*.dylib` of `python-build-standalone`"
+
+        See: <https://github.com/pytauri/pytauri/issues/99#issuecomment-2704556726>.
+
+        The `install_name` of `libpython3.*.dylib` built by `python-build-standalone` [does not include `@rpath`](https://github.com/astral-sh/python-build-standalone/blob/d0ed97f7618769996f1dd2a586faec150d7ebcb9/cpython-unix/build-cpython.sh#L611-L624), which makes the [`rpath` set for the executable](https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone/#macos) ineffective.
+
+        **Migration**
+
+        Until this is fixed upstream in `python-build-standalone`, you need to manually patch the `install_name`:
+
+        ```bash
+        install_name_tool -id '@rpath/libpython3.13.dylib' /the/path/to/pyembed/python/lib/libpython3.13.dylib
+        ```
+
+    ??? bug "Do not create more than one `App` instance"
+
+        See: <https://github.com/tauri-apps/tauri/issues/12934>
+
+        `tauri` does not allow creating more than one `App` instance per process. Previously, we were unaware of this limitation and suggested creating a [`sample_app`](https://github.com/pytauri/pytauri/blob/bfb84aba80f8774e3db6e69ff5d74425e0b8c736/examples/tauri-app/src-tauri/src/main.rs#L30-L37) to obtain the `resource_dir`, which subsequently caused a panic in [`App` in `__init__.py`](https://github.com/pytauri/pytauri/blob/bfb84aba80f8774e3db6e69ff5d74425e0b8c736/examples/tauri-app/src-tauri/python/tauri_app/__init__.py#L120-L126).
+
+        **Migration**
+
+        <https://github.com/pytauri/create-pytauri-app/pull/1/commits/6813b7df4211d711fc962f251e7bedeb9a2378d0>
+
 - [#161](https://github.com/pytauri/pytauri/pull/161) - refactor(pytauri)!: refactor `BuilderArgs` to `TypedDict`.
 
     ??? tip "Migration"
