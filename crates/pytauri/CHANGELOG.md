@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.6.0]
+
 ### BREAKING
 
 - [#161](https://github.com/pytauri/pytauri/pull/161) - refactor(pytauri)!: refactor `BuilderArgs` to `TypedDict`.
@@ -62,6 +64,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.6.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri/v0.3.0

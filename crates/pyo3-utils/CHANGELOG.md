@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.3.0]
+
 ### Added
 
 - [#160](https://github.com/pytauri/pytauri/pull/160) - feat: added unstable mod `from_py_dict`.
@@ -29,6 +31,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.3.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.3.0
 [0.2.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.2.0
 [0.1.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.1.0
 [0.1.0-beta.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.1.0-beta.0
