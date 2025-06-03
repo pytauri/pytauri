@@ -7,7 +7,7 @@ use pyo3::wrap_pymodule;
 use pytauri::standalone::{
     dunce::simplified, PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript,
 };
-use tauri::{Builder, Manager as _};
+use tauri::utils::platform::resource_dir;
 
 use nicegui_app_lib::{ext_mod, tauri_generate_context};
 
@@ -27,15 +27,9 @@ fn main() -> Result<Infallible, Box<dyn Error>> {
     } else {
         // embedded Python, i.e., bundle mode with `tauri build`.
 
-        // Actually, we don't use this app, we just use it to get the resource directory
-        let sample_app = Builder::default()
-            .build(tauri_generate_context())
-            .map_err(|err| format!("failed to build sample app: {err}"))?;
-        let resource_dir = sample_app
-            .path()
-            .resource_dir()
+        let context = tauri_generate_context();
+        let resource_dir = resource_dir(context.package_info(), &tauri::Env::default())
             .map_err(|err| format!("failed to get resource dir: {err}"))?;
-
         // 👉 Remove the UNC prefix `\\?\`, Python ecosystems don't like it.
         let resource_dir = simplified(&resource_dir).to_owned();
 
