@@ -40,7 +40,7 @@ We provide precompiled Wheels for the following platforms and supported Python v
     Only Python >= 3.11 supports arm64 on Windows, refer to [setup-python](https://github.com/actions/setup-python/issues/715#issue-1846474433) and [python-build-standalone](https://github.com/astral-sh/python-build-standalone/pull/387#issuecomment-2818671913).
 
 ```bash
-pip install "pytauri-wheel == 0.5.*"  # (1)!
+pip install "pytauri-wheel == 0.6.*"  # (1)!
 ```
 
 1. This is the version at the time of writing this tutorial. There may be a newer version of pytauri available when you use it.

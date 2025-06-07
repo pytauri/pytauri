@@ -38,7 +38,7 @@ name = "tauri-app"  # (1)!
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.9"
-dependencies = ["pytauri == 0.5.*"]  # (2)!
+dependencies = ["pytauri == 0.6.*"]  # (2)!
 
 [project.entry-points.pytauri]
 ext_mod = "tauri_app.ext_mod"
@@ -108,11 +108,12 @@ required-features = ["pytauri/standalone"]
 
 [dependencies]
 # ...
-pytauri = { version = "0.5" }  # (1)!
-pyo3 = { version = "*" }
+pytauri = { version = "0.6" }  # (1)!
+pyo3 = { version = "0.25" }  # (2)!
 ```
 
 1. This is the version at the time of writing this tutorial. There may be a newer version of pytauri available when you use it.
+2. This is the version at the time of writing this tutorial. There may be a newer version of pytauri available when you use it.
 
 Also, enable the `pytauri/standalone` feature:
 
