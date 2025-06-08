@@ -32,7 +32,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0]
+
 ### Highlights
+
+#### `create-pytauri-app` template generator
+
+> - [#169](https://github.com/pytauri/pytauri/pull/169) - docs: update docs for v0.6.0 .
+
+Since version `0.6`, [create-pytauri-app](https://github.com/pytauri/create-pytauri-app/) is the recommended way to start a new PyTauri project, even if it is still in development.
+
+??? tip "Usage"
+
+    Refer to [uv] and [copier], run the following command:
+
+    ```bash
+    uvx copier copy https://github.com/pytauri/create-pytauri-app .
+    ```
+
+    This will initialize the project in the form of an interactive questionnaire:
+
+    ```text
+    🎤 Project name
+    pytauri-app
+    🎤 Identifier
+    com.pytauri-app.app
+    🎤 Choose your UI template
+    Vue
+    ```
+
+    **However, we still recommend reading the entire "Tutorial" section, as it will help you understand all the details of pytauri.**
+
+    [uv]: https://docs.astral.sh/uv/guides/tools/
+    [copier]: https://copier.readthedocs.io/en/stable/generating/
 
 #### `tauri-plugin-dialog` bingings
 
@@ -400,6 +432,7 @@ Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pyta
 ## [0.1.0-beta]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.6.0]: https://github.com/pytauri/pytauri/releases/tag/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/v0.3.0

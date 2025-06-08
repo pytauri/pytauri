@@ -1,5 +1,25 @@
 # Getting Started
 
+## Create PyTauri App
+
+!!! tip
+
+    Since version `0.6`, [create-pytauri-app] is the recommended way to start a new PyTauri project, even if it is still in development. Refer to [uv] and [copier], run the following command:
+
+    ```bash
+    uvx copier copy https://github.com/pytauri/create-pytauri-app .
+    ```
+
+    This will initialize the project in the form of an interactive questionnaire.
+
+    **However, we still recommend reading the entire "Tutorial" section, as it will help you understand all the details of pytauri.**
+
+    [create-pytauri-app]: https://github.com/pytauri/create-pytauri-app/
+    [uv]: https://docs.astral.sh/uv/guides/tools/
+    [copier]: https://copier.readthedocs.io/en/stable/generating/
+
+---
+
 Before starting the tutorial, we recommend installing the following tools, which are considered best practices for initializing a pytauri project. We will use these tools throughout the tutorial.
 
 - [create-tauri-app](https://github.com/tauri-apps/create-tauri-app): `v4.5.9`
