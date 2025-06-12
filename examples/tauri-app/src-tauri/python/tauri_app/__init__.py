@@ -83,13 +83,10 @@ class Person(_CamelModel):
     name: str
 
 
-Greeting = RootModel[str]
-
-
 @commands.command()
 async def greet(
     body: Person, app_handle: AppHandle, webview_window: WebviewWindow
-) -> Greeting:
+) -> str:
     notification_builder = NotificationExt.builder(app_handle)
 
     message_dialog_builder = DialogExt.message(app_handle, f"Hello {body.name}!")
@@ -102,9 +99,7 @@ async def greet(
 
     webview_window.set_title(f"Hello {body.name}!")
 
-    return Greeting(
-        f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
-    )
+    return f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
 
 
 # Anyio `TaskGroup` can only be created in async context,
