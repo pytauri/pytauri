@@ -26,7 +26,7 @@ The currently supported signature pattern is [ArgumentsType][pytauri.ipc.Argumen
 --8<-- "docs_src/concepts/ipc/reg_cmd.py"
 ```
 
-#### Deserializing the Body
+#### Deserializing the Body using `BaseModel`
 
 For the `body` argument, it is of type `bytes`, allowing you to pass binary data such as files between the frontend and backend.
 
@@ -40,6 +40,24 @@ If you use [BaseModel][pydantic.BaseModel]/[RootModel][pydantic.RootModel] as th
 ```python
 --8<-- "docs_src/concepts/ipc/serde_body.py"
 ```
+
+#### Deserializing the Body using arbitrary types
+
+!!! info
+    This is an experimental feature. If we find that it causes more problems than benefits, it may be removed in the future. You may also encounter some bugs—please report them on GitHub issues!
+
+For types like `str`, it would be cumbersome to explicitly declare `#!python StrModel = RootModel[str]` every time. Since pytauri `v0.7`, if you use types other than `bytes`/`BaseModel`/`RootModel` as the type annotation for the `body` parameter or return value, pytauri will automatically convert them to [BaseModel][pydantic.BaseModel]/[TypeAdapter][pydantic.TypeAdapter] behind the scenes.
+
+```python
+--8<-- "docs_src/concepts/ipc/serde_body_as_any.py"
+```
+
+??? tip "Implementation details"
+    These are the current implementation details (which may change in the future). This means you need to pay attention to the [lru_cache][functools.lru_cache] cache missing issue:
+
+    ```python
+    --8<-- "docs_src/concepts/ipc/serde_body_as_any_impl.py"
+    ```
 
 #### Generate Invoke Handler for App
 
@@ -152,4 +170,4 @@ Ref:
 See:
 
 - [pytauri.Listener--examples][]
-- [pytauri.Listener--examples][]
+- [pytauri.Emitter--examples][]

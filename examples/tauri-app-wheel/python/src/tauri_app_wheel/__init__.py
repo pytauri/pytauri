@@ -47,7 +47,7 @@ async def timer_task(time_channel: Channel[Time]) -> None:
 @commands.command()
 async def start_timer(
     body: JavaScriptChannelId[Time], webview_window: WebviewWindow
-) -> bytes:
+) -> None:
     time_channel = body.channel_on(webview_window.as_ref_webview())
 
     # NOTE:
@@ -68,7 +68,6 @@ async def start_timer(
     # Or if you use `asyncio`, you can use `asyncio.create_task` derectly,
     # so that you don't need init `task_group`.
     task_group.start_soon(timer_task, time_channel)
-    return b"null"
 
 
 class _CamelModel(BaseModel):
@@ -86,16 +85,11 @@ class Person(_CamelModel):
     name: str
 
 
-Greeting = RootModel[str]
-
-
 @commands.command()
-async def greet(body: Person, webview_window: WebviewWindow) -> Greeting:
+async def greet(body: Person, webview_window: WebviewWindow) -> str:
     webview_window.set_title(f"Hello {body.name}!")
 
-    return Greeting(
-        f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
-    )
+    return f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
 
 
 # Anyio `TaskGroup` can only be created in async context,

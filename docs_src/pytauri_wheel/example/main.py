@@ -36,8 +36,8 @@ commands = Commands()
 
 
 @commands.command()
-async def greet() -> bytes:
-    return json.dumps(sys.version).encode()
+async def greet() -> str:
+    return sys.version
 
 
 if DEV_SERVER is not None:
