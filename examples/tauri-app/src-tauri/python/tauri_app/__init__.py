@@ -44,7 +44,7 @@ async def timer_task(time_channel: Channel[Time]) -> None:
 @commands.command()
 async def start_timer(
     body: JavaScriptChannelId[Time], webview_window: WebviewWindow
-) -> bytes:
+) -> None:
     time_channel = body.channel_on(webview_window.as_ref_webview())
 
     # NOTE:
@@ -65,7 +65,6 @@ async def start_timer(
     # Or if you use `asyncio`, you can use `asyncio.create_task` derectly,
     # so that you don't need init `task_group`.
     task_group.start_soon(timer_task, time_channel)
-    return b"null"
 
 
 class _CamelModel(BaseModel):

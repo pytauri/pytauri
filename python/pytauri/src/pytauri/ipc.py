@@ -123,6 +123,7 @@ def _type_to_type_adapter(type_: type[_T]) -> TypeAdapter[_T]: ...
 def _type_to_type_adapter(type_: Any) -> TypeAdapter[Any]: ...
 def _type_to_type_adapter(type_: Any) -> TypeAdapter[Any]:
     type_adapter = _type_to_type_adapter_inner(type_)
+    # PERF: `cache_info` will require lock and instantiate a new `cache_info` tuple.
     if _type_to_type_adapter_inner.cache_info().misses > 128:
         warn(
             f"`{_type_to_type_adapter.__qualname__}` cache misses more than 128 times, "
@@ -130,24 +131,6 @@ def _type_to_type_adapter(type_: Any) -> TypeAdapter[Any]:
             stacklevel=2,
         )
     return type_adapter
-
-
-@overload
-def _type_to_serializer(type_: type[_T]) -> Callable[[bytes], _T]: ...
-@overload
-def _type_to_serializer(type_: Any) -> Callable[[bytes], Any]: ...
-def _type_to_serializer(type_: Any) -> Callable[[bytes], Any]:
-    type_adapter = _type_to_type_adapter(type_)
-    return type_adapter.validate_json
-
-
-@overload
-def _type_to_deserializer(type_: type[_T]) -> Callable[[_T], bytes]: ...
-@overload
-def _type_to_deserializer(type_: Any) -> Callable[[Any], bytes]: ...
-def _type_to_deserializer(type_: Any) -> Callable[[Any], bytes]:
-    type_adapter = TypeAdapter(type_)
-    return type_adapter.dump_json
 
 
 class Commands(UserDict[str, _PyInvokHandleData]):
@@ -252,11 +235,15 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         Specifically:
 
-        - If `pyfunc` has a `KEYWORD_ONLY` parameter named `body`, will check if `issubclass(body, BaseModel)` is true,
-          and if so, wrap it as a new function with `body: bytes` parameter.
-        - If `pyfunc` conforms to `issubclass(return_annotation, BaseModel)`,
-          wrap it as a new function with `return_annotation: bytes` return type.
-        - If not, will return the original `pyfunc`.
+        - If `pyfunc` has a `KEYWORD_ONLY` parameter named `body`:
+            - If `body` is `bytes`:
+                do nothing.
+            - If `issubclass(body, BaseModel)`:
+                wrap this callable as a new function with a `body: bytes` parameter.
+            - Otherwise:
+                try to convert it to a `BaseModel`/`TypeAdapter`, and proceed as in the `BaseModel` branch.
+        - Handle the return value type in the same way as the `body` parameter.
+        - If no wrapping is needed, the original `pyfunc` will be returned.
 
         The `pyfunc` will be decorated using [functools.wraps][], and its `__signature__` will also be updated.
         """
@@ -293,7 +280,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
                 body_type = cast(Any, body_type)
                 try:
-                    serializer = _type_to_serializer(body_type)
+                    serializer = _type_to_type_adapter(body_type).validate_json
                 except Exception as e:
                     raise ValueError(
                         f"Failed to convert `{body_type}` type to pydantic Model, "
@@ -316,7 +303,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
             return_annotation = cast(Any, return_annotation)
             try:
-                deserializer = _type_to_deserializer(return_annotation)
+                deserializer = _type_to_type_adapter(return_annotation).dump_json
             except Exception as e:
                 raise ValueError(
                     f"Failed to convert `{return_annotation}` type to pydantic Model, "
@@ -554,7 +541,7 @@ class JavaScriptChannelId(
 
 
     @commands.command()
-    async def download(body: Download, webview_window: WebviewWindow) -> bytes:
+    async def download(body: Download, webview_window: WebviewWindow) -> None:
         channel = body.channel.channel_on(webview_window.as_ref_webview())
 
         async def task():
@@ -567,8 +554,6 @@ class JavaScriptChannelId(
         t = create_task(task())
         background_tasks.add(t)
         t.add_done_callback(background_tasks.discard)
-
-        return b"null"
 
 
     # Or you can use it as `body` model directly
