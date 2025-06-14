@@ -5,5 +5,5 @@ commands = Commands()
 
 
 @commands.command()
-async def command() -> bytes:
+async def command() -> None:
     raise InvokeException("error message")
