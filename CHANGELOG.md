@@ -32,6 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Highlights
+#### > []() Updated PyTauri branding
+A branding overhaul with an updated logo and colors.
+
 ## [0.6.0]
 
 ### Highlights
