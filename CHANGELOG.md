@@ -32,6 +32,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Highlights
+
+#### Support using arbitrary types in `command`
+
+> - [#171](https://github.com/pytauri/pytauri/pull/171) - feat(pytauri): support using arbitrary types in `command`.
+
+See: <https://pytauri.github.io/pytauri/0.7/usage/concepts/ipc/#deserializing-the-body-using-arbitrary-types>
+
+```python
+from pydantic import RootModel
+from pytauri import Commands
+
+commands = Commands()
+
+RootModelStr = RootModel[str]
+
+
+# 😫 ❌
+@commands.command()
+async def old(body: RootModelStr) -> bytes:
+    return b"null"
+
+
+# 😇 ✔
+@commands.command()
+async def new(body: str) -> None:
+    return
+```
+
 ## [0.6.1]
 
 ### Highlights
