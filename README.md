@@ -2,10 +2,9 @@
 <!-- Do not use any **relative link** and  **GitHub-specific syntax** ！-->
 <!-- Do not rename or move the file -->
 
-![banner.png](https://raw.githubusercontent.com/pytauri/branding/main/assets/banner.png)
-
 # PyTauri
 
+![banner.png](https://raw.githubusercontent.com/pytauri/branding/6832e0defd4220b8a3f5c1f111bd164cee616bbe/assets/banner.png)
 
 [Tauri] bindings for Python through [Pyo3]
 

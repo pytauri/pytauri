@@ -33,8 +33,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Highlights
-#### > [#173](https://github.com/pytauri/pytauri/pull/173) Updated PyTauri branding
-A branding overhaul with an updated logo and colors.
+
+#### Rebranding
+
+> [#173](https://github.com/pytauri/pytauri/pull/173) - docs: rebranding.
+
+![rebranding](https://github.com/user-attachments/assets/890bbfdf-0d64-4d24-9cb5-3d703532295a)
+
+A branding overhaul with an updated logo and colors:
+
+> 1. The shape is similar to shapes found in the Tauri logo.
+>
+>     *We have verified with the Tauri board and [they are OK with this logo](https://discord.com/channels/616186924390023171/1379155413257289819).*
+>
+>     ??? tip "Comparison"
+>         ![Image](https://github.com/user-attachments/assets/3668fcbd-1e7b-4fab-b302-09048d55321b)
+>
+> 2. The updated brand color is a mix of the Python and Tauri blue.
+
+**Q: Changing the logo and branding color might confuse users that they have entered the wrong site**
+
+While this might be true, we think PyTauri is not large enough yet to have this be a big issue. Either way I would suggest leaving this issue [#170](https://github.com/pytauri/pytauri/issues/170) up for a week and adding the banner above to the website to prepare users for the transition. An argument could also be made that a more professional looking icon attracts more users.
+Anyway, we will not change the logo (at least the color) again in the future.
 
 ## [0.6.0]
 
