@@ -10,3 +10,6 @@ coverage.xml
 # mkdocs build
 /site/
 .cache/
+
+# JetBrains IDE's
+.idea

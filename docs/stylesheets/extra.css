@@ -1,6 +1,6 @@
 :root > * {
 
-    --main-color: #6AAB73;
+    --main-color: #2294b2;
 
     --md-primary-fg-color: var(--main-color);
     --md-accent-fg-color: var(--main-color);
@@ -12,7 +12,7 @@
 }
 
 [data-md-color-scheme="slate"] {
-    --md-default-bg-color: #232323;
+    --md-default-bg-color: #1b1b1f;
     --md-code-bg-color: #1C1C1C;
 }
 
