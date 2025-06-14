@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Highlights
-#### > []() Updated PyTauri branding
+#### > [#173](https://github.com/pytauri/pytauri/pull/173) Updated PyTauri branding
 A branding overhaul with an updated logo and colors.
 
 ## [0.6.0]
