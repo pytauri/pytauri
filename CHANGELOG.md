@@ -56,6 +56,18 @@ A branding overhaul with an updated logo and colors:
 While this might be true, we think PyTauri is not large enough yet to have this be a big issue. Either way I would suggest leaving this issue [#170](https://github.com/pytauri/pytauri/issues/170) up for a week and adding the banner above to the website to prepare users for the transition. An argument could also be made that a more professional looking icon attracts more users.
 Anyway, we will not change the logo (at least the color) again in the future.
 
+### Fixed
+
+- [#175](https://github.com/pytauri/pytauri/pull/175) - fix(pytauri): bump `tauri-plugin-*` to fix rust docs build failures on `docs.rs`.
+
+    See [tauri-apps/tauri#13597](https://github.com/tauri-apps/tauri/pull/13597#issuecomment-2961321899) for details.
+
+    - `tauri-plugin-opener = { version = "2.3.0" }`
+    - `tauri-plugin-clipboard-manager = { version = "2.2.3" }`
+    - `tauri-plugin-dialog = { version = "2.2.2" }`
+    - `tauri-plugin-fs = { version = "2.3.0" }`
+    - `tauri-plugin-notification = { version = "2.2.3" }`
+
 ## [0.6.0]
 
 ### Highlights
