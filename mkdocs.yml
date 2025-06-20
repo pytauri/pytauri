@@ -12,6 +12,8 @@ theme:
   name: material
   logo: assets/logo-white.svg
   favicon: assets/favicon.png
+  icon:
+    repo: octicons/mark-github-24
   features:
     - content.code.copy
     - content.code.annotate
@@ -38,19 +40,19 @@ theme:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/brightness-auto
+        icon: octicons/sun-16
         name: Switch to light mode
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       toggle:
-        icon: material/brightness-7
+        icon: octicons/moon-16
         name: Switch to dark mode
     # Palette toggle for dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       toggle:
-        icon: material/brightness-4
+        icon: octicons/device-desktop-16
         name: Switch to system preference
 extra_css:
   - stylesheets/extra.css

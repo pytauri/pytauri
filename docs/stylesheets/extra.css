@@ -1,6 +1,7 @@
 :root > * {
 
-    --main-color: #6AAB73;
+    --color-brand: #2294b2;
+    --main-color: #2294b2;
 
     --md-primary-fg-color: var(--main-color);
     --md-accent-fg-color: var(--main-color);
@@ -9,11 +10,13 @@
     --md-footer-bg-color: #1C1C1C;
     --md-footer-bg-color--dark: #181818;
 
+    --md-primary-fg-color--dark: color-mix(in oklch, var(--main-color) 80%, black);
+
 }
 
 [data-md-color-scheme="slate"] {
-    --md-default-bg-color: #232323;
-    --md-code-bg-color: #1C1C1C;
+    --md-default-bg-color: #1b1b1f;
+    --md-code-bg-color: #1c1c1c;
 }
 
 .md-header__title {
