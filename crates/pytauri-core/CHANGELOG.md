@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.6.1]
+
+- [#175](https://github.com/pytauri/pytauri/pull/175) - fix(pytauri): bump `tauri-plugin-*` to fix rust docs build failures on `docs.rs`.
+
 ## [0.6.0]
 
 ### BREAKING
@@ -110,6 +114,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.6.1]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.6.1
 [0.6.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.4.0
