@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- fix: bump `tauri-plugin-*` to fix rust docs build failures on `docs.rs`.
+- [#175](https://github.com/pytauri/pytauri/pull/175) - fix: bump `tauri-plugin-*` to fix rust docs build failures on `docs.rs`.
 
     See [tauri-apps/tauri#13597](https://github.com/tauri-apps/tauri/pull/13597#issuecomment-2961321899) for details.
 
