@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- fix: bump `tauri-plugin-*` to fix rust docs build failures on `docs.rs`.
+
+    See [tauri-apps/tauri#13597](https://github.com/tauri-apps/tauri/pull/13597#issuecomment-2961321899) for details.
+
+    - `tauri-plugin-opener = { version = "2.3.0" }`
+    - `tauri-plugin-clipboard-manager = { version = "2.2.3" }`
+    - `tauri-plugin-dialog = { version = "2.2.2" }`
+    - `tauri-plugin-fs = { version = "2.3.0" }`
+    - `tauri-plugin-notification = { version = "2.2.3" }`
+
 ## [0.6.0]
 
 ### Added

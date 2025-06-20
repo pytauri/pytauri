@@ -37,11 +37,11 @@ tauri-utils = { version = "~2.4", features = [
     "config-json5",
     "build",
 ] }
-tauri-plugin-opener = { version = "2.2" }
-tauri-plugin-clipboard-manager = { version = "2.2" }
-tauri-plugin-dialog = { version = "2.2" }
-tauri-plugin-fs = { version = "2.2" }
-tauri-plugin-notification = { version = "2.2" }
+tauri-plugin-opener = { version = "2.3.0" }
+tauri-plugin-clipboard-manager = { version = "2.2.3" }
+tauri-plugin-dialog = { version = "2.2.2" }
+tauri-plugin-fs = { version = "2.3.0" }
+tauri-plugin-notification = { version = "2.2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
