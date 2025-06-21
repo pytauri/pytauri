@@ -2,19 +2,19 @@
 
 from collections import UserDict
 from collections.abc import Awaitable
-from functools import partial, wraps
-from inspect import Parameter, signature
+from functools import cache, partial, wraps
+from inspect import Parameter, Signature, signature
 from logging import getLogger
 from typing import (
     Annotated,
     Any,
     Callable,
     Generic,
-    NamedTuple,
     Optional,
     Union,
     cast,
 )
+from warnings import warn
 
 from anyio.from_thread import BlockingPortal
 from pydantic import (
@@ -30,7 +30,7 @@ from pydantic_core.core_schema import (
     no_info_plain_validator_function,
     str_schema,
 )
-from typing_extensions import Self, TypeVar
+from typing_extensions import NamedTuple, Self, TypeVar, overload
 
 from pytauri.ffi.ipc import (
     ArgumentsType,
@@ -65,7 +65,9 @@ _InvokeResponse = bytes
 
 _PyHandlerType = Callable[..., Awaitable[_InvokeResponse]]
 
-_WrappablePyHandlerType = Callable[..., Awaitable[Union[_InvokeResponse, BaseModel]]]
+_WrappablePyHandlerType = Callable[
+    ..., Awaitable[Union[_InvokeResponse, BaseModel, Any]]
+]
 
 _WrappablePyHandlerTypeVar = TypeVar(
     "_WrappablePyHandlerTypeVar", bound=_WrappablePyHandlerType, infer_variance=True
@@ -93,6 +95,66 @@ class InvokeException(Exception):  # noqa: N818
 
     def __init__(self, value: str) -> None:  # noqa: D107
         self.value = value
+
+
+_T = TypeVar("_T", infer_variance=True)
+
+_T_model = TypeVar("_T_model", bound=BaseModel, infer_variance=True)
+
+
+class _ModelSerde(NamedTuple, Generic[_T, _T_model]):
+    model: type[_T_model]
+    serializer: Callable[[bytes], _T]
+    deserializer: Callable[[_T], bytes]
+
+
+# This second overload is for unsupported special forms (such as Annotated, Union, None, etc.)
+# Currently there is no way to type this correctly
+# See https://github.com/python/typing/pull/1618
+# ref: <https://github.com/pydantic/pydantic/blob/e1f9d15a5ed59d4b6f495154e2410823bdf55a3a/pydantic/type_adapter.py#L182-L184>
+@overload
+@cache
+def _type_to_model_inner(type_: type[_T]) -> _ModelSerde[_T, RootModel[_T]]: ...
+@overload
+@cache
+def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]: ...
+@cache
+def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
+    model = RootModel[type_]
+
+    # PERF, FIXME: Since we need to access the `root` attribute and
+    # require `def serializer` and `def deserializer` as wrapper functions,
+    # this may be slightly slower than using `pydantic.TypeAdapter`.
+    # However, we need to use `pydantic.json_schema.models_json_schema` or `pydantic.TypeAdapter.json_schemas`
+    # to generate json schema, and both only accept `BaseModel` or `TypeAdapter` (not mixed).
+    # Therefore, we consistently use `BaseModel` here instead of `TypeAdapter`.
+    # TODO: maybe we can submit a feature request to pydantic.
+
+    def serializer(data: bytes) -> _T:
+        return model.model_validate_json(data).root
+
+    def deserializer(data: _T) -> bytes:
+        instance = model(data)
+        # ref: see `BaseModel.model_dump_json` implementation
+        return model.__pydantic_serializer__.to_json(instance)
+
+    return _ModelSerde(model, serializer, deserializer)
+
+
+@overload
+def _type_to_model(type_: type[_T]) -> _ModelSerde[_T, RootModel[_T]]: ...
+@overload
+def _type_to_model(type_: Any) -> _ModelSerde[_T, RootModel[_T]]: ...
+def _type_to_model(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
+    model_serde: _ModelSerde[_T, RootModel[_T]] = _type_to_model_inner(type_)
+    # PERF: `cache_info` will require lock and instantiate a new `cache_info` tuple.
+    if _type_to_model_inner.cache_info().misses > 128:
+        warn(
+            f"`{_type_to_model.__qualname__}` cache misses more than 128 times, "
+            "please report this to pytauri developers",
+            stacklevel=2,
+        )
+    return model_serde
 
 
 class Commands(UserDict[str, _PyInvokHandleData]):
@@ -190,18 +252,22 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         return invoke_handler
 
     @staticmethod
-    def wrap_pyfunc(  # noqa: C901  # TODO: simplify the method
+    def wrap_pyfunc(  # noqa: C901, PLR0912, PLR0915  # TODO: simplify this method
         pyfunc: _WrappablePyHandlerType,
     ) -> _PyHandlerType:
         """Wrap a `Callable` to conform to the definition of PyHandlerType.
 
         Specifically:
 
-        - If `pyfunc` has a `KEYWORD_ONLY` parameter named `body`, will check if `issubclass(body, BaseModel)` is true,
-          and if so, wrap it as a new function with `body: bytes` parameter.
-        - If `pyfunc` conforms to `issubclass(return_annotation, BaseModel)`,
-          wrap it as a new function with `return_annotation: bytes` return type.
-        - If not, will return the original `pyfunc`.
+        - If `pyfunc` has a `KEYWORD_ONLY` parameter named `body`:
+            - If `body` is `bytes`:
+                do nothing.
+            - If `issubclass(body, BaseModel)`:
+                wrap this callable as a new function with a `body: bytes` parameter.
+            - Otherwise:
+                try to convert it to a `BaseModel`/`TypeAdapter`, and proceed as in the `BaseModel` branch.
+        - Handle the return value type in the same way as the `body` parameter.
+        - If no wrapping is needed, the original `pyfunc` will be returned.
 
         The `pyfunc` will be decorated using [functools.wraps][], and its `__signature__` will also be updated.
         """
@@ -223,24 +289,51 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 raise ValueError(
                     f"Expected `{body_key}` to be KEYWORD parameter, but got `{body_param.kind}` parameter"
                 )
+
             body_type = body_param.annotation
-            if issubclass(body_type, BaseModel):
+            if body_type is Parameter.empty:
+                raise ValueError(
+                    f"Expected `{body_key}` to have type annotation, but got empty"
+                )
+            elif body_type is bytes:
+                serializer = None
+            # `Annotated`, `Union`, `None`, etc are not `type`
+            elif isinstance(body_type, type) and issubclass(body_type, BaseModel):
                 serializer = body_type.model_validate_json
             else:
-                if body_type is not bytes:
+                # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
+                body_type = cast(Any, body_type)
+                try:
+                    serializer = _type_to_model(body_type).serializer
+                except Exception as e:
                     raise ValueError(
-                        f"Expected `{body_key}` to be subclass of {BaseModel} or {bytes}, "
-                        f"got {body_type}"
-                    )
+                        f"Failed to convert `{body_type}` type to pydantic Model, "
+                        f"please explicitly use {BaseModel} or {bytes} as `{body_key}` type annotation instead."
+                    ) from e
 
-        if issubclass(return_annotation, BaseModel):
+        if return_annotation is Signature.empty:
+            raise ValueError(
+                "Expected the return value to have type annotation, but got empty. "
+                "Please explicitly use `def foo() -> None:` instead."
+            )
+        elif return_annotation is bytes:
+            deserializer = None
+        # `Annotated`, `Union`, `None`, etc are not `type`
+        elif isinstance(return_annotation, type) and issubclass(
+            return_annotation, BaseModel
+        ):
+            # ref: see `BaseModel.model_dump_json` implementation
             deserializer = return_annotation.__pydantic_serializer__.to_json
         else:
-            if return_annotation is not bytes:
+            # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
+            return_annotation = cast(Any, return_annotation)
+            try:
+                deserializer = _type_to_model(return_annotation).deserializer
+            except Exception as e:
                 raise ValueError(
-                    f"Expected `return_annotation` to be subclass of {BaseModel} or {bytes}, "
-                    f"got {return_annotation}"
-                )
+                    f"Failed to convert `{return_annotation}` type to pydantic Model, "
+                    f"please explicitly use {BaseModel} or {bytes} as return type annotation instead."
+                ) from e
 
         if not serializer and not deserializer:
             return cast(_PyHandlerType, pyfunc)  # `cast` make typing happy
@@ -253,33 +346,33 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 body_bytes = kwargs[body_key]
                 assert isinstance(body_bytes, bytes)  # PERF
                 try:
-                    body_model = serializer(body_bytes)
+                    body_arg = serializer(body_bytes)
                 except ValidationError as e:
                     raise InvokeException(repr(e)) from e
-                kwargs[body_key] = body_model
+                kwargs[body_key] = body_arg
 
             resp = await pyfunc(*args, **kwargs)
 
             if deserializer is not None:
-                assert isinstance(resp, BaseModel)  # PERF
+                # - subclass of `BaseModel`
+                # - other types that are not `bytes`
+                assert not isinstance(resp, bytes)  # PERF
                 return deserializer(resp)
             else:
                 assert isinstance(resp, bytes)  # PERF
                 return resp
 
-        new_parameters = None
+        new_parameters = parameters.copy()
+        new_return_annotation = return_annotation
         if serializer is not None:
-            new_parameters = parameters.copy()
             new_parameters[body_key] = parameters[body_key].replace(annotation=bytes)
+        if deserializer is not None:
+            new_return_annotation = bytes
 
         # see: <https://docs.python.org/3.13/library/inspect.html#inspect.signature>
-        wrapper.__signature__ = (  # pyright: ignore[reportAttributeAccessIssue]
-            sig.replace(
-                parameters=list(new_parameters.values()),
-                return_annotation=bytes,
-            )
-            if new_parameters
-            else sig.replace(return_annotation=bytes)
+        wrapper.__signature__ = sig.replace(  # pyright: ignore[reportAttributeAccessIssue]
+            parameters=tuple(new_parameters.values()),
+            return_annotation=new_return_annotation,
         )
         return wrapper
 
@@ -473,7 +566,7 @@ class JavaScriptChannelId(
 
 
     @commands.command()
-    async def download(body: Download, webview_window: WebviewWindow) -> bytes:
+    async def download(body: Download, webview_window: WebviewWindow) -> None:
         channel = body.channel.channel_on(webview_window.as_ref_webview())
 
         async def task():
@@ -486,8 +579,6 @@ class JavaScriptChannelId(
         t = create_task(task())
         background_tasks.add(t)
         t.add_done_callback(background_tasks.discard)
-
-        return b"null"
 
 
     # Or you can use it as `body` model directly
