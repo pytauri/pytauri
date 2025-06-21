@@ -10,7 +10,6 @@ from typing import (
     Any,
     Callable,
     Generic,
-    NamedTuple,
     Optional,
     Union,
     cast,
@@ -22,7 +21,6 @@ from pydantic import (
     BaseModel,
     GetPydanticSchema,
     RootModel,
-    TypeAdapter,
     ValidationError,
 )
 from pydantic_core.core_schema import (
@@ -32,7 +30,7 @@ from pydantic_core.core_schema import (
     no_info_plain_validator_function,
     str_schema,
 )
-from typing_extensions import Self, TypeVar, overload
+from typing_extensions import NamedTuple, Self, TypeVar, overload
 
 from pytauri.ffi.ipc import (
     ArgumentsType,
@@ -101,6 +99,14 @@ class InvokeException(Exception):  # noqa: N818
 
 _T = TypeVar("_T", infer_variance=True)
 
+_T_model = TypeVar("_T_model", bound=BaseModel, infer_variance=True)
+
+
+class _ModelSerde(NamedTuple, Generic[_T, _T_model]):
+    model: type[_T_model]
+    serializer: Callable[[bytes], _T]
+    deserializer: Callable[[_T], bytes]
+
 
 # This second overload is for unsupported special forms (such as Annotated, Union, None, etc.)
 # Currently there is no way to type this correctly
@@ -108,29 +114,47 @@ _T = TypeVar("_T", infer_variance=True)
 # ref: <https://github.com/pydantic/pydantic/blob/e1f9d15a5ed59d4b6f495154e2410823bdf55a3a/pydantic/type_adapter.py#L182-L184>
 @overload
 @cache
-def _type_to_type_adapter_inner(type_: type[_T]) -> TypeAdapter[_T]: ...
+def _type_to_model_inner(type_: type[_T]) -> _ModelSerde[_T, RootModel[_T]]: ...
 @overload
 @cache
-def _type_to_type_adapter_inner(type_: Any) -> TypeAdapter[Any]: ...
+def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]: ...
 @cache
-def _type_to_type_adapter_inner(type_: Any) -> TypeAdapter[Any]:
-    return TypeAdapter(type_)
+def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
+    model = RootModel[type_]
+
+    # PERF, FIXME: Since we need to access the `root` attribute and
+    # require `def serializer` and `def deserializer` as wrapper functions,
+    # this may be slightly slower than using `pydantic.TypeAdapter`.
+    # However, we need to use `pydantic.json_schema.models_json_schema` or `pydantic.TypeAdapter.json_schemas`
+    # to generate json schema, and both only accept `BaseModel` or `TypeAdapter` (not mixed).
+    # Therefore, we consistently use `BaseModel` here instead of `TypeAdapter`.
+    # TODO: maybe we can submit a feature request to pydantic.
+
+    def serializer(data: bytes) -> _T:
+        return model.model_validate_json(data).root
+
+    def deserializer(data: _T) -> bytes:
+        instance = model(data)
+        # ref: see `BaseModel.model_dump_json` implementation
+        return model.__pydantic_serializer__.to_json(instance)
+
+    return _ModelSerde(model, serializer, deserializer)
 
 
 @overload
-def _type_to_type_adapter(type_: type[_T]) -> TypeAdapter[_T]: ...
+def _type_to_model(type_: type[_T]) -> _ModelSerde[_T, RootModel[_T]]: ...
 @overload
-def _type_to_type_adapter(type_: Any) -> TypeAdapter[Any]: ...
-def _type_to_type_adapter(type_: Any) -> TypeAdapter[Any]:
-    type_adapter = _type_to_type_adapter_inner(type_)
+def _type_to_model(type_: Any) -> _ModelSerde[_T, RootModel[_T]]: ...
+def _type_to_model(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
+    model_serde: _ModelSerde[_T, RootModel[_T]] = _type_to_model_inner(type_)
     # PERF: `cache_info` will require lock and instantiate a new `cache_info` tuple.
-    if _type_to_type_adapter_inner.cache_info().misses > 128:
+    if _type_to_model_inner.cache_info().misses > 128:
         warn(
-            f"`{_type_to_type_adapter.__qualname__}` cache misses more than 128 times, "
+            f"`{_type_to_model.__qualname__}` cache misses more than 128 times, "
             "please report this to pytauri developers",
             stacklevel=2,
         )
-    return type_adapter
+    return model_serde
 
 
 class Commands(UserDict[str, _PyInvokHandleData]):
@@ -280,7 +304,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
                 body_type = cast(Any, body_type)
                 try:
-                    serializer = _type_to_type_adapter(body_type).validate_json
+                    serializer = _type_to_model(body_type).serializer
                 except Exception as e:
                     raise ValueError(
                         f"Failed to convert `{body_type}` type to pydantic Model, "
@@ -298,12 +322,13 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         elif isinstance(return_annotation, type) and issubclass(
             return_annotation, BaseModel
         ):
+            # ref: see `BaseModel.model_dump_json` implementation
             deserializer = return_annotation.__pydantic_serializer__.to_json
         else:
             # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
             return_annotation = cast(Any, return_annotation)
             try:
-                deserializer = _type_to_type_adapter(return_annotation).dump_json
+                deserializer = _type_to_model(return_annotation).deserializer
             except Exception as e:
                 raise ValueError(
                     f"Failed to convert `{return_annotation}` type to pydantic Model, "
