@@ -2130,6 +2130,36 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      Highlights
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#support-using-arbitrary-types-in-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support using arbitrary types in command
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2143,7 +2173,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights" class="md-nav__link">
+  <a href="#highlights_1" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2191,7 +2221,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights_1" class="md-nav__link">
+  <a href="#highlights_2" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2266,7 +2296,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights_2" class="md-nav__link">
+  <a href="#highlights_3" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2359,7 +2389,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights_3" class="md-nav__link">
+  <a href="#highlights_4" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2425,7 +2455,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#highlights_4" class="md-nav__link">
+  <a href="#highlights_5" class="md-nav__link">
     <span class="md-ellipsis">
       Highlights
     </span>
@@ -2587,8 +2617,35 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<h2 id="061"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.6.1">0.6.1</a><a class="headerlink" href="#061" title="Permanent link">&para;</a></h2>
 <h3 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h3>
+<h4 id="support-using-arbitrary-types-in-command">Support using arbitrary types in <code>command</code><a class="headerlink" href="#support-using-arbitrary-types-in-command" title="Permanent link">&para;</a></h4>
+<blockquote>
+<ul>
+<li><a href="https://github.com/pytauri/pytauri/pull/171">#171</a> - feat(pytauri): support using arbitrary types in <code>command</code>.</li>
+</ul>
+</blockquote>
+<p>See: <a href="https://pytauri.github.io/pytauri/0.7/usage/concepts/ipc/#deserializing-the-body-using-arbitrary-types">https://pytauri.github.io/pytauri/0.7/usage/concepts/ipc/#deserializing-the-body-using-arbitrary-types</a></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">RootModel</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">Commands</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">RootModelStr</span> <span class="o">=</span> <span class="n">RootModel</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># 😫 ❌</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">old</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="n">RootModelStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;null&quot;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># 😇 ✔</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="k">return</span>
+</span></code></pre></div>
+<h2 id="061"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.6.1">0.6.1</a><a class="headerlink" href="#061" title="Permanent link">&para;</a></h2>
+<h3 id="highlights_1">Highlights<a class="headerlink" href="#highlights_1" title="Permanent link">&para;</a></h3>
 <h4 id="rebranding">Rebranding<a class="headerlink" href="#rebranding" title="Permanent link">&para;</a></h4>
 <blockquote>
 <p><a href="https://github.com/pytauri/pytauri/pull/173">#173</a> - docs: rebranding.</p>
@@ -2628,7 +2685,7 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 </li>
 </ul>
 <h2 id="060"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.6.0">0.6.0</a><a class="headerlink" href="#060" title="Permanent link">&para;</a></h2>
-<h3 id="highlights_1">Highlights<a class="headerlink" href="#highlights_1" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_2">Highlights<a class="headerlink" href="#highlights_2" title="Permanent link">&para;</a></h3>
 <h4 id="create-pytauri-app-template-generator"><code>create-pytauri-app</code> template generator<a class="headerlink" href="#create-pytauri-app-template-generator" title="Permanent link">&para;</a></h4>
 <blockquote>
 <ul>
@@ -2639,15 +2696,15 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 <details class="tip">
 <summary>Usage</summary>
 <p>Refer to <a href="https://docs.astral.sh/uv/guides/tools/">uv</a> and <a href="https://copier.readthedocs.io/en/stable/generating/">copier</a>, run the following command:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uvx<span class="w"> </span>copier<span class="w"> </span>copy<span class="w"> </span>https://github.com/pytauri/create-pytauri-app<span class="w"> </span>.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uvx<span class="w"> </span>copier<span class="w"> </span>copy<span class="w"> </span>https://github.com/pytauri/create-pytauri-app<span class="w"> </span>.
 </span></code></pre></div>
 <p>This will initialize the project in the form of an interactive questionnaire:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>🎤 Project name
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pytauri-app
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>🎤 Identifier
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>com.pytauri-app.app
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>🎤 Choose your UI template
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Vue
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>🎤 Project name
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pytauri-app
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>🎤 Identifier
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>com.pytauri-app.app
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>🎤 Choose your UI template
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Vue
 </span></code></pre></div>
 <p><strong>However, we still recommend reading the entire "Tutorial" section, as it will help you understand all the details of pytauri.</strong></p>
 </details>
@@ -2661,29 +2718,29 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 <details class="tip">
 <summary>Usage</summary>
 <p><img alt="dialog" src="https://github.com/user-attachments/assets/85cbf9f1-4203-4336-959a-499b3691bcd9" /></p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">pytauri_plugins.dialog</span> <span class="kn">import</span> <span class="n">DialogExt</span><span class="p">,</span> <span class="n">MessageDialogButtons</span><span class="p">,</span> <span class="n">MessageDialogKind</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">webview_window</span><span class="p">:</span> <span class="n">WebviewWindow</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">file_dialog_builder</span> <span class="o">=</span> <span class="n">DialogExt</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">app_handle</span><span class="p">)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">file_dialog_builder</span><span class="o">.</span><span class="n">pick_files</span><span class="p">(</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="k">lambda</span> <span class="n">files</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Files selected: </span><span class="si">{</span><span class="n">files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">add_filter</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;md&quot;</span><span class="p">]),</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">set_parent</span><span class="o">=</span><span class="n">webview_window</span><span class="p">,</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">set_title</span><span class="o">=</span><span class="s2">&quot;Select a Markdown file&quot;</span><span class="p">,</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="p">)</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">message_dialog_builder</span> <span class="o">=</span> <span class="n">DialogExt</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
-</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    <span class="n">message_dialog_builder</span><span class="o">.</span><span class="n">show</span><span class="p">(</span>
-</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>        <span class="k">lambda</span> <span class="n">is_ok</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dialog closed with: </span><span class="si">{</span><span class="n">is_ok</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
-</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>        <span class="n">parent</span><span class="o">=</span><span class="n">webview_window</span><span class="p">,</span>
-</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="n">buttons</span><span class="o">=</span><span class="n">MessageDialogButtons</span><span class="o">.</span><span class="n">OkCancelCustom</span><span class="p">(</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;cancel&quot;</span><span class="p">),</span>
-</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="n">kind</span><span class="o">=</span><span class="n">MessageDialogKind</span><span class="o">.</span><span class="n">Info</span><span class="p">,</span>
-</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="p">)</span>
-</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
-</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;null&quot;</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">pytauri_plugins.dialog</span> <span class="kn">import</span> <span class="n">DialogExt</span><span class="p">,</span> <span class="n">MessageDialogButtons</span><span class="p">,</span> <span class="n">MessageDialogKind</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">greet</span><span class="p">(</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">webview_window</span><span class="p">:</span> <span class="n">WebviewWindow</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">file_dialog_builder</span> <span class="o">=</span> <span class="n">DialogExt</span><span class="o">.</span><span class="n">file</span><span class="p">(</span><span class="n">app_handle</span><span class="p">)</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">file_dialog_builder</span><span class="o">.</span><span class="n">pick_files</span><span class="p">(</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="k">lambda</span> <span class="n">files</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Files selected: </span><span class="si">{</span><span class="n">files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">add_filter</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;md&quot;</span><span class="p">]),</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">set_parent</span><span class="o">=</span><span class="n">webview_window</span><span class="p">,</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">set_title</span><span class="o">=</span><span class="s2">&quot;Select a Markdown file&quot;</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="p">)</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">message_dialog_builder</span> <span class="o">=</span> <span class="n">DialogExt</span><span class="o">.</span><span class="n">message</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">message_dialog_builder</span><span class="o">.</span><span class="n">show</span><span class="p">(</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="k">lambda</span> <span class="n">is_ok</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dialog closed with: </span><span class="si">{</span><span class="n">is_ok</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="n">parent</span><span class="o">=</span><span class="n">webview_window</span><span class="p">,</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>        <span class="n">buttons</span><span class="o">=</span><span class="n">MessageDialogButtons</span><span class="o">.</span><span class="n">OkCancelCustom</span><span class="p">(</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="s2">&quot;cancel&quot;</span><span class="p">),</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="n">kind</span><span class="o">=</span><span class="n">MessageDialogKind</span><span class="o">.</span><span class="n">Info</span><span class="p">,</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="p">)</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="k">return</span> <span class="sa">b</span><span class="s2">&quot;null&quot;</span>
 </span></code></pre></div>
 </details>
 <h4 id="integrate-plugins-as-features">Integrate plugins as features<a class="headerlink" href="#integrate-plugins-as-features" title="Permanent link">&para;</a></h4>
@@ -2696,30 +2753,30 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 <p>For details, compare the <a href="https://pytauri.github.io/pytauri/0.5/usage/tutorial/using-plugins/"><code>v0.5</code></a> and <a href="https://pytauri.github.io/pytauri/0.6/usage/tutorial/using-plugins/"><code>v0.6</code></a> "tutorial/using-plugins" documentation.</p>
 <details class="tip">
 <summary>Migration</summary>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># src-tauri/Cargo.toml
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>[dependencies]
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="gd">-pytauri-plugin-notification = ...</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="gi">+pytauri = { version = &quot;...&quot;, features = [&quot;plugin-notification&quot;] }</span>
-</span></code></pre></div>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>// src-tauri/src/lib.rs
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># src-tauri/Cargo.toml
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>mod ext_mod {
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="gd">-    #[pymodule_export]</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="gd">-    use pytauri_plugin_notification::notification;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>}
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>[dependencies]
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="gd">-pytauri-plugin-notification = ...</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="gi">+pytauri = { version = &quot;...&quot;, features = [&quot;plugin-notification&quot;] }</span>
 </span></code></pre></div>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># src-tauri/pyproject.toml
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>// src-tauri/src/lib.rs
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>[project]
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>dependencies = [
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="gd">-    pytauri-plugin-notification = ...</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>]
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>mod ext_mod {
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="gd">-    #[pymodule_export]</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="gd">-    use pytauri_plugin_notification::notification;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>}
 </span></code></pre></div>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># src-tauri/python/__init__.py
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># src-tauri/pyproject.toml
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="gd">-from pytauri_plugin_notification import NotificationExt</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="gi">+from pytauri_plugins.notification import NotificationExt</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>[project]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>dependencies = [
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="gd">-    pytauri-plugin-notification = ...</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>]
+</span></code></pre></div>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># src-tauri/python/__init__.py
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="gd">-from pytauri_plugin_notification import NotificationExt</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="gi">+from pytauri_plugins.notification import NotificationExt</span>
 </span></code></pre></div>
 </details>
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
@@ -2732,7 +2789,7 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 <p>The <code>install_name</code> of <code>libpython3.*.dylib</code> built by <code>python-build-standalone</code> <a href="https://github.com/astral-sh/python-build-standalone/blob/d0ed97f7618769996f1dd2a586faec150d7ebcb9/cpython-unix/build-cpython.sh#L611-L624">does not include <code>@rpath</code></a>, which makes the <a href="https://pytauri.github.io/pytauri/0.5/usage/tutorial/build-standalone/#macos"><code>rpath</code> set for the executable</a> ineffective.</p>
 <p><strong>Migration</strong></p>
 <p>Until this is fixed upstream in <code>python-build-standalone</code>, you need to manually patch the <code>install_name</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>install_name_tool<span class="w"> </span>-id<span class="w"> </span><span class="s1">&#39;@rpath/libpython3.13.dylib&#39;</span><span class="w"> </span>/the/path/to/pyembed/python/lib/libpython3.13.dylib
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>install_name_tool<span class="w"> </span>-id<span class="w"> </span><span class="s1">&#39;@rpath/libpython3.13.dylib&#39;</span><span class="w"> </span>/the/path/to/pyembed/python/lib/libpython3.13.dylib
 </span></code></pre></div>
 </details>
 <details class="bug">
@@ -2747,14 +2804,14 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 <p><a href="https://github.com/pytauri/pytauri/pull/161">#161</a> - refactor(pytauri)!: refactor <code>BuilderArgs</code> to <code>TypedDict</code>.</p>
 <details class="tip">
 <summary>Migration</summary>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>app = builder_factory().build(
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="gd">-    BuilderArgs(</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="gd">-        context=context_factory(),</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="gd">-        invoke_handler=commands.generate_handler(portal),</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="gd">-    )</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="gi">+    context=context_factory(),</span>
-</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="gi">+    invoke_handler=commands.generate_handler(portal),</span>
-</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>)
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>app = builder_factory().build(
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="gd">-    BuilderArgs(</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="gd">-        context=context_factory(),</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="gd">-        invoke_handler=commands.generate_handler(portal),</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gd">-    )</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="gi">+    context=context_factory(),</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="gi">+    invoke_handler=commands.generate_handler(portal),</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>)
 </span></code></pre></div>
 </details>
 </li>
@@ -2769,26 +2826,26 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 </ul>
 <details class="tip">
 <summary>Migration</summary>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>from pytauri import Position, PositionType, Size, SizeType
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>def foo(pos: PositionType, size: SizeType) -&gt; None:
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w"> </span>   match pos:
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="gd">-        case Position.Physical(x, y):</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="gi">+        case Position.Physical((x, y)):</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w"> </span>           print(f&quot;Physical position: {x}, {y}&quot;)
-</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="gd">-        case Position.Logical(x, y):</span>
-</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="gi">+        case Position.Logical((x, y)):</span>
-</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w"> </span>           print(f&quot;Logical position: {x}, {y}&quot;)
-</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w"> </span>   match size:
-</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="gd">-        case Size.Physical(w, h):</span>
-</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="gi">+        case Size.Physical((w, h)):</span>
-</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w"> </span>           print(f&quot;Physical size: {w}, {h}&quot;)
-</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="gd">-        case Size.Logical(w, h):</span>
-</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="gi">+        case Size.Logical((w, h)):</span>
-</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w"> </span>           print(f&quot;Logical size: {w}, {h}&quot;)
-</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
-</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="gd">-foo(pos=Position.Physical(1, 2), size=Size.Physical(3, 4))</span>
-</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="gi">+foo(pos=Position.Physical((1, 2)), size=Size.Physical((3, 4)))</span>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>from pytauri import Position, PositionType, Size, SizeType
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>def foo(pos: PositionType, size: SizeType) -&gt; None:
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w"> </span>   match pos:
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="gd">-        case Position.Physical(x, y):</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="gi">+        case Position.Physical((x, y)):</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w"> </span>           print(f&quot;Physical position: {x}, {y}&quot;)
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="gd">-        case Position.Logical(x, y):</span>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="gi">+        case Position.Logical((x, y)):</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w"> </span>           print(f&quot;Logical position: {x}, {y}&quot;)
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w"> </span>   match size:
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="gd">-        case Size.Physical(w, h):</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="gi">+        case Size.Physical((w, h)):</span>
+</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w"> </span>           print(f&quot;Physical size: {w}, {h}&quot;)
+</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="gd">-        case Size.Logical(w, h):</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="gi">+        case Size.Logical((w, h)):</span>
+</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w"> </span>           print(f&quot;Logical size: {w}, {h}&quot;)
+</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="gd">-foo(pos=Position.Physical(1, 2), size=Size.Physical(3, 4))</span>
+</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="gi">+foo(pos=Position.Physical((1, 2)), size=Size.Physical((3, 4)))</span>
 </span></code></pre></div>
 </details>
 </li>
@@ -2818,31 +2875,31 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 </ul>
 <details class="tip">
 <summary>Usage</summary>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">WindowEvent</span><span class="p">,</span> <span class="n">WindowEventType</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">def</span> <span class="nf">register_window_event_handler</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">):</span>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">webview_window</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">get_webview_window</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;main&quot;</span><span class="p">)</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">assert</span> <span class="n">webview_window</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    <span class="n">close_requested</span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    <span class="k">def</span> <span class="nf">window_event_handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">WindowEventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="k">nonlocal</span> <span class="n">close_requested</span>
-</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="k">match</span> <span class="n">event</span><span class="p">:</span>
-</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">CloseRequested</span><span class="p">(</span><span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">):</span>
-</span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>                <span class="k">if</span> <span class="ow">not</span> <span class="n">close_requested</span><span class="p">:</span>
-</span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preventing window closing&quot;</span><span class="p">)</span>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>                    <span class="n">api</span><span class="o">.</span><span class="n">prevent_close</span><span class="p">()</span>
-</span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>                    <span class="n">close_requested</span> <span class="o">=</span> <span class="kc">True</span>
-</span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">Focused</span><span class="p">(</span><span class="n">focused</span><span class="p">):</span>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Window focused: </span><span class="si">{</span><span class="n">focused</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">Moved</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
-</span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Moved to (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-</span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-</span><span id="__span-10-23"><a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>                <span class="k">pass</span>
-</span><span id="__span-10-24"><a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
-</span><span id="__span-10-25"><a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>    <span class="n">webview_window</span><span class="o">.</span><span class="n">on_window_event</span><span class="p">(</span><span class="n">window_event_handler</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Manager</span><span class="p">,</span> <span class="n">WindowEvent</span><span class="p">,</span> <span class="n">WindowEventType</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">def</span> <span class="nf">register_window_event_handler</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">):</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">webview_window</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">get_webview_window</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;main&quot;</span><span class="p">)</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">assert</span> <span class="n">webview_window</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="n">close_requested</span> <span class="o">=</span> <span class="kc">False</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>    <span class="k">def</span> <span class="nf">window_event_handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">WindowEventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="k">nonlocal</span> <span class="n">close_requested</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        <span class="k">match</span> <span class="n">event</span><span class="p">:</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">CloseRequested</span><span class="p">(</span><span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">):</span>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>                <span class="k">if</span> <span class="ow">not</span> <span class="n">close_requested</span><span class="p">:</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preventing window closing&quot;</span><span class="p">)</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>                    <span class="n">api</span><span class="o">.</span><span class="n">prevent_close</span><span class="p">()</span>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>                    <span class="n">close_requested</span> <span class="o">=</span> <span class="kc">True</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">Focused</span><span class="p">(</span><span class="n">focused</span><span class="p">):</span>
+</span><span id="__span-11-19"><a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Window focused: </span><span class="si">{</span><span class="n">focused</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="__span-11-20"><a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>            <span class="k">case</span> <span class="n">WindowEvent</span><span class="o">.</span><span class="n">Moved</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+</span><span id="__span-11-21"><a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Moved to (</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+</span><span id="__span-11-22"><a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>            <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
+</span><span id="__span-11-23"><a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>                <span class="k">pass</span>
+</span><span id="__span-11-24"><a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>
+</span><span id="__span-11-25"><a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>    <span class="n">webview_window</span><span class="o">.</span><span class="n">on_window_event</span><span class="p">(</span><span class="n">window_event_handler</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
 </li>
@@ -2851,7 +2908,7 @@ Anyway, we will not change the logo (at least the color) again in the future.</p
 </li>
 </ul>
 <h2 id="050"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.5.0">0.5.0</a><a class="headerlink" href="#050" title="Permanent link">&para;</a></h2>
-<h3 id="highlights_2">Highlights<a class="headerlink" href="#highlights_2" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_3">Highlights<a class="headerlink" href="#highlights_3" title="Permanent link">&para;</a></h3>
 <h4 id="wheel-on-windows-arm64">Wheel on Windows Arm64<a class="headerlink" href="#wheel-on-windows-arm64" title="Permanent link">&para;</a></h4>
 <blockquote>
 <ul>
@@ -2915,7 +2972,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - docs: update example to use <code>App.run_return</code> instead of <code>App.run</code>, allowing cleanup tasks to be performed after the app exits (e.g., shutting down the <code>nicegui</code> server) and retrieving the exit code.</li>
 </ul>
 <h2 id="040"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.4.0">0.4.0</a><a class="headerlink" href="#040" title="Permanent link">&para;</a></h2>
-<h3 id="highlights_3">Highlights<a class="headerlink" href="#highlights_3" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_4">Highlights<a class="headerlink" href="#highlights_4" title="Permanent link">&para;</a></h3>
 <h4 id="precompiled-python-wheel-goodbye-rust-compiler">Precompiled python wheel (goodbye Rust compiler)<a class="headerlink" href="#precompiled-python-wheel-goodbye-rust-compiler" title="Permanent link">&para;</a></h4>
 <blockquote>
 <ul>
@@ -2945,7 +3002,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <li><a href="https://github.com/pytauri/pytauri/pull/103">#103</a> - chore: transfer repo to <code>pytauri</code> org.</li>
 </ul>
 <h2 id="030"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.3.0">0.3.0</a><a class="headerlink" href="#030" title="Permanent link">&para;</a></h2>
-<h3 id="highlights_4">Highlights<a class="headerlink" href="#highlights_4" title="Permanent link">&para;</a></h3>
+<h3 id="highlights_5">Highlights<a class="headerlink" href="#highlights_5" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><a href="https://tauri.app/learn/window-menu/">menu</a> and <a href="https://tauri.app/learn/system-tray/">tray</a> python API bindings, see <code>pytauri</code> changelog for more details.</p>
