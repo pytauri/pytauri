@@ -118,7 +118,14 @@ if TYPE_CHECKING:
             """
 
         def resolve(self, value: _InvokeResponseBody) -> None:
-            """Consumes this `Invoke` and resolves the command with the given value."""
+            """Consumes this `Invoke` and resolves the command with the given value.
+
+            Args:
+                value: The value to resolve the command with.
+
+                    - If `str`, it will be serialized as JSON on the frontend.
+                    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+            """
             ...
 
         def reject(self, value: str) -> None:
@@ -135,7 +142,14 @@ if TYPE_CHECKING:
             ...
 
         def resolve(self, value: _InvokeResponseBody) -> None:
-            """Consumes this `InvokeResolver` and resolves the command with the given value."""
+            """Consumes this `InvokeResolver` and resolves the command with the given value.
+
+            Args:
+                value: The value to resolve the command with.
+
+                    - If `str`, it will be serialized as JSON on the frontend.
+                    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+            """
 
         def reject(self, value: str) -> None:
             """Consumes this `InvokeResolver` and rejects the command with the given value."""
@@ -172,6 +186,7 @@ if TYPE_CHECKING:
 
             Args:
                 data: The data to send.
+
                     - If `str`, it will be deserialized as JSON on the frontend.
                     - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
             """

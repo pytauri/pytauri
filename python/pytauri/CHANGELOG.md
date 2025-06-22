@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#178](https://github.com/pytauri/pytauri/pull/178) - feat(plugin-api)!: remove `rawPyInvoke` and `Channel`.
+
+    [Channel.send][pytauri.ipc.Channel.send], [Invoke.resolve][pytauri.ipc.Invoke.resolve] and [InvokeResolver.resolve][pytauri.ipc.InvokeResolver.resolve] now can send `Union[bytes, str]`:
+
+    - If `str`, it will be deserialized as JSON on the frontend.
+    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+
 ## [0.6.0]
 
 ### BREAKING
