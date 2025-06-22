@@ -18,9 +18,10 @@ use crate::{
 #[non_exhaustive]
 // TODO: more types
 pub enum ImplManager {
-    App(Py<App>),
     AppHandle(Py<AppHandle>),
     WebviewWindow(Py<WebviewWindow>),
+    // NOTE: Put `App` at the end because it is the least likely to appear
+    App(Py<App>),
 }
 
 impl ImplManager {

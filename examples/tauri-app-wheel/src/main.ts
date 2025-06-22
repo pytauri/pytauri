@@ -1,5 +1,6 @@
 import { message } from '@tauri-apps/plugin-dialog';
-import { pyInvoke, Channel } from "tauri-plugin-pytauri-api";
+import { pyInvoke } from "tauri-plugin-pytauri-api";
+import { Channel } from "@tauri-apps/api/core";
 // or if tauri config `app.withGlobalTauri = true`:
 //
 // ```js
@@ -33,8 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const timeLabel = document.querySelector("#time-label");
 
-  const timeChannel = new Channel<string>();
-  timeChannel.addJsonListener((time) => {
+  const timeChannel = new Channel<string>((time) => {
     if (timeLabel) {
       timeLabel.textContent = time;
     }

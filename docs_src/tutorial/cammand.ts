@@ -8,6 +8,7 @@ import { pyInvoke } from "tauri-plugin-pytauri-api";
 // or if tauri config `app.withGlobalTauri = true`:
 //
 // ```js
+// const { invoke } = window.__TAURI__.core;
 // const { pyInvoke } = window.__TAURI__.pytauri;
 // ```
 

@@ -38,6 +38,7 @@ from pytauri.ffi.ipc import (
     Invoke,
     InvokeResolver,
     ParametersType,
+    _InvokeResponseBody,  # pyright: ignore[reportPrivateUsage]
 )
 from pytauri.ffi.ipc import Channel as _FFIChannel
 from pytauri.ffi.ipc import JavaScriptChannelId as _FFIJavaScriptChannelId
@@ -61,13 +62,9 @@ __all__ = [
 
 _logger = getLogger(__name__)
 
-_InvokeResponse = bytes
+_PyHandlerType = Callable[..., Awaitable[_InvokeResponseBody]]
 
-_PyHandlerType = Callable[..., Awaitable[_InvokeResponse]]
-
-_WrappablePyHandlerType = Callable[
-    ..., Awaitable[Union[_InvokeResponse, BaseModel, Any]]
-]
+_WrappablePyHandlerType = Callable[..., Awaitable[Union[bytes, BaseModel, Any]]]
 
 _WrappablePyHandlerTypeVar = TypeVar(
     "_WrappablePyHandlerTypeVar", bound=_WrappablePyHandlerType, infer_variance=True
@@ -101,11 +98,15 @@ _T = TypeVar("_T", infer_variance=True)
 
 _T_model = TypeVar("_T_model", bound=BaseModel, infer_variance=True)
 
+_Serializer = Callable[[bytes], _T]
+
+_Deserializer = Callable[[_T], str]
+
 
 class _ModelSerde(NamedTuple, Generic[_T, _T_model]):
     model: type[_T_model]
-    serializer: Callable[[bytes], _T]
-    deserializer: Callable[[_T], bytes]
+    serializer: _Serializer[_T]
+    deserializer: _Deserializer[_T]
 
 
 # This second overload is for unsupported special forms (such as Annotated, Union, None, etc.)
@@ -120,7 +121,7 @@ def _type_to_model_inner(type_: type[_T]) -> _ModelSerde[_T, RootModel[_T]]: ...
 def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]: ...
 @cache
 def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
-    model = RootModel[type_]
+    root_model = RootModel[type_]
 
     # PERF, FIXME: Since we need to access the `root` attribute and
     # require `def serializer` and `def deserializer` as wrapper functions,
@@ -131,14 +132,12 @@ def _type_to_model_inner(type_: Any) -> _ModelSerde[_T, RootModel[_T]]:
     # TODO: maybe we can submit a feature request to pydantic.
 
     def serializer(data: bytes) -> _T:
-        return model.model_validate_json(data).root
+        return root_model.model_validate_json(data).root
 
-    def deserializer(data: _T) -> bytes:
-        instance = model(data)
-        # ref: see `BaseModel.model_dump_json` implementation
-        return model.__pydantic_serializer__.to_json(instance)
+    def deserializer(data: _T) -> str:
+        return root_model(data).model_dump_json()
 
-    return _ModelSerde(model, serializer, deserializer)
+    return _ModelSerde(root_model, serializer, deserializer)
 
 
 @overload
@@ -266,13 +265,19 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 wrap this callable as a new function with a `body: bytes` parameter.
             - Otherwise:
                 try to convert it to a `BaseModel`/`TypeAdapter`, and proceed as in the `BaseModel` branch.
-        - Handle the return value type in the same way as the `body` parameter.
+        - Handle the return type:
+            - If the return type is `bytes`:
+                do nothing.
+            - If `issubclass(return_type, BaseModel)`:
+                wrap this callable as a new function with `return: str` value.
+            - Otherwise:
+                try to convert it to a `BaseModel`/`TypeAdapter`, and proceed as in the `BaseModel` branch.
         - If no wrapping is needed, the original `pyfunc` will be returned.
 
         The `pyfunc` will be decorated using [functools.wraps][], and its `__signature__` will also be updated.
         """
-        serializer = None
-        deserializer = None
+        serializer: Optional[_Serializer[Union[BaseModel, Any]]] = None
+        deserializer: Optional[_Deserializer[Union[BaseModel, Any]]] = None
 
         body_key = "body"
 
@@ -322,8 +327,11 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         elif isinstance(return_annotation, type) and issubclass(
             return_annotation, BaseModel
         ):
-            # ref: see `BaseModel.model_dump_json` implementation
-            deserializer = return_annotation.__pydantic_serializer__.to_json
+            # PERF: maybe we should cache this closure?
+            def _deserializer(data: BaseModel) -> str:
+                return data.model_dump_json()
+
+            deserializer = _deserializer
         else:
             # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
             return_annotation = cast(Any, return_annotation)
@@ -339,7 +347,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             return cast(_PyHandlerType, pyfunc)  # `cast` make typing happy
 
         @wraps(pyfunc)
-        async def wrapper(*args: Any, **kwargs: Any) -> bytes:
+        async def wrapper(*args: Any, **kwargs: Any) -> _InvokeResponseBody:
             nonlocal serializer, deserializer
 
             if serializer is not None:
@@ -367,7 +375,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         if serializer is not None:
             new_parameters[body_key] = parameters[body_key].replace(annotation=bytes)
         if deserializer is not None:
-            new_return_annotation = bytes
+            new_return_annotation = str
 
         # see: <https://docs.python.org/3.13/library/inspect.html#inspect.signature>
         wrapper.__signature__ = sig.replace(  # pyright: ignore[reportAttributeAccessIssue]
@@ -383,7 +391,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         """Check the signature of a `Callable` and return the parameters.
 
         Check if the [Signature][inspect.Signature] of `pyfunc` conforms to [ArgumentsType][pytauri.ipc.ArgumentsType],
-        and if the return value is a subclass of [bytes][].
+        and if the return value is [bytes][] or [str][].
 
         Args:
             pyfunc: The `Callable` to check.
@@ -397,7 +405,6 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             ValueError: If the signature does not conform to the expected pattern.
         """
         sig = signature(pyfunc)
-        # NOTE: it seems that `parameters.keys()` is already `sys._is_interned` in cpython
         parameters = sig.parameters
         if not check_signature:
             # `cast` make typing happy
@@ -435,9 +442,9 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             # after checking, we are sure that the `parameters` are valid
             parameters = cast(ParametersType, parameters)
 
-        if return_annotation is not bytes:
+        if return_annotation not in {bytes, str}:
             raise ValueError(
-                f"Expected `return_annotation` to be {bytes}, got `{return_annotation}`"
+                f"Expected `return_annotation` to be {bytes} or {str}, got `{return_annotation}`"
             )
 
         return parameters
@@ -523,7 +530,8 @@ _FFIJavaScriptChannelIdAnno = Annotated[
                 ]
             ),
             python_schema=any_schema(),
-        )
+        ),
+        lambda _source, handler: handler(str_schema()),
     ),
 ]
 
@@ -618,10 +626,10 @@ class Channel(Generic[_ModelTypeVar]):
         """See [pytauri.ffi.ipc.Channel.id][]."""
         return self._ffi_channel.id()
 
-    def send(self, data: bytes, /) -> None:
+    def send(self, data: _InvokeResponseBody, /) -> None:
         """See [pytauri.ffi.ipc.Channel.send][]."""
         self._ffi_channel.send(data)
 
     def send_model(self, model: _ModelTypeVar, /) -> None:
-        """Equivalent to `self.send(model.__pydantic_serializer__.to_json(model))`."""
-        self.send(model.__pydantic_serializer__.to_json(model))
+        """Equivalent to `self.send(model.model_dump_json())`."""
+        self.send(model.model_dump_json())
