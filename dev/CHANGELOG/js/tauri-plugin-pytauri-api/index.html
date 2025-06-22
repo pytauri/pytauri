@@ -2120,6 +2120,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      BREAKING
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2272,6 +2287,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      BREAKING
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2400,6 +2430,42 @@
 
 <h1 id="tauri-plugin-pytauri-api">tauri-plugin-pytauri-api<a class="headerlink" href="#tauri-plugin-pytauri-api" title="Permanent link">&para;</a></h1>
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/178">#178</a> - feat(plugin-api)!: remove <code>rawPyInvoke</code> and <code>Channel</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Migration</p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gd">-import { rawPyInvoke, Channel } from &quot;tauri-plugin-pytauri-api&quot;;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gi">+import { pyInvoke } from &quot;tauri-plugin-pytauri-api&quot;;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gi">+import { Channel } from &quot;@tauri-apps/api/core&quot;;</span>
+</span></code></pre></div>
+</div>
+<p>Before <code>v0.7</code>, IPC between Python and the frontend always used <code>bytes</code>/<code>ArrayBuffer</code> for data transfer. <code>pyInvoke</code> and <code>Channel.addJsonListener</code> would force serialization and deserialization of input and output, while <code>rawPyInvoke</code> and <code>Channel.onmessage</code> would directly send and receive raw <code>ArrayBuffer</code> data. This mechanism has been improved in <code>v0.7</code>:</p>
+<ul>
+<li>
+<p>Now, <code>pyInvoke</code> automatically chooses whether to serialize based on your input type:</p>
+<ul>
+<li><code>ArrayBuffer</code>/<code>Uint8Array</code> will be sent directly to the backend.</li>
+<li>Other types (<code>any</code>) will be converted to <code>ArrayBuffer</code> using <code>JSON.stringify</code> and <code>TextEncoder</code> before being sent to the backend.</li>
+</ul>
+<p><a href="https://pytauri.github.io/pytauri/0.7/usage/concepts/ipc/#commands">Only the backend can decide whether to deserialize or accept the raw bytes data</a>.</p>
+</li>
+<li>
+<p>Only the backend can decide whether to return deserialized JSON data or raw <code>ArrayBuffer</code> data:</p>
+<ul>
+<li>If <code>Command</code> returns a <code>bytes</code> type or <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/ipc/#pytauri.ipc.Channel.send">Channel.send</a> sends a <code>bytes</code> type, the frontend will receive an <code>ArrayBuffer</code>.</li>
+<li>If <code>Command</code> returns other types (<code>BaseModel</code>/<code>Any</code>) and <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/ipc/#pytauri.ipc.Channel.send">Channel.send</a> sends a <code>str</code> type, the frontend will receive automatically deserialized JSON data.</li>
+</ul>
+</li>
+</ul>
+<p>Therefore:</p>
+<ul>
+<li><code>pyInvoke</code> replaces <code>rawPyInvoke</code></li>
+<li><code>import { Channel } from "@tauri-apps/api/core"</code> replaces <code>import { Channel } from "tauri-plugin-pytauri-api"</code>.</li>
+</ul>
+</li>
+</ul>
 <h2 id="060"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.6.0">0.6.0</a><a class="headerlink" href="#060" title="Permanent link">&para;</a></h2>
 <h2 id="050"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.5.0">0.5.0</a><a class="headerlink" href="#050" title="Permanent link">&para;</a></h2>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
