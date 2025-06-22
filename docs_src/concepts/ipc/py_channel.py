@@ -15,5 +15,4 @@ async def command(
     channel: Channel[Msg] = body.channel_on(webview_window.as_ref_webview())
 
     # 👇 you should do this as background task, here just keep it simple as a example
-    channel.send(b'"message"')
     channel.send_model(Msg("message"))

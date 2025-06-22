@@ -5,6 +5,7 @@ from typing import (
     Any,
     Generic,
     Optional,
+    Union,
     final,
 )
 
@@ -27,6 +28,13 @@ _ipc_mod = pytauri_mod.ipc
 if TYPE_CHECKING:
     from pytauri.ffi.lib import AppHandle
     from pytauri.ffi.webview import Webview, WebviewWindow
+
+_InvokeResponseBody = TypeAliasType("_InvokeResponseBody", Union[str, bytes])
+"""The body of an IPC response.
+
+- str: InvokeResponseBody:Json (Any)
+- bytes: InvokeResponseBody:Raw (ArrayBuffer)
+"""
 
 Headers = TypeAliasType("Headers", list[tuple[bytes, bytes]])
 """[http::header::HeaderMap::iter](https://docs.rs/http/latest/http/header/struct.HeaderMap.html#method.iter)
@@ -109,8 +117,15 @@ if TYPE_CHECKING:
             is not the same object as the input `parameters`.
             """
 
-        def resolve(self, value: bytes) -> None:
-            """Consumes this `Invoke` and resolves the command with the given value."""
+        def resolve(self, value: _InvokeResponseBody) -> None:
+            """Consumes this `Invoke` and resolves the command with the given value.
+
+            Args:
+                value: The value to resolve the command with.
+
+                    - If `str`, it will be serialized as JSON on the frontend.
+                    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+            """
             ...
 
         def reject(self, value: str) -> None:
@@ -126,8 +141,15 @@ if TYPE_CHECKING:
             """The bound arguments of the current command."""
             ...
 
-        def resolve(self, value: bytes) -> None:
-            """Consumes this `InvokeResolver` and resolves the command with the given value."""
+        def resolve(self, value: _InvokeResponseBody) -> None:
+            """Consumes this `InvokeResolver` and resolves the command with the given value.
+
+            Args:
+                value: The value to resolve the command with.
+
+                    - If `str`, it will be serialized as JSON on the frontend.
+                    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+            """
 
         def reject(self, value: str) -> None:
             """Consumes this `InvokeResolver` and rejects the command with the given value."""
@@ -159,8 +181,15 @@ if TYPE_CHECKING:
             """The channel identifier."""
             ...
 
-        def send(self, data: bytes, /) -> None:
-            """Sends the given data through the channel."""
+        def send(self, data: _InvokeResponseBody, /) -> None:
+            """Sends the given data through the channel.
+
+            Args:
+                data: The data to send.
+
+                    - If `str`, it will be deserialized as JSON on the frontend.
+                    - If `bytes`, it will be sent as `ArrayBuffer` to the frontend.
+            """
             ...
 
 else:

@@ -76,7 +76,7 @@ After that, you generate an `invoke_handler` and pass it to the `App`, similar t
 --8<-- "docs_src/concepts/ipc/gen_handler.py"
 ```
 
-The key point here is that **you must not close the `BlockingPortal` (i.e., do not `exit` the context manager) while [App.run][pytauri.App.run] is still running**.
+The key point here is that **you must not close the `BlockingPortal` (i.e., do not exit the context manager) while [App.run][pytauri.App.run] is still running**.
 
 If you want to obtain this `invoke_handler` and keep the `BlockingPortal` running, you can use [contextlib.ExitStack][] to achieve this:
 
@@ -92,7 +92,10 @@ You can also spawn tasks in the async runtime (in the child thread) from the mai
 --8<-- "docs_src/concepts/ipc/calling_cmd.ts"
 ```
 
-The difference between `rawPyInvoke` and `pyInvoke` is that the input and output of `rawPyInvoke` are both `ArrayBuffer`, allowing you to pass binary data.
+The usage of `pyInvoke` is exactly the same as Tauri's `invoke`:
+
+- <https://tauri.app/develop/calling-rust/#basic-example>
+- <https://tauri.app/reference/javascript/api/namespacecore/#invoke>
 
 #### Returning Errors to the Frontend
 
@@ -140,11 +143,6 @@ To use a `channel`, you only need to add the [JavaScriptChannelId][pytauri.ipc.J
 ```typescript
 --8<-- "docs_src/concepts/ipc/js_channel.ts"
 ```
-
-!!! info
-    The `Channel` in `tauri-plugin-pytauri-api` is just a subclass of the `Channel` in `@tauri-apps/api/event`.
-
-    It adds the `addJsonListener` method to help serialize data. You can use `Channel.onmessage` to handle raw `ArrayBuffer` data.
 
 ### Evaluating JavaScript
 

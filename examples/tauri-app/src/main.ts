@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/core";
-import { pyInvoke, Channel } from "tauri-plugin-pytauri-api";
+import { invoke, Channel } from "@tauri-apps/api/core";
+import { pyInvoke } from "tauri-plugin-pytauri-api";
 // or if tauri config `app.withGlobalTauri = true`:
 //
 // ```js
@@ -33,12 +33,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const timeLabel = document.querySelector("#time-label");
 
-  const timeChannel = new Channel<string>();
-  timeChannel.addJsonListener((time) => {
-    if (timeLabel) {
-      timeLabel.textContent = time;
+  const timeChannel = new Channel<string>(
+    (time) => {
+      if (timeLabel) {
+        timeLabel.textContent = time;
+      }
     }
-  });
+  );
 
   pyInvoke("start_timer", timeChannel);
 });

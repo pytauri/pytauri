@@ -93,11 +93,11 @@ pub fn get_pytauri_ipc_response<D: DeserializeOwned>(
     .unwrap();
 
     let data = match resp {
-        InvokeResponseBody::Json(_) => panic!("ipc should return raw `Vec<u8>`"),
-        InvokeResponseBody::Raw(data) => data,
+        InvokeResponseBody::Json(data) => data,
+        InvokeResponseBody::Raw(_) => panic!("ipc should return Json `String`"),
     };
 
-    serde_json::from_slice(&data).unwrap()
+    serde_json::from_str(&data).unwrap()
 }
 
 /// Test the command and channel IPC between Python and Frontend.
@@ -116,12 +116,12 @@ fn test_ipc() -> Result<(), Box<dyn Error>> {
             // Because the `channel` created by python using [JavaScriptChannelId::channel_on] does not call this callback.
             // We should submit a PR to tauri.
 
-            if let InvokeResponseBody::Raw(data) = reps {
-                let data: String = serde_json::from_slice(&data)?;
+            if let InvokeResponseBody::Json(data) = reps {
+                let data: String = serde_json::from_str(&data)?;
                 assert_eq!(data, "ping");
                 Ok(())
             } else {
-                panic!("expected raw data");
+                panic!("expected Json data");
             }
         });
 

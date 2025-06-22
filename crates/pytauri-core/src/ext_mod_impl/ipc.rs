@@ -4,12 +4,11 @@ use pyo3::{
     exceptions::PyValueError,
     intern,
     prelude::*,
+    pybacked::{PyBackedBytes, PyBackedStr},
     types::{PyBytes, PyDict, PyList, PyMapping, PyString},
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
-use tauri::ipc::{
-    self, CommandArg as _, CommandItem, InvokeBody, InvokeMessage, InvokeResponseBody,
-};
+use tauri::ipc::{self, CommandArg as _, CommandItem, InvokeBody, InvokeMessage};
 
 use crate::{
     ext_mod::{
@@ -23,6 +22,28 @@ use crate::{
 type IpcInvoke = tauri::ipc::Invoke<Runtime>;
 type IpcInvokeResolver = tauri::ipc::InvokeResolver<Runtime>;
 type TauriWebviewWindow = tauri::webview::WebviewWindow<Runtime>;
+type TauriInvokeResponseBody = tauri::ipc::InvokeResponseBody;
+
+// PERF, TODO: maybe we should use `downcast` to manually implement `FromPyObject`,
+// because `derive(FromPyObject)` will be based on `extract`,
+// which has higher overhead on errors
+#[derive(FromPyObject)]
+enum InvokeResponseBody {
+    // NOTE: Json appears more frequently, so we put it first.
+    Json(PyBackedStr),
+    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
+    // see: <https://github.com/PyO3/pyo3/issues/2888>
+    Raw(PyBackedBytes),
+}
+
+impl From<InvokeResponseBody> for TauriInvokeResponseBody {
+    fn from(value: InvokeResponseBody) -> Self {
+        match value {
+            InvokeResponseBody::Json(json) => TauriInvokeResponseBody::Json(json.to_owned()),
+            InvokeResponseBody::Raw(raw) => TauriInvokeResponseBody::Raw(raw.to_owned()),
+        }
+    }
+}
 
 /// Please refer to the Python-side documentation
 #[pyclass(frozen, generic)]
@@ -46,13 +67,11 @@ impl InvokeResolver {
 #[pymethods]
 // NOTE: These pymethods implementation must not block
 impl InvokeResolver {
-    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
-    // see: <https://github.com/PyO3/pyo3/issues/2888>
-    fn resolve(&self, py: Python<'_>, value: Cow<'_, [u8]>) -> PyResult<()> {
+    fn resolve(&self, py: Python<'_>, value: InvokeResponseBody) -> PyResult<()> {
         // NOTE: This function implementation must not block
         py.allow_threads(|| {
             let resolver = self.inner.try_take_inner()??;
-            resolver.resolve(InvokeResponseBody::Raw(value.into_owned()));
+            resolver.resolve(TauriInvokeResponseBody::from(value));
             Ok(())
         })
     }
@@ -164,7 +183,8 @@ impl Invoke {
             match message.payload() {
                 InvokeBody::Json(_) => {
                     resolver.reject(
-                        "Please use `ArrayBuffer` or `Uint8Array` raw request, it's more efficient",
+                        "Please use `ArrayBuffer` or `Uint8Array` for `InvokeBody::Raw`. \
+                        If you are using `pyInvoke`, please report this as bug to pytauri developers.",
                     );
                     return Ok(None);
                 }
@@ -228,14 +248,12 @@ impl Invoke {
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))
     }
 
-    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
-    // see: <https://github.com/PyO3/pyo3/issues/2888>
-    fn resolve(&self, py: Python<'_>, value: Cow<'_, [u8]>) -> PyResult<()> {
+    fn resolve(&self, py: Python<'_>, value: InvokeResponseBody) -> PyResult<()> {
         // NOTE: This function implementation must not block
 
         py.allow_threads(|| {
             let resolver = self.inner.try_take_inner()??.resolver;
-            resolver.resolve(InvokeResponseBody::Raw(value.into_owned()));
+            resolver.resolve(TauriInvokeResponseBody::from(value));
             Ok(())
         })
     }
@@ -316,15 +334,13 @@ impl Channel {
         self.0.inner_ref().id()
     }
 
-    // NOTE: use `Cow<[u8]>` instead of `Vec<u8>`,
-    // see: <https://github.com/PyO3/pyo3/issues/2888>
-    fn send(&self, py: Python<'_>, data: Cow<'_, [u8]>) -> PyResult<()> {
+    fn send(&self, py: Python<'_>, data: InvokeResponseBody) -> PyResult<()> {
         // [tauri::ipc::Channel::send] is not a very fast operation,
         // so we need to release the GIL
         py.allow_threads(|| {
             self.0
                 .inner_ref()
-                .send(InvokeResponseBody::Raw(data.into_owned()))
+                .send(TauriInvokeResponseBody::from(data))
                 .map_err(TauriError::from)?;
             Ok(())
         })

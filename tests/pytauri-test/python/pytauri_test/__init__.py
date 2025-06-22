@@ -52,14 +52,14 @@ async def command(
     body: Body,
     app_handle: AppHandle,  # noqa: ARG001
     webview_window: WebviewWindow,
-) -> Pong:
+) -> Literal["pong"]:
     assert body.ping == "ping"
 
     channel = body.channel_id.channel_on(webview_window.as_ref_webview())
 
     await channel_task(channel)
 
-    return Pong("pong")
+    return "pong"
 
 
 task_group: TaskGroup
