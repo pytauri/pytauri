@@ -1,14 +1,21 @@
+import sys
 from collections.abc import Iterable
 from itertools import chain
 from json import dumps
 from os import PathLike
 from string import Template
-from typing import Annotated, Literal, Optional, Union
+from typing import Annotated, Literal, Union
 
 from anyio import Path, create_task_group, run_process, to_thread
 from pydantic import BaseModel, Field
-from pydantic.json_schema import JsonSchemaValue, models_json_schema
-from typing_extensions import NamedTuple
+from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue, models_json_schema
+from typing_extensions import NamedTuple, TypeIs
+
+if sys.version_info < (3, 10):
+    NoneType = type(None)
+else:
+    from types import NoneType
+
 
 _COMMANDS_TITLE = "Commands"
 """Default title for commands JSON schema."""
@@ -16,10 +23,13 @@ _COMMANDS_TITLE = "Commands"
 _INPUT_PROPERTIES = "input"
 _OUTPUT_PROPERTIES = "output"
 
+# Ref: <https://github.com/bcherny/json-schema-to-typescript/pull/168>
+_VOID_TS_TYPE = {
+    "tsType": "void | undefined",
+}
 _BYTES_TS_TYPE = {
     "tsType": "ArrayBuffer",
 }
-"""Ref: <https://github.com/bcherny/json-schema-to-typescript/pull/168>."""
 
 _API_TYPES_FILE_NAME = "_apiTypes.d.ts"
 """Default file name for generated TypeScript types for API."""
@@ -54,19 +64,29 @@ export async function ${{cmd}}(
 
 
 _Model = type[BaseModel]
+_Bytes = type[bytes]
+_Void = type[None]
 
 
 class InputOutput(NamedTuple):
-    input_model: Optional[_Model]
-    output_model: Optional[_Model]
+    input_type: Union[_Model, _Bytes, _Void]
+    output_type: Union[_Model, _Bytes, _Void]
 
 
 CommandInputOutput = dict[str, InputOutput]
 
 
 class _InputOutputSerde(NamedTuple):
-    input_model: Optional[tuple[_Model, Literal["validation"]]]
-    output_model: Optional[tuple[_Model, Literal["serialization"]]]
+    input_type: Union[
+        tuple[_Model, Literal["validation"]],
+        _Bytes,
+        _Void,
+    ]
+    output_type: Union[
+        tuple[_Model, Literal["serialization"]],
+        _Bytes,
+        _Void,
+    ]
 
 
 _CommandInputOutputSerde = dict[str, _InputOutputSerde]
@@ -81,17 +101,29 @@ def _object_json_schema(properties: dict[str, JsonSchemaValue]) -> JsonSchemaVal
     }
 
 
+def _is_model(
+    type_: Union[_Model, _Bytes, _Void],
+) -> TypeIs[_Model]:
+    return issubclass(type_, BaseModel)
+
+
+def _is_model_serde(
+    type_: Union[tuple[_Model, JsonSchemaMode], _Bytes, _Void],
+) -> TypeIs[tuple[_Model, JsonSchemaMode]]:
+    return isinstance(type_, tuple)
+
+
 def _gen_json_schemas(cmd_in_out: CommandInputOutput) -> JsonSchemaValue:
     cmd_in_out_serde: _CommandInputOutputSerde = {
         cmd: _InputOutputSerde(
-            input_model=(input_model, "validation") if input_model else None,
-            output_model=(output_model, "serialization") if output_model else None,
+            (input_type, "validation") if _is_model(input_type) else input_type,
+            (output_type, "serialization") if _is_model(output_type) else output_type,
         )
-        for cmd, (input_model, output_model) in cmd_in_out.items()
+        for cmd, (input_type, output_type) in cmd_in_out.items()
     }
 
     json_schemas_map, definitions = models_json_schema(
-        tuple(filter(None, chain.from_iterable(cmd_in_out_serde.values()))),
+        tuple(filter(_is_model_serde, chain.from_iterable(cmd_in_out_serde.values()))),
         title=_COMMANDS_TITLE,
         description="Commands Input and Output Schemas",
     )
@@ -101,15 +133,19 @@ def _gen_json_schemas(cmd_in_out: CommandInputOutput) -> JsonSchemaValue:
             {
                 cmd: _object_json_schema(
                     {
-                        _INPUT_PROPERTIES: json_schemas_map[input_model]
-                        if input_model
+                        _INPUT_PROPERTIES: json_schemas_map[input_type]
+                        if _is_model_serde(input_type)
+                        else _VOID_TS_TYPE
+                        if issubclass(input_type, NoneType)
                         else _BYTES_TS_TYPE,
-                        _OUTPUT_PROPERTIES: json_schemas_map[output_model]
-                        if output_model
+                        _OUTPUT_PROPERTIES: json_schemas_map[output_type]
+                        if _is_model_serde(output_type)
+                        else _VOID_TS_TYPE
+                        if issubclass(output_type, NoneType)
                         else _BYTES_TS_TYPE,
                     }
                 )
-                for cmd, (input_model, output_model) in cmd_in_out_serde.items()
+                for cmd, (input_type, output_type) in cmd_in_out_serde.items()
             }
         ),
         **definitions,  # $defs, title, description
@@ -167,8 +203,9 @@ if __name__ == "__main__":
     async def main():
         await gen_ts(
             {
-                "commandA": InputOutput(Foo, None),
+                "commandA": InputOutput(type(None), Foo),
                 "commandB": InputOutput(Bar, Bar),
+                "commandC": InputOutput(Foo, type(None)),
             },
             "pnpm json2ts --format=false",
             ".",
