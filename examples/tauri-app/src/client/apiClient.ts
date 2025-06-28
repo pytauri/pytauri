@@ -23,4 +23,3 @@ export async function greet(
 ): Promise<Commands["greet"]["output"]> {
     return await pyInvoke("greet", body, options);
 };
-

@@ -61,7 +61,6 @@ export async function ${{js_cmd}}(
 ): Promise<{_COMMANDS_TITLE}["${{py_cmd}}"]["{_OUTPUT_PROPERTIES}"]> {{
     return await pyInvoke("${{py_cmd}}", body, options);
 }};
-
 """)
 
 
@@ -166,7 +165,7 @@ def _gen_json_schemas_bytes(cmd_in_out: CommandInputOutput) -> bytes:
 def _gen_client_code(
     cmds: Iterable[str], *, cmd_alias: Optional[_AliasGenerator] = None
 ) -> str:
-    return _CLIENT_PREFIX + "".join(
+    return _CLIENT_PREFIX + "\n".join(
         _INVOKE_CMD_TEMPLATE.substitute(
             js_cmd=cmd_alias(cmd) if cmd_alias else cmd,
             py_cmd=cmd,
