@@ -127,13 +127,11 @@ def main() -> int:
         if PYTAURI_GEN_TS:
             output_dir = Path(__file__).parent.parent.parent.parent / "src" / "client"
             json2ts_cmd = "pnpm json2ts --format=false"
-            cmd_alias = to_camel
             portal.start_task_soon(
                 partial(
                     commands.experimental_gen_ts,
                     output_dir,
                     json2ts_cmd,
-                    cmd_alias=cmd_alias,
                 )
             )
 

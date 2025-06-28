@@ -24,6 +24,7 @@ from pydantic import (
     RootModel,
     ValidationError,
 )
+from pydantic.alias_generators import to_camel
 from pydantic_core.core_schema import (
     any_schema,
     chain_schema,
@@ -544,8 +545,24 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         output_dir: Union[str, PathLike[str]],
         json2ts_cmd: str,
         *,
-        cmd_alias: Optional[Callable[[str], str]] = None,
+        cmd_alias: Optional[Callable[[str], str]] = to_camel,
     ) -> None:
+        """Generate TypeScript types and API client from the registered commands.
+
+        This method is only available if `experimental_gen_ts` is set to `True`
+        when creating the `Commands` instance.
+
+        Args:
+            output_dir: The directory to output the generated TypeScript files.
+            json2ts_cmd: The command to run [json-schema-to-typescript] to generate TypeScript types.
+                [json-schema-to-typescript]: https://github.com/bcherny/json-schema-to-typescript/
+            cmd_alias: An optional function to convert command names to TypeScript style.
+                By default, it uses [to_camel][pydantic.alias_generators.to_camel].
+
+        Raises:
+            RuntimeError: If `experimental_gen_ts` is not enabled when creating the `Commands`
+            instance.
+        """
         if self._experimental_gen_ts is None:
             raise RuntimeError(
                 "Experimental TypeScript generation is not enabled. "
