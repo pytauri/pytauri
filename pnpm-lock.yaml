@@ -38,9 +38,6 @@ importers:
       eslint-plugin-security:
         specifier: ^3.0.1
         version: 3.0.1
-      json-schema-to-typescript:
-        specifier: 15.0.4
-        version: 15.0.4
       prettier:
         specifier: ^3.3.3
         version: 3.4.2
@@ -84,6 +81,9 @@ importers:
       '@tauri-apps/cli':
         specifier: ^2.5
         version: 2.5.0
+      json-schema-to-typescript:
+        specifier: 15.0.4
+        version: 15.0.4
       typescript:
         specifier: ~5.6.2
         version: 5.6.3

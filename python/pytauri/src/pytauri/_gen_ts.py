@@ -1,20 +1,22 @@
 import sys
 from collections.abc import Iterable
 from itertools import chain
-from json import dumps
 from os import PathLike
 from string import Template
-from typing import Annotated, Literal, Union
+from typing import Callable, Literal, Optional, Union
 
 from anyio import Path, create_task_group, run_process, to_thread
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from pydantic.json_schema import JsonSchemaMode, JsonSchemaValue, models_json_schema
+from pydantic_core import to_json
 from typing_extensions import NamedTuple, TypeIs
 
 if sys.version_info < (3, 10):
     NoneType = type(None)
 else:
     from types import NoneType
+
+__all__ = ["gen_ts"]
 
 
 _COMMANDS_TITLE = "Commands"
@@ -53,15 +55,17 @@ import type {{ {_COMMANDS_TITLE} }} from "./{_API_TYPES_FILE_NAME}";
 """
 
 _INVOKE_CMD_TEMPLATE = Template(f"""\
-export async function ${{cmd}}(
-    body: {_COMMANDS_TITLE}["${{cmd}}"]["{_INPUT_PROPERTIES}"],
+export async function ${{js_cmd}}(
+    body: {_COMMANDS_TITLE}["${{py_cmd}}"]["{_INPUT_PROPERTIES}"],
     options?: InvokeOptions
-): Promise<{_COMMANDS_TITLE}["${{cmd}}"]["{_OUTPUT_PROPERTIES}"]> {{
-    return await pyInvoke("${{cmd}}", body, options);
+): Promise<{_COMMANDS_TITLE}["${{py_cmd}}"]["{_OUTPUT_PROPERTIES}"]> {{
+    return await pyInvoke("${{py_cmd}}", body, options);
 }};
 
 """)
 
+
+_AliasGenerator = Callable[[str], str]
 
 _Model = type[BaseModel]
 _Bytes = type[bytes]
@@ -154,33 +158,45 @@ def _gen_json_schemas(cmd_in_out: CommandInputOutput) -> JsonSchemaValue:
     return json_schemas
 
 
-def _gen_client(cmds: Iterable[str]) -> str:
+def _gen_json_schemas_bytes(cmd_in_out: CommandInputOutput) -> bytes:
+    json_schemas = _gen_json_schemas(cmd_in_out)
+    return to_json(json_schemas)
+
+
+def _gen_client_code(
+    cmds: Iterable[str], *, cmd_alias: Optional[_AliasGenerator] = None
+) -> str:
     return _CLIENT_PREFIX + "".join(
-        _INVOKE_CMD_TEMPLATE.substitute(cmd=cmd) for cmd in cmds
+        _INVOKE_CMD_TEMPLATE.substitute(
+            js_cmd=cmd_alias(cmd) if cmd_alias else cmd,
+            py_cmd=cmd,
+        )
+        for cmd in cmds
     )
 
 
 async def gen_ts(
     cmd_in_out: CommandInputOutput,
-    json2ts_cmd: str,
     output_dir: Union[str, PathLike[str]],
+    json2ts_cli: str,
+    *,
+    cmd_alias: Optional[_AliasGenerator] = None,
 ):
     output_dir_path = Path(output_dir)
     await output_dir_path.mkdir(parents=True, exist_ok=True)
 
     async def gen_api_types():
-        json_schemas = await to_thread.run_sync(
-            _gen_json_schemas,
+        json_schemas_bytes = await to_thread.run_sync(
+            _gen_json_schemas_bytes,
             cmd_in_out,
         )
-        json_schemas_bytes = dumps(json_schemas).encode()
-        process = await run_process(json2ts_cmd, input=json_schemas_bytes)
+        process = await run_process(json2ts_cli, input=json_schemas_bytes)
 
         api_types_file_path = output_dir_path / _API_TYPES_FILE_NAME
         await api_types_file_path.write_bytes(process.stdout)
 
     async def gen_api_client():
-        api_client_code = _gen_client(cmd_in_out.keys())
+        api_client_code = _gen_client_code(cmd_in_out.keys(), cmd_alias=cmd_alias)
 
         api_client_file_path = output_dir_path / _API_CLIENT_FILE_NAME
         await api_client_file_path.write_text(api_client_code)
@@ -188,27 +204,3 @@ async def gen_ts(
     async with create_task_group() as tg:
         tg.start_soon(gen_api_types)
         tg.start_soon(gen_api_client)
-
-
-if __name__ == "__main__":
-    from anyio import run
-
-    class Foo(BaseModel):
-        a: int
-
-    class Bar(BaseModel):
-        a: Annotated[int, Field(serialization_alias="a_s")]
-        b: Foo
-
-    async def main():
-        await gen_ts(
-            {
-                "commandA": InputOutput(type(None), Foo),
-                "commandB": InputOutput(Bar, Bar),
-                "commandC": InputOutput(Foo, type(None)),
-            },
-            "pnpm json2ts --format=false",
-            ".",
-        )
-
-    run(main)

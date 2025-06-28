@@ -8,6 +8,8 @@ environ["_PYTAURI_DIST"] = "tauri-app"
 
 import sys
 from datetime import datetime
+from functools import partial
+from pathlib import Path
 
 from anyio import create_task_group, sleep
 from anyio.abc import TaskGroup
@@ -27,7 +29,10 @@ from pytauri_plugins.notification import NotificationExt
 
 from tauri_app.private import private_algorithm
 
-commands = Commands()
+PYTAURI_GEN_TS = environ.get("PYTAURI_GEN_TS") != "0"
+
+
+commands = Commands(experimental_gen_ts=PYTAURI_GEN_TS)
 
 
 Time = RootModel[datetime]
@@ -75,6 +80,7 @@ class _CamelModel(BaseModel):
 
     model_config = ConfigDict(
         alias_generator=to_camel,
+        extra="forbid",
     )
 
 
@@ -118,6 +124,19 @@ def main() -> int:
         start_blocking_portal("asyncio") as portal,  # or `trio`
         portal.wrap_async_context_manager(portal.call(create_task_group)) as task_group,
     ):
+        if PYTAURI_GEN_TS:
+            output_dir = Path(__file__).parent.parent.parent.parent / "src" / "client"
+            json2ts_cmd = "pnpm json2ts --format=false"
+            cmd_alias = to_camel
+            portal.start_task_soon(
+                partial(
+                    commands.experimental_gen_ts,
+                    output_dir,
+                    json2ts_cmd,
+                    cmd_alias=cmd_alias,
+                )
+            )
+
         app = builder_factory().build(
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),
