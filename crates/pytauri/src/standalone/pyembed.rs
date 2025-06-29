@@ -86,8 +86,8 @@ mod error {
     impl NewInterpreterError {
         pub(crate) fn new_from_pyerr(py: Python, err: PyErr, context: &str) -> Self {
             match format_pyerr(py, err) {
-                Ok(value) => NewInterpreterError::Dynamic(format!("during {}: {}", context, value)),
-                Err(msg) => NewInterpreterError::Dynamic(format!("during {}: {}", context, msg)),
+                Ok(value) => NewInterpreterError::Dynamic(format!("during {context}: {value}")),
+                Err(msg) => NewInterpreterError::Dynamic(format!("during {context}: {msg}")),
             }
         }
 
@@ -111,10 +111,7 @@ mod error {
                     msg.to_string_lossy()
                 ))
             } else {
-                NewInterpreterError::Dynamic(format!(
-                    "during {}: could not format PyStatus",
-                    context
-                ))
+                NewInterpreterError::Dynamic(format!("during {context}: could not format PyStatus"))
             }
         }
     }
@@ -161,8 +158,7 @@ pub(crate) mod utils {
                 }
             },
             Err(_) => Err(NewInterpreterError::Dynamic(format!(
-                "during {}: unable to convert {} to C string",
-                context, value
+                "during {context}: unable to convert {value} to C string"
             ))),
         }
     }

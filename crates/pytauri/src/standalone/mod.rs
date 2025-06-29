@@ -464,10 +464,7 @@ where
     /// or you will get a [NewInterpreterError].
     pub fn build(self) -> NewInterpreterResult<PythonInterpreter> {
         let current_exe = current_exe().map_err(|e| {
-            NewInterpreterError::Dynamic(format!(
-                "failed to get the current executable path: {}",
-                e
-            ))
+            NewInterpreterError::Dynamic(format!("failed to get the current executable path: {e}"))
         })?;
 
         let mut config = PyConfig::new(PyConfigProfile::Python);

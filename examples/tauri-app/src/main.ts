@@ -1,22 +1,17 @@
 import { invoke, Channel } from "@tauri-apps/api/core";
-import { pyInvoke } from "tauri-plugin-pytauri-api";
-// or if tauri config `app.withGlobalTauri = true`:
-//
-// ```js
-// const { pyInvoke } = window.__TAURI__.pytauri;
-// ```
+import { greet, startTimer } from "./client/apiClient";
 
 let greetInputEl: HTMLInputElement | null;
 let greetMsgEl: HTMLElement | null;
 
 
-async function greet() {
+async function onGreet() {
   if (greetMsgEl && greetInputEl) {
     // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
     const rsGreeting = await invoke<string>("greet", {
       name: greetInputEl.value,
     });
-    const pyGreeting = await pyInvoke<string>("greet", {
+    const pyGreeting = await greet({
       name: greetInputEl.value,
     });
     greetMsgEl.textContent = rsGreeting + "\n" + pyGreeting;
@@ -28,7 +23,7 @@ window.addEventListener("DOMContentLoaded", () => {
   greetMsgEl = document.querySelector("#greet-msg");
   document.querySelector("#greet-form")?.addEventListener("submit", (e) => {
     e.preventDefault();
-    greet();
+    onGreet();
   });
 
   const timeLabel = document.querySelector("#time-label");
@@ -41,5 +36,5 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   );
 
-  pyInvoke("start_timer", timeChannel);
+  startTimer(timeChannel.toJSON());
 });
