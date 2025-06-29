@@ -17,6 +17,7 @@ from typing import (
 )
 from warnings import warn
 
+from anyio import current_time
 from anyio.from_thread import BlockingPortal
 from pydantic import (
     BaseModel,
@@ -561,7 +562,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         Raises:
             RuntimeError: If `experimental_gen_ts` is not enabled when creating the `Commands`
-            instance.
+                instance.
         """
         if self._experimental_gen_ts is None:
             raise RuntimeError(
@@ -572,6 +573,50 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         del self._experimental_gen_ts  # release memory
 
         await gen_ts(cmd_in_out, output_dir, json2ts_cmd, cmd_alias=cmd_alias)
+
+    async def experimental_gen_ts_background(
+        self,
+        output_dir: Union[str, PathLike[str]],
+        json2ts_cmd: str,
+        *,
+        cmd_alias: Optional[Callable[[str], str]] = to_camel,
+    ) -> None:
+        """Generate TypeScript types and API client from the registered commands in the background.
+
+        See [experimental_gen_ts][pytauri.ipc.Commands.experimental_gen_ts] for more details.
+        This method is equivalent to:
+
+        ```python
+        try:
+            ret = await self.experimental_gen_ts(
+                output_dir,
+                json2ts_cmd,
+                cmd_alias=cmd_alias,
+            )
+        except Exception:
+            logging.exception(...)
+            raise
+
+        return ret
+        ```
+        """
+        start_time = current_time()
+        _logger.info("Generating TypeScript types and API client in the background.")
+        try:
+            ret = await self.experimental_gen_ts(
+                output_dir,
+                json2ts_cmd,
+                cmd_alias=cmd_alias,
+            )
+        except Exception:
+            _logger.exception("Failed to generate TypeScript types and API client.")
+            raise
+
+        elapsed = current_time() - start_time
+        _logger.info(
+            f"Finished generating TypeScript types and API client in {elapsed:.2f} seconds."
+        )
+        return ret
 
 
 # see:

@@ -129,7 +129,7 @@ def main() -> int:
             json2ts_cmd = "pnpm json2ts --format=false"
             portal.start_task_soon(
                 partial(
-                    commands.experimental_gen_ts,
+                    commands.experimental_gen_ts_background,
                     output_dir,
                     json2ts_cmd,
                 )
