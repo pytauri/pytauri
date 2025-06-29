@@ -192,14 +192,43 @@ async def gen_ts(
         process = await run_process(json2ts_cli, input=json_schemas_bytes)
 
         api_types_file_path = output_dir_path / _API_TYPES_FILE_NAME
-        await api_types_file_path.write_bytes(process.stdout)
+        await _write_if_changed_bytes(api_types_file_path, process.stdout)
 
     async def gen_api_client():
         api_client_code = _gen_client_code(cmd_in_out.keys(), cmd_alias=cmd_alias)
 
         api_client_file_path = output_dir_path / _API_CLIENT_FILE_NAME
-        await api_client_file_path.write_text(api_client_code)
+        await _write_if_changed_text(api_client_file_path, api_client_code)
 
     async with create_task_group() as tg:
         tg.start_soon(gen_api_types)
         tg.start_soon(gen_api_client)
+
+
+# TODO: use stat to cache and compare in chunks,
+# ref: <https://github.com/python/cpython/blob/a2f1d22a362cccab59691fa4fa2b202475480b04/Lib/filecmp.py#L30-L68>
+async def _write_if_changed_text(
+    path: Path,
+    content: str,
+) -> None:
+    encoding = "utf-8"
+    try:
+        if await path.read_text(encoding=encoding) == content:
+            return
+    except FileNotFoundError:
+        pass
+
+    await path.write_text(content, encoding=encoding)
+
+
+async def _write_if_changed_bytes(
+    path: Path,
+    content: bytes,
+) -> None:
+    try:
+        if await path.read_bytes() == content:
+            return
+    except FileNotFoundError:
+        pass
+
+    await path.write_bytes(content)
