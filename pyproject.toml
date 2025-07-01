@@ -6,6 +6,7 @@ requires-python = ">=3.9"
 
 [dependency-groups]
 dev = [
+    "debugpy == 1.*",
     { include-group = "lint" },
     { include-group = "docs" },
     { include-group = "test" },
