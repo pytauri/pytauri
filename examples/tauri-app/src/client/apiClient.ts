@@ -12,10 +12,10 @@ import type { Commands } from "./_apiTypes.d.ts";
 
 /**
  * Starts a timer that sends the current time to the specified channel every second.
- * 
+ *
  * Args:
  *     body: The channel ID to send the time updates to.
- * 
+ *
  * Returns:
  *     None
  */
@@ -28,7 +28,7 @@ export async function startTimer(
 
 /**
  * Greets a person with a message.
- * 
+ *
  * @param body - The person to greet.
  * @returns The greeting message.
  */

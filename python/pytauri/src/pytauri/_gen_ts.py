@@ -3,7 +3,6 @@ from inspect import getdoc
 from itertools import chain
 from os import PathLike
 from string import Template
-from textwrap import indent
 from typing import Callable, Literal, Optional, Union
 
 from anyio import Path, create_task_group, run_process, to_thread
@@ -252,8 +251,20 @@ def _gen_ts_doc(obj: object) -> Optional[str]:
     if not py_doc:  # Skip generation for empty docstrings
         return None
 
+    # `indent`, ref: <https://github.com/python/cpython/blob/6d21cc54fffbe56df3372f65227160bf27807158/Lib/textwrap.py#L447-L469>
+    js_doc_body_lines: list[str] = []
+    for line in py_doc.splitlines(keepends=True):
+        # str.splitlines(keepends=True) doesn't produce the empty string,
+        # so we need to use `str.isspace()` rather than a truth test.
+        if line.isspace():
+            js_doc_body_lines.append(" *\n")
+        else:
+            js_doc_body_lines.extend((" * ", line))
+
+    js_doc_body = "".join(js_doc_body_lines)
+
     return f"""\
 /**
-{indent(py_doc, " * ", lambda _line: True)}
+{js_doc_body}
  */
 """
