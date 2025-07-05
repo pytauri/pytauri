@@ -368,7 +368,8 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 )
             return cast(_PyHandlerType, pyfunc)  # `cast` make typing happy
 
-        @wraps(pyfunc)  # NOTE: Use `wraps` to ensure the docstring is preserved correctly
+        # NOTE: Use `wraps` to ensure the docstring is preserved correctly
+        @wraps(pyfunc)
         async def wrapper(*args: Any, **kwargs: Any) -> _InvokeResponseBody:
             nonlocal serializer, deserializer
 
@@ -593,35 +594,32 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         ```python
         try:
-            ret = await self.experimental_gen_ts(
+            await self.experimental_gen_ts(
                 output_dir,
                 json2ts_cmd,
                 cmd_alias=cmd_alias,
             )
         except Exception:
             logging.exception(...)
-            raise
-
-        return ret
+            return None
         ```
         """
         start_time = current_time()
         _logger.info("Generating TypeScript types and API client in the background.")
         try:
-            ret = await self.experimental_gen_ts(
+            await self.experimental_gen_ts(
                 output_dir,
                 json2ts_cmd,
                 cmd_alias=cmd_alias,
             )
         except Exception:
             _logger.exception("Failed to generate TypeScript types and API client.")
-            raise
+            return None
 
         elapsed = current_time() - start_time
         _logger.info(
             f"Finished generating TypeScript types and API client in {elapsed:.2f} seconds."
         )
-        return ret
 
 
 # see:
