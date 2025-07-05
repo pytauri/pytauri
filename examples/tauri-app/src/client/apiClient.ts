@@ -10,6 +10,15 @@ import { InvokeOptions } from "@tauri-apps/api/core";
 
 import type { Commands } from "./_apiTypes.d.ts";
 
+/**
+ * Starts a timer that sends the current time to the specified channel every second.
+ * 
+ * Args:
+ *     body: The channel ID to send the time updates to.
+ * 
+ * Returns:
+ *     None
+ */
 export async function startTimer(
     body: Commands["start_timer"]["input"],
     options?: InvokeOptions
@@ -17,6 +26,12 @@ export async function startTimer(
     return await pyInvoke("start_timer", body, options);
 }
 
+/**
+ * Greets a person with a message.
+ * 
+ * @param body - The person to greet.
+ * @returns The greeting message.
+ */
 export async function greet(
     body: Commands["greet"]["input"],
     options?: InvokeOptions

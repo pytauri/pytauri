@@ -360,16 +360,15 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             deserializer = model_serde.deserializer
             output_type = model_serde.model
 
-        if _gen_ts_cmd is not None:
-            assert self._experimental_gen_ts is not None
-            self._experimental_gen_ts[_gen_ts_cmd] = InputOutput(
-                input_type, output_type
-            )
-
         if not serializer and not deserializer:
+            if _gen_ts_cmd is not None:
+                assert self._experimental_gen_ts is not None
+                self._experimental_gen_ts[_gen_ts_cmd] = InputOutput(
+                    cmd_handler=pyfunc, input_type=input_type, output_type=output_type
+                )
             return cast(_PyHandlerType, pyfunc)  # `cast` make typing happy
 
-        @wraps(pyfunc)
+        @wraps(pyfunc)  # NOTE: Use `wraps` to ensure the docstring is preserved correctly
         async def wrapper(*args: Any, **kwargs: Any) -> _InvokeResponseBody:
             nonlocal serializer, deserializer
 
@@ -405,6 +404,12 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             parameters=tuple(new_parameters.values()),
             return_annotation=new_return_annotation,
         )
+
+        if _gen_ts_cmd is not None:
+            assert self._experimental_gen_ts is not None
+            self._experimental_gen_ts[_gen_ts_cmd] = InputOutput(
+                cmd_handler=wrapper, input_type=input_type, output_type=output_type
+            )
         return wrapper
 
     @staticmethod

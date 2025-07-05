@@ -50,6 +50,14 @@ async def timer_task(time_channel: Channel[Time]) -> None:
 async def start_timer(
     body: JavaScriptChannelId[Time], webview_window: WebviewWindow
 ) -> None:
+    """Starts a timer that sends the current time to the specified channel every second.
+
+    Args:
+        body: The channel ID to send the time updates to.
+
+    Returns:
+        None
+    """
     time_channel = body.channel_on(webview_window.as_ref_webview())
 
     # NOTE:
@@ -92,6 +100,11 @@ class Person(_CamelModel):
 async def greet(
     body: Person, app_handle: AppHandle, webview_window: WebviewWindow
 ) -> str:
+    """Greets a person with a message.
+
+    @param body - The person to greet.
+    @returns The greeting message.
+    """
     notification_builder = NotificationExt.builder(app_handle)
 
     message_dialog_builder = DialogExt.message(app_handle, f"Hello {body.name}!")

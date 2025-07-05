@@ -1,8 +1,9 @@
 import sys
-from collections.abc import Iterable
+from inspect import getdoc
 from itertools import chain
 from os import PathLike
 from string import Template
+from textwrap import indent
 from typing import Callable, Literal, Optional, Union
 
 from anyio import Path, create_task_group, run_process, to_thread
@@ -55,7 +56,7 @@ import type {{ {_COMMANDS_TITLE} }} from "./{_API_TYPES_FILE_NAME}";
 """
 
 _INVOKE_CMD_TEMPLATE = Template(f"""\
-export async function ${{js_cmd}}(
+${{doc}}export async function ${{js_cmd}}(
     body: {_COMMANDS_TITLE}["${{py_cmd}}"]["{_INPUT_PROPERTIES}"],
     options?: InvokeOptions
 ): Promise<{_COMMANDS_TITLE}["${{py_cmd}}"]["{_OUTPUT_PROPERTIES}"]> {{
@@ -72,6 +73,7 @@ _Void = type[None]
 
 
 class InputOutput(NamedTuple):
+    cmd_handler: object
     input_type: Union[_Model, _Bytes, _Void]
     output_type: Union[_Model, _Bytes, _Void]
 
@@ -95,15 +97,6 @@ class _InputOutputSerde(NamedTuple):
 _CommandInputOutputSerde = dict[str, _InputOutputSerde]
 
 
-def _object_json_schema(properties: dict[str, JsonSchemaValue]) -> JsonSchemaValue:
-    return {
-        "type": "object",
-        "properties": properties,
-        "required": list(properties.keys()),
-        "additionalProperties": False,
-    }
-
-
 def _is_model(
     type_: Union[_Model, _Bytes, _Void],
 ) -> TypeIs[_Model]:
@@ -116,13 +109,20 @@ def _is_model_serde(
     return isinstance(type_, tuple)
 
 
+# -- core ---------------------------------------------------------------------
+
+
 def _gen_json_schemas(cmd_in_out: CommandInputOutput) -> JsonSchemaValue:
     cmd_in_out_serde: _CommandInputOutputSerde = {
         cmd: _InputOutputSerde(
-            (input_type, "validation") if _is_model(input_type) else input_type,
-            (output_type, "serialization") if _is_model(output_type) else output_type,
+            input_type=(input_type, "validation")
+            if _is_model(input_type)
+            else input_type,
+            output_type=(output_type, "serialization")
+            if _is_model(output_type)
+            else output_type,
         )
-        for cmd, (input_type, output_type) in cmd_in_out.items()
+        for cmd, (_, input_type, output_type) in cmd_in_out.items()
     }
 
     json_schemas_map, definitions = models_json_schema(
@@ -163,14 +163,15 @@ def _gen_json_schemas_bytes(cmd_in_out: CommandInputOutput) -> bytes:
 
 
 def _gen_client_code(
-    cmds: Iterable[str], *, cmd_alias: Optional[_AliasGenerator] = None
+    cmd_in_out: CommandInputOutput, *, cmd_alias: Optional[_AliasGenerator] = None
 ) -> str:
     return _CLIENT_PREFIX + "\n".join(
         _INVOKE_CMD_TEMPLATE.substitute(
+            doc=_gen_ts_doc(in_out.cmd_handler) or "",
             js_cmd=cmd_alias(cmd) if cmd_alias else cmd,
             py_cmd=cmd,
         )
-        for cmd in cmds
+        for cmd, in_out in cmd_in_out.items()
     )
 
 
@@ -189,13 +190,13 @@ async def gen_ts(
             _gen_json_schemas_bytes,
             cmd_in_out,
         )
-        process = await run_process(json2ts_cli, input=json_schemas_bytes)
+        process = await run_process(json2ts_cli, input=json_schemas_bytes, check=True)
 
         api_types_file_path = output_dir_path / _API_TYPES_FILE_NAME
         await _write_if_changed_bytes(api_types_file_path, process.stdout)
 
     async def gen_api_client():
-        api_client_code = _gen_client_code(cmd_in_out.keys(), cmd_alias=cmd_alias)
+        api_client_code = _gen_client_code(cmd_in_out, cmd_alias=cmd_alias)
 
         api_client_file_path = output_dir_path / _API_CLIENT_FILE_NAME
         await _write_if_changed_text(api_client_file_path, api_client_code)
@@ -203,6 +204,18 @@ async def gen_ts(
     async with create_task_group() as tg:
         tg.start_soon(gen_api_types)
         tg.start_soon(gen_api_client)
+
+
+# -- utils --------------------------------------------------------------------
+
+
+def _object_json_schema(properties: dict[str, JsonSchemaValue]) -> JsonSchemaValue:
+    return {
+        "type": "object",
+        "properties": properties,
+        "required": list(properties.keys()),
+        "additionalProperties": False,
+    }
 
 
 # TODO: use stat to cache and compare in chunks,
@@ -232,3 +245,15 @@ async def _write_if_changed_bytes(
         pass
 
     await path.write_bytes(content)
+
+
+def _gen_ts_doc(obj: object) -> Optional[str]:
+    py_doc = getdoc(obj)
+    if not py_doc:  # Skip generation for empty docstrings
+        return None
+
+    return f"""\
+/**
+{indent(py_doc, " * ", lambda _line: True)}
+ */
+"""
