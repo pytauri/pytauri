@@ -8,6 +8,8 @@ environ["_PYTAURI_DIST"] = "tauri-app"
 
 import sys
 from datetime import datetime
+from functools import partial
+from pathlib import Path
 
 from anyio import create_task_group, sleep
 from anyio.abc import TaskGroup
@@ -27,7 +29,10 @@ from pytauri_plugins.notification import NotificationExt
 
 from tauri_app.private import private_algorithm
 
-commands = Commands()
+PYTAURI_GEN_TS = environ.get("PYTAURI_GEN_TS") != "0"
+
+
+commands = Commands(experimental_gen_ts=PYTAURI_GEN_TS)
 
 
 Time = RootModel[datetime]
@@ -45,6 +50,14 @@ async def timer_task(time_channel: Channel[Time]) -> None:
 async def start_timer(
     body: JavaScriptChannelId[Time], webview_window: WebviewWindow
 ) -> None:
+    """Starts a timer that sends the current time to the specified channel every second.
+
+    Args:
+        body: The channel ID to send the time updates to.
+
+    Returns:
+        None
+    """
     time_channel = body.channel_on(webview_window.as_ref_webview())
 
     # NOTE:
@@ -67,7 +80,7 @@ async def start_timer(
     task_group.start_soon(timer_task, time_channel)
 
 
-class _CamelModel(BaseModel):
+class _BaseModel(BaseModel):
     """Accepts camelCase js ipc arguments for snake_case python fields.
 
     See: <https://docs.pydantic.dev/2.10/concepts/alias/#using-an-aliasgenerator>
@@ -75,10 +88,11 @@ class _CamelModel(BaseModel):
 
     model_config = ConfigDict(
         alias_generator=to_camel,
+        extra="forbid",
     )
 
 
-class Person(_CamelModel):
+class Person(_BaseModel):
     name: str
 
 
@@ -86,6 +100,11 @@ class Person(_CamelModel):
 async def greet(
     body: Person, app_handle: AppHandle, webview_window: WebviewWindow
 ) -> str:
+    """Greets a person with a message.
+
+    @param body - The person to greet.
+    @returns The greeting message.
+    """
     notification_builder = NotificationExt.builder(app_handle)
 
     message_dialog_builder = DialogExt.message(app_handle, f"Hello {body.name}!")
@@ -118,6 +137,17 @@ def main() -> int:
         start_blocking_portal("asyncio") as portal,  # or `trio`
         portal.wrap_async_context_manager(portal.call(create_task_group)) as task_group,
     ):
+        if PYTAURI_GEN_TS:
+            output_dir = Path(__file__).parent.parent.parent.parent / "src" / "client"
+            json2ts_cmd = "pnpm json2ts --format=false"
+            portal.start_task_soon(
+                partial(
+                    commands.experimental_gen_ts_background,
+                    output_dir,
+                    json2ts_cmd,
+                )
+            )
+
         app = builder_factory().build(
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),

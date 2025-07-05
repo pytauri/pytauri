@@ -70,7 +70,7 @@ async def start_timer(
     task_group.start_soon(timer_task, time_channel)
 
 
-class _CamelModel(BaseModel):
+class _BaseModel(BaseModel):
     """Accepts camelCase js ipc arguments for snake_case python fields.
 
     See: <https://docs.pydantic.dev/2.10/concepts/alias/#using-an-aliasgenerator>
@@ -81,7 +81,7 @@ class _CamelModel(BaseModel):
     )
 
 
-class Person(_CamelModel):
+class Person(_BaseModel):
     name: str
 
 

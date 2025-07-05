@@ -5,6 +5,7 @@ from collections.abc import Awaitable
 from functools import cache, partial, wraps
 from inspect import Parameter, Signature, signature
 from logging import getLogger
+from os import PathLike
 from typing import (
     Annotated,
     Any,
@@ -16,6 +17,7 @@ from typing import (
 )
 from warnings import warn
 
+from anyio import current_time
 from anyio.from_thread import BlockingPortal
 from pydantic import (
     BaseModel,
@@ -23,6 +25,7 @@ from pydantic import (
     RootModel,
     ValidationError,
 )
+from pydantic.alias_generators import to_camel
 from pydantic_core.core_schema import (
     any_schema,
     chain_schema,
@@ -32,6 +35,7 @@ from pydantic_core.core_schema import (
 )
 from typing_extensions import NamedTuple, Self, TypeVar, overload
 
+from pytauri._gen_ts import CommandInputOutput, InputOutput, NoneType, gen_ts
 from pytauri.ffi.ipc import (
     ArgumentsType,
     Headers,
@@ -164,8 +168,12 @@ class Commands(UserDict[str, _PyInvokHandleData]):
     for use with [BuilderArgs][pytauri.BuilderArgs].
     """
 
-    def __init__(self) -> None:  # noqa: D107
+    _experimental_gen_ts: Optional[CommandInputOutput]
+
+    def __init__(self, *, experimental_gen_ts: bool = False) -> None:  # noqa: D107
         super().__init__()
+
+        self._experimental_gen_ts = {} if experimental_gen_ts else None
 
         data = self.data
 
@@ -250,9 +258,8 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         return invoke_handler
 
-    @staticmethod
     def wrap_pyfunc(  # noqa: C901, PLR0912, PLR0915  # TODO: simplify this method
-        pyfunc: _WrappablePyHandlerType,
+        self, pyfunc: _WrappablePyHandlerType, *, _gen_ts_cmd: Optional[str] = None
     ) -> _PyHandlerType:
         """Wrap a `Callable` to conform to the definition of PyHandlerType.
 
@@ -278,6 +285,8 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         """
         serializer: Optional[_Serializer[Union[BaseModel, Any]]] = None
         deserializer: Optional[_Deserializer[Union[BaseModel, Any]]] = None
+        input_type = NoneType
+        output_type = NoneType
 
         body_key = "body"
 
@@ -302,19 +311,23 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 )
             elif body_type is bytes:
                 serializer = None
+                input_type = bytes
             # `Annotated`, `Union`, `None`, etc are not `type`
             elif isinstance(body_type, type) and issubclass(body_type, BaseModel):
                 serializer = body_type.model_validate_json
+                input_type = body_type
             else:
                 # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
                 body_type = cast(Any, body_type)
                 try:
-                    serializer = _type_to_model(body_type).serializer
+                    model_serde = _type_to_model(body_type)
                 except Exception as e:
                     raise ValueError(
                         f"Failed to convert `{body_type}` type to pydantic Model, "
                         f"please explicitly use {BaseModel} or {bytes} as `{body_key}` type annotation instead."
                     ) from e
+                serializer = model_serde.serializer
+                input_type = model_serde.model
 
         if return_annotation is Signature.empty:
             raise ValueError(
@@ -323,6 +336,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             )
         elif return_annotation is bytes:
             deserializer = None
+            output_type = bytes
         # `Annotated`, `Union`, `None`, etc are not `type`
         elif isinstance(return_annotation, type) and issubclass(
             return_annotation, BaseModel
@@ -332,20 +346,29 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 return data.model_dump_json()
 
             deserializer = _deserializer
+            output_type = return_annotation
         else:
             # PERF, FIXME: `cast` make pyright happy, it mistakenly thinks this is `Any | type[Unknown]`
             return_annotation = cast(Any, return_annotation)
             try:
-                deserializer = _type_to_model(return_annotation).deserializer
+                model_serde = _type_to_model(return_annotation)
             except Exception as e:
                 raise ValueError(
                     f"Failed to convert `{return_annotation}` type to pydantic Model, "
                     f"please explicitly use {BaseModel} or {bytes} as return type annotation instead."
                 ) from e
+            deserializer = model_serde.deserializer
+            output_type = model_serde.model
 
         if not serializer and not deserializer:
+            if _gen_ts_cmd is not None:
+                assert self._experimental_gen_ts is not None
+                self._experimental_gen_ts[_gen_ts_cmd] = InputOutput(
+                    cmd_handler=pyfunc, input_type=input_type, output_type=output_type
+                )
             return cast(_PyHandlerType, pyfunc)  # `cast` make typing happy
 
+        # NOTE: Use `wraps` to ensure the docstring is preserved correctly
         @wraps(pyfunc)
         async def wrapper(*args: Any, **kwargs: Any) -> _InvokeResponseBody:
             nonlocal serializer, deserializer
@@ -382,6 +405,12 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             parameters=tuple(new_parameters.values()),
             return_annotation=new_return_annotation,
         )
+
+        if _gen_ts_cmd is not None:
+            assert self._experimental_gen_ts is not None
+            self._experimental_gen_ts[_gen_ts_cmd] = InputOutput(
+                cmd_handler=wrapper, input_type=input_type, output_type=output_type
+            )
         return wrapper
 
     @staticmethod
@@ -461,7 +490,10 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         This method internally calls [parse_parameters][pytauri.Commands.parse_parameters]
         and [wrap_pyfunc][pytauri.Commands.wrap_pyfunc], `parse_parameters(wrap_pyfunc(handler))`.
         """
-        new_handler = self.wrap_pyfunc(handler)
+        new_handler = self.wrap_pyfunc(
+            handler,
+            _gen_ts_cmd=command if self._experimental_gen_ts is not None else None,
+        )
         parameters = self.parse_parameters(new_handler, check_signature=check_signature)
         self.data[command] = _PyInvokHandleData(parameters, new_handler)
 
@@ -514,6 +546,80 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             return self._register
         else:
             return partial(self._register, command=command)
+
+    async def experimental_gen_ts(
+        self,
+        output_dir: Union[str, PathLike[str]],
+        json2ts_cmd: str,
+        *,
+        cmd_alias: Optional[Callable[[str], str]] = to_camel,
+    ) -> None:
+        """Generate TypeScript types and API client from the registered commands.
+
+        This method is only available if `experimental_gen_ts` is set to `True`
+        when creating the `Commands` instance.
+
+        Args:
+            output_dir: The directory to output the generated TypeScript files.
+            json2ts_cmd: The command to run [json-schema-to-typescript] to generate TypeScript types.
+                [json-schema-to-typescript]: https://github.com/bcherny/json-schema-to-typescript/
+            cmd_alias: An optional function to convert command names to TypeScript style.
+                By default, it uses [to_camel][pydantic.alias_generators.to_camel].
+
+        Raises:
+            RuntimeError: If `experimental_gen_ts` is not enabled when creating the `Commands`
+                instance.
+        """
+        if self._experimental_gen_ts is None:
+            raise RuntimeError(
+                "Experimental TypeScript generation is not enabled. "
+                "Please set `experimental_gen_ts=True` when creating `Commands`."
+            )
+        cmd_in_out = self._experimental_gen_ts
+        del self._experimental_gen_ts  # release memory
+
+        await gen_ts(cmd_in_out, output_dir, json2ts_cmd, cmd_alias=cmd_alias)
+
+    async def experimental_gen_ts_background(
+        self,
+        output_dir: Union[str, PathLike[str]],
+        json2ts_cmd: str,
+        *,
+        cmd_alias: Optional[Callable[[str], str]] = to_camel,
+    ) -> None:
+        """Generate TypeScript types and API client from the registered commands in the background.
+
+        See [experimental_gen_ts][pytauri.ipc.Commands.experimental_gen_ts] for more details.
+        This method is equivalent to:
+
+        ```python
+        try:
+            await self.experimental_gen_ts(
+                output_dir,
+                json2ts_cmd,
+                cmd_alias=cmd_alias,
+            )
+        except Exception:
+            logging.exception(...)
+            return None
+        ```
+        """
+        start_time = current_time()
+        _logger.info("Generating TypeScript types and API client in the background.")
+        try:
+            await self.experimental_gen_ts(
+                output_dir,
+                json2ts_cmd,
+                cmd_alias=cmd_alias,
+            )
+        except Exception:
+            _logger.exception("Failed to generate TypeScript types and API client.")
+            return None
+
+        elapsed = current_time() - start_time
+        _logger.info(
+            f"Finished generating TypeScript types and API client in {elapsed:.2f} seconds."
+        )
 
 
 # see:

@@ -53,6 +53,7 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
 - Natively support async python (`asyncio`, `trio` or `anyio`)
 - **100%** [Type Completeness](https://microsoft.github.io/pyright/#/typed-libraries?id=type-completeness)
 - Ergonomic API (and as close as possible to the Tauri Rust API)
+    - [Automatically generated TypeScript types and client for IPC](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app/src/client)
     - Python
 
         ```python

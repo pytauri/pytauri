@@ -3,7 +3,7 @@ use pyo3::prelude::*;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+    format!("Hello, {name}! You've been greeted from Rust!")
 }
 
 pub fn tauri_generate_context() -> tauri::Context {

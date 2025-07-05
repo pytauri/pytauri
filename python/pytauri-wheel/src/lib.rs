@@ -232,7 +232,7 @@ pub fn context_factory(
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-build/src/acl.rs#L402-L407>
         let capabilities_pattern_path = src_tauri_dir
             // i.e., `cpabilities/**/*`
-            .join(format!("{}/**/*", CAPABILITIES_FOLDER));
+            .join(format!("{CAPABILITIES_FOLDER}/**/*"));
         let capabilities_pattern = capabilities_pattern_path.to_str().ok_or_else(|| {
             PyValueError::new_err(format!(
                 "`{}` is not is valid unicode",

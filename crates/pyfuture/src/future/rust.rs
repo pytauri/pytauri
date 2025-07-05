@@ -142,12 +142,11 @@ impl Future for RustFuture {
                             match e.traceback(py).map(|t| t.format()) {
                                 Some(Ok(traceback)) => {
                                     panic!(
-                                        "Error while calling runner: {}\n{}",
-                                        e, traceback
+                                        "Error while calling runner: {e}\n{traceback}"
                                     );
                                 }
                                 _ => {
-                                    panic!("Error while calling runner: {:?}", e);
+                                    panic!("Error while calling runner: {e:?}");
                                 }
                             }
                         });
@@ -204,13 +203,10 @@ impl Drop for CancelOnDrop {
                     match e.traceback(py).map(|t| t.format()) {
                         // TODO: use `log` crate instead of `eprintln!`
                         Some(Ok(traceback)) => {
-                            eprintln!(
-                                "[Warning] Error while cancelling on drop: {}\n{}",
-                                e, traceback
-                            );
+                            eprintln!("[Warning] Error while cancelling on drop: {e}\n{traceback}");
                         }
                         _ => {
-                            eprintln!("Warning] Error while cancelling on drop: {:?}", e);
+                            eprintln!("Warning] Error while cancelling on drop: {e:?}");
                         }
                     }
                 }
