@@ -4,6 +4,11 @@
 
 ### Added
 
+- [#179](https://github.com/pytauri/pytauri/pull/179) - feat(pytauri): generate typescript client for IPC.
+    - `pytauri.ipc.Commands`
+        - `__init__(*, experimental_gen_ts)` parameter
+        - `def experimental_gen_ts`
+        - `def experimental_gen_ts_background`
 - [#178](https://github.com/pytauri/pytauri/pull/178) - feat(plugin-api)!: remove `rawPyInvoke` and `Channel`.
 
     [Channel.send][pytauri.ipc.Channel.send], [Invoke.resolve][pytauri.ipc.Invoke.resolve] and [InvokeResolver.resolve][pytauri.ipc.InvokeResolver.resolve] now can send `Union[bytes, str]`:

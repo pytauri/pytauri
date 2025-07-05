@@ -34,6 +34,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Generate TypeScript Client for IPC
+
+> - [#179](https://github.com/pytauri/pytauri/pull/179) - feat(pytauri): generate typescript client for IPC.
+
+See: <https://pytauri.github.io/pytauri/0.7/usage/tutorial/gen-ts>
+
+```py
+@commands.command()
+async def greet_to_person(body: Person) -> str: ...
+```
+
+automatically generates the following TypeScript client code:
+
+```ts
+export async function greetToPerson(
+    body: Commands["greet_to_person"]["input"],
+    options?: InvokeOptions
+): Promise<Commands["greet_to_person"]["output"]> {
+    return await pyInvoke("greet_to_person", body, options);
+}
+```
+
 #### Support using arbitrary types in `command`
 
 > - [#171](https://github.com/pytauri/pytauri/pull/171) - feat(pytauri): support using arbitrary types in `command`.

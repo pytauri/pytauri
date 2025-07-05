@@ -23,6 +23,8 @@ pnpm json2ts --help  # check if installed correctly
 
 ## Usage Example
 
+[Commands.experimental_gen_ts_background][pytauri.ipc.Commands.experimental_gen_ts_background]
+
 ```python title="src-tauri/python/__init__.py"
 --8<-- "docs_src/tutorial/gen_ts.py"
 ```
