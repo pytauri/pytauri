@@ -27,13 +27,13 @@ commands = Commands()
 ChannelBody = RootModel[Literal["ping"]]
 
 
-class _CamelModel(BaseModel):
+class _BaseModel(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
     )
 
 
-class Body(_CamelModel):
+class Body(_BaseModel):
     ping: Literal["ping"]
     channel_id: JavaScriptChannelId[ChannelBody]
 
