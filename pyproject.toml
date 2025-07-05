@@ -29,7 +29,7 @@ docs = [
     "mkdocs-literate-nav == 0.6.*",
     "mkdocs-section-index == 0.3.*",
     "mkdocs-git-revision-date-localized-plugin ==1.4.*",
-    "mkdocs-git-committers-plugin-2 == 2.4.*",
+    "mkdocs-git-committers-plugin-2 ==2.5.*",
     "mike == 2.1.*",
 ]
 test = [

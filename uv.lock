@@ -1038,16 +1038,16 @@ wheels = [
 
 [[package]]
 name = "mkdocs-git-committers-plugin-2"
-version = "2.4.1"
+version = "2.5.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "gitpython" },
     { name = "mkdocs" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/36/4a/783d1c2683bc577bfe875646ce68bc9e0d845d0817a96f2a057033fdc64e/mkdocs_git_committers_plugin_2-2.4.1.tar.gz", hash = "sha256:ea1f80a79cedc42289e0b8e973276df04fb94f56e0ae3efc5385fb28547cf5cb", size = 14924, upload-time = "2024-10-04T17:18:44.007Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b4/8a/4ca4fb7d17f66fa709b49744c597204ad03fb3b011c76919564843426f11/mkdocs_git_committers_plugin_2-2.5.0.tar.gz", hash = "sha256:a01f17369e79ca28651681cddf212770e646e6191954bad884ca3067316aae60", size = 15183, upload-time = "2025-01-30T07:30:48.667Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7d/a7/1f5ea492f6b441fa84157608608a8d211bea322ecc0957e738b83e22cb0c/mkdocs_git_committers_plugin_2-2.4.1-py3-none-any.whl", hash = "sha256:ec9c1d81445606c471337d1c4a1782c643b7377077b545279dc18b86b7362c6d", size = 11614, upload-time = "2024-10-04T17:18:42.389Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/f5/768590251839a148c188d64779b809bde0e78a306295c18fc29d7fc71ce1/mkdocs_git_committers_plugin_2-2.5.0-py3-none-any.whl", hash = "sha256:1778becf98ccdc5fac809ac7b62cf01d3c67d6e8432723dffbb823307d1193c4", size = 11788, upload-time = "2025-01-30T07:30:45.748Z" },
 ]
 
 [[package]]
@@ -1977,7 +1977,7 @@ dev = [
     { name = "griffe-warnings-deprecated", specifier = "==1.1.*" },
     { name = "mike", specifier = "==2.1.*" },
     { name = "mkdocs-gen-files", specifier = "==0.5.*" },
-    { name = "mkdocs-git-committers-plugin-2", specifier = "==2.4.*" },
+    { name = "mkdocs-git-committers-plugin-2", specifier = "==2.5.*" },
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.5.*" },
@@ -2009,7 +2009,7 @@ docs = [
     { name = "griffe-warnings-deprecated", specifier = "==1.1.*" },
     { name = "mike", specifier = "==2.1.*" },
     { name = "mkdocs-gen-files", specifier = "==0.5.*" },
-    { name = "mkdocs-git-committers-plugin-2", specifier = "==2.4.*" },
+    { name = "mkdocs-git-committers-plugin-2", specifier = "==2.5.*" },
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.5.*" },
