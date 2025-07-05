@@ -38,7 +38,7 @@ test = [
     "pytest-timeout == 2.3.*",
     "trio == 0.27.0",          # for `pyfuture`
 ]
-tools = ["pre-commit == 4.0.1"]
+tools = ["pre-commit ==4.2.0"]
 "build-system" = [
     "setuptools >= 64",
     "setuptools-scm >= 8",
