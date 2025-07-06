@@ -1,9 +1,4 @@
 {
-  "lldb.rpcServer": {
-    "host": "127.0.0.1",
-    "port": 9552,
-    "token": "secret",
-  },
   "rust-analyzer.cargo.targetDir": true,
   "rust-analyzer.cargo.features": [
     "pytauri-core/__private",
