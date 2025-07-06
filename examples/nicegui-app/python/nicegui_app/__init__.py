@@ -7,7 +7,7 @@ from os import environ
 environ["_PYTAURI_DIST"] = "nicegui-app"
 
 import sys
-from typing import Callable
+from collections.abc import Callable
 
 import uvicorn
 from anyio.from_thread import start_blocking_portal
@@ -65,9 +65,9 @@ def app_setup_hook(front_server: FrontServer) -> Callable[[AppHandle], None]:
         app_handle = app_handle_
 
         webview_window_ = Manager.get_webview_window(app_handle, "main")
-        assert (
-            webview_window_ is not None
-        ), "you forgot to set the unvisible 'main' window in `tauri.conf.json`"
+        assert webview_window_ is not None, (
+            "you forgot to set the unvisible 'main' window in `tauri.conf.json`"
+        )
         global webview_window
         webview_window = webview_window_
 

@@ -529,7 +529,9 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
 
             @commands.command("foo_command")
-            async def my_command2(body: FooModel, app_handle: AppHandle) -> BarModel: ...
+            async def my_command2(
+                body: FooModel, app_handle: AppHandle
+            ) -> BarModel: ...
             ```
 
         This method internally calls [set_command][pytauri.Commands.set_command],

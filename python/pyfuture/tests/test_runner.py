@@ -73,8 +73,8 @@ async def test_runner_builder() -> None:
 
         # check result
         assert pyfuture, "unreachable"
-        assert (
-            pyfuture.result is mock_result
-        ), "runner didn't call `py_future.set_result`"
+        assert pyfuture.result is mock_result, (
+            "runner didn't call `py_future.set_result`"
+        )
 
     await main()

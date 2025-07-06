@@ -1,5 +1,3 @@
-# ruff: noqa: D102
-
 """This module provides [pytauri/tauri plugins](https://github.com/tauri-apps/plugins-workspace).
 
 Currently, it is distributed as part of the [`pytauri`](https://pypi.org/project/pytauri/) package on PyPI.
