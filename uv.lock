@@ -2014,7 +2014,7 @@ dev = [
     { name = "setuptools-scm", specifier = ">=8" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
     { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
-    { name = "trio", specifier = "==0.27.0" },
+    { name = "trio", specifier = "==0.30.0" },
     { name = "typos", specifier = "==1.34.0" },
 ]
 docs = [
@@ -2043,7 +2043,7 @@ test = [
     { name = "pytest", specifier = "==8.4.*" },
     { name = "pytest-cov", specifier = "==6.0.*" },
     { name = "pytest-timeout", specifier = "==2.4.*" },
-    { name = "trio", specifier = "==0.27.0" },
+    { name = "trio", specifier = "==0.30.0" },
 ]
 tools = [{ name = "pre-commit", specifier = "==4.2.0" }]
 workspaces = [
@@ -2456,7 +2456,7 @@ wheels = [
 
 [[package]]
 name = "trio"
-version = "0.27.0"
+version = "0.30.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
@@ -2467,9 +2467,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "sortedcontainers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/17/d1/a83dee5be404da7afe5a71783a33b8907bacb935a6dc8c69ab785e4a3eed/trio-0.27.0.tar.gz", hash = "sha256:1dcc95ab1726b2da054afea8fd761af74bad79bd52381b84eae408e983c76831", size = 568064, upload-time = "2024-10-16T23:29:23.432Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/c1/68d582b4d3a1c1f8118e18042464bb12a7c1b75d64d75111b297687041e3/trio-0.30.0.tar.gz", hash = "sha256:0781c857c0c81f8f51e0089929a26b5bb63d57f927728a5586f7e36171f064df", size = 593776, upload-time = "2025-04-21T00:48:19.507Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/83/ec3196c360afffbc5b342ead48d1eb7393dd74fa70bca75d33905a86f211/trio-0.27.0-py3-none-any.whl", hash = "sha256:68eabbcf8f457d925df62da780eff15ff5dc68fd6b367e2dde59f7aaf2a0b884", size = 481734, upload-time = "2024-10-16T23:29:21.459Z" },
+    { url = "https://files.pythonhosted.org/packages/69/8e/3f6dfda475ecd940e786defe6df6c500734e686c9cd0a0f8ef6821e9b2f2/trio-0.30.0-py3-none-any.whl", hash = "sha256:3bf4f06b8decf8d3cf00af85f40a89824669e2d033bb32469d34840edcfc22a5", size = 499194, upload-time = "2025-04-21T00:48:17.167Z" },
 ]
 
 [[package]]
