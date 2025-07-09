@@ -44,7 +44,7 @@ from pytauri.ffi import (
 from pytauri.ffi import (
     Emitter as _Emitter,
 )
-from pytauri.ipc import Commands
+from pytauri.ipc import Commands, State
 
 __all__ = [
     "EXT_MOD",
@@ -76,6 +76,7 @@ __all__ = [
     "RunEventType",
     "Size",
     "SizeType",
+    "State",
     "Theme",
     "Url",
     "WebviewEvent",

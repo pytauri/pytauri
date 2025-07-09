@@ -10,6 +10,7 @@ import sys
 from datetime import datetime
 from functools import partial
 from pathlib import Path
+from typing import Annotated
 
 from anyio import sleep
 from anyio.from_thread import start_blocking_portal
@@ -19,6 +20,7 @@ from pytauri import (
     AppHandle,
     Commands,
     Manager,
+    State,
     builder_factory,
     context_factory,
 )
@@ -49,7 +51,9 @@ async def timer_task(time_channel: Channel[Time]) -> None:
 
 @commands.command()
 async def start_timer(
-    body: JavaScriptChannelId[Time], webview_window: WebviewWindow
+    body: JavaScriptChannelId[Time],
+    webview_window: WebviewWindow,
+    async_tools: Annotated[AsyncTools, State()],
 ) -> None:
     """Starts a timer that sends the current time to the specified channel every second.
 
@@ -60,8 +64,6 @@ async def start_timer(
         None
     """
     time_channel = body.channel_on(webview_window.as_ref_webview())
-
-    async_tools = Manager.state(webview_window, AsyncTools)
     async_tools.task_group.start_soon(timer_task, time_channel)
 
 
