@@ -43,7 +43,7 @@ importers:
         version: 3.6.2
       pyright:
         specifier: ^1.1.400
-        version: 1.1.402
+        version: 1.1.403
       rollup:
         specifier: ^4.9.6
         version: 4.44.2
@@ -86,7 +86,7 @@ importers:
         version: 15.0.4
       typescript:
         specifier: ~5.6.2
-        version: 5.8.3
+        version: 5.6.3
       vite:
         specifier: ^6.1.6
         version: 6.1.6(@types/node@22.16.0)(terser@5.37.0)
@@ -108,7 +108,7 @@ importers:
     devDependencies:
       typescript:
         specifier: ~5.6.2
-        version: 5.8.3
+        version: 5.6.3
       vite:
         specifier: ^6.1.6
         version: 6.1.6(@types/node@22.16.0)(terser@5.37.0)
@@ -1073,8 +1073,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  pyright@1.1.402:
-    resolution: {integrity: sha512-DwzfZFTlqg9j7VDvwSIORmTsYL8awHMce8DaNV7n+M3KjD0wFEWBQrxSUX6N0pv2BJcKe1PKx+8x9yfJRQvqKQ==}
+  pyright@1.1.403:
+    resolution: {integrity: sha512-OyslngwxftKgNfbiyR8WDadUoLHDoinwUfbd50P1VBfLWkR5cro9R52qMQMpVI/LiSVpWbzunToR2NX7SanwmA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -1189,6 +1189,11 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
       typescript: '>=4.8.4 <5.9.0'
+
+  typescript@5.6.3:
+    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
 
   typescript@5.8.3:
     resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
@@ -2097,7 +2102,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  pyright@1.1.402:
+  pyright@1.1.403:
     optionalDependencies:
       fsevents: 2.3.3
 
@@ -2221,6 +2226,8 @@ snapshots:
       typescript: 5.8.3
     transitivePeerDependencies:
       - supports-color
+
+  typescript@5.6.3: {}
 
   typescript@5.8.3: {}
 
