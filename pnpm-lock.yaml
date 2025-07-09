@@ -43,7 +43,7 @@ importers:
         version: 3.6.2
       pyright:
         specifier: ^1.1.400
-        version: 1.1.402
+        version: 1.1.403
       rollup:
         specifier: ^4.9.6
         version: 4.44.2
@@ -1073,8 +1073,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  pyright@1.1.402:
-    resolution: {integrity: sha512-DwzfZFTlqg9j7VDvwSIORmTsYL8awHMce8DaNV7n+M3KjD0wFEWBQrxSUX6N0pv2BJcKe1PKx+8x9yfJRQvqKQ==}
+  pyright@1.1.403:
+    resolution: {integrity: sha512-OyslngwxftKgNfbiyR8WDadUoLHDoinwUfbd50P1VBfLWkR5cro9R52qMQMpVI/LiSVpWbzunToR2NX7SanwmA==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -2102,7 +2102,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  pyright@1.1.402:
+  pyright@1.1.403:
     optionalDependencies:
       fsevents: 2.3.3
 
