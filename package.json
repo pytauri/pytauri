@@ -9,7 +9,7 @@
     "scripts": {},
     "devDependencies": {
         "eslint": "^9.10.0",
-        "eslint-config-prettier": "^9.1.0",
+        "eslint-config-prettier": "^10.0.0",
         "eslint-plugin-security": "^3.0.1",
         "typescript-eslint": "^8.6.0",
         "prettier": "^3.3.3",
