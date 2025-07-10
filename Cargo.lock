@@ -3282,6 +3282,7 @@ version = "0.7.0"
 dependencies = [
  "pyo3",
  "pyo3-utils",
+ "serde_json",
  "tauri",
  "tauri-plugin-dialog",
  "tauri-plugin-notification",

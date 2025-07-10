@@ -26,6 +26,9 @@ tauri = { workspace = true, features = ["wry", "tray-icon"] }
 tauri-plugin-notification = { workspace = true, optional = true }
 tauri-plugin-dialog = { workspace = true, optional = true }
 
+# TODO: remove this
+serde_json = { workspace = true }
+
 pyo3 = { workspace = true }
 
 # workspace dependencies

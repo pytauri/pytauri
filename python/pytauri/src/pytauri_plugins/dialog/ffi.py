@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Callable, Optional, Union, final
 
 from pytauri import ImplManager
 from pytauri.ffi._typing import Pyo3Path, StrictPyo3Path
+from pytauri.plugin import Plugin
 from pytauri.webview import WebviewWindow
 from typing_extensions import Self, TypeAlias, TypeAliasType, TypedDict, Unpack
 
@@ -33,6 +34,7 @@ __all__ = [
     "MessageDialogButtons",
     "MessageDialogButtonsType",
     "MessageDialogKind",
+    "init",
 ]
 
 if PLUGIN_DIALOG:
@@ -51,6 +53,10 @@ FilePath = TypeAliasType("FilePath", StrictPyo3Path)
 """[tauri_plugin_dialog::FilePath](https://docs.rs/tauri-plugin-dialog/latest/tauri_plugin_dialog/enum.FilePath.html)"""
 
 if TYPE_CHECKING:
+
+    def init() -> Plugin:
+        """[tauri_plugin_dialog::init](https://docs.rs/tauri-plugin-dialog/latest/tauri_plugin_dialog/fn.init.html)"""
+        ...
 
     @final
     class MessageDialogButtons:
@@ -172,6 +178,7 @@ if TYPE_CHECKING:
         def file(slf: "ImplDialogExt", /) -> FileDialogBuilder: ...
 
 else:
+    init = _dialog_mod.init
     MessageDialogButtons = _dialog_mod.MessageDialogButtons
     MessageDialogKind = _dialog_mod.MessageDialogKind
     MessageDialogBuilder = _dialog_mod.MessageDialogBuilder

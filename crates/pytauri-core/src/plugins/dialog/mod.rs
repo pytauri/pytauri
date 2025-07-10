@@ -16,7 +16,7 @@ use tauri::Manager as _;
 use tauri_plugin_dialog::{self as plugin, DialogExt as _};
 
 use crate::{
-    ext_mod::{manager_method_impl, webview::WebviewWindow, ImplManager},
+    ext_mod::{manager_method_impl, plugin::Plugin, webview::WebviewWindow, ImplManager},
     tauri_runtime::Runtime,
     utils::{PyResultExt as _, TauriError},
 };
@@ -64,6 +64,12 @@ impl From<plugin::Error> for PluginError {
 // }
 // ```
 type HasWindowHandleAndHasDisplayHandle = Py<WebviewWindow>;
+
+/// See also: [tauri_plugin_dialog::init]
+#[pyfunction]
+pub fn init() -> Plugin {
+    Plugin::new(|| Box::new(plugin::init::<Runtime>()))
+}
 
 /// See also: [tauri_plugin_dialog::MessageDialogButtons]
 #[pyclass(frozen)]
@@ -648,7 +654,8 @@ impl DialogExt {
 pub mod dialog {
     #[pymodule_export]
     pub use super::{
-        DialogExt, FileDialogBuilder, MessageDialogBuilder, MessageDialogButtons, MessageDialogKind,
+        init, DialogExt, FileDialogBuilder, MessageDialogBuilder, MessageDialogButtons,
+        MessageDialogKind,
     };
 
     pub use super::{FileDialogBuilderArgs, FilePath, ImplDialogExt, MessageDialogBuilderArgs};
