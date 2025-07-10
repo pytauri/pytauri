@@ -11,6 +11,7 @@ from pytauri_plugins.dialog.ffi import (
     MessageDialogButtons,
     MessageDialogButtonsType,
     MessageDialogKind,
+    init,
 )
 
 __all__ = [
@@ -24,4 +25,5 @@ __all__ = [
     "MessageDialogButtons",
     "MessageDialogButtonsType",
     "MessageDialogKind",
+    "init",
 ]

@@ -11,6 +11,7 @@ use crate::{
     ext_mod::{
         image::Image,
         menu::{Menu, MenuEvent},
+        plugin::{BoxedPluginWrapper, Plugin},
         tray::{TrayIcon, TrayIconEvent},
         Theme,
     },
@@ -64,6 +65,13 @@ impl AppHandle {
                     });
                 })
             })
+        })
+    }
+
+    fn plugin(&self, py: Python<'_>, plugin: Py<Plugin>) -> PyResult<()> {
+        py.allow_threads(|| {
+            let plugin = plugin.get().into_tauri()??;
+            delegate_inner!(self, plugin, BoxedPluginWrapper(plugin))
         })
     }
 

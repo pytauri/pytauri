@@ -215,7 +215,7 @@ class RunnerBuilder:
 
         return self
 
-    async def __aexit__(self, *exc_info: Any) -> bool:
+    async def __aexit__(self, *exc_info: Any) -> Optional[bool]:
         return await self._exit_stack.__aexit__(*exc_info)
 
     def build(self, runner_cls: type[_RunnerTypeVar]) -> _RunnerTypeVar:

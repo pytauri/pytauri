@@ -24,6 +24,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
+from pytauri_plugins import dialog, notification
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
 
@@ -151,6 +152,7 @@ def main() -> int:
         app = builder_factory().build(
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),
+            plugins=(dialog.init(), notification.init()),
         )
         exit_code = app.run_return()
         return exit_code
