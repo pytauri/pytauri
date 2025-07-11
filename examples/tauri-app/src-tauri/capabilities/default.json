@@ -9,6 +9,7 @@
     "pytauri:default",
     "notification:default",
     "dialog:default",
-    "clipboard-manager:default"
+    "clipboard-manager:default",
+    "fs:default"
   ]
 }

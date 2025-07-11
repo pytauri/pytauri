@@ -36,8 +36,10 @@ pytauri = { workspace = true, features = [
     "plugin-notification",
     "plugin-dialog",
     "plugin-clipboard-manager",
+    "plugin-fs",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
 tauri-plugin-dialog = { workspace = true }
 tauri-plugin-clipboard-manager = { workspace = true }
+tauri-plugin-fs = { workspace = true, features = ["watch"] }

@@ -3,7 +3,8 @@
 
 [package]
 name = "pytauri-wheel"
-version = "0.7.0" # ❗ when bumping, remember to update workspace dependencies
+# ❗ when bumping, remember to update workspace dependencies
+version = "0.7.0"
 description = "Precompiled wheels for PyTauri"
 authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 edition = "2021"
@@ -40,7 +41,7 @@ tauri-utils = { version = "~2.4", features = [
 tauri-plugin-opener = { version = "2.3.0" }
 tauri-plugin-clipboard-manager = { version = "2.2.3" }
 tauri-plugin-dialog = { version = "2.2.2" }
-tauri-plugin-fs = { version = "2.3.0" }
+tauri-plugin-fs = { version = "2.3.0", features = ["watch"] }
 tauri-plugin-notification = { version = "2.2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
@@ -51,6 +52,11 @@ pyo3 = { version = "0.25" }
 # ❗ when bumping, remember to update workspace dependencies.
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
-pytauri = { version = "0.7", features = ["plugin-notification", "plugin-dialog"] }
+pytauri = { version = "0.7", features = [
+    "plugin-notification",
+    "plugin-dialog",
+    "plugin-clipboard-manager",
+    "plugin-fs",
+] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

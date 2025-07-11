@@ -2,6 +2,8 @@
 mod clipboard_manager;
 #[cfg(feature = "plugin-dialog")]
 mod dialog;
+#[cfg(feature = "plugin-fs")]
+mod fs;
 #[cfg(feature = "plugin-notification")]
 mod notification;
 
@@ -27,6 +29,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_CLIPBOARD_MANAGER: bool = cfg!(feature = "plugin-clipboard-manager");
 
+    /// Whether the `plugin-fs` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_FS: bool = cfg!(feature = "plugin-fs");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -38,4 +44,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-clipboard-manager")]
     #[pymodule_export]
     pub use clipboard_manager::clipboard_manager;
+
+    #[cfg(feature = "plugin-fs")]
+    #[pymodule_export]
+    pub use fs::fs;
 }

@@ -11,6 +11,7 @@
         "pytauri/plugin-notification",
         "pytauri/plugin-dialog",
         "pytauri/plugin-clipboard-manager",
+        "pytauri/plugin-fs",
         "pyo3-utils/unstable",
     ],
 }

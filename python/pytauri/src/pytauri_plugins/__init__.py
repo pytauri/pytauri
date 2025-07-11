@@ -10,7 +10,9 @@ from typing import Final
 from pytauri import EXT_MOD
 
 __all__ = [
+    "PLUGIN_CLIPBOARD_MANAGER",
     "PLUGIN_DIALOG",
+    "PLUGIN_FS",
     "PLUGIN_NOTIFICATION",
 ]
 
@@ -22,3 +24,5 @@ PLUGIN_DIALOG: Final[bool] = _pytauri_plugins_mod.PLUGIN_DIALOG
 """Whether the `plugin-dialog` feature is enabled."""
 PLUGIN_CLIPBOARD_MANAGER: Final[bool] = _pytauri_plugins_mod.PLUGIN_CLIPBOARD_MANAGER
 """Whether the `plugin-clipboard-manager` feature is enabled."""
+PLUGIN_FS: Final[bool] = _pytauri_plugins_mod.PLUGIN_FS
+"""Whether the `plugin-fs` feature is enabled."""

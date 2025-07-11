@@ -26,6 +26,7 @@ tauri = { workspace = true, features = ["wry", "tray-icon"] }
 tauri-plugin-notification = { workspace = true, optional = true }
 tauri-plugin-dialog = { workspace = true, optional = true }
 tauri-plugin-clipboard-manager = { workspace = true, optional = true }
+tauri-plugin-fs = { workspace = true, optional = true }
 
 # TODO: remove this
 serde_json = { workspace = true }
@@ -44,3 +45,4 @@ __no_test = []          # for allowing use `--all-features` without running test
 plugin-notification = ["dep:tauri-plugin-notification"]
 plugin-dialog = ["dep:tauri-plugin-dialog"]
 plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
+plugin-fs = ["dep:tauri-plugin-fs"]
