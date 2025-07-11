@@ -3286,6 +3286,7 @@ dependencies = [
  "tauri",
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
+ "tauri-plugin-fs",
  "tauri-plugin-notification",
 ]
 
@@ -4230,6 +4231,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
+ "tauri-plugin-fs",
  "tauri-plugin-notification",
  "tauri-plugin-opener",
  "tauri-plugin-pytauri",
