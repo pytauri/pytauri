@@ -8,6 +8,7 @@
     "opener:default",
     "pytauri:default",
     "notification:default",
-    "dialog:default"
+    "dialog:default",
+    "clipboard-manager:default"
   ]
 }

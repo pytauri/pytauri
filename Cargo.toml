@@ -27,9 +27,11 @@ tauri = { version = "2.5.1" }
 tauri-build = { version = "2.2" }
 tauri-plugin = { version = "2.2" }
 
-tauri-plugin-notification = { version = "2.2.3" }
 tauri-plugin-opener = { version = "2.3.0" }
+tauri-plugin-clipboard-manager = { version = "2.2.3" }
 tauri-plugin-dialog = { version = "2.2.2" }
+tauri-plugin-fs = { version = "2.3.0" }
+tauri-plugin-notification = { version = "2.2.3" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }
