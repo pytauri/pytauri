@@ -20,3 +20,5 @@ PLUGIN_NOTIFICATION: Final[bool] = _pytauri_plugins_mod.PLUGIN_NOTIFICATION
 """Whether the `plugin-notification` feature is enabled."""
 PLUGIN_DIALOG: Final[bool] = _pytauri_plugins_mod.PLUGIN_DIALOG
 """Whether the `plugin-dialog` feature is enabled."""
+PLUGIN_CLIPBOARD_MANAGER: Final[bool] = _pytauri_plugins_mod.PLUGIN_CLIPBOARD_MANAGER
+"""Whether the `plugin-clipboard-manager` feature is enabled."""

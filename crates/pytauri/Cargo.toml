@@ -25,6 +25,7 @@ standalone = ["dep:libc", "dep:dunce"]
 
 plugin-notification = ["pytauri-core/plugin-notification"]
 plugin-dialog = ["pytauri-core/plugin-dialog"]
+plugin-clipboard-manager = ["pytauri-core/plugin-clipboard-manager"]
 
 
 [dependencies]
