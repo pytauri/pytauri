@@ -9,7 +9,7 @@ use tauri_plugin_fs::{self as plugin};
 use crate::{ext_mod::plugin::Plugin, tauri_runtime::Runtime, utils::TauriError};
 
 #[derive(Debug)]
-struct PluginError(plugin::Error);
+pub(crate) struct PluginError(plugin::Error);
 
 impl Display for PluginError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
@@ -22,13 +22,15 @@ impl Error for PluginError {}
 impl From<PluginError> for PyErr {
     fn from(value: PluginError) -> Self {
         match value.0 {
-            plugin::Error::Json(e) => PyRuntimeError::new_err(e.to_string()),
             plugin::Error::Tauri(e) => TauriError::from(e).into(),
             plugin::Error::Io(e) => e.into(),
-            plugin::Error::PathForbidden(path) => PyRuntimeError::new_err(("PathForbidden", path)),
-            plugin::Error::GlobPattern(e) => PyRuntimeError::new_err(e.to_string()),
-            plugin::Error::InvalidPathUrl => PyRuntimeError::new_err("InvalidPathUrl"),
-            plugin::Error::UnsafePathBuf(msg) => PyRuntimeError::new_err(("UnsafePathBuf", msg)),
+            e @ (
+                plugin::Error::Json(_)
+                | plugin::Error::PathForbidden(_)
+                | plugin::Error::GlobPattern(_)
+                | plugin::Error::InvalidPathUrl
+                | plugin::Error::UnsafePathBuf(_)
+            ) => PyRuntimeError::new_err(e.to_string()),
             non_exhaustive => PyRuntimeError::new_err(format!(
                 "Unimplemented plugin error, please report this to the pytauri developers: {non_exhaustive}"
             )),
@@ -53,4 +55,6 @@ pub fn init() -> Plugin {
 pub mod fs {
     #[pymodule_export]
     pub use super::init;
+
+    pub(crate) use super::PluginError;
 }

@@ -22,8 +22,8 @@ impl Error for PluginError {}
 impl From<PluginError> for PyErr {
     fn from(value: PluginError) -> Self {
         match value.0 {
-            plugin::Error::Clipboard(e) => PyRuntimeError::new_err(e),
             plugin::Error::Tauri(e) => TauriError::from(e).into(),
+            e @ plugin::Error::Clipboard(_) => PyRuntimeError::new_err(e.to_string()),
         }
     }
 }
