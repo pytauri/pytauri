@@ -24,7 +24,7 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
-from pytauri_plugins import clipboard_manager, dialog, fs, notification
+from pytauri_plugins import clipboard_manager, dialog, fs, notification, opener
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
 
@@ -157,6 +157,7 @@ def main() -> int:
                 notification.init(),
                 clipboard_manager.init(),
                 fs.init(),
+                opener.init(),
             ),
         )
         exit_code = app.run_return()

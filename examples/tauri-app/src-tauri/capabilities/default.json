@@ -5,11 +5,11 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default",
     "pytauri:default",
     "notification:default",
     "dialog:default",
     "clipboard-manager:default",
-    "fs:default"
+    "fs:default",
+    "opener:default"
   ]
 }

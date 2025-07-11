@@ -27,6 +27,7 @@ tauri-plugin-notification = { workspace = true, optional = true }
 tauri-plugin-dialog = { workspace = true, optional = true }
 tauri-plugin-clipboard-manager = { workspace = true, optional = true }
 tauri-plugin-fs = { workspace = true, optional = true }
+tauri-plugin-opener = { workspace = true, optional = true }
 
 # TODO: remove this
 serde_json = { workspace = true }
@@ -46,3 +47,4 @@ plugin-notification = ["dep:tauri-plugin-notification"]
 plugin-dialog = ["dep:tauri-plugin-dialog"]
 plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
 plugin-fs = ["dep:tauri-plugin-fs"]
+plugin-opener = ["dep:tauri-plugin-opener"]
