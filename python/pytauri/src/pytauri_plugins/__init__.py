@@ -14,6 +14,7 @@ __all__ = [
     "PLUGIN_DIALOG",
     "PLUGIN_FS",
     "PLUGIN_NOTIFICATION",
+    "PLUGIN_OPENER",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -26,3 +27,5 @@ PLUGIN_CLIPBOARD_MANAGER: Final[bool] = _pytauri_plugins_mod.PLUGIN_CLIPBOARD_MA
 """Whether the `plugin-clipboard-manager` feature is enabled."""
 PLUGIN_FS: Final[bool] = _pytauri_plugins_mod.PLUGIN_FS
 """Whether the `plugin-fs` feature is enabled."""
+PLUGIN_OPENER: Final[bool] = _pytauri_plugins_mod.PLUGIN_OPENER
+"""Whether the `plugin-opener` feature is enabled."""

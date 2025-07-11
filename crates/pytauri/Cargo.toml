@@ -27,6 +27,7 @@ plugin-notification = ["pytauri-core/plugin-notification"]
 plugin-dialog = ["pytauri-core/plugin-dialog"]
 plugin-clipboard-manager = ["pytauri-core/plugin-clipboard-manager"]
 plugin-fs = ["pytauri-core/plugin-fs"]
+plugin-opener = ["pytauri-core/plugin-opener"]
 
 
 [dependencies]

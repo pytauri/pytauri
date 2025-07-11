@@ -27,7 +27,6 @@ tauri-build = { workspace = true }
 
 [dependencies]
 tauri = { workspace = true }
-tauri-plugin-opener = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
@@ -37,9 +36,11 @@ pytauri = { workspace = true, features = [
     "plugin-dialog",
     "plugin-clipboard-manager",
     "plugin-fs",
+    "plugin-opener",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
 tauri-plugin-dialog = { workspace = true }
 tauri-plugin-clipboard-manager = { workspace = true }
 tauri-plugin-fs = { workspace = true, features = ["watch"] }
+tauri-plugin-opener = { workspace = true }

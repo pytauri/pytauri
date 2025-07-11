@@ -6,6 +6,8 @@ mod dialog;
 mod fs;
 #[cfg(feature = "plugin-notification")]
 mod notification;
+#[cfg(feature = "plugin-opener")]
+mod opener;
 
 use pyo3::prelude::*;
 
@@ -33,6 +35,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_FS: bool = cfg!(feature = "plugin-fs");
 
+    /// Whether the `plugin-opener` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_OPENER: bool = cfg!(feature = "plugin-opener");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -48,4 +54,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-fs")]
     #[pymodule_export]
     pub use fs::fs;
+
+    #[cfg(feature = "plugin-opener")]
+    #[pymodule_export]
+    pub use opener::opener;
 }
