@@ -203,7 +203,7 @@ impl Error for PyAppHandleStateError {}
 
 impl From<PyAppHandleStateError> for PyErr {
     fn from(value: PyAppHandleStateError) -> Self {
-        PyRuntimeError::new_err(format!("{value}"))
+        PyRuntimeError::new_err(value.to_string())
     }
 }
 
