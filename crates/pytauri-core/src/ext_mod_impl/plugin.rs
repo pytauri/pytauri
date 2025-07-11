@@ -27,9 +27,11 @@ impl Plugin {
     }
 }
 
-// TODO: remove this
+// TODO: remove this struct after we upstream it to tauri
+#[cfg(feature = "__private")]
 pub struct BoxedPluginWrapper(pub BoxedPlugin);
 
+#[cfg(feature = "__private")]
 impl plugin::Plugin<Runtime> for BoxedPluginWrapper {
     fn name(&self) -> &'static str {
         self.0.name()
