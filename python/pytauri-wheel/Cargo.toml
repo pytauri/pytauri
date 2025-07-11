@@ -57,6 +57,7 @@ pytauri = { version = "0.7", features = [
     "plugin-dialog",
     "plugin-clipboard-manager",
     "plugin-fs",
+    "plugin-opener",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

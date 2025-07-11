@@ -12,6 +12,7 @@
         "pytauri/plugin-dialog",
         "pytauri/plugin-clipboard-manager",
         "pytauri/plugin-fs",
+        "pytauri/plugin-opener",
         "pyo3-utils/unstable",
     ],
 }
