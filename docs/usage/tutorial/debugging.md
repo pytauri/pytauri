@@ -117,6 +117,6 @@ Start your app:
 
 When you see the `"Waiting for debugger to attach..."` output, you can attach the `Python Debugger` to your app to start debugging Python code:
 
-![debug-py](https://github.com/user-attachments/assets/30f7ce76-ba87-4396-a8a3-f3dc51948602)
+![debugging](https://github.com/user-attachments/assets/d8d3763d-0285-4265-b071-8cdcd5921efa)
 
 The `CodeLLDB` debugger will automatically attach to your app; you do not need to start it manually.

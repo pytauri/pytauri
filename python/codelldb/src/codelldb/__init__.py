@@ -64,7 +64,7 @@ def debug(host: str, port: int, token: Optional[str] = None) -> None:
     # Line-oriented YAML Syntax: <https://github.com/vadimcn/codelldb/blob/v1.10.0/MANUAL.md#debugging-externally-launched-code>
     # Arg: <https://github.com/vadimcn/codelldb/blob/v1.10.0/MANUAL.md#attaching-to-a-running-process>
     rpc_data = dedent(f"""\
-        name: "rust.debug"
+        name: "CodeLLDB: Attach to Process"
         type: "lldb"
         request: "attach"
         pid: {getpid()}
