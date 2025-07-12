@@ -2421,6 +2421,7 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "codelldb" },
     { name = "debugpy" },
 ]
 
@@ -2432,7 +2433,10 @@ requires-dist = [
 ]
 
 [package.metadata.requires-dev]
-dev = [{ name = "debugpy", specifier = "==1.*" }]
+dev = [
+    { name = "codelldb", editable = "python/codelldb" },
+    { name = "debugpy", specifier = "==1.*" },
+]
 
 [[package]]
 name = "tauri-app-wheel"

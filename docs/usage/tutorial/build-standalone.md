@@ -1,4 +1,4 @@
-# Build standalone binary
+# Build Standalone Binary
 
 pytauri can be distributed as a Python wheel or compiled into a standalone executable (a regular Tauri application).
 

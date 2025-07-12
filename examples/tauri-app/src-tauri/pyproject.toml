@@ -6,7 +6,7 @@ requires-python = ">=3.9"
 dependencies = ["pytauri == 0.1.*", "pydantic == 2.*", "anyio == 4.*"]
 
 [dependency-groups]
-dev = ["debugpy == 1.*"]
+dev = ["debugpy == 1.*", "codelldb"]
 
 [project.entry-points.pytauri]
 # - "tauri_app" -> `python/tauri_app/`
@@ -42,3 +42,4 @@ include = [{ path = "frontend/**/*", format = "sdist" }]
 
 [tool.uv.sources]
 pytauri = { workspace = true }
+codelldb = { workspace = true }

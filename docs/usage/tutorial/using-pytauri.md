@@ -1,4 +1,4 @@
-# Using pytauri
+# Using PyTauri
 
 !!! note
     The dependency versions specified in the following tutorial are the versions at the time of writing. There may be newer versions available when you use it.
@@ -69,26 +69,11 @@ uv pip install -e src-tauri
 Add following code:
 
 ```python title="src-tauri/python/tauri_app/__init__.py"
-"""The tauri-app."""
-
-from pytauri import (
-    builder_factory,
-    context_factory,
-)
-
-
-def main() -> int:
-    """Run the tauri-app."""
-    app = builder_factory().build(
-        context=context_factory(),
-        invoke_handler=None,  # TODO
-    )
-    exit_code = app.run_return()
-    return exit_code
+--8<-- "docs_src/tutorial/using_pytauri/__init__.py"
 ```
 
 ```python title="src-tauri/python/tauri_app/__main__.py"
---8<-- "examples/tauri-app/src-tauri/python/tauri_app/__main__.py"
+--8<-- "docs_src/tutorial/using_pytauri/__main__.py"
 ```
 
 ## Run pytauri from rust
@@ -131,43 +116,11 @@ Also, enable the `pytauri/standalone` feature:
 Change following rust code:
 
 ```rust title="src-tauri/src/lib.rs"
-use pyo3::prelude::*;
-
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-pub fn tauri_generate_context() -> tauri::Context {
-    tauri::generate_context!()
-}
-
-#[pymodule(gil_used = false)]
-#[pyo3(name = "ext_mod")]
-pub mod ext_mod {
-    use super::*;
-
-    #[pymodule_init]
-    fn init(module: &Bound<'_, PyModule>) -> PyResult<()> {
-        pytauri::pymodule_export(
-            module,
-            // i.e., `context_factory` function of python binding
-            |_args, _kwargs| Ok(tauri_generate_context()),
-            // i.e., `builder_factory` function of python binding
-            |_args, _kwargs| {
-                let builder = tauri::Builder::default()
-                    .plugin(tauri_plugin_opener::init())
-                    .invoke_handler(tauri::generate_handler![greet]);
-                Ok(builder)
-            },
-        )
-    }
-}
+--8<-- "docs_src/tutorial/using_pytauri/lib.rs"
 ```
 
 ```rust title="src-tauri/src/main.rs"
---8<-- "examples/tauri-app/src-tauri/src/main.rs"
+--8<-- "docs_src/tutorial/using_pytauri/main.rs"
 ```
 
 ## Launch the app in dev mode
@@ -183,15 +136,7 @@ __pycache__
 Also, we need tell `vite` to ignore `.venv`:
 
 ```ts title="vite.config.ts"
-// https://vitejs.dev/config/
-export default defineConfig(async () => ({
-  server: {
-    watch: {
-      // 3. tell vite to ignore watching `src-tauri`
-      ignored: ["**/src-tauri/**", "**/.venv/**"],
-    },
-  },
-}));
+--8<-- "docs_src/tutorial/using_pytauri/vite.config.ts"
 ```
 
 Run `#!bash pnpm tauri dev`, and after recompiling, you will see a window similar to the previous step.

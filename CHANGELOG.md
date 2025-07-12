@@ -259,7 +259,7 @@ For details, compare the [`v0.5`](https://pytauri.github.io/pytauri/0.5/usage/tu
     ```
 
     ```diff
-    # src-tauri/python/__init__.py
+    # src-tauri/python/tauri_app/__init__.py
 
     -from pytauri_plugin_notification import NotificationExt
     +from pytauri_plugins.notification import NotificationExt

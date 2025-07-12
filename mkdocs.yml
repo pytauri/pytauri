@@ -236,9 +236,10 @@ nav:
           - usage/tutorial/py-js-ipc.md
           - usage/tutorial/gen-ts.md
           - usage/tutorial/using-plugins.md
+          - usage/tutorial/debugging.md
           - usage/tutorial/build-sdist.md
           - usage/tutorial/build-wheel.md
-          - Build standalone binary:
+          - Build Standalone Binary:
               - usage/tutorial/build-standalone.md
               - usage/tutorial/build-standalone-cython.md
       - PyTauri Wheel:

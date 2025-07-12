@@ -1,4 +1,4 @@
-# Using tauri plugins
+# Using Tauri Plugins
 
 The Tauri team and community have developed some [plugins](https://tauri.app/plugin/), you can use them by:
 
@@ -47,6 +47,6 @@ The PyTauri API maps very well to the original Rust API of the plugin. You can r
     `pytauri_plugins` is distributed as part of the [`pytauri`](https://pypi.org/project/pytauri/) package on PyPI.
     Therefore, running `pip install pytauri` will also install it.
 
-```python title="src-tauri/python/__init__.py"
+```python title="src-tauri/python/tauri_app/__init__.py"
 --8<-- "docs_src/tutorial/plugin.py"
 ```
