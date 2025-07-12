@@ -1,15 +1,8 @@
 """[tauri::ipc](https://docs.rs/tauri/latest/tauri/ipc/index.html)"""
 
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Generic,
-    Optional,
-    Union,
-    final,
-)
+from typing import TYPE_CHECKING, Annotated, Any, Generic, Optional, Union, final
 
-from typing_extensions import ReadOnly, TypeAliasType, TypedDict, TypeVar
+from typing_extensions import TypeAliasType, TypedDict, TypeVar
 
 from pytauri.ffi._ext_mod import pytauri_mod
 
@@ -21,6 +14,8 @@ __all__ = [
     "InvokeResolver",
     "JavaScriptChannelId",
     "ParametersType",
+    "ResolvedArgumentsType",
+    "State",
 ]
 
 _ipc_mod = pytauri_mod.ipc
@@ -56,31 +51,29 @@ Headers = TypeAliasType("Headers", list[tuple[bytes, bytes]])
 """
 
 
-class ParametersType(TypedDict, total=False):
+class State:
+    pass
+
+
+class ParametersType(TypedDict, total=False, closed=True):
     """The parameters of a command.
 
     All keys are optional, and values can be of any type.
     If a key exists, it will be assigned a value corresponding to [ArgumentsType][pytauri.ffi.ipc.ArgumentsType].
     """
 
-    body: ReadOnly[Any]
+    body: Any
     """Whatever. We just use the `key`, not the `value`."""
-    app_handle: ReadOnly[Any]
+    app_handle: Any
     """Whatever. We just use the `key`, not the `value`."""
-    webview_window: ReadOnly[Any]
+    webview_window: Any
     """Whatever. We just use the `key`, not the `value`."""
-    headers: ReadOnly[Any]
+    headers: Any
     """Whatever. We just use the `key`, not the `value`."""
+    states: dict[str, type[Any]]
 
 
-class ArgumentsType(TypedDict, total=False):
-    """The bound arguments of a command.
-
-    Each key is optional, depending on the keys of the bound [ParametersType][pytauri.ffi.ipc.ParametersType].
-
-    You can use it like `**kwargs`, for example `command(**arguments)`.
-    """
-
+class _BaseArgumentsType(TypedDict, total=False):
     body: bytes
     """The body of this ipc message."""
     app_handle: "AppHandle"
@@ -91,7 +84,20 @@ class ArgumentsType(TypedDict, total=False):
     """The headers of this ipc message."""
 
 
-_ArgumentsTypeVar = TypeVar("_ArgumentsTypeVar", default=dict[str, Any])
+class ResolvedArgumentsType(_BaseArgumentsType, total=False):
+    states: dict[str, Annotated[Any, State()]]
+
+
+class ArgumentsType(TypedDict, total=False, extra_items=Annotated[Any, State()]):
+    """The bound arguments of a command.
+
+    Each key is optional, depending on the keys of the bound [ParametersType][pytauri.ffi.ipc.ParametersType].
+
+    You can use it like `**kwargs`, for example `command(**arguments)`.
+    """
+
+
+_ArgumentsTypeVar = TypeVar("_ArgumentsTypeVar", default=ResolvedArgumentsType)
 
 
 if TYPE_CHECKING:
