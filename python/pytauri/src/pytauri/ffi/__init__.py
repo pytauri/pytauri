@@ -7,6 +7,9 @@
 
 from pytauri.ffi._ext_mod import EXT_MOD
 from pytauri.ffi.lib import (
+    IS_DEV,
+    RESTART_EXIT_CODE,
+    VERSION,
     App,
     AppHandle,
     Assets,
@@ -42,10 +45,14 @@ from pytauri.ffi.lib import (
     WindowEventType,
     builder_factory,
     context_factory,
+    webview_version,
 )
 
 __all__ = (
     "EXT_MOD",
+    "IS_DEV",
+    "RESTART_EXIT_CODE",
+    "VERSION",
     "App",
     "AppHandle",
     "Assets",
@@ -81,4 +88,5 @@ __all__ = (
     "WindowEventType",
     "builder_factory",
     "context_factory",
+    "webview_version",
 )
