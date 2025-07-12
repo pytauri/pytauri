@@ -1,6 +1,5 @@
 from socket import socket
 from threading import Event
-from typing import Optional
 
 import uvicorn
 from typing_extensions import override
@@ -16,15 +15,15 @@ class FrontServer(uvicorn.Server):
         # NOTE: use `threading.Event` instead of `anyio.Event` for cross-thread communication
         self._startup_event = Event()
         self._shutdown_event = Event()
-        self._serve_exception: Optional[Exception] = None
+        self._serve_exception: Exception | None = None
 
     @property
-    def serve_exception(self) -> Optional[Exception]:
+    def serve_exception(self) -> Exception | None:
         """The exception raised during serving the application."""
         return self._serve_exception
 
     @override
-    async def startup(self, sockets: Optional[list[socket]] = None) -> None:
+    async def startup(self, sockets: list[socket] | None = None) -> None:
         """Set the startup event after the server is started."""
         await super().startup(sockets)
         self._startup_event.set()

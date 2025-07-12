@@ -1,5 +1,3 @@
-# ruff: noqa: D102
-
 """[tauri::window](https://docs.rs/tauri/latest/tauri/window/index.html)"""
 
 from typing import (
