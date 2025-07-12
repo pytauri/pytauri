@@ -1,4 +1,4 @@
-# Using multiprocessing
+# Using Multiprocessing
 
 When building as a `standalone` app, `pytauri` will automatically configure the following to support the use of [multiprocessing][]:
 

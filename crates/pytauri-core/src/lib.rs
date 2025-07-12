@@ -35,7 +35,16 @@ pub mod ext_mod {
             CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent, WebviewEvent, WindowEvent,
         },
         theme::Theme,
+        webview_version,
     };
+    // TODO: constants defined outside a module and then re-exported are not supported,
+    // see <https://github.com/PyO3/pyo3/pull/5150#issuecomment-2889031243>.
+    #[pymodule_export]
+    pub const RESTART_EXIT_CODE: i32 = ext_mod_impl::lib::RESTART_EXIT_CODE;
+    #[pymodule_export]
+    pub const VERSION: &str = ext_mod_impl::lib::VERSION;
+    #[pymodule_export]
+    pub const IS_DEV: bool = ext_mod_impl::lib::IS_DEV;
 
     pub use ext_mod_impl::lib::{
         app_handle::{PyAppHandleExt, PyAppHandleStateError, PyAppHandleStateResult},

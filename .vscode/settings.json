@@ -1,15 +1,15 @@
 {
-  "lldb.rpcServer": {
-    "host": "127.0.0.1",
-    "port": 9552,
-    "token": "secret",
-  },
-  "rust-analyzer.cargo.targetDir": true,
-  "rust-analyzer.cargo.features": [
-    "pytauri-core/__private",
-    "pytauri/standalone",
-    "pytauri/plugin-notification",
-    "pytauri/plugin-dialog",
-    "pyo3-utils/unstable",
-  ],
+    "lldb.rpcServer": {
+        "host": "localhost",
+        "port": 9552,
+        "token": "secret",
+    },
+    "rust-analyzer.cargo.targetDir": true,
+    "rust-analyzer.cargo.features": [
+        "pytauri-core/__private",
+        "pytauri/standalone",
+        "pytauri/plugin-notification",
+        "pytauri/plugin-dialog",
+        "pyo3-utils/unstable",
+    ],
 }

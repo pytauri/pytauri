@@ -2,7 +2,7 @@
 name = "nicegui-app"
 version = "0.1.0"
 description = "Add your description here"
-# Although we use the `match` feature of py310,
+# TODO: Although we use the `match` feature of py310,
 # we still keep `requires-python = ">=3.9"` here,
 # otherwise it cannot be installed in the py39 CI job.
 requires-python = ">=3.9"
@@ -42,3 +42,10 @@ sdist-generator = "git"
 
 [tool.uv.sources]
 pytauri = { workspace = true }
+
+
+[tool.ruff]
+extend = "../../pyproject.toml"
+# TODO: We use the py310 `match` statement, but `requires-python >= 3.9`,
+# so we must tell ruff that we target py310.
+target-version = "py310"

@@ -10,6 +10,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
+    Final,
     NewType,
     NoReturn,
     Optional,
@@ -20,6 +21,7 @@ from typing import (
 
 from pydantic import NonNegativeInt
 from typing_extensions import (
+    LiteralString,
     Never,
     Required,
     Self,
@@ -32,6 +34,9 @@ from typing_extensions import (
 from pytauri.ffi._ext_mod import pytauri_mod
 
 __all__ = [
+    "IS_DEV",
+    "RESTART_EXIT_CODE",
+    "VERSION",
     "App",
     "AppHandle",
     "Assets",
@@ -67,6 +72,7 @@ __all__ = [
     "WindowEventType",
     "builder_factory",
     "context_factory",
+    "webview_version",
 ]
 
 if TYPE_CHECKING:
@@ -100,12 +106,36 @@ _AssetKey = TypeAliasType("_AssetKey", str)
 """[tauri::utils::assets::AssetKey](https://docs.rs/tauri-utils/latest/tauri_utils/assets/struct.AssetKey.html)"""
 
 
+RESTART_EXIT_CODE: Final[int] = pytauri_mod.RESTART_EXIT_CODE
+"""[tauri::RESTART_EXIT_CODE](https://docs.rs/tauri/latest/tauri/constant.RESTART_EXIT_CODE.html)
+
+The exit code on `RunEvent::ExitRequested` when `AppHandle` is called.
+"""
+VERSION: Final[LiteralString] = pytauri_mod.VERSION
+"""[tauri::VERSION](https://docs.rs/tauri/latest/tauri/constant.VERSION.html)
+
+The Tauri version.
+"""
+IS_DEV: Final[bool] = pytauri_mod.IS_DEV
+"""[tauri::is_dev](https://docs.rs/tauri/latest/tauri/fn.is_dev.html)
+
+Whether we are running in development mode or not.
+"""
+
+
 if TYPE_CHECKING:
     from pytauri.ffi.image import Image
     from pytauri.ffi.menu import Menu, MenuEvent
     from pytauri.ffi.path import PathResolver
     from pytauri.ffi.tray import TrayIcon, TrayIconEventType
     from pytauri.ffi.webview import WebviewWindow
+
+    def webview_version() -> str:
+        """[tauri::webview_version](https://docs.rs/tauri/latest/tauri/fn.webview_version.html)
+
+        Get WebView/Webkit version on current platform.
+        """
+        ...
 
     @final
     class App:
@@ -850,6 +880,7 @@ if TYPE_CHECKING:
 
 
 else:
+    webview_version = pytauri_mod.webview_version
     App = pytauri_mod.App
     AppHandle = pytauri_mod.AppHandle
     Builder = pytauri_mod.Builder

@@ -4,6 +4,10 @@
 
 ### Added
 
+- [#182](https://github.com/pytauri/pytauri/pull/182) - feat!: debugging tutorial.
+
+    Added `tauri::{IS_DEV, RESTART_EXIT_CODE, VERSION, webview_version}` for obtaining pytauri runtime configuration.
+
 - [#179](https://github.com/pytauri/pytauri/pull/179) - feat(pytauri): generate typescript client for IPC.
     - `pytauri.ipc.Commands`
         - `__init__(*, experimental_gen_ts)` parameter

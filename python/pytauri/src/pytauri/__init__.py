@@ -6,6 +6,9 @@ from pydantic import BaseModel
 
 from pytauri.ffi import (
     EXT_MOD,
+    IS_DEV,
+    RESTART_EXIT_CODE,
+    VERSION,
     App,
     AppHandle,
     Assets,
@@ -40,6 +43,7 @@ from pytauri.ffi import (
     WindowEventType,
     builder_factory,
     context_factory,
+    webview_version,
 )
 from pytauri.ffi import (
     Emitter as _Emitter,
@@ -48,6 +52,9 @@ from pytauri.ipc import Commands
 
 __all__ = [
     "EXT_MOD",
+    "IS_DEV",
+    "RESTART_EXIT_CODE",
+    "VERSION",
     "App",
     "AppHandle",
     "Assets",
@@ -84,6 +91,7 @@ __all__ = [
     "WindowEventType",
     "builder_factory",
     "context_factory",
+    "webview_version",
 ]
 
 

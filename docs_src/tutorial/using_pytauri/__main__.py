@@ -1,22 +1,5 @@
 """The main entry point for the Tauri app."""
 
-from os import environ
-
-if environ.get("PYTAURI_DEBUG_PY") == "1":
-    import debugpy  # pyright: ignore[reportMissingTypeStubs]
-
-    debugpy.listen(5678)
-    print("Waiting for debugger to attach...")
-    # debugpy.wait_for_client()
-
-
-if environ.get("PYTAURI_DEBUG_RS") == "1":
-    import codelldb
-
-    codelldb.debug(host="localhost", port=9552, token="secret")
-
-# -- main ---------------------------------------------------------------------
-
 import sys
 from multiprocessing import freeze_support
 

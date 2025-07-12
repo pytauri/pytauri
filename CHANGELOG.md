@@ -34,6 +34,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Debugging Tutorial
+
+> - [#182](https://github.com/pytauri/pytauri/pull/182) - feat!: debugging tutorial.
+
+See: <https://pytauri.github.io/pytauri/0.7/usage/tutorial/debugging>
+
+Also, we added `tauri::{IS_DEV, RESTART_EXIT_CODE, VERSION, webview_version}` for obtaining pytauri runtime configuration.
+
+![debugging](https://github.com/user-attachments/assets/d8d3763d-0285-4265-b071-8cdcd5921efa)
+
 #### Generate TypeScript Client for IPC
 
 > - [#179](https://github.com/pytauri/pytauri/pull/179) - feat(pytauri): generate typescript client for IPC.
@@ -259,7 +269,7 @@ For details, compare the [`v0.5`](https://pytauri.github.io/pytauri/0.5/usage/tu
     ```
 
     ```diff
-    # src-tauri/python/__init__.py
+    # src-tauri/python/tauri_app/__init__.py
 
     -from pytauri_plugin_notification import NotificationExt
     +from pytauri_plugins.notification import NotificationExt

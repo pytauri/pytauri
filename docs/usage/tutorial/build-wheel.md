@@ -1,4 +1,4 @@
-# Build python Wheel distribution
+# Build Python Wheel distribution
 
 Although you have built the sdist in the previous step and can build the wheel using `setuptools-rust`, take a look at the output wheel file name `tauri-app-0.1.0-cp39-cp39-linux_x86_64.whl`.
 
