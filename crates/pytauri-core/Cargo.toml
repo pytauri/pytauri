@@ -25,6 +25,12 @@ tauri = { workspace = true, features = ["wry", "tray-icon"] }
 # tauri plugins
 tauri-plugin-notification = { workspace = true, optional = true }
 tauri-plugin-dialog = { workspace = true, optional = true }
+tauri-plugin-clipboard-manager = { workspace = true, optional = true }
+tauri-plugin-fs = { workspace = true, optional = true }
+tauri-plugin-opener = { workspace = true, optional = true }
+
+# TODO: remove this
+serde_json = { workspace = true }
 
 pyo3 = { workspace = true }
 
@@ -38,4 +44,10 @@ __test = ["tauri/test"]
 __no_test = []          # for allowing use `--all-features` without running tests
 
 plugin-notification = ["dep:tauri-plugin-notification"]
-plugin-dialog = ["dep:tauri-plugin-dialog"]
+plugin-dialog = [
+    "dep:tauri-plugin-dialog",
+    "plugin-fs",               # `plugin-fs` just for `PluginError`
+]
+plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
+plugin-fs = ["dep:tauri-plugin-fs"]
+plugin-opener = ["dep:tauri-plugin-opener"]

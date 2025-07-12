@@ -41,7 +41,7 @@ pub struct TauriError(tauri::Error);
 
 impl Display for TauriError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:}", self.0)
+        Display::fmt(&self.0, f)
     }
 }
 
@@ -49,7 +49,7 @@ impl Error for TauriError {}
 
 impl From<TauriError> for PyErr {
     fn from(value: TauriError) -> Self {
-        PyRuntimeError::new_err(format!("{:?}", value.0))
+        PyRuntimeError::new_err(value.0.to_string())
     }
 }
 

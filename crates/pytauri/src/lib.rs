@@ -38,6 +38,8 @@ pub struct BuilderArgs {
     invoke_handler: Option<PyObject>,
     /// see [tauri::Builder::setup] and python side type hint.
     setup: NotRequired<PyObject>,
+    /// see [tauri::Builder::plugin]
+    plugins: NotRequired<Vec<Py<ext_mod::plugin::Plugin>>>,
 }
 
 derive_from_py_dict!(BuilderArgs {
@@ -46,6 +48,8 @@ derive_from_py_dict!(BuilderArgs {
     invoke_handler,
     #[default]
     setup,
+    #[default]
+    plugins,
 });
 
 impl BuilderArgs {
@@ -60,10 +64,11 @@ impl BuilderArgs {
         }
     }
 
-    fn apply_to_builder(self, py: Python<'_>, mut builder: TauriBuilder) -> TauriBuilder {
+    fn apply_to_builder(self, py: Python<'_>, mut builder: TauriBuilder) -> PyResult<TauriBuilder> {
         let Self {
             invoke_handler,
             setup,
+            plugins,
         } = self;
 
         if let Some(invoke_handler) = invoke_handler {
@@ -79,8 +84,14 @@ impl BuilderArgs {
                 })
             });
         }
+        if let Some(plugins) = plugins.0 {
+            for plugin in plugins {
+                let plugin = plugin.get().into_tauri()??;
+                builder = builder.plugin(ext_mod::plugin::BoxedPluginWrapper(plugin));
+            }
+        }
 
-        builder
+        Ok(builder)
     }
 }
 
@@ -111,7 +122,7 @@ impl Builder {
         let args = BuilderArgs::from_kwargs(kwargs)?;
 
         let mut builder = self.0.try_take_inner()??;
-        builder = args.apply_to_builder(py, builder);
+        builder = args.apply_to_builder(py, builder)?;
 
         let app = builder.build(context).map_err(TauriError::from)?;
         ext_mod::App::try_build(py, app)

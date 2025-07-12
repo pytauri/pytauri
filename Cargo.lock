@@ -3282,9 +3282,13 @@ version = "0.6.1"
 dependencies = [
  "pyo3",
  "pyo3-utils",
+ "serde_json",
  "tauri",
+ "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
+ "tauri-plugin-fs",
  "tauri-plugin-notification",
+ "tauri-plugin-opener",
 ]
 
 [[package]]
@@ -4226,7 +4230,9 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-plugin-clipboard-manager",
  "tauri-plugin-dialog",
+ "tauri-plugin-fs",
  "tauri-plugin-notification",
  "tauri-plugin-opener",
  "tauri-plugin-pytauri",

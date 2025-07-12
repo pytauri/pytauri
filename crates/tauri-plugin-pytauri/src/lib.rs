@@ -92,7 +92,7 @@ impl Error for PyInvokeHandlerStateError {}
 
 impl From<PyInvokeHandlerStateError> for PyErr {
     fn from(value: PyInvokeHandlerStateError) -> Self {
-        PyRuntimeError::new_err(format!("{value}"))
+        PyRuntimeError::new_err(value.to_string())
     }
 }
 
