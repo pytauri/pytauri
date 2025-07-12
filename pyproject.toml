@@ -29,7 +29,7 @@ docs = [
     "griffe-warnings-deprecated == 1.1.*",
     "mkdocs-gen-files == 0.5.*",
     "mkdocs-literate-nav == 0.6.*",
-    "mkdocs-section-index == 0.3.*",
+    "mkdocs-section-index ~= 0.3.10",
     "mkdocs-git-revision-date-localized-plugin ==1.4.*",
     "mkdocs-git-committers-plugin-2 ==2.5.*",
     "mike == 2.1.*",

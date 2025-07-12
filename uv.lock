@@ -1153,14 +1153,14 @@ wheels = [
 
 [[package]]
 name = "mkdocs-section-index"
-version = "0.3.9"
+version = "0.3.10"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "mkdocs" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/86/09/3cfcfec56740fba157991cd098c76dd08ef9c211db292c7c7d820d16c351/mkdocs_section_index-0.3.9.tar.gz", hash = "sha256:b66128d19108beceb08b226ee1ba0981840d14baf8a652b6c59e650f3f92e4f8", size = 13941, upload-time = "2024-04-20T14:40:58.164Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/93/40/4aa9d3cfa2ac6528b91048847a35f005b97ec293204c02b179762a85b7f2/mkdocs_section_index-0.3.10.tar.gz", hash = "sha256:a82afbda633c82c5568f0e3b008176b9b365bf4bd8b6f919d6eff09ee146b9f8", size = 14446, upload-time = "2025-04-05T20:56:45.387Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/19/16f6368f69949ea2d0086197a86beda4d4f27f09bb8c59130922f03d335d/mkdocs_section_index-0.3.9-py3-none-any.whl", hash = "sha256:5e5eb288e8d7984d36c11ead5533f376fdf23498f44e903929d72845b24dfe34", size = 8728, upload-time = "2024-04-20T14:40:56.864Z" },
+    { url = "https://files.pythonhosted.org/packages/01/53/76c109e6f822a6d19befb0450c87330b9a6ce52353de6a9dda7892060a1f/mkdocs_section_index-0.3.10-py3-none-any.whl", hash = "sha256:bc27c0d0dc497c0ebaee1fc72839362aed77be7318b5ec0c30628f65918e4776", size = 8796, upload-time = "2025-04-05T20:56:43.975Z" },
 ]
 
 [[package]]
@@ -2024,7 +2024,7 @@ dev = [
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
-    { name = "mkdocs-section-index", specifier = "==0.3.*" },
+    { name = "mkdocs-section-index", specifier = "~=0.3.10" },
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.29.*" },
     { name = "nicegui-app", editable = "examples/nicegui-app" },
     { name = "packaging", specifier = ">=24" },
@@ -2056,7 +2056,7 @@ docs = [
     { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
-    { name = "mkdocs-section-index", specifier = "==0.3.*" },
+    { name = "mkdocs-section-index", specifier = "~=0.3.10" },
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.29.*" },
 ]
 examples = [
