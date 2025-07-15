@@ -28,7 +28,7 @@ importers:
         version: 2.5.0
       '@types/node':
         specifier: ^22.7.4
-        version: 22.16.3
+        version: 22.16.4
       eslint:
         specifier: ^9.10.0
         version: 9.31.0
@@ -61,7 +61,7 @@ importers:
         version: 8.37.0(eslint@9.31.0)(typescript@5.8.3)
       vite:
         specifier: ^6.1.6
-        version: 6.3.5(@types/node@22.16.3)(terser@5.37.0)
+        version: 6.3.5(@types/node@22.16.4)(terser@5.37.0)
 
   crates/tauri-plugin-pytauri/guest-js:
     dependencies:
@@ -92,7 +92,7 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^6.1.6
-        version: 6.3.5(@types/node@22.16.3)(terser@5.37.0)
+        version: 6.3.5(@types/node@22.16.4)(terser@5.37.0)
 
   examples/tauri-app-wheel:
     dependencies:
@@ -114,7 +114,7 @@ importers:
         version: 5.6.3
       vite:
         specifier: ^6.1.6
-        version: 6.3.5(@types/node@22.16.3)(terser@5.37.0)
+        version: 6.3.5(@types/node@22.16.4)(terser@5.37.0)
 
 packages:
 
@@ -626,8 +626,8 @@ packages:
   '@types/lodash@4.17.18':
     resolution: {integrity: sha512-KJ65INaxqxmU6EoCiJmRPZC9H9RVWCRd349tXM2M3O5NA7cY6YL7c0bHAHQ93NOfTObEQ004kd2QVHs/r0+m4g==}
 
-  '@types/node@22.16.3':
-    resolution: {integrity: sha512-sr4Xz74KOUeYadexo1r8imhRtlVXcs+j3XK3TcoiYk7B1t3YRVJgtaD3cwX73NYb71pmVuMLNRhJ9XKdoDB74g==}
+  '@types/node@22.16.4':
+    resolution: {integrity: sha512-PYRhNtZdm2wH/NT2k/oAJ6/f2VD2N2Dag0lGlx2vWgMSJXGNmlce5MiTQzoWAiIJtso30mjnfQCOKVH+kAQC/g==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -1614,7 +1614,7 @@ snapshots:
 
   '@types/conventional-commits-parser@5.0.1':
     dependencies:
-      '@types/node': 22.16.3
+      '@types/node': 22.16.4
 
   '@types/estree@1.0.8': {}
 
@@ -1622,7 +1622,7 @@ snapshots:
 
   '@types/lodash@4.17.18': {}
 
-  '@types/node@22.16.3':
+  '@types/node@22.16.4':
     dependencies:
       undici-types: 6.21.0
 
@@ -2239,7 +2239,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite@6.3.5(@types/node@22.16.3)(terser@5.37.0):
+  vite@6.3.5(@types/node@22.16.4)(terser@5.37.0):
     dependencies:
       esbuild: 0.25.6
       fdir: 6.4.6(picomatch@4.0.2)
@@ -2248,7 +2248,7 @@ snapshots:
       rollup: 4.45.0
       tinyglobby: 0.2.14
     optionalDependencies:
-      '@types/node': 22.16.3
+      '@types/node': 22.16.4
       fsevents: 2.3.3
       terser: 5.37.0
 
