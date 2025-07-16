@@ -1,8 +1,13 @@
 use std::{collections::HashMap, iter::Iterator};
 
-use pyo3::{marker::Ungil, prelude::*, FromPyObject, IntoPyObject};
+use pyo3::{
+    marker::Ungil,
+    prelude::*,
+    types::{PyDict, PyType},
+    FromPyObject, IntoPyObject,
+};
 use pyo3_utils::ungil::UnsafeUngilExt;
-use tauri::Manager as _;
+use tauri::{Manager as TauriManager, State};
 
 use crate::{
     ext_mod::{
@@ -12,6 +17,51 @@ use crate::{
     },
     tauri_runtime::Runtime,
 };
+
+pub(crate) struct StateManager(Py<PyDict>);
+
+impl StateManager {
+    pub(crate) fn get_or_init<'a>(
+        py: Python<'_>,
+        manager: &'a impl TauriManager<Runtime>,
+    ) -> State<'a, Self> {
+        if let Some(state) = manager.try_state::<Self>() {
+            return state;
+        }
+        manager.manage(Self(PyDict::new(py).into()));
+        manager.state::<Self>()
+    }
+
+    pub(crate) fn manage(&self, py: Python<'_>, state: &Bound<PyAny>) -> PyResult<bool> {
+        let this = self.0.bind(py);
+        let py_type = state.get_type();
+        // If the state for the T type has previously been set, the state is unchanged and false is returned.
+        // Otherwise true is returned.
+        if this.contains(&py_type)? {
+            return Ok(false);
+        }
+        this.set_item(py_type, state)?;
+        Ok(true)
+    }
+
+    pub(crate) fn state<'py>(
+        &self,
+        py: Python<'py>,
+        state_type: &Bound<'py, PyType>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        let this = self.0.bind(py);
+        PyAnyMethods::get_item(this.as_any(), state_type)
+    }
+
+    pub(crate) fn try_state<'py>(
+        &self,
+        py: Python<'py>,
+        state_type: &Bound<'py, PyType>,
+    ) -> PyResult<Option<Bound<'py, PyAny>>> {
+        let this = self.0.bind(py);
+        PyDictMethods::get_item(this, state_type)
+    }
+}
 
 /// The Implementers of [tauri::Manager].
 #[derive(FromPyObject, IntoPyObject, IntoPyObjectRef)]
@@ -159,6 +209,38 @@ impl Manager {
                 .map(|(label, window)| (label, WebviewWindow::new(window)))
                 .collect::<_>()
         })
+    }
+
+    #[staticmethod]
+    fn manage(py: Python<'_>, slf: ImplManager, state: &Bound<PyAny>) -> PyResult<bool> {
+        manager_method_impl!(py, &slf, |py, manager| {
+            let state_manager = StateManager::get_or_init(py, manager);
+            state_manager.manage(py, state)
+        })?
+    }
+
+    #[staticmethod]
+    fn state<'py>(
+        py: Python<'py>,
+        slf: ImplManager,
+        state_type: &Bound<'py, PyType>,
+    ) -> PyResult<Bound<'py, PyAny>> {
+        manager_method_impl!(py, &slf, |py, manager| {
+            let state_manager = StateManager::get_or_init(py, manager);
+            state_manager.state(py, state_type)
+        })?
+    }
+
+    #[staticmethod]
+    fn try_state<'py>(
+        py: Python<'py>,
+        slf: ImplManager,
+        state_type: &Bound<'py, PyType>,
+    ) -> PyResult<Option<Bound<'py, PyAny>>> {
+        manager_method_impl!(py, &slf, |py, manager| {
+            let state_manager = StateManager::get_or_init(py, manager);
+            state_manager.try_state(py, state_type)
+        })?
     }
 
     #[staticmethod]
