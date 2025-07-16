@@ -14,7 +14,7 @@ dependencies = [
     "pydantic >= 2",
     "anyio >= 4",
     "pillow >= 11.1",         # `>=11` for free-threading
-    "typing-extensions >= 4",
+    "typing-extensions >= 4.14",
     # See: <https://pypi.org/project/backports.entry-points-selectable/>
     # and: <https://docs.python.org/3/library/importlib.metadata.html#entry-points>
     # Deprecated: once we no longer support versions Python 3.9, we can remove this dependency.

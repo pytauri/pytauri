@@ -5,7 +5,7 @@ use pyo3::{
     intern,
     prelude::*,
     pybacked::{PyBackedBytes, PyBackedStr},
-    types::{PyBytes, PyDict, PyList, PyMapping, PyString},
+    types::{PyBytes, PyDict, PyList, PyString, PyType},
 };
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0, PyWrapperT2};
 use tauri::ipc::{self, CommandArg as _, CommandItem, InvokeBody, InvokeMessage};
@@ -13,7 +13,7 @@ use tauri::ipc::{self, CommandArg as _, CommandItem, InvokeBody, InvokeMessage};
 use crate::{
     ext_mod::{
         webview::{Webview, WebviewWindow},
-        PyAppHandleExt as _,
+        PyAppHandleExt as _, StateManager,
     },
     tauri_runtime::Runtime,
     utils::TauriError,
@@ -146,13 +146,16 @@ impl Invoke {
     const APP_HANDLE_KEY: &str = "app_handle";
     const WEBVIEW_WINDOW_KEY: &str = "webview_window";
     const HEADERS_KEY: &str = "headers";
+    const STATES_KEY: &str = "states";
 
     /// Pass in a Python dictionary, which can contain the following
-    /// optional keys (values are arbitrary):
+    /// optional keys:
     ///
     /// - [Self::BODY_KEY] : [PyBytes]
     /// - [Self::APP_HANDLE_KEY] : [crate::ext_mod::AppHandle]
     /// - [Self::WEBVIEW_WINDOW_KEY] : [crate::ext_mod::webview::WebviewWindow]
+    /// - [Self::HEADERS_KEY] : `list[tuple[bytes, bytes]]`
+    /// - [Self::STATES_KEY] : `dict[str, type[Any]]`
     ///
     /// # Returns
     ///
@@ -162,7 +165,7 @@ impl Invoke {
     ///     The return value [InvokeResolver::arguments] is not the same object as
     ///     the input `parameters`.
     /// - On failure, it returns [None], consumes and rejects [Invoke];
-    fn bind_to(&self, parameters: Bound<'_, PyMapping>) -> PyResult<Option<InvokeResolver>> {
+    fn bind_to(&self, parameters: &Bound<'_, PyDict>) -> PyResult<Option<InvokeResolver>> {
         // NOTE: This function implementation must not block
 
         // see <https://docs.rs/tauri/2.1.1/tauri/ipc/trait.CommandArg.html#implementors>
@@ -243,6 +246,29 @@ impl Invoke {
             // TODO: Unify and export this type in [crate::ext_mod::ipc], see Python [pytauri.ipc.Headers] type.
             let py_headers = PyList::new(py, headers)?;
             arguments.set_item(headers_key, py_headers)?;
+        }
+
+        let states_key = intern!(py, Invoke::STATES_KEY);
+        if let Some(states_params) = parameters.get_item(states_key)? {
+            let states_params = states_params.downcast_into::<PyDict>()?;
+            // TODO, PERF: benchmark `PyDict::copy` vs `PyDict::new` vs `PyDict::from_sequence`.
+            let states_args = PyDict::new(py);
+            let state_manager = StateManager::get_or_init(py, message.webview_ref());
+
+            // TODO, PERF: use `BorrowedDictIterator` in the future (not implemented in pyo3 yet).
+            for (key, value) in states_params.into_iter() {
+                let state_type = value.downcast::<PyType>()?;
+                if let Some(state) = state_manager.try_state(py, state_type)? {
+                    states_args.set_item(key, state)?;
+                } else {
+                    resolver.reject(format!(
+                        "state `{state_type}` not managed for field `{key}`. \
+                        You must call `.manage()` before using this command"
+                    ));
+                    return Ok(None);
+                }
+            }
+            arguments.set_item(states_key, states_args)?;
         }
 
         Ok(Some(InvokeResolver::new(resolver, arguments.unbind())))

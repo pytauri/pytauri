@@ -596,7 +596,7 @@ if TYPE_CHECKING:
             """Retrieves the managed state for the type `T`.
 
             Raises:
-                KeyError: Panics if the state for the type `T` has not been previously [managed][pytauri.ffi.lib.Manager].
+                Exception: Panics if the state for the type `T` has not been previously [managed][pytauri.ffi.lib.Manager].
                     Use [try_state][pytauri.ffi.lib.Manager.try_state] for a non-panicking version.
             """
             ...
