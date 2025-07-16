@@ -206,6 +206,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 try:
                     arguments = resolver.arguments
                     states = arguments.pop("states", {})
+                    # PERF: `**ArgumentsType(**arguments, **states)`
                     resp = await handler(**arguments, **states)
                     # TODO, PERF: idk if this will block?
                 except InvokeException as e:
