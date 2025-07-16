@@ -127,7 +127,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          import:
+          inventories:
             # see: https://mkdocstrings.github.io/python/usage/#import
             - https://docs.python.org/3/objects.inv
             - https://docs.pydantic.dev/latest/objects.inv

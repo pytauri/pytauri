@@ -52,14 +52,35 @@ Headers = TypeAliasType("Headers", list[tuple[bytes, bytes]])
 
 
 class State:
-    pass
+    """A marker for state in [ArgumentsType][pytauri.ffi.ipc.ArgumentsType].
+
+    # Examples
+
+    ```python
+    from typing import Annotated
+
+    from pytauri import Commands, State
+
+    commands = Commands()
+
+
+    class MyState:
+        foo: int
+
+
+    @commands.command()
+    async def command(state: Annotated[MyState, State()]) -> int:
+        return state.foo
+    ```
+    """
 
 
 class ParametersType(TypedDict, total=False, closed=True):
     """The parameters of a command.
 
-    All keys are optional, and values can be of any type.
-    If a key exists, it will be assigned a value corresponding to [ArgumentsType][pytauri.ffi.ipc.ArgumentsType].
+    You can use this with [Invoke.bind_to][pytauri.ffi.ipc.Invoke.bind_to].
+    All keys are optional. If a key exists, it will be assigned a value corresponding to
+    [ResolvedArgumentsType][pytauri.ffi.ipc.ResolvedArgumentsType].
     """
 
     body: Any
@@ -71,6 +92,7 @@ class ParametersType(TypedDict, total=False, closed=True):
     headers: Any
     """Whatever. We just use the `key`, not the `value`."""
     states: dict[str, type[Any]]
+    """A dictionary of state classes."""
 
 
 class _BaseArgumentsType(TypedDict, total=False):
@@ -85,13 +107,21 @@ class _BaseArgumentsType(TypedDict, total=False):
 
 
 class ResolvedArgumentsType(_BaseArgumentsType, total=False):
+    """The resolved arguments of a invoked command.
+
+    It contains the resolved values of the parameters in [ParametersType][pytauri.ffi.ipc.ParametersType].
+    """
+
     states: dict[str, Annotated[Any, State()]]
+    """The value is an instance of the state class in [ParametersType.states][pytauri.ffi.ipc.ParametersType.states]."""
 
 
-class ArgumentsType(TypedDict, total=False, extra_items=Annotated[Any, State()]):
+class ArgumentsType(
+    _BaseArgumentsType, total=False, extra_items=Annotated[Any, State()]
+):
     """The bound arguments of a command.
 
-    Each key is optional, depending on the keys of the bound [ParametersType][pytauri.ffi.ipc.ParametersType].
+    Each key is optional, depending on the keys of the bound [ResolvedArgumentsType][pytauri.ffi.ipc.ResolvedArgumentsType].
 
     You can use it like `**kwargs`, for example `command(**arguments)`.
     """
