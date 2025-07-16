@@ -59,7 +59,7 @@ pub mod ext_mod {
         app::TauriApp,
         app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
         assets::PyAssets,
-        manager::manager_method_impl,
+        manager::{manager_method_impl, StateManager},
         rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32},
     };
 

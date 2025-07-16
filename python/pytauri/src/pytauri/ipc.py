@@ -33,7 +33,7 @@ from pydantic_core.core_schema import (
     no_info_plain_validator_function,
     str_schema,
 )
-from typing_extensions import NamedTuple, Self, TypeVar, overload
+from typing_extensions import NamedTuple, Self, TypeVar, get_args, get_origin, overload
 
 from pytauri._gen_ts import CommandInputOutput, InputOutput, NoneType, gen_ts
 from pytauri.ffi.ipc import (
@@ -42,6 +42,8 @@ from pytauri.ffi.ipc import (
     Invoke,
     InvokeResolver,
     ParametersType,
+    ResolvedArgumentsType,
+    State,
     _InvokeResponseBody,  # pyright: ignore[reportPrivateUsage]
 )
 from pytauri.ffi.ipc import Channel as _FFIChannel
@@ -62,6 +64,8 @@ __all__ = [
     "InvokeResolver",
     "JavaScriptChannelId",
     "ParametersType",
+    "ResolvedArgumentsType",
+    "State",
 ]
 
 _logger = getLogger(__name__)
@@ -192,13 +196,17 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 parameters = handler_data.parameters
                 handler = handler_data.handler
 
-                resolver = invoke.bind_to(parameters)
+                resolver: Optional[InvokeResolver[ResolvedArgumentsType]] = (
+                    invoke.bind_to(parameters)
+                )
                 if resolver is None:
                     # `invoke` has already been rejected
                     return
 
                 try:
-                    resp = await handler(**resolver.arguments)
+                    arguments = resolver.arguments
+                    states = arguments.pop("states", {})
+                    resp = await handler(**arguments, **states)
                     # TODO, PERF: idk if this will block?
                 except InvokeException as e:
                     resolver.reject(e.value)
@@ -414,9 +422,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         return wrapper
 
     @staticmethod
-    def parse_parameters(
-        pyfunc: _PyHandlerType, /, check_signature: bool = True
-    ) -> ParametersType:
+    def parse_parameters(pyfunc: _PyHandlerType, /) -> ParametersType:
         """Check the signature of a `Callable` and return the parameters.
 
         Check if the [Signature][inspect.Signature] of `pyfunc` conforms to [ArgumentsType][pytauri.ipc.ArgumentsType],
@@ -424,8 +430,6 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         Args:
             pyfunc: The `Callable` to check.
-            check_signature: Whether to check the signature of `pyfunc`.
-                Set it to `False` only if you are sure that the signature conforms to the expected pattern.
 
         Returns:
             The parameters of the `pyfunc`. You can use it with [Invoke.bind_to][pytauri.ipc.Invoke.bind_to].
@@ -435,13 +439,10 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         """
         sig = signature(pyfunc)
         parameters = sig.parameters
-        if not check_signature:
-            # `cast` make typing happy
-            return cast(ParametersType, parameters)
-
         return_annotation = sig.return_annotation
+        handled_parameters: ParametersType = {}
 
-        arguments_type = {
+        known_arguments_type = {
             "body": bytes,
             "app_handle": AppHandle,
             "webview_window": WebviewWindow,
@@ -451,39 +452,47 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         for name, param in parameters.items():
             # check if the `parameters` type hint conforms to [pytauri.ipc.ArgumentsType][]
 
-            correct_anna = arguments_type.get(name)
-            if correct_anna is None:
+            kind = param.kind
+            annotation = param.annotation
+
+            correct_annotation = known_arguments_type.get(name)
+            if correct_annotation is not None:
+                if kind not in {
+                    Parameter.KEYWORD_ONLY,
+                    Parameter.POSITIONAL_OR_KEYWORD,
+                }:
+                    raise ValueError(
+                        f"Expected `{name}` to be KEYWORD parameter, but got `{kind}` parameter"
+                    )
+                if annotation is not correct_annotation:
+                    raise ValueError(
+                        f"Expected `{name}` to be `{correct_annotation}`, but got `{annotation}`"
+                    )
+                handled_parameters[name] = annotation
+            elif get_origin(annotation) is Annotated:
+                [origin, hint, *_] = get_args(annotation)
+                if not isinstance(origin, type) or not isinstance(hint, State):
+                    raise ValueError(
+                        f"Expected `{name}` to be `{Annotated[type[Any], State()]}`, but got `{annotation}`"
+                    )
+                handled_parameters.setdefault("states", {})[name] = origin
+            else:
                 raise ValueError(
-                    f"Unexpected parameter `{name}`, expected one of {list(arguments_type.keys())}"
+                    f"Unexpected parameter `{name}`, expected one of {tuple(known_arguments_type.keys())} or `{Annotated}`"
                 )
-            if param.annotation is not correct_anna:
-                raise ValueError(
-                    f"Expected `{name}` to be `{correct_anna}`, but got `{param.annotation}`"
-                )
-            if param.kind not in {
-                Parameter.KEYWORD_ONLY,
-                Parameter.POSITIONAL_OR_KEYWORD,
-            }:
-                raise ValueError(
-                    f"Expected `{name}` to be KEYWORD parameter, but got `{param.kind}` parameter"
-                )
-        else:
-            # after checking, we are sure that the `parameters` are valid
-            parameters = cast(ParametersType, parameters)
 
         if return_annotation not in {bytes, str}:
             raise ValueError(
                 f"Expected `return_annotation` to be {bytes} or {str}, got `{return_annotation}`"
             )
 
-        return parameters
+        return handled_parameters
 
     def set_command(
         self,
         command: str,
         handler: _WrappablePyHandlerType,
         /,
-        check_signature: bool = True,
     ) -> None:
         """Set a command handler.
 
@@ -494,7 +503,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
             handler,
             _gen_ts_cmd=command if self._experimental_gen_ts is not None else None,
         )
-        parameters = self.parse_parameters(new_handler, check_signature=check_signature)
+        parameters = self.parse_parameters(new_handler)
         self.data[command] = _PyInvokHandleData(parameters, new_handler)
 
     def _register(
@@ -511,7 +520,7 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                 f"Command `{command}` already exists. If it's expected, use `set_command` instead."
             )
 
-        self.set_command(command, handler, check_signature=True)
+        self.set_command(command, handler)
         return handler
 
     def command(

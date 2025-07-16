@@ -1,6 +1,7 @@
 use std::{collections::HashMap, iter::Iterator};
 
 use pyo3::{
+    exceptions::PyValueError,
     marker::Ungil,
     prelude::*,
     types::{PyDict, PyType},
@@ -49,8 +50,10 @@ impl StateManager {
         py: Python<'py>,
         state_type: &Bound<'py, PyType>,
     ) -> PyResult<Bound<'py, PyAny>> {
-        let this = self.0.bind(py);
-        PyAnyMethods::get_item(this.as_any(), state_type)
+        let state = self.try_state(py, state_type)?;
+        state.ok_or_else(|| {
+            PyValueError::new_err(format!("state() called before manage() for {state_type}"))
+        })
     }
 
     pub(crate) fn try_state<'py>(
