@@ -7,7 +7,7 @@ Ref:
 - <https://tauri.app/develop/calling-rust/>
 - [pytauri.ipc.Commands][]
 
-pytauri implements IPC API consistent with rust tauri. Reading tauri's documentation is like reading pytauri's documentation.
+PyTauri implements IPC API consistent with rust tauri. Reading tauri's documentation is like reading PyTauri's documentation.
 
 ### Commands
 
