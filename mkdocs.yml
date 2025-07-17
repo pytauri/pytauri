@@ -235,6 +235,7 @@ nav:
           - usage/tutorial/using-pytauri.md
           - usage/tutorial/py-js-ipc.md
           - usage/tutorial/gen-ts.md
+          - usage/tutorial/state-management.md
           - usage/tutorial/using-plugins.md
           - usage/tutorial/debugging.md
           - usage/tutorial/build-sdist.md
