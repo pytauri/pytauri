@@ -12,9 +12,4 @@ pyo3 = { workspace = true }
 [dependencies.tokio]
 workspace = true
 default-features = false
-optional = true
-
-
-[features]
-default = ["sync"]
-sync = ["dep:tokio", "tokio?/sync"]
+features = ["sync", "macros", "rt", "rt-multi-thread"]
