@@ -114,6 +114,8 @@ executionEnvironments = [
     # so we must tell pyright that we target py310.
     { root = "examples/nicegui-app", pythonVersion = "3.10" },
 ]
+# TODO: temporary enable for PEP 728 <https://github.com/microsoft/pyright/issues/7232>
+enableExperimentalFeatures = true
 
 
 [tool.ruff.format]
