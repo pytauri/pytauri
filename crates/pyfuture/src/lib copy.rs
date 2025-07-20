@@ -5,16 +5,8 @@
     doc(cfg_hide(doc))
 )]
 
-use std::{
-    convert::Infallible,
-    future,
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
-};
+use std::{convert::Infallible, future, sync::Arc};
 
-use crossbeam::atomic::AtomicCell;
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
     exceptions::PyTypeError,
@@ -213,71 +205,17 @@ where
     Ok(py_future1)
 }
 
-struct Defer<T>
+struct Defer<T>(T)
 where
-    T: FnOnce() + Send + 'static,
-{
-    func: Option<T>,
-    suppressed: bool,
-}
+    T: FnOnce() + Send + 'static;
 
-impl<T> Defer<T>
-where
-    T: FnOnce() + Send + 'static,
-{
-    fn new(func: T) -> Self {
-        Self {
-            func: Some(func),
-            suppressed: false,
-        }
-    }
-
-    fn suppress(mut self) {
-        self.suppressed = true;
-    }
-}
-
-impl<T> Drop for Defer<T>
-where
-    T: FnOnce() + Send + 'static,
-{
-    fn drop(&mut self) {
-        if self.suppressed {
-            return;
-        }
-        self.func.take().unwrap()();
-    }
-}
-
-pyo3::import_exception!(concurrent.futures, CancelledError);
-
-#[repr(u8)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum CancelFutures {
-    NoSet,
-    True,
-    False,
-}
-
-const _: () = {
-    assert!(AtomicCell::<CancelFutures>::is_lock_free());
-};
-
-/// A executor like python `concurrent.futures.ThreadPoolExecutor`
 struct TokioPoolExecutor {
     runtime: tokio::runtime::Handle,
-    tracker: tokio_util::task::TaskTracker,
-    shutdown: Arc<AtomicCell<CancelFutures>>,
 }
 
-#[bon::bon]
 impl TokioPoolExecutor {
     pub fn new(runtime: tokio::runtime::Handle) -> Self {
-        Self {
-            runtime,
-            tracker: tokio_util::task::TaskTracker::new(),
-            shutdown: Arc::new(AtomicCell::new(CancelFutures::NoSet)),
-        }
+        Self { runtime }
     }
 
     pub fn submit<Func, Args, Ret>(
@@ -291,77 +229,34 @@ impl TokioPoolExecutor {
         Func: future::Future<Output = PyResult<Ret>> + Send,
         for<'p> Ret: IntoPyObject<'p>,
     {
-        if self.shutdown.load() != CancelFutures::NoSet {
-            panic!("Already Shutdown")
-        }
-
         let py_future = Future::new(py)?;
         let py_future1 = py_future.clone_ref(py)?;
-        let py_future2 = py_future.clone_ref(py)?;
-        let shutdown = self.shutdown.clone();
 
-        let defer = Defer::new(move || {
-            Python::with_gil(|py| py_future2.set_exception(py, Some(CancelledError::new_err(()))))
-                .unwrap();
+        self.runtime.spawn(async move {
+            let script = async || {
+                if !Python::with_gil(|py| py_future.set_running_or_notify_cancel(py))? {
+                    return Ok(());
+                }
+
+                let ret = func(args).await;
+
+                Python::with_gil(|py| match ret {
+                    Ok(value) => {
+                        let value = value.into_bound_py_any(py)?;
+                        py_future.set_result(py, &value)
+                    }
+                    Err(err) => py_future.set_exception(py, Some(err)),
+                })?;
+
+                PyResult::Ok(())
+            };
+            script().await.expect("Failed to run future script")
         });
-
-        self.tracker.spawn_on(
-            async move {
-                let defer = defer;
-                let script = async || {
-                    if shutdown.load() == CancelFutures::True {
-                        Python::with_gil(|py| py_future.cancel(py))?;
-                        defer.suppress();
-                        return Ok(());
-                    }
-
-                    if !Python::with_gil(|py| py_future.set_running_or_notify_cancel(py))? {
-                        defer.suppress();
-                        return Ok(());
-                    }
-
-                    let ret = func(args).await;
-
-                    Python::with_gil(|py| match ret {
-                        Ok(value) => {
-                            let value = value.into_bound_py_any(py)?;
-                            py_future.set_result(py, &value)
-                        }
-                        Err(err) => py_future.set_exception(py, Some(err)),
-                    })?;
-
-                    defer.suppress();
-                    PyResult::Ok(())
-                };
-                script().await.expect("Failed to run future script")
-            },
-            &self.runtime,
-        );
 
         Ok(py_future1)
     }
 
-    #[builder]
-    pub async fn shutdown(
-        &self,
-        #[builder(default = true)] wait: bool,
-        #[builder(default = false)] cancel_futures: bool,
-    ) {
-        if self.shutdown.swap(if cancel_futures {
-            CancelFutures::True
-        } else {
-            CancelFutures::False
-        }) != CancelFutures::NoSet
-        {
-            return;
-        }
-
-        self.tracker.close();
-
-        if wait {
-            self.tracker.wait().await;
-        }
-    }
+    pub fn shutdown() {}
 }
 
 #[cfg(test)]
@@ -370,9 +265,6 @@ mod tests {
 
     #[test]
     fn test_future() {
-        let foo: TokioPoolExecutor = todo!();
-        foo.shutdown().wait(true).cancel_futures(false).call();
-
         pyo3::prepare_freethreaded_python();
 
         Python::with_gil(|py| {
@@ -406,59 +298,12 @@ mod tests {
             .build()
             .expect("Failed building the Runtime");
 
-        let executor = TokioPoolExecutor::new(runtime.handle().clone());
-
         Python::with_gil(|py| {
             async fn rs_future() -> PyResult<i32> {
                 Ok(42)
             }
 
-            let py_future = executor.submit(py, |_| rs_future(), ()).unwrap();
-
-            py_future
-                .add_done_callback(py, |py, fut| {
-                    let ret = fut.result(py, Some(0.001))?.extract::<i32>(py)?;
-                    assert_eq!(ret, 42);
-                    Ok(())
-                })
-                .unwrap();
-
-            let ret = py_future
-                .result(py, Some(0.001))
-                .unwrap()
-                .extract::<i32>(py)
-                .unwrap();
-            assert_eq!(ret, 42);
-        });
-    }
-
-    #[test]
-    fn test_shutdown() {
-        console_subscriber::init();
-
-        pyo3::prepare_freethreaded_python();
-
-        let runtime = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("Failed building the Runtime");
-
-        let executor = TokioPoolExecutor::new(runtime.handle().clone());
-
-        Python::with_gil(|py| {
-            async fn rs_future() -> PyResult<i32> {
-                println!("1");
-                tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-                println!("2");
-                Ok(42)
-            }
-
-            let py_future = executor.submit(py, |_| rs_future(), ()).unwrap();
-
-            py.allow_threads(|| {
-                let wait = executor.shutdown().wait(true).cancel_futures(true).call();
-                runtime.handle().block_on(wait);
-            });
+            let py_future = future_to_py(py, &runtime.handle(), rs_future()).unwrap();
 
             py_future
                 .add_done_callback(py, |py, fut| {
@@ -479,72 +324,39 @@ mod tests {
 
     #[test]
     fn test_tokio_pool_executor() {
-        enum Cancel {
-            NoSet,
-            True,
-            False,
+        let runtime = tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
+            .build()
+            .expect("Failed building the Runtime");
+
+        struct Defer(i32);
+
+        impl Drop for Defer {
+            fn drop(&mut self) {
+                println!("Defer dropped with value: {}", self.0);
+            }
         }
 
-        const _: () = {
-            assert!(crossbeam::atomic::AtomicCell::<Cancel>::is_lock_free());
-        };
-
-        type Foo = Option<u8>;
-
-        let foo = crossbeam::atomic::AtomicCell::<Option<u8>>::is_lock_free();
-        println!("Is AtomicCell lock-free? {}", foo);
-
-        // let runtime = tokio::runtime::Builder::new_multi_thread()
-        //     .enable_all()
-        //     .build()
-        //     .expect("Failed building the Runtime");
-
-        // struct Defer(i32);
-
-        // impl Drop for Defer {
-        //     fn drop(&mut self) {
-        //         println!("Defer dropped with value: {}", self.0);
-        //     }
+        // for i in 0..8 {
+        //     runtime.spawn(async {
+        //         std::thread::sleep(std::time::Duration::from_secs(5));
+        //     });
         // }
 
-        // // for i in 0..8 {
-        // //     runtime.spawn(async {
-        // //         std::thread::sleep(std::time::Duration::from_secs(5));
-        // //     });
-        // // }
+        let handle = runtime.handle().clone();
 
-        // let handle = runtime.handle().clone();
+        runtime.shutdown_background();
 
-        // // runtime.shutdown_background();
+        let mut buf = vec![];
 
-        // let tracker = tokio_util::task::TaskTracker::new();
-        // tracker.close();
-
-        // let mut buf = vec![];
-
-        // for i in 0..1024 {
-        //     let task = tracker.spawn_on(
-        //         async move {
-        //             let defer = Defer(i);
-        //             defer;
-        //         },
-        //         &handle,
-        //     );
-        //     buf.push(task);
-        // }
-        // let all_finished = buf.into_iter().all(|task| task.is_finished());
-        // assert!(all_finished, "Not all tasks finished before shutdown");
-    }
-
-    #[test]
-    fn test_defer() {
-        {
-            let defer = Defer::new(|| println!("0"));
-            defer.suppress();
+        for i in 0..1024 {
+            let task = handle.spawn(async move {
+                let defer = Defer(i);
+                defer;
+            });
+            buf.push(task);
         }
-
-        {
-            let _defer = Defer::new(|| println!("1"));
-        }
+        let all_finished = buf.into_iter().all(|task| task.is_finished());
+        assert!(all_finished, "Not all tasks finished before shutdown");
     }
 }

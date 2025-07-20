@@ -39,6 +39,8 @@ libc = { version = "0.2" }
 dunce = { version = "1", default-features = false }
 
 tokio = { version = "1", default-features = false }
+tokio-util = { version = "0.7", default-features = false }
+bon = { version = "3.6" }
 
 # ❗ when bumping, remember to update workspace dependencies
 tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri", version = "0.7" }

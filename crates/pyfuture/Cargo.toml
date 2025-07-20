@@ -8,8 +8,26 @@ rust-version = { workspace = true }
 
 [dependencies]
 pyo3 = { workspace = true }
+bon = { workspace = true }
 
 [dependencies.tokio]
 workspace = true
 default-features = false
 features = ["sync", "macros", "rt", "rt-multi-thread"]
+
+[dependencies.tokio-util]
+workspace = true
+default-features = false
+features = ["rt"]
+
+
+[dependencies.crossbeam]
+version = "0.8"
+
+[dev-dependencies.tokio]
+workspace = true
+default-features = false
+features = ["time", "full", "tracing"]
+
+[dev-dependencies.console-subscriber]
+version = "0.4"
