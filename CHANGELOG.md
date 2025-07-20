@@ -34,6 +34,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### App State Management and `AsyncTools` utils
+
+> - [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
+
+See:
+
+- State Management: <https://pytauri.github.io/pytauri/0.7/usage/tutorial/state-management>
+- `AsyncTools`: <https://pytauri.github.io/pytauri/0.7/usage/concepts/async>
+
 #### Debugging Tutorial
 
 > - [#182](https://github.com/pytauri/pytauri/pull/182) - feat!: debugging tutorial.
@@ -94,6 +103,14 @@ async def new(body: str) -> None:
 ```
 
 ### BREAKING
+
+- [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
+
+    The following parameters have been removed:
+
+    - `pytauri.Commands`
+        - `set_command(check_signature)`
+        - `parse_parameters(check_signature)`
 
 - [#178](https://github.com/pytauri/pytauri/pull/178) - feat(plugin-api)!: remove `rawPyInvoke` and `Channel`.
 

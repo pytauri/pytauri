@@ -4,6 +4,9 @@
 
 ### Added
 
+- [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
+    - `tauri::Manager::{manage, state, try_state}`
+
 - [#182](https://github.com/pytauri/pytauri/pull/182) - feat!: debugging tutorial.
 
     Added `tauri::{IS_DEV, RESTART_EXIT_CODE, VERSION, webview_version}` for obtaining pytauri runtime configuration.
