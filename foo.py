@@ -89,5 +89,7 @@ async def main() -> None:
     a = await callback_tool(foo, 1)
     b = await callback_tool(foo_instance.foo, 1)
 
-from concurrent.futures import Future
-from anyio.from_thread import start_blocking_portal
+from concurrent.futures import Future, Executor
+from anyio.from_thread import start_blocking_portal, BlockingPortal
+Executor.map
+from anyio
