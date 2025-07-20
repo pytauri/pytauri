@@ -248,6 +248,7 @@ nav:
       - Concepts:
           - usage/concepts/index.md
           - usage/concepts/ipc.md
+          - usage/concepts/async.md
           - usage/concepts/mutiprocessing.md
       - Using Unreleased Commits: usage/using-unreleased-commits.md
   - API Reference:
