@@ -38,7 +38,7 @@ name = "tauri-app"  # (1)!
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.9"
-dependencies = ["pytauri == 0.6.*"]  # (2)!
+dependencies = ["pytauri == 0.7.*"]  # (2)!
 
 [project.entry-points.pytauri]
 ext_mod = "tauri_app.ext_mod"
@@ -93,7 +93,7 @@ required-features = ["pytauri/standalone"]
 
 [dependencies]
 # ...
-pytauri = { version = "0.6" }  # (1)!
+pytauri = { version = "0.7" }  # (1)!
 pyo3 = { version = "0.25" }  # (2)!
 ```
 
