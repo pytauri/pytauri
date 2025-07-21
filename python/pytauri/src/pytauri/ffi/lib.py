@@ -27,6 +27,7 @@ from typing_extensions import (
     Self,
     TypeAliasType,
     TypedDict,
+    TypeVar,
     Unpack,
     deprecated,
 )
@@ -77,6 +78,9 @@ __all__ = [
 
 if TYPE_CHECKING:
     from pytauri.ffi.ipc import Invoke
+
+
+_T = TypeVar("_T", infer_variance=True)
 
 
 class _InvokeHandlerProto(Protocol):
@@ -576,6 +580,33 @@ if TYPE_CHECKING:
         @staticmethod
         def webview_windows(slf: "ImplManager", /) -> dict[str, WebviewWindow]:
             """Fetch all managed webview windows."""
+            ...
+
+        @staticmethod
+        def manage(slf: "ImplManager", state: object, /) -> bool:
+            """Add `state` to the state managed by the application.
+
+            If the state for the `T` type has previously been set, the state is unchanged and false is returned.
+            Otherwise true is returned.
+            """
+            ...
+
+        @staticmethod
+        def state(slf: "ImplManager", state_type: type[_T], /) -> _T:
+            """Retrieves the managed state for the type `T`.
+
+            Raises:
+                Exception: Panics if the state for the type `T` has not been previously [managed][pytauri.ffi.lib.Manager].
+                    Use [try_state][pytauri.ffi.lib.Manager.try_state] for a non-panicking version.
+            """
+            ...
+
+        @staticmethod
+        def try_state(slf: "ImplManager", state_type: type[_T], /) -> Optional[_T]:
+            """Attempts to retrieve the managed state for the type `T`.
+
+            Returns `Some` if the state has previously been `managed`. Otherwise returns `None`.
+            """
             ...
 
         @staticmethod

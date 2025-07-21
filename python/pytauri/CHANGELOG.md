@@ -2,7 +2,24 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
+
+    The following parameters have been removed:
+
+    - `pytauri.Commands`
+        - `set_command(check_signature)`
+        - `parse_parameters(check_signature)`
+
 ### Added
+
+- [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
+    - `tauri::Manager::{manage, state, try_state}`
+    - `pytauri_utils.async_tools`
+    - `pytauri.State`
+    - `pytauri.ipc`
+        - `ResolvedArgumentsType, State`
 
 - [#182](https://github.com/pytauri/pytauri/pull/182) - feat!: debugging tutorial.
 

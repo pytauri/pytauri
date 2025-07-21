@@ -1,6 +1,10 @@
 # IPC between Python and JavaScript
 
-**See [concepts/ipc](../concepts/ipc.md) for more information.**
+!!! tip
+    **See [concepts/ipc](../concepts/ipc.md) for more information.**
+
+!!! tip
+    **Also, see [Async Recipes](../concepts/async.md) for how to work smoothly with asynchronous PyTauri.**
 
 ---
 

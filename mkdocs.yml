@@ -127,7 +127,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          import:
+          inventories:
             # see: https://mkdocstrings.github.io/python/usage/#import
             - https://docs.python.org/3/objects.inv
             - https://docs.pydantic.dev/latest/objects.inv
@@ -235,6 +235,7 @@ nav:
           - usage/tutorial/using-pytauri.md
           - usage/tutorial/py-js-ipc.md
           - usage/tutorial/gen-ts.md
+          - usage/tutorial/state-management.md
           - usage/tutorial/using-plugins.md
           - usage/tutorial/debugging.md
           - usage/tutorial/build-sdist.md
@@ -247,6 +248,7 @@ nav:
       - Concepts:
           - usage/concepts/index.md
           - usage/concepts/ipc.md
+          - usage/concepts/async.md
           - usage/concepts/mutiprocessing.md
       - Using Unreleased Commits: usage/using-unreleased-commits.md
   - API Reference:
