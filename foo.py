@@ -1,20 +1,31 @@
-from typing import Any, Awaitable, Callable, Generic, Union, cast
+from collections.abc import Coroutine
+from concurrent import futures
+from contextlib import (
+    AbstractAsyncContextManager,
+    AbstractContextManager,
+    AsyncExitStack,
+    ExitStack,
+)
+from functools import partial
+from typing import Any, Awaitable, Callable, Generic, Optional, Union, cast
 
 from anyio import (
-    TASK_STATUS_IGNORED,
+    CancelScope,
     Event,
-    connect_tcp,
     create_memory_object_stream,
     create_task_group,
     create_tcp_listener,
+    get_cancelled_exc_class,
     run,
 )
-from anyio.abc import TaskStatus
+from anyio.abc import TaskGroup
+from anyio.from_thread import BlockingPortal, start_blocking_portal
 from pytauri_utils.async_tools import AsyncTools
 from typing_extensions import (
     Concatenate,
     ParamSpec,
     Protocol,
+    Self,
     TypeVar,
     TypeVarTuple,
     Unpack,
@@ -27,69 +38,195 @@ P = ParamSpec("P")
 P1 = ParamSpec("P1")
 
 
-Exception_T = TypeVar(
-    "Exception_T", bound=BaseException, infer_variance=True, default=BaseException
-)
+class BlockingPortalPoolExecutor(AbstractContextManager["BlockingPortalPoolExecutor"]):
+    def __init__(self, portal: BlockingPortal) -> None:
+        self._portal = portal
+        self._exit_stack = ExitStack()
 
-Catch = Callable[[Exception_T], None]
+    def __enter__(self) -> Self:
+        portal = self._portal
+        exit_stack = self._exit_stack
 
-Then = Callable[[T], None]
+        self._cancelled_exc_class = portal.call(get_cancelled_exc_class)
+        self._task_group: TaskGroup = exit_stack.enter_context(
+            portal.wrap_async_context_manager(portal.call(create_task_group))
+        )
+
+        return self
+
+    def __exit__(self, *args: Any) -> Optional[bool]:
+        return self._exit_stack.__exit__(*args)
+
+    def submit(
+        self, fn: Callable[P, Awaitable[T]], *args: P.args, **kwargs: P.kwargs
+    ) -> futures.Future[T]:
+        future = futures.Future[T]()
+
+        async def task() -> None:
+            async def wrapper() -> None:
+                try:
+                    result = await fn(*args, **kwargs)
+                    future.set_result(result)
+                except self._cancelled_exc_class as exc:
+                    future.set_exception(futures.CancelledError(exc))
+                    raise
+                except BaseException as exc:
+                    future.set_exception(exc)
+                    if not isinstance(exc, Exception):
+                        raise
+
+            self._task_group.start_soon(wrapper)
+
+        self._portal.start_task_soon(task).add_done_callback(
+            # NOTE: log
+            lambda f: f.result(0)
+        )
+        return future
+
+    def shutdown(self, wait: bool = True) -> None:
+        portal = self._portal
+        exit_stack = self._exit_stack
+
+        if wait:
+            portal.call(exit_stack.close)
+        else:
+            portal.start_task_soon(exit_stack.close).add_done_callback(
+                # NOTE: log
+                lambda f: f.result(0)
+            )
 
 
-async_tools = cast(AsyncTools, ...)
+class TaskGroupPoolExecutor(AbstractAsyncContextManager["TaskGroupPoolExecutor"]):
+    def __init__(self, task_group: TaskGroup) -> None:
+        self._outer_task_group = task_group
+        self._task_group = create_task_group()
+        self._exit_stack = AsyncExitStack()
+        self._cancelled_exc_class = get_cancelled_exc_class()
+
+    async def __aenter__(self) -> Self:
+        await self._exit_stack.enter_async_context(self._task_group)
+        return self
+
+    async def __aexit__(self, *args: Any) -> Optional[bool]:
+        return await self._exit_stack.__aexit__(*args)
+
+    async def submit(
+        self, fn: Callable[P, Awaitable[T]], *args: P.args, **kwargs: P.kwargs
+    ) -> futures.Future[T]:
+        future = futures.Future[T]()
+
+        async def wrapper() -> None:
+            try:
+                result = await fn(*args, **kwargs)
+                future.set_result(result)
+            except self._cancelled_exc_class as exc:
+                future.set_exception(futures.CancelledError(exc))
+                raise
+            except BaseException as exc:
+                future.set_exception(exc)
+                if not isinstance(exc, Exception):
+                    raise
+
+        self._task_group.start_soon(wrapper)
+        return future
+
+    async def shutdown(self, wait: bool = True) -> None:
+        exit_stack = self._exit_stack
+
+        if wait:
+            await exit_stack.aclose()
+        else:
+            self._outer_task_group.start_soon(exit_stack.aclose)
 
 
-async def callback_tool(
-    func: Callable[[Unpack[Ts], Then[T], Catch], None], *args: Unpack[Ts]
-) -> T:
-    send, recv = create_memory_object_stream[Union[T, BaseException]](max_buffer_size=0)
+def future_to_coroutine(
+    future: futures.Future[T],
+    executor: Union[BlockingPortal, TaskGroup],
+) -> Coroutine[None, None, T]:
+    sender, receiver = create_memory_object_stream[Union[T, BaseException]](1)
 
-    @async_tools.to_sync
-    async def then(ret: T) -> None:
-        async with send:
-            send.send_nowait(ret)
+    async def acallback(future: futures.Future[T]) -> None:
+        with CancelScope(shield=True), sender:  # noqa: ASYNC100
+            if future.cancelled():
+                sender.send_nowait(get_cancelled_exc_class()())
+                return
 
-    @async_tools.to_sync
-    async def catch(e: BaseException) -> None:
-        async with send:
-            send.send_nowait(e)
+            exception = future.exception()
+            if exception is not None:
+                sender.send_nowait(exception)
+                return
 
-    func(*args, then, catch)
+            ret = future.result()
+            sender.send_nowait(ret)
 
-    async with recv:
-        ret = await recv.receive()
+    def callback(future: futures.Future[T]) -> None:
+        # TODO: HOW to ensure `acallback` will not be cancelled in any case?
+        if isinstance(executor, BlockingPortal):
+            executor.start_task_soon(acallback, future).add_done_callback(
+                # NOTE: log
+                lambda f: f.result(0)
+            )
+        else:
+            executor.start_soon(acallback, future)
 
-    if isinstance(ret, BaseException):
-        raise ret
-    return ret
+    future.add_done_callback(callback)
 
+    async def wait_for_future() -> T:
+        with receiver:
+            ret = await receiver.receive()
+            if isinstance(ret, BaseException):
+                raise ret
+            return ret
 
-def chenge(
-    func: Callable[[Unpack[Ts], Then[T], Catch], None],
-) -> Callable[[Unpack[Ts]], Awaitable[T]]:
-    return lambda *args: callback_tool(func, *args)
-
-
-def foo(
-    a: int, then: Callable[[str], None], catch: Callable[[Exception], None]
-) -> None: ...
-
-
-class Foo:
-    def foo(
-        self, a: int, then: Callable[[str], None], catch: Callable[[Exception], None]
-    ) -> None: ...
-
-
-foo1_0 = chenge(foo)
+    return wait_for_future()
 
 
-async def main() -> None:
-    foo_instance = Foo()
-    a = await callback_tool(foo, 1)
-    b = await callback_tool(foo_instance.foo, 1)
+if __name__ == "__main__":
 
-from concurrent.futures import Future, Executor
-from anyio.from_thread import start_blocking_portal, BlockingPortal
-Executor.map
-from anyio
+    async def foo() -> int:
+        from anyio import sleep
+
+        for i in range(2):
+            print(f"Task running iteration {i}")
+            await sleep(1)
+        # raise ValueError("An error occurred in the task")
+        return 42
+
+    with (
+        start_blocking_portal() as portal,
+        BlockingPortalPoolExecutor(portal) as portal_executor,
+    ):
+        future = portal_executor.submit(foo)
+
+        async def main() -> None:
+            async with (
+                create_task_group() as tg,
+                TaskGroupPoolExecutor(tg) as executor,
+                BlockingPortal() as blocking_portal,
+            ):
+                future1 = await executor.submit(foo)
+                result = await future_to_coroutine(future1, tg)
+                print(result)
+
+                result = await future_to_coroutine(future, blocking_portal)
+                print("Result from future:", result)
+
+        run(main)
+
+    # from anyio import sleep
+
+    # async def main() -> None:
+    #     async with create_task_group() as tg, TaskGroupPoolExecutor(tg) as executor:
+
+    #         async def foo() -> None:
+    #             print("Task group started, ready to accept tasks")
+
+    #         print("1")
+    #         tg.cancel_scope.cancel()
+    #         print("2")
+    #         tg.start_soon(foo)
+    #         print("3")
+    #         await sleep(1)
+    #         print("4")
+
+    # run(main, backend="trio")
