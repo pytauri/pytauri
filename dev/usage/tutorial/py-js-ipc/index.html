@@ -711,6 +711,29 @@
   
   
     <li class="md-nav__item">
+      <a href="../state-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    State Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../using-plugins/" class="md-nav__link">
         
   
@@ -814,7 +837,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_9" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_10" >
         
           
           <div class="md-nav__link md-nav__container">
@@ -831,14 +854,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1_9" id="__nav_2_1_9_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_1_10" id="__nav_2_1_10_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_9_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2_1_9">
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_10">
             <span class="md-nav__icon md-icon"></span>
             Build Standalone Binary
           </label>
@@ -967,6 +990,29 @@
   
   <span class="md-ellipsis">
     IPC
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Async And Callbacks
     
   </span>
   
@@ -1859,12 +1905,12 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/py/pytauri_wheel/" class="md-nav__link ">
+            <a href="../../../reference/py/pytauri_utils/" class="md-nav__link ">
               
   
   
   <span class="md-ellipsis">
-    pytauri_wheel
+    pytauri_utils
     
   </span>
   
@@ -1880,6 +1926,85 @@
         
         <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3_1_5">
+            <span class="md-nav__icon md-icon"></span>
+            pytauri_utils
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/py/pytauri_utils/async_tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    async_tools
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/py/pytauri_wheel/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    pytauri_wheel
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3_1_6" id="__nav_3_1_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_3_1_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1_6">
             <span class="md-nav__icon md-icon"></span>
             pytauri_wheel
           </label>
@@ -2504,7 +2629,14 @@
 
 
 <h1 id="ipc-between-python-and-javascript">IPC between Python and JavaScript<a class="headerlink" href="#ipc-between-python-and-javascript" title="Permanent link">&para;</a></h1>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p><strong>See <a href="../../concepts/ipc/">concepts/ipc</a> for more information.</strong></p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><strong>Also, see <a href="../../concepts/async/">Async Recipes</a> for how to work smoothly with asynchronous PyTauri.</strong></p>
+</div>
 <hr />
 <p>pytauri implements the same IPC API as tauri. You can use it through <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/#pytauri.Commands">pytauri.Commands</a>.</p>
 <p>This tutorial will demonstrate how to use pytauri's IPC API by rewriting the <code>fn greet</code> command in <code>src-tauri/src/lib.rs</code> in Python.</p>
@@ -2673,7 +2805,7 @@ You need to add it to the dependencies so that you can enable its permission in 
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 12, 2025 18:45:47 UTC"><span class="timeago" datetime="2025-07-12T18:45:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 12, 2025 18:45:47 UTC">2025-07-12</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 21, 2025 15:38:47 UTC"><span class="timeago" datetime="2025-07-21T15:38:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 21, 2025 15:38:47 UTC">2025-07-21</span>
   </span>
 
     

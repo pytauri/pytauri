@@ -8,11 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://pytauri.github.io/pytauri/dev/CHANGELOG/js/tauri-plugin-pytauri-api/">
+        <link rel="canonical" href="https://pytauri.github.io/pytauri/dev/usage/concepts/async/">
       
       
-        <link rel="prev" href="../../rs/pyo3-utils/">
+        <link rel="prev" href="../ipc/">
       
+      
+        <link rel="next" href="../mutiprocessing/">
       
       
       <link rel="icon" href="../../../assets/favicon.png">
@@ -20,7 +22,7 @@
     
     
       
-        <title>tauri-plugin-pytauri-api - PyTauri</title>
+        <title>Async And Callbacks - PyTauri</title>
       
     
     
@@ -78,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tauri-plugin-pytauri-api" class="md-skip">
+        <a href="#async-and-callbacks" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              tauri-plugin-pytauri-api
+              Async And Callbacks
             
           </span>
         </div>
@@ -260,11 +262,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../../usage/tutorial/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../tutorial/" class="md-tabs__link">
           
   
   
@@ -329,11 +333,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="../../" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../../CHANGELOG/" class="md-tabs__link">
         
   
   
@@ -416,24 +418,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -446,7 +453,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Usage
@@ -475,7 +482,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../usage/tutorial/" class="md-nav__link ">
+            <a href="../../tutorial/" class="md-nav__link ">
               
   
   
@@ -508,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/getting-started/" class="md-nav__link">
+      <a href="../../tutorial/getting-started/" class="md-nav__link">
         
   
   
@@ -531,7 +538,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/using-pytauri/" class="md-nav__link">
+      <a href="../../tutorial/using-pytauri/" class="md-nav__link">
         
   
   
@@ -554,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/py-js-ipc/" class="md-nav__link">
+      <a href="../../tutorial/py-js-ipc/" class="md-nav__link">
         
   
   
@@ -577,7 +584,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/gen-ts/" class="md-nav__link">
+      <a href="../../tutorial/gen-ts/" class="md-nav__link">
         
   
   
@@ -600,7 +607,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/state-management/" class="md-nav__link">
+      <a href="../../tutorial/state-management/" class="md-nav__link">
         
   
   
@@ -623,7 +630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/using-plugins/" class="md-nav__link">
+      <a href="../../tutorial/using-plugins/" class="md-nav__link">
         
   
   
@@ -646,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/debugging/" class="md-nav__link">
+      <a href="../../tutorial/debugging/" class="md-nav__link">
         
   
   
@@ -669,7 +676,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/build-sdist/" class="md-nav__link">
+      <a href="../../tutorial/build-sdist/" class="md-nav__link">
         
   
   
@@ -692,7 +699,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/build-wheel/" class="md-nav__link">
+      <a href="../../tutorial/build-wheel/" class="md-nav__link">
         
   
   
@@ -730,7 +737,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../usage/tutorial/build-standalone/" class="md-nav__link ">
+            <a href="../../tutorial/build-standalone/" class="md-nav__link ">
               
   
   
@@ -763,7 +770,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/tutorial/build-standalone-cython/" class="md-nav__link">
+      <a href="../../tutorial/build-standalone-cython/" class="md-nav__link">
         
   
   
@@ -802,7 +809,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/pytauri-wheel/" class="md-nav__link">
+      <a href="../../pytauri-wheel/" class="md-nav__link">
         
   
   
@@ -822,6 +829,8 @@
                 
   
   
+    
+  
   
   
     
@@ -832,15 +841,15 @@
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../usage/concepts/" class="md-nav__link ">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -859,7 +868,7 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2_3">
             <span class="md-nav__icon md-icon"></span>
             Concepts
@@ -873,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/concepts/ipc/" class="md-nav__link">
+      <a href="../ipc/" class="md-nav__link">
         
   
   
@@ -893,10 +902,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../../usage/concepts/async/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Async And Callbacks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -907,6 +938,77 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#async-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      Async Tools
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Async Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#run-async-code-in-sync-callbacks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Async Code in Sync Callbacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-blocking-code-in-async-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Blocking Code in Async Context
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-async-code-in-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Async Code in Background
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-raw-blockingportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access Raw BlockingPortal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -919,7 +1021,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/concepts/mutiprocessing/" class="md-nav__link">
+      <a href="../mutiprocessing/" class="md-nav__link">
         
   
   
@@ -950,7 +1052,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../usage/using-unreleased-commits/" class="md-nav__link">
+      <a href="../../using-unreleased-commits/" class="md-nav__link">
         
   
   
@@ -1994,30 +2096,25 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../CHANGELOG/" class="md-nav__link ">
               
   
   
@@ -2030,13 +2127,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             Changelog
@@ -2091,7 +2188,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../py/pytauri/" class="md-nav__link">
+      <a href="../../../CHANGELOG/py/pytauri/" class="md-nav__link">
         
   
   
@@ -2114,7 +2211,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../py/pytauri-wheel/" class="md-nav__link">
+      <a href="../../../CHANGELOG/py/pytauri-wheel/" class="md-nav__link">
         
   
   
@@ -2137,7 +2234,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../py/pyo3-utils/" class="md-nav__link">
+      <a href="../../../CHANGELOG/py/pyo3-utils/" class="md-nav__link">
         
   
   
@@ -2160,7 +2257,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../py/codelldb/" class="md-nav__link">
+      <a href="../../../CHANGELOG/py/codelldb/" class="md-nav__link">
         
   
   
@@ -2232,7 +2329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rs/pytauri/" class="md-nav__link">
+      <a href="../../../CHANGELOG/rs/pytauri/" class="md-nav__link">
         
   
   
@@ -2255,7 +2352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rs/pytauri-core/" class="md-nav__link">
+      <a href="../../../CHANGELOG/rs/pytauri-core/" class="md-nav__link">
         
   
   
@@ -2278,7 +2375,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rs/tauri-plugin-pytauri/" class="md-nav__link">
+      <a href="../../../CHANGELOG/rs/tauri-plugin-pytauri/" class="md-nav__link">
         
   
   
@@ -2301,7 +2398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../rs/pyo3-utils/" class="md-nav__link">
+      <a href="../../../CHANGELOG/rs/pyo3-utils/" class="md-nav__link">
         
   
   
@@ -2329,8 +2426,6 @@
                 
   
   
-    
-  
   
   
     
@@ -2341,11 +2436,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
         
           
           <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
@@ -2361,7 +2456,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5_3">
             <span class="md-nav__icon md-icon"></span>
             js
@@ -2372,32 +2467,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    tauri-plugin-pytauri-api
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../CHANGELOG/js/tauri-plugin-pytauri-api/" class="md-nav__link">
         
   
   
@@ -2408,143 +2481,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#unreleased" class="md-nav__link">
-    <span class="md-ellipsis">
-      Unreleased
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Unreleased">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#breaking" class="md-nav__link">
-    <span class="md-ellipsis">
-      BREAKING
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#060" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.6.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#050" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.5.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.5.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#040" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.4.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#030" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.3.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.2.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#docs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Docs
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#010-beta0" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.1.0-beta.0
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2592,19 +2528,46 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#unreleased" class="md-nav__link">
+  <a href="#async-tools" class="md-nav__link">
     <span class="md-ellipsis">
-      Unreleased
+      Async Tools
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Unreleased">
+    <nav class="md-nav" aria-label="Async Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#breaking" class="md-nav__link">
+  <a href="#run-async-code-in-sync-callbacks" class="md-nav__link">
     <span class="md-ellipsis">
-      BREAKING
+      Run Async Code in Sync Callbacks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-blocking-code-in-async-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Blocking Code in Async Context
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-async-code-in-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      Run Async Code in Background
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access-raw-blockingportal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Access Raw BlockingPortal
     </span>
   </a>
   
@@ -2612,99 +2575,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#060" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.6.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#050" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.5.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.5.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#040" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.4.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#030" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.3.0
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#020" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.2.0
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="0.2.0">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Added
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#docs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Docs
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#010-beta0" class="md-nav__link">
-    <span class="md-ellipsis">
-      0.1.0-beta.0
-    </span>
-  </a>
   
 </li>
       
@@ -2724,7 +2594,7 @@
 
 
   
-    <a href="https://github.com/pytauri/pytauri/edit/main/docs/CHANGELOG/js/tauri-plugin-pytauri-api.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/pytauri/pytauri/edit/main/docs/usage/concepts/async.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2733,72 +2603,194 @@
     
       
     
-    <a href="https://github.com/pytauri/pytauri/raw/main/docs/CHANGELOG/js/tauri-plugin-pytauri-api.md" title="View source of this page" class="md-content__button md-icon">
+    <a href="https://github.com/pytauri/pytauri/raw/main/docs/usage/concepts/async.md" title="View source of this page" class="md-content__button md-icon">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
     </a>
   
 
 
-<h1 id="tauri-plugin-pytauri-api">tauri-plugin-pytauri-api<a class="headerlink" href="#tauri-plugin-pytauri-api" title="Permanent link">&para;</a></h1>
-<h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
-<ul>
-<li>
-<p><a href="https://github.com/pytauri/pytauri/pull/178">#178</a> - feat(plugin-api)!: remove <code>rawPyInvoke</code> and <code>Channel</code>.</p>
-<div class="admonition tip">
-<p class="admonition-title">Migration</p>
-<div class="language-diff highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gd">-import { rawPyInvoke, Channel } from &quot;tauri-plugin-pytauri-api&quot;;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gi">+import { pyInvoke } from &quot;tauri-plugin-pytauri-api&quot;;</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gi">+import { Channel } from &quot;@tauri-apps/api/core&quot;;</span>
-</span></code></pre></div>
+<h1 id="async-and-callbacks">Async And Callbacks<a class="headerlink" href="#async-and-callbacks" title="Permanent link">&para;</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>FastAPI has a brief tutorial about <code>async</code> that you might find interesting: <a href="https://fastapi.tiangolo.com/async/">https://fastapi.tiangolo.com/async/</a></p>
 </div>
-<p>Before <code>v0.7</code>, IPC between Python and the frontend always used <code>bytes</code>/<code>ArrayBuffer</code> for data transfer. <code>pyInvoke</code> and <code>Channel.addJsonListener</code> would force serialization and deserialization of input and output, while <code>rawPyInvoke</code> and <code>Channel.onmessage</code> would directly send and receive raw <code>ArrayBuffer</code> data. This mechanism has been improved in <code>v0.7</code>:</p>
+<p>PyTauri/Tauri runtime model:</p>
+<ol>
+<li>The main thread is used for Tauri App's window/webview event loop</li>
+<li>Tauri (Rust part) uses <a href="https://docs.rs/tokio/1.46.0/tokio/runtime/index.html#multi-thread-scheduler">tokio multi-threaded async runtime</a> to execute asynchronous code like IPC commands</li>
+<li>PyTauri uses <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.from_thread.BlockingPortal">anyio.from_thread.BlockingPortal</a> async runtime in a separate thread to execute asynchronous code like IPC commands</li>
+</ol>
+<hr />
+<p>You might notice that some Tauri/PyTauri APIs use synchronous callbacks, such as:</p>
 <ul>
-<li>
-<p>Now, <code>pyInvoke</code> automatically chooses whether to serialize based on your input type:</p>
+<li><code>Listener</code> (<a href="https://docs.rs/tauri/2.6.0/tauri/trait.Listener.html">Tauri</a>/<a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/#pytauri.Listener">PyTauri</a>)</li>
+<li><code>AppHandle::on_menu_event</code> (<a href="https://docs.rs/tauri/2.6.0/tauri/struct.AppHandle.html#method.on_menu_event">Tauri</a>/<a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/#pytauri.AppHandle.on_menu_event">PyTauri</a>)</li>
+<li>etc.</li>
+</ul>
+<p>These synchronous callbacks execute either in the main thread or in Tauri's tokio multi-threaded async runtime. However, one thing is certain: they will never execute in PyTauri's anyio async runtime.</p>
+<p>Unlike the tokio runtime in Rust, Python's async runtimes (<code>anyio</code>/<code>asyncio</code>/<code>trio</code>) are not thread-safe.</p>
+<div class="admonition info">
+<p class="admonition-title">Thread safety references</p>
 <ul>
-<li><code>ArrayBuffer</code>/<code>Uint8Array</code> will be sent directly to the backend.</li>
-<li>Other types (<code>any</code>) will be converted to <code>ArrayBuffer</code> using <code>JSON.stringify</code> and <code>TextEncoder</code> before being sent to the backend.</li>
+<li><a href="https://anyio.readthedocs.io/en/stable/threads.html">https://anyio.readthedocs.io/en/stable/threads.html</a></li>
+<li><a href="https://docs.python.org/3/library/asyncio-task.html#asyncio.run_coroutine_threadsafe">https://docs.python.org/3/library/asyncio-task.html#asyncio.run_coroutine_threadsafe</a></li>
 </ul>
-<p><a href="https://pytauri.github.io/pytauri/0.7/usage/concepts/ipc/#commands">Only the backend can decide whether to deserialize or accept the raw bytes data</a>.</p>
-</li>
-<li>
-<p>Only the backend can decide whether to return deserialized JSON data or raw <code>ArrayBuffer</code> data:</p>
-<ul>
-<li>If <code>Command</code> returns a <code>bytes</code> type or <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/ipc/#pytauri.ipc.Channel.send">Channel.send</a> sends a <code>bytes</code> type, the frontend will receive an <code>ArrayBuffer</code>.</li>
-<li>If <code>Command</code> returns other types (<code>BaseModel</code>/<code>Any</code>) and <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri/ipc/#pytauri.ipc.Channel.send">Channel.send</a> sends a <code>str</code> type, the frontend will receive automatically deserialized JSON data.</li>
-</ul>
-</li>
-</ul>
-<p>Therefore:</p>
-<ul>
-<li><code>pyInvoke</code> replaces <code>rawPyInvoke</code></li>
-<li><code>import { Channel } from "@tauri-apps/api/core"</code> replaces <code>import { Channel } from "tauri-plugin-pytauri-api"</code>.</li>
-</ul>
-</li>
-</ul>
-<h2 id="060"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.6.0">0.6.0</a><a class="headerlink" href="#060" title="Permanent link">&para;</a></h2>
-<h2 id="050"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.5.0">0.5.0</a><a class="headerlink" href="#050" title="Permanent link">&para;</a></h2>
-<h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
-<ul>
-<li>
-<p><a href="https://github.com/pytauri/pytauri/pull/136">#136</a> - feat(pytauri): accessing the request headers in <code>Commands</code>:</p>
-<p>Added <code>options?: InvokeOptions</code> parameter to <code>rawPyInvoke</code> and <code>pyInvoke</code>.</p>
-</li>
-</ul>
-<h2 id="040"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.4.0">0.4.0</a><a class="headerlink" href="#040" title="Permanent link">&para;</a></h2>
-<h2 id="030"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.3.0">0.3.0</a><a class="headerlink" href="#030" title="Permanent link">&para;</a></h2>
-<h2 id="020"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.2.0">0.2.0</a><a class="headerlink" href="#020" title="Permanent link">&para;</a></h2>
-<h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="https://github.com/pytauri/pytauri/pull/50">#50</a> - feat: add <code>class Channel extends TauriChannel&lt;ArrayBuffer&gt;</code> for pytauri <a href="https://tauri.app/develop/calling-frontend/#channels">channels ipc</a>.</li>
-</ul>
-<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
-<ul>
-<li><a href="https://github.com/pytauri/pytauri/pull/50">#50</a> - add tsdoc for all classes and functions.</li>
-</ul>
-<h2 id="010-beta0"><a href="https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.1.0-beta.0">0.1.0-beta.0</a><a class="headerlink" href="#010-beta0" title="Permanent link">&para;</a></h2>
+</div>
+<p>This means you cannot directly use Python's async APIs (like <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.create_task_group">anyio.create_task_group</a>) and async synchronization primitives (like <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.Event">anyio.Event</a>) in these synchronous callbacks (i.e., in another thread): <a href="https://github.com/pytauri/pytauri/issues/132">pytauri/pytauri#132</a>.</p>
+<p>Fortunately, anyio provides some methods to achieve this, such as <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.from_thread.BlockingPortal.call">BlockingPortal.call</a>, etc: <a href="https://anyio.readthedocs.io/en/stable/threads.html#calling-asynchronous-code-from-an-external-thread">https://anyio.readthedocs.io/en/stable/threads.html#calling-asynchronous-code-from-an-external-thread</a>.</p>
+<p>However, using this approach directly is not very ergonomic. Therefore, <code>pytauri</code> provides some utility tools to simplify this process since <code>v0.7</code>.</p>
+<h2 id="async-tools">Async Tools<a class="headerlink" href="#async-tools" title="Permanent link">&para;</a></h2>
+<p>The <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_utils/async_tools/#pytauri_utils.async_tools">pytauri_utils.async_tools</a> module provides some tools to simplify the process of using async APIs in synchronous callbacks/contexts.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><code>pytauri_utils</code> is distributed as part of the <a href="https://pypi.org/project/pytauri/"><code>pytauri</code></a> package on PyPI.
+Therefore, running <code>pip install pytauri</code> will also install it.</p>
+</div>
+<p>First, let's add <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_utils/async_tools/#pytauri_utils.async_tools.AsyncTools">AsyncTools</a> to the <a href="../../tutorial/state-management/">App State</a>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">anyio.from_thread</span> <span class="kn">import</span> <span class="n">start_blocking_portal</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">Commands</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">ImplManager</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">Manager</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">State</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">builder_factory</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">context_factory</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="kn">from</span> <span class="nn">pytauri_utils.async_tools</span> <span class="kn">import</span> <span class="n">AsyncTools</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="k">def</span> <span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="k">with</span> <span class="p">(</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>        <span class="n">start_blocking_portal</span><span class="p">(</span><span class="s2">&quot;asyncio&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">portal</span><span class="p">,</span>  <span class="c1"># or `trio`</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>        <span class="n">AsyncTools</span><span class="p">(</span><span class="n">portal</span><span class="p">)</span> <span class="k">as</span> <span class="n">async_tools</span><span class="p">,</span>  <span class="c1"># ⭐ initialize AsyncTools</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="p">):</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>        <span class="n">app</span> <span class="o">=</span> <span class="n">builder_factory</span><span class="p">()</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="n">context</span><span class="o">=</span><span class="n">context_factory</span><span class="p">(),</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="n">invoke_handler</span><span class="o">=</span><span class="n">commands</span><span class="o">.</span><span class="n">generate_handler</span><span class="p">(</span><span class="n">portal</span><span class="p">),</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>        <span class="p">)</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>        <span class="c1"># ⭐ Add `AsyncTools` to app state</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="n">Manager</span><span class="o">.</span><span class="n">manage</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">async_tools</span><span class="p">)</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>        <span class="n">exit_code</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">run_return</span><span class="p">()</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>        <span class="k">return</span> <span class="n">exit_code</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="c1"># ⭐ Access `AsyncTools` from app state</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="k">def</span> <span class="nf">access_async_tools_via_api</span><span class="p">(</span><span class="n">manager</span><span class="p">:</span> <span class="n">ImplManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncTools</span><span class="p">:</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    <span class="n">async_tools</span> <span class="o">=</span> <span class="n">Manager</span><span class="o">.</span><span class="n">state</span><span class="p">(</span><span class="n">manager</span><span class="p">,</span> <span class="n">AsyncTools</span><span class="p">)</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    <span class="k">return</span> <span class="n">async_tools</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a><span class="c1"># ⭐ Access `AsyncTools` from app state in a command</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">access_async_via_command_injection</span><span class="p">(</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    <span class="n">async_tools</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">AsyncTools</span><span class="p">,</span> <span class="n">State</span><span class="p">()],</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">async_tools</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Then we can access it through <a href="../../tutorial/state-management/#managing-and-accessing-state">Manager.state</a> API or <a href="../../tutorial/state-management/#state-injection-in-commands"><code>command state injection</code></a>.</p>
+<h3 id="run-async-code-in-sync-callbacks">Run Async Code in Sync Callbacks<a class="headerlink" href="#run-async-code-in-sync-callbacks" title="Permanent link">&para;</a></h3>
+<p>The <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_utils/async_tools/#pytauri_utils.async_tools.AsyncTools.to_sync">AsyncTools.to_sync</a> method allows you to convert an async function to a sync function, so you can use it in/as synchronous callbacks.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span> <span class="nn">anyio</span> <span class="kn">import</span> <span class="n">create_memory_object_stream</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Commands</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Listener</span><span class="p">,</span> <span class="n">State</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span> <span class="nn">pytauri_utils.async_tools</span> <span class="kn">import</span> <span class="n">AsyncTools</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command_handler</span><span class="p">(</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">async_tools</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">AsyncTools</span><span class="p">,</span> <span class="n">State</span><span class="p">()]</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    <span class="n">send_stream</span><span class="p">,</span> <span class="n">receive_stream</span> <span class="o">=</span> <span class="n">create_memory_object_stream</span><span class="p">[</span><span class="nb">str</span><span class="p">]()</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="c1"># ⭐ Convert an asynchronous function to a synchronous one</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="nd">@async_tools</span><span class="o">.</span><span class="n">to_sync</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">listener</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="k">async</span> <span class="k">with</span> <span class="n">send_stream</span><span class="p">:</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>            <span class="k">await</span> <span class="n">send_stream</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="c1"># ⭐ Then we can use it as synchronous callback</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    <span class="n">Listener</span><span class="o">.</span><span class="n">once</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;foo-event&quot;</span><span class="p">,</span> <span class="n">listener</span><span class="p">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">receive_stream</span><span class="p">:</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Received: &quot;</span><span class="p">,</span> <span class="k">await</span> <span class="n">receive_stream</span><span class="o">.</span><span class="n">receive</span><span class="p">())</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Alternatively, you can use <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.from_thread.BlockingPortal.call">BlockingPortal.call</a> or <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.from_thread.BlockingPortal.start_task_soon">BlockingPortal.start_task_soon</a> directly, as it has better performance (no need to instantiate a new function).</p>
+<p>See following <a href="#access-raw-blockingportal">AsyncTools.portal</a>.</p>
+</div>
+<h3 id="run-blocking-code-in-async-context">Run Blocking Code in Async Context<a class="headerlink" href="#run-blocking-code-in-async-context" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p>Ref: <a href="https://anyio.readthedocs.io/en/stable/threads.html#">https://anyio.readthedocs.io/en/stable/threads.html#</a></p>
+<p>Practical asynchronous applications occasionally need to run network, file or computationally expensive operations. Such operations would normally block the asynchronous event loop, leading to performance issues. The solution is to run such code in worker threads. Using worker threads lets the event loop continue running other tasks while the worker thread runs the blocking call.</p>
+</blockquote>
+<p>The <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_utils/async_tools/#pytauri_utils.async_tools.AsyncTools.to_async">AsyncTools.to_async</a> method allows you to convert a sync function to an async function, so you won't block the async event loop.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">Commands</span><span class="p">,</span> <span class="n">State</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="kn">from</span> <span class="nn">pytauri_utils.async_tools</span> <span class="kn">import</span> <span class="n">AsyncTools</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command_handler</span><span class="p">(</span><span class="n">async_tools</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">AsyncTools</span><span class="p">,</span> <span class="n">State</span><span class="p">()])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="c1"># ⭐ Convert a synchronous blocking function to an asynchronous one</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="nd">@async_tools</span><span class="o">.</span><span class="n">to_async</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="k">def</span> <span class="nf">some_blocking_task</span><span class="p">(</span><span class="n">secs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Running a blocking task...&quot;</span><span class="p">)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="n">sleep</span><span class="p">(</span><span class="n">secs</span><span class="p">)</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="c1"># ⭐ Run blocking task in a separate worker thread</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="k">await</span> <span class="n">some_blocking_task</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This method exists more as a symmetric counterpart to <code>to_sync</code>.
+In practical applications, you might prefer to use <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.to_thread.run_sync">anyio.to_thread.run_sync</a>, as it has better performance (no need to instantiate a new function).</p>
+</div>
+<h3 id="run-async-code-in-background">Run Async Code in Background<a class="headerlink" href="#run-async-code-in-background" title="Permanent link">&para;</a></h3>
+<p>You can use the <a class="autorefs autorefs-external" href="https://anyio.readthedocs.io/en/stable/api.html#anyio.abc.TaskGroup.start_soon">TaskGroup.start_soon</a> method to run an async function in the background.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="kn">from</span> <span class="nn">anyio</span> <span class="kn">import</span> <span class="n">sleep</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">RootModel</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="kn">from</span> <span class="nn">pytauri</span> <span class="kn">import</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">Commands</span><span class="p">,</span> <span class="n">Emitter</span><span class="p">,</span> <span class="n">State</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="kn">from</span> <span class="nn">pytauri_utils.async_tools</span> <span class="kn">import</span> <span class="n">AsyncTools</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">commands</span> <span class="o">=</span> <span class="n">Commands</span><span class="p">()</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="n">DatetimeModel</span> <span class="o">=</span> <span class="n">RootModel</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">task_in_background</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>        <span class="n">Emitter</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">app_handle</span><span class="p">,</span> <span class="s2">&quot;foo-event&quot;</span><span class="p">,</span> <span class="n">DatetimeModel</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()))</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>        <span class="k">await</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">command_handler</span><span class="p">(</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">async_tools</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">AsyncTools</span><span class="p">,</span> <span class="n">State</span><span class="p">()]</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    <span class="c1"># ⭐ Run a task in the background</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>    <span class="n">async_tools</span><span class="o">.</span><span class="n">task_group</span><span class="o">.</span><span class="n">start_soon</span><span class="p">(</span><span class="n">task_in_background</span><span class="p">,</span> <span class="n">app_handle</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="access-raw-blockingportal">Access Raw <code>BlockingPortal</code><a class="headerlink" href="#access-raw-blockingportal" title="Permanent link">&para;</a></h3>
+<p>You can access the <code>BlockingPortal</code> you passed when instantiating <code>AsyncTools</code> through <a class="autorefs autorefs-internal" href="../../../reference/py/pytauri_utils/async_tools/#pytauri_utils.async_tools.AsyncTools.portal">AsyncTools.portal</a>.</p>
 
 
 
@@ -2821,7 +2813,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="January 15, 2025 20:32:48 UTC"><span class="timeago" datetime="2025-01-15T20:32:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="January 15, 2025 20:32:48 UTC">2025-01-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 21, 2025 15:38:47 UTC"><span class="timeago" datetime="2025-07-21T15:38:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 21, 2025 15:38:47 UTC">2025-07-21</span>
   </span>
 
     
@@ -2831,7 +2823,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="January 15, 2025 20:32:48 UTC"><span class="timeago" datetime="2025-01-15T20:32:48+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="January 15, 2025 20:32:48 UTC">2025-01-15</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="July 21, 2025 15:38:47 UTC"><span class="timeago" datetime="2025-07-21T15:38:47+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="July 21, 2025 15:38:47 UTC">2025-07-21</span>
   </span>
 
     
@@ -2896,7 +2888,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../../rs/pyo3-utils/" class="md-footer__link md-footer__link--prev" aria-label="Previous: pyo3-utils">
+          <a href="../ipc/" class="md-footer__link md-footer__link--prev" aria-label="Previous: IPC">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2906,11 +2898,27 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                pyo3-utils
+                IPC
               </div>
             </div>
           </a>
         
+        
+          
+          <a href="../mutiprocessing/" class="md-footer__link md-footer__link--next" aria-label="Next: Using Multiprocessing">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Using Multiprocessing
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
         
       </nav>
     
