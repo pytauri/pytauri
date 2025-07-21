@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.0]
+
 ### Added
 
 - [#208](https://github.com/pytauri/pytauri/pull/208) - feat(pytauri)!: app state management and `AsyncTools` utils.
@@ -130,6 +132,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.7.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.7.0
 [0.6.1]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.6.1
 [0.6.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.5.0
