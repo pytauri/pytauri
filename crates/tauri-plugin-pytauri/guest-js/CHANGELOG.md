@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.7.0]
+
 ### BREAKING
 
 - [#178](https://github.com/pytauri/pytauri/pull/178) - feat(plugin-api)!: remove `rawPyInvoke` and `Channel`.
@@ -60,6 +62,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.7.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.7.0
 [0.6.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.5.0
 [0.4.0]: https://github.com/pytauri/pytauri/releases/tag/js/tauri-plugin-pytauri-api/v0.4.0
