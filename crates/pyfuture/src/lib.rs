@@ -6,6 +6,7 @@
 )]
 
 use std::{
+    cell::Cell,
     convert::Infallible,
     future,
     sync::{
@@ -17,7 +18,7 @@ use std::{
 use crossbeam::atomic::AtomicCell;
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
-    exceptions::PyTypeError,
+    exceptions::{PyRuntimeError, PyTypeError},
     prelude::*,
     sync::GILOnceCell,
     types::{PyCFunction, PyType},
@@ -90,11 +91,49 @@ impl Future {
     pub fn add_done_callback(
         &self,
         py: Python<'_>,
-        cb: impl for<'p> Fn(Python<'p>, Self) -> PyResult<()> + Send + 'static,
+        cb: impl for<'p> FnOnce(Python<'p>, Self) -> PyResult<()> + Send + 'static,
     ) -> PyResult<()> {
+        #[pyclass(frozen)]
+        struct OnceCallback(
+            AtomicCell<
+                Option<
+                    Box<
+                        dyn for<'p> FnOnce(Python<'p>, Future) -> PyResult<()>
+                            + Send
+                            + Sync
+                            + 'static,
+                    >,
+                >,
+            >,
+        );
+
+        impl OnceCallback {
+            fn new(
+                cb: impl for<'p> FnOnce(Python<'p>, Future) -> PyResult<()> + Send + Sync + 'static,
+            ) -> Self {
+                OnceCallback(AtomicCell::new(Some(Box::new(cb))))
+            }
+        }
+
+        #[pymethods]
+        impl OnceCallback {
+            fn __call__(&self, py: Python<'_>, this: Future) -> PyResult<()> {
+                let cb = self.0.take().ok_or_else(|| {
+                    PyRuntimeError::new_err("This callback can only be called once")
+                })?;
+                cb(py, this)
+            }
+        }
+
+        // let cb = OnceCallback::new(cb);
+
         let this = self.clone_ref(py)?;
+        let cb = Cell::new(Some(cb));
         let cb = PyCFunction::new_closure(py, None, None, move |args, _kwargs| {
             let py = args.py();
+            let cb = cb
+                .take()
+                .ok_or_else(|| PyRuntimeError::new_err("This callback can only be called once"))?;
             cb(py, this.clone_ref(py)?)
         })?;
 
@@ -364,6 +403,46 @@ impl TokioPoolExecutor {
     }
 }
 
+struct FutureNursery {
+    runtime: tokio::runtime::Handle,
+}
+
+impl FutureNursery {
+    pub fn new(runtime: tokio::runtime::Handle) -> Self {
+        Self { runtime }
+    }
+
+    pub fn wait(
+        &self,
+        py: Python<'_>,
+        future: Future,
+    ) -> PyResult<impl std::future::Future<Output = PyResult<PyObject>> + Send + Sync + 'static>
+    {
+        let (tx, rx) = oneshot::channel::<PyResult<PyObject>>();
+
+        future.add_done_callback(py, move |py, future| {
+            if future.cancelled(py)? {
+                tx.send(Err(CancelledError::new_err(()))).unwrap();
+                return Ok(());
+            }
+
+            if let Some(err) = future.exception(py, None)? {
+                tx.send(Err(err)).unwrap();
+                return Ok(());
+            }
+
+            let ret = future.result(py, None)?;
+            tx.send(Ok(ret)).unwrap();
+            Ok(())
+        })?;
+
+        Ok(async {
+            // TODO: cancelled exception handling
+            rx.await.unwrap()
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -422,6 +501,17 @@ mod tests {
                     Ok(())
                 })
                 .unwrap();
+
+            let future_nursery = FutureNursery::new(runtime.handle().clone());
+            let fut = future_nursery
+                .wait(py, py_future.clone_ref(py).unwrap())
+                .unwrap();
+            let ret = py
+                .allow_threads(|| runtime.handle().block_on(fut))
+                .unwrap()
+                .extract::<i32>(py)
+                .unwrap();
+            assert_eq!(ret, 42);
 
             let ret = py_future
                 .result(py, Some(0.001))
