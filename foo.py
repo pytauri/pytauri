@@ -11,6 +11,7 @@ from threading import get_ident
 from typing import Any, Awaitable, Callable, Generic, Optional, Union, cast
 
 from anyio import (
+    BrokenResourceError,
     CancelScope,
     Event,
     create_memory_object_stream,
@@ -146,6 +147,7 @@ class FutureNursery(AbstractAsyncContextManager["FutureNursery"]):
         self._portal = BlockingPortal()
         self._task_group: TaskGroup = create_task_group()
         self._event_loop_ident = get_ident()
+        self._cancelled_exc_class = get_cancelled_exc_class()
 
     async def __aenter__(self) -> Self:
         await self._exit_stack.enter_async_context(self._portal)
@@ -160,17 +162,21 @@ class FutureNursery(AbstractAsyncContextManager["FutureNursery"]):
 
         def _callback(future: futures.Future[T]) -> None:
             with CancelScope(shield=True), sender:  # noqa: ASYNC100
-                if future.cancelled():
-                    sender.send_nowait(futures.CancelledError())
-                    return
+                try:
+                    if future.cancelled():
+                        sender.send_nowait(futures.CancelledError())
+                        return
 
-                exception = future.exception()
-                if exception is not None:
-                    sender.send_nowait(exception)
-                    return
+                    exception = future.exception()
+                    if exception is not None:
+                        sender.send_nowait(exception)
+                        return
 
-                ret = future.result()
-                sender.send_nowait(ret)
+                    ret = future.result()
+                    sender.send_nowait(ret)
+                except BrokenResourceError:
+                    # maybe cancelled
+                    pass
 
         def callback(future: futures.Future[T]) -> None:
             if get_ident() == self._event_loop_ident:
@@ -184,12 +190,15 @@ class FutureNursery(AbstractAsyncContextManager["FutureNursery"]):
 
         future.add_done_callback(callback)
 
-        # TODO: cancelled exception handling
-        with receiver:
-            ret = await receiver.receive()
-            if isinstance(ret, BaseException):
-                raise ret
-            return ret
+        try:
+            with receiver:
+                ret = await receiver.receive()
+                if isinstance(ret, BaseException):
+                    raise ret
+                return ret
+        except self._cancelled_exc_class:
+            future.cancel()
+            raise
 
 
 # def future_to_coroutine(
