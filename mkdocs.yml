@@ -145,6 +145,7 @@ plugins:
               - pyo3_utils
               - pytauri
               - pytauri_plugins  # it is shipped within the `pytauri` package on PyPI
+              - pytauri_utils  # it is shipped within the `pytauri` package on PyPI
               - pytauri_wheel
             extensions:
               # https://mkdocstrings.github.io/griffe-inherited-docstrings/
