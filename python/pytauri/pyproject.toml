@@ -13,7 +13,7 @@ description = "Tauri binding for Python through Pyo3."
 dependencies = [
     "pydantic >= 2",
     "anyio >= 4",
-    "pillow >= 11.1",         # `>=11` for free-threading
+    "pillow >= 11.1",            # `>=11` for free-threading
     "typing-extensions >= 4.14",
     # See: <https://pypi.org/project/backports.entry-points-selectable/>
     # and: <https://docs.python.org/3/library/importlib.metadata.html#entry-points>
@@ -37,4 +37,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/pytauri", "src/pytauri_plugins"]
+packages = ["src/pytauri", "src/pytauri_plugins", "src/pytauri_utils"]
