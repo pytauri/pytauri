@@ -50,6 +50,7 @@ pub struct AddDoneCallbackArgs<Fn_>
 where
     Fn_: for<'p> FnOnce(Bound<'p, PyFuture>) -> PyResult<()> + Send + 'static,
 {
+    #[builder(start_fn)]
     fn_: Fn_,
 }
 
@@ -60,6 +61,7 @@ pub struct ResultArgs {
 
 #[derive(bon::Builder)]
 pub struct SetResultArgs<'a, 'py> {
+    #[builder(start_fn)]
     result: &'a Bound<'py, PyAny>,
 }
 
@@ -70,8 +72,7 @@ pub struct ExceptionArgs {
 
 #[derive(bon::Builder)]
 pub struct SetExceptionArgs {
-    // TODO: maybe `#[builder(start_fn)]`
-    #[builder(required)]
+    #[builder(start_fn)]
     exception: Option<PyErr>,
 }
 
@@ -114,6 +115,7 @@ pub trait PyFutureMethods<'py>: sealed::Sealed {
 }
 
 impl<'py> PyFutureMethods<'py> for Bound<'py, PyFuture> {
+    // TODO: add `*Args` for these methods
     fn cancel(&self) -> PyResult<bool> {
         let py = self.py();
         self.call_method0(intern!(py, "cancel"))?.extract()
@@ -289,7 +291,8 @@ pub struct TokioPoolExecutor {
 
 #[bon::bon]
 impl TokioPoolExecutor {
-    pub fn new(runtime: tokio::runtime::Handle) -> Self {
+    #[builder]
+    pub fn new(#[builder(start_fn)] runtime: tokio::runtime::Handle) -> Self {
         Self {
             runtime,
             tracker: tokio_util::task::TaskTracker::new(),
@@ -319,9 +322,7 @@ impl TokioPoolExecutor {
         let shutdown = self.shutdown.clone();
 
         let defer = Defer::new(move || {
-            let args = SetExceptionArgs::builder()
-                .exception(Some(CancelledError::new_err(())))
-                .build();
+            let args = SetExceptionArgs::builder(Some(CancelledError::new_err(()))).build();
             Python::with_gil(|py| py_future2.bind(py).set_exception(args))
                 // TODO: raise unraised exception instead of panicking
                 .unwrap();
@@ -348,11 +349,11 @@ impl TokioPoolExecutor {
                     Python::with_gil(|py| match ret {
                         Ok(result) => {
                             let result = result.into_bound_py_any(py)?;
-                            let args = SetResultArgs::builder().result(&result).build();
+                            let args = SetResultArgs::builder(&result).build();
                             py_future.bind(py).set_result(args)
                         }
                         Err(err) => {
-                            let args = SetExceptionArgs::builder().exception(Some(err)).build();
+                            let args = SetExceptionArgs::builder(Some(err)).build();
                             py_future.bind(py).set_exception(args)
                         }
                     })?;
@@ -395,40 +396,42 @@ pub struct FutureNursery {
     runtime: tokio::runtime::Handle,
 }
 
+#[bon::bon]
 impl FutureNursery {
-    pub fn new(runtime: tokio::runtime::Handle) -> Self {
+    #[builder]
+    pub fn new(#[builder(start_fn)] runtime: tokio::runtime::Handle) -> Self {
         Self { runtime }
     }
 
+    #[builder]
     pub fn wait<'py>(
         &self,
-        future: Bound<'py, PyFuture>,
+        #[builder(start_fn)] future: Bound<'py, PyFuture>,
     ) -> PyResult<impl std::future::Future<Output = PyResult<PyObject>> + Send + Sync + 'static>
     {
         let (tx, rx) = oneshot::channel::<PyResult<PyObject>>();
 
-        let args = AddDoneCallbackArgs::builder()
-            .fn_(move |future| {
-                if future.cancelled()? {
-                    // maybe cancelled
-                    let _ = tx.send(Err(CancelledError::new_err(())));
-                    return Ok(());
-                }
-
-                let args = ExceptionArgs::builder().build();
-                if let Some(err) = future.exception(args)? {
-                    // maybe cancelled
-                    let _ = tx.send(Err(err));
-                    return Ok(());
-                }
-
-                let args = ResultArgs::builder().build();
-                let ret = future.result(args)?;
+        let args = AddDoneCallbackArgs::builder(move |future| {
+            if future.cancelled()? {
                 // maybe cancelled
-                let _ = tx.send(Ok(ret.unbind()));
-                Ok(())
-            })
-            .build();
+                let _ = tx.send(Err(CancelledError::new_err(())));
+                return Ok(());
+            }
+
+            let args = ExceptionArgs::builder().build();
+            if let Some(err) = future.exception(args)? {
+                // maybe cancelled
+                let _ = tx.send(Err(err));
+                return Ok(());
+            }
+
+            let args = ResultArgs::builder().build();
+            let ret = future.result(args)?;
+            // maybe cancelled
+            let _ = tx.send(Ok(ret.unbind()));
+            Ok(())
+        })
+        .build();
         future.add_done_callback(args)?;
 
         let future = future.unbind();
@@ -458,20 +461,27 @@ mod tests {
         Python::with_gil(|py| {
             let future = PyFuture::builder(py).build().unwrap();
             future
-                .add_done_callback(py, |py, fut| {
-                    let ret = fut.result(py, Some(0.0))?.extract::<i32>(py)?;
-                    assert_eq!(ret, 42);
-                    Ok(())
-                })
+                .add_done_callback(
+                    AddDoneCallbackArgs::builder(|future| {
+                        let ret = future
+                            .result(ResultArgs::builder().timeout(0.0).build())?
+                            .extract::<i32>()?;
+                        assert_eq!(ret, 42);
+                        Ok(())
+                    })
+                    .build(),
+                )
                 .unwrap();
             let input: Bound<'_, pyo3::types::PyInt> = 42.into_pyobject(py).unwrap();
             let input = input.into_any();
-            future.set_result(py, &input).unwrap();
+            future
+                .set_result(SetResultArgs::builder(&input).build())
+                .unwrap();
 
             let ret = future
-                .result(py, Some(0.0))
+                .result(ResultArgs::builder().timeout(0.0).build())
                 .unwrap()
-                .extract::<i32>(py)
+                .extract::<i32>()
                 .unwrap();
             assert_eq!(ret, 42);
         });
@@ -486,27 +496,29 @@ mod tests {
             .build()
             .expect("Failed building the Runtime");
 
-        let executor = TokioPoolExecutor::new(runtime.handle().clone());
+        let executor = TokioPoolExecutor::builder(runtime.handle().clone()).build();
 
         Python::with_gil(|py| {
             async fn rs_future() -> PyResult<i32> {
                 Ok(42)
             }
 
-            let py_future = executor.submit(py, |_| rs_future(), ()).unwrap();
-
+            let py_future = executor.submit(py, |_| rs_future(), ()).call().unwrap();
             py_future
-                .add_done_callback(py, |py, fut| {
-                    let ret = fut.result(py, Some(0.001))?.extract::<i32>(py)?;
-                    assert_eq!(ret, 42);
-                    Ok(())
-                })
+                .add_done_callback(
+                    AddDoneCallbackArgs::builder(|fut| {
+                        let ret = fut
+                            .result(ResultArgs::builder().timeout(0.001).build())?
+                            .extract::<i32>()?;
+                        assert_eq!(ret, 42);
+                        Ok(())
+                    })
+                    .build(),
+                )
                 .unwrap();
 
-            let future_nursery = FutureNursery::new(runtime.handle().clone());
-            let fut = future_nursery
-                .wait(py, py_future.clone_ref(py).unwrap())
-                .unwrap();
+            let future_nursery = FutureNursery::builder(runtime.handle().clone()).build();
+            let fut = future_nursery.wait(py_future.clone()).call().unwrap();
             let ret = py
                 .allow_threads(|| runtime.handle().block_on(fut))
                 .unwrap()
@@ -515,9 +527,9 @@ mod tests {
             assert_eq!(ret, 42);
 
             let ret = py_future
-                .result(py, Some(0.001))
+                .result(ResultArgs::builder().timeout(0.001).build())
                 .unwrap()
-                .extract::<i32>(py)
+                .extract::<i32>()
                 .unwrap();
             assert_eq!(ret, 42);
         });
@@ -534,7 +546,7 @@ mod tests {
             .build()
             .expect("Failed building the Runtime");
 
-        let executor = TokioPoolExecutor::new(runtime.handle().clone());
+        let executor = TokioPoolExecutor::builder(runtime.handle().clone()).build();
 
         Python::with_gil(|py| {
             async fn rs_future() -> PyResult<i32> {
@@ -544,7 +556,7 @@ mod tests {
                 Ok(42)
             }
 
-            let py_future = executor.submit(py, |_| rs_future(), ()).unwrap();
+            let py_future = executor.submit(py, |_| rs_future(), ()).call().unwrap();
 
             py.allow_threads(|| {
                 let wait = executor.shutdown().wait(true).cancel_futures(true).call();
@@ -552,19 +564,18 @@ mod tests {
             });
 
             py_future
-                .add_done_callback(py, |py, fut| {
-                    let ret = fut.result(py, Some(0.001))?.extract::<i32>(py)?;
-                    assert_eq!(ret, 42);
-                    Ok(())
-                })
+                .add_done_callback(
+                    AddDoneCallbackArgs::builder(|fut| {
+                        let cancelled = fut.cancelled()?;
+                        assert!(cancelled);
+                        Ok(())
+                    })
+                    .build(),
+                )
                 .unwrap();
 
-            let ret = py_future
-                .result(py, Some(0.001))
-                .unwrap()
-                .extract::<i32>(py)
-                .unwrap();
-            assert_eq!(ret, 42);
+            let ret = py_future.cancelled().unwrap();
+            assert!(ret);
         });
     }
 
@@ -583,7 +594,7 @@ mod tests {
         type Foo = Option<u8>;
 
         let foo = crossbeam::atomic::AtomicCell::<Option<u8>>::is_lock_free();
-        println!("Is AtomicCell lock-free? {}", foo);
+        println!("Is AtomicCell lock-free? {foo}");
 
         // let runtime = tokio::runtime::Builder::new_multi_thread()
         //     .enable_all()
