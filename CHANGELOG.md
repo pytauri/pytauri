@@ -32,6 +32,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1]
+
+### Fixed
+
+- [#240](https://github.com/pytauri/pytauri/pull/240) - fix(pytauri): include `pytauri_utils` in package.
+    Yank `py/pytauri/v0.7.0` release.
+
 ## [0.7.0]
 
 ### Highlights
@@ -581,6 +588,7 @@ Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pyta
 ## [0.1.0-beta]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.7.1]: https://github.com/pytauri/pytauri/releases/tag/v0.7.1
 [0.7.0]: https://github.com/pytauri/pytauri/releases/tag/v0.7.0
 [0.6.1]: https://github.com/pytauri/pytauri/releases/tag/v0.6.1
 [0.6.0]: https://github.com/pytauri/pytauri/releases/tag/v0.6.0
