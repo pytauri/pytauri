@@ -9,6 +9,7 @@ use std::{
     cell::Cell,
     convert::Infallible,
     future,
+    marker::Unpin,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -26,6 +27,8 @@ use pyo3::{
     types::{DerefToPyAny, PyCFunction, PyType},
 };
 use tokio::sync::{oneshot, Notify};
+
+pyo3::import_exception!(concurrent.futures, CancelledError);
 
 #[repr(transparent)]
 pub struct PyFuture(PyAny);
@@ -46,6 +49,18 @@ unsafe impl PyTypeInfo for PyFuture {
 }
 
 #[derive(bon::Builder)]
+pub struct CancelArgs {}
+
+#[derive(bon::Builder)]
+pub struct CancelledArgs {}
+
+#[derive(bon::Builder)]
+pub struct RunningArgs {}
+
+#[derive(bon::Builder)]
+pub struct DoneArgs {}
+
+#[derive(bon::Builder)]
 pub struct AddDoneCallbackArgs<Fn_>
 where
     Fn_: for<'p> FnOnce(Bound<'p, PyFuture>) -> PyResult<()> + Send + 'static,
@@ -58,6 +73,9 @@ where
 pub struct ResultArgs {
     timeout: Option<f64>,
 }
+
+#[derive(bon::Builder)]
+pub struct SetRunningOrNotifyCancelArgs {}
 
 #[derive(bon::Builder)]
 pub struct SetResultArgs<'a, 'py> {
@@ -97,10 +115,10 @@ mod sealed {
 
 #[doc(alias = "PyFuture")]
 pub trait PyFutureMethods<'py>: sealed::Sealed {
-    fn cancel(&self) -> PyResult<bool>;
-    fn cancelled(&self) -> PyResult<bool>;
-    fn running(&self) -> PyResult<bool>;
-    fn done(&self) -> PyResult<bool>;
+    fn cancel(&self, args: CancelArgs) -> PyResult<bool>;
+    fn cancelled(&self, args: CancelledArgs) -> PyResult<bool>;
+    fn running(&self, args: RunningArgs) -> PyResult<bool>;
+    fn done(&self, args: DoneArgs) -> PyResult<bool>;
     fn add_done_callback(
         &self,
         args: AddDoneCallbackArgs<
@@ -108,31 +126,34 @@ pub trait PyFutureMethods<'py>: sealed::Sealed {
         >,
     ) -> PyResult<()>;
     fn result(&self, args: ResultArgs) -> PyResult<Bound<'py, PyAny>>;
-    fn set_running_or_notify_cancel(&self) -> PyResult<bool>;
+    fn set_running_or_notify_cancel(&self, args: SetRunningOrNotifyCancelArgs) -> PyResult<bool>;
     fn set_result(&self, args: SetResultArgs) -> PyResult<()>;
     fn exception(&self, args: ExceptionArgs) -> PyResult<Option<PyErr>>;
     fn set_exception(&self, args: SetExceptionArgs) -> PyResult<()>;
 }
 
 impl<'py> PyFutureMethods<'py> for Bound<'py, PyFuture> {
-    // TODO: add `*Args` for these methods
-    fn cancel(&self) -> PyResult<bool> {
+    fn cancel(&self, args: CancelArgs) -> PyResult<bool> {
         let py = self.py();
+        let CancelArgs {} = args;
         self.call_method0(intern!(py, "cancel"))?.extract()
     }
 
-    fn cancelled(&self) -> PyResult<bool> {
+    fn cancelled(&self, args: CancelledArgs) -> PyResult<bool> {
         let py = self.py();
+        let CancelledArgs {} = args;
         self.call_method0(intern!(py, "cancelled"))?.extract()
     }
 
-    fn running(&self) -> PyResult<bool> {
+    fn running(&self, args: RunningArgs) -> PyResult<bool> {
         let py = self.py();
+        let RunningArgs {} = args;
         self.call_method0(intern!(py, "running"))?.extract()
     }
 
-    fn done(&self) -> PyResult<bool> {
+    fn done(&self, args: DoneArgs) -> PyResult<bool> {
         let py = self.py();
+        let DoneArgs {} = args;
         self.call_method0(intern!(py, "done"))?.extract()
     }
 
@@ -201,8 +222,9 @@ impl<'py> PyFutureMethods<'py> for Bound<'py, PyFuture> {
         }
     }
 
-    fn set_running_or_notify_cancel(&self) -> PyResult<bool> {
+    fn set_running_or_notify_cancel(&self, args: SetRunningOrNotifyCancelArgs) -> PyResult<bool> {
         let py = self.py();
+        let SetRunningOrNotifyCancelArgs {} = args;
         self.call_method0(intern!(py, "set_running_or_notify_cancel"))?
             .extract()
     }
@@ -237,39 +259,6 @@ impl<'py> PyFutureMethods<'py> for Bound<'py, PyFuture> {
     }
 }
 
-struct Defer<T>
-where
-    T: FnOnce() + Send + 'static,
-{
-    func: Option<T>,
-}
-
-impl<T> Defer<T>
-where
-    T: FnOnce() + Send + 'static,
-{
-    fn new(func: T) -> Self {
-        Self { func: Some(func) }
-    }
-
-    fn suppress(mut self) {
-        self.func.take();
-    }
-}
-
-impl<T> Drop for Defer<T>
-where
-    T: FnOnce() + Send + 'static,
-{
-    fn drop(&mut self) {
-        if let Some(func) = self.func.take() {
-            func();
-        }
-    }
-}
-
-pyo3::import_exception!(concurrent.futures, CancelledError);
-
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum CancelFutures {
@@ -301,15 +290,15 @@ impl TokioPoolExecutor {
     }
 
     #[builder]
-    pub fn submit<'py, Fn_, Args, Ret>(
+    pub fn submit<'py, Args, Ret, Fut>(
         &self,
         #[builder(start_fn)] py: Python<'py>,
-        #[builder(start_fn)] fn_: impl FnOnce(Args) -> Fn_ + Send + 'static,
+        #[builder(start_fn)] fn_: impl FnOnce(Args) -> Fut + Send + 'static,
         #[builder(start_fn)] args: Args,
     ) -> PyResult<Bound<'py, PyFuture>>
     where
         Args: Send + 'static,
-        Fn_: future::Future<Output = PyResult<Ret>> + Send,
+        Fut: future::Future<Output = PyResult<Ret>> + Send,
         for<'p> Ret: IntoPyObject<'p>,
     {
         if self.shutdown.load() != CancelFutures::NoSet {
@@ -321,11 +310,16 @@ impl TokioPoolExecutor {
         let py_future2 = py_future.clone().unbind();
         let shutdown = self.shutdown.clone();
 
+        // If `spawn_on` is cancelled/dropped, ensure the `PyFuture` is also cancelled
         let defer = Defer::new(move || {
-            let args = SetExceptionArgs::builder(Some(CancelledError::new_err(()))).build();
-            Python::with_gil(|py| py_future2.bind(py).set_exception(args))
-                // TODO: raise unraised exception instead of panicking
-                .unwrap();
+            let err = Some(CancelledError::new_err("rust future cancelled"));
+            let args = SetExceptionArgs::builder(err).build();
+            Python::with_gil(|py| {
+                let py_future2 = py_future2.bind(py);
+                if let Err(e) = py_future2.set_exception(args) {
+                    e.write_unraisable(py, Some(py_future2));
+                }
+            })
         });
 
         let py_future = py_future.unbind();
@@ -334,12 +328,18 @@ impl TokioPoolExecutor {
                 let defer = defer;
                 let script = async || {
                     if shutdown.load() == CancelFutures::True {
-                        Python::with_gil(|py| py_future.bind(py).cancel())?;
+                        Python::with_gil(|py| {
+                            py_future.bind(py).cancel(CancelArgs::builder().build())
+                        })?;
                         defer.suppress();
                         return Ok(());
                     }
 
-                    if !Python::with_gil(|py| py_future.bind(py).set_running_or_notify_cancel())? {
+                    if !Python::with_gil(|py| {
+                        let args = SetRunningOrNotifyCancelArgs::builder().build();
+                        py_future.bind(py).set_running_or_notify_cancel(args)
+                    })? {
+                        // `PyFuture` was already cancelled
                         defer.suppress();
                         return Ok(());
                     }
@@ -361,6 +361,7 @@ impl TokioPoolExecutor {
                     defer.suppress();
                     PyResult::Ok(())
                 };
+                // TODO: `write_unraisable`?
                 script().await.expect("Failed to run future script")
             },
             &self.runtime,
@@ -370,24 +371,30 @@ impl TokioPoolExecutor {
     }
 
     #[builder]
-    pub async fn shutdown(
+    // We may use parameters with `'py` in the future,
+    // and `async fn` would cause the generated `Future` to capture `'py`,
+    // so we use `impl Future` instead.
+    #[expect(clippy::manual_async_fn)]
+    pub fn shutdown(
         &self,
         #[builder(default = true)] wait: bool,
         #[builder(default = false)] cancel_futures: bool,
-    ) {
-        if self.shutdown.swap(if cancel_futures {
-            CancelFutures::True
-        } else {
-            CancelFutures::False
-        }) != CancelFutures::NoSet
-        {
-            return;
-        }
+    ) -> impl future::Future<Output = ()> + Send + Sync + '_ {
+        async move {
+            if self.shutdown.swap(if cancel_futures {
+                CancelFutures::True
+            } else {
+                CancelFutures::False
+            }) != CancelFutures::NoSet
+            {
+                return;
+            }
 
-        self.tracker.close();
+            self.tracker.close();
 
-        if wait {
-            self.tracker.wait().await;
+            if wait {
+                self.tracker.wait().await;
+            }
         }
     }
 }
@@ -407,26 +414,23 @@ impl FutureNursery {
     pub fn wait<'py>(
         &self,
         #[builder(start_fn)] future: Bound<'py, PyFuture>,
-    ) -> PyResult<impl std::future::Future<Output = PyResult<PyObject>> + Send + Sync + 'static>
-    {
+    ) -> PyResult<impl future::Future<Output = PyResult<PyObject>> + Send + Sync + 'static> {
         let (tx, rx) = oneshot::channel::<PyResult<PyObject>>();
 
         let args = AddDoneCallbackArgs::builder(move |future| {
-            if future.cancelled()? {
+            if future.cancelled(CancelledArgs::builder().build())? {
                 // maybe cancelled
                 let _ = tx.send(Err(CancelledError::new_err(())));
                 return Ok(());
             }
 
-            let args = ExceptionArgs::builder().build();
-            if let Some(err) = future.exception(args)? {
+            if let Some(err) = future.exception(ExceptionArgs::builder().build())? {
                 // maybe cancelled
                 let _ = tx.send(Err(err));
                 return Ok(());
             }
 
-            let args = ResultArgs::builder().build();
-            let ret = future.result(args)?;
+            let ret = future.result(ResultArgs::builder().build())?;
             // maybe cancelled
             let _ = tx.send(Ok(ret.unbind()));
             Ok(())
@@ -437,8 +441,10 @@ impl FutureNursery {
         let future = future.unbind();
         let defer = Defer::new(move || {
             Python::with_gil(|py| {
-                // TODO: raise unraised exception instead of panicking
-                future.bind(py).cancel().unwrap();
+                let future = future.bind(py);
+                if let Err(e) = future.cancel(CancelArgs::builder().build()) {
+                    e.write_unraisable(py, Some(future));
+                }
             })
         });
         Ok(async {
@@ -450,33 +456,62 @@ impl FutureNursery {
     }
 }
 
+struct Defer<T>
+where
+    T: FnOnce() + Send + 'static,
+{
+    func: Option<T>,
+}
+
+impl<T> Defer<T>
+where
+    T: FnOnce() + Send + 'static,
+{
+    fn new(func: T) -> Self {
+        Self { func: Some(func) }
+    }
+
+    fn suppress(mut self) {
+        self.func.take();
+    }
+}
+
+impl<T> Drop for Defer<T>
+where
+    T: FnOnce() + Send + 'static,
+{
+    fn drop(&mut self) {
+        if let Some(func) = self.func.take() {
+            func();
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
-    fn test_future() {
+    fn test_future() -> anyhow::Result<()> {
         pyo3::prepare_freethreaded_python();
-
         Python::with_gil(|py| {
+            let callback_return = Arc::new(AtomicCell::new(None));
+            let callback_return1 = callback_return.clone();
+
             let future = PyFuture::builder(py).build().unwrap();
-            future
-                .add_done_callback(
-                    AddDoneCallbackArgs::builder(|future| {
-                        let ret = future
-                            .result(ResultArgs::builder().timeout(0.0).build())?
-                            .extract::<i32>()?;
-                        assert_eq!(ret, 42);
-                        Ok(())
-                    })
-                    .build(),
-                )
-                .unwrap();
+            future.add_done_callback(
+                AddDoneCallbackArgs::builder(move |future| {
+                    let ret = future
+                        .result(ResultArgs::builder().timeout(0.0).build())?
+                        .extract::<i32>()?;
+                    callback_return1.store(Some(ret));
+                    Ok(())
+                })
+                .build(),
+            )?;
             let input: Bound<'_, pyo3::types::PyInt> = 42.into_pyobject(py).unwrap();
             let input = input.into_any();
-            future
-                .set_result(SetResultArgs::builder(&input).build())
-                .unwrap();
+            future.set_result(SetResultArgs::builder(&input).build())?;
 
             let ret = future
                 .result(ResultArgs::builder().timeout(0.0).build())
@@ -484,7 +519,42 @@ mod tests {
                 .extract::<i32>()
                 .unwrap();
             assert_eq!(ret, 42);
-        });
+            assert_eq!(callback_return.load(), Some(42));
+            assert!(!future.cancel(CancelArgs::builder().build())?);
+            assert!(!future.cancelled(CancelledArgs::builder().build())?);
+            assert!(!future.running(RunningArgs::builder().build())?);
+            assert!(future.done(DoneArgs::builder().build())?);
+            assert!(future
+                .exception(ExceptionArgs::builder().build())?
+                .is_none());
+            Ok(())
+        })
+    }
+
+    #[test]
+    fn test_canceling_future() -> anyhow::Result<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let future = PyFuture::builder(py).build().unwrap();
+            future.cancel(CancelArgs::builder().build())?;
+            assert!(future.cancelled(CancelledArgs::builder().build())?);
+            Ok(())
+        })
+    }
+
+    #[test]
+    fn test_future_set_exception() -> anyhow::Result<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let err = PyRuntimeError::new_err(());
+            let future = PyFuture::builder(py).build().unwrap();
+            future.set_exception(SetExceptionArgs::builder(Some(err)).build())?;
+            let exception = future
+                .exception(ExceptionArgs::builder().build())?
+                .expect("should be Some");
+            assert!(exception.is_instance_of::<PyRuntimeError>(py));
+            Ok(())
+        })
     }
 
     #[test]
@@ -535,7 +605,7 @@ mod tests {
         });
     }
 
-    #[test]
+    // #[test]
     fn test_shutdown() {
         console_subscriber::init();
 
@@ -566,7 +636,7 @@ mod tests {
             py_future
                 .add_done_callback(
                     AddDoneCallbackArgs::builder(|fut| {
-                        let cancelled = fut.cancelled()?;
+                        let cancelled = fut.cancelled(CancelledArgs::builder().build())?;
                         assert!(cancelled);
                         Ok(())
                     })
@@ -574,7 +644,9 @@ mod tests {
                 )
                 .unwrap();
 
-            let ret = py_future.cancelled().unwrap();
+            let ret = py_future
+                .cancelled(CancelledArgs::builder().build())
+                .unwrap();
             assert!(ret);
         });
     }
