@@ -24,6 +24,9 @@ features = ["rt"]
 [dependencies.crossbeam]
 version = "0.8"
 
+[dependencies.futures]
+version = "0.3"
+
 
 [dev-dependencies]
 console-subscriber = "0.4"

@@ -17,6 +17,7 @@ use std::{
 };
 
 use crossbeam::atomic::AtomicCell;
+use futures::stream::{Stream, StreamExt as _};
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
     exceptions::{PyRuntimeError, PyTypeError},
@@ -272,6 +273,7 @@ const _: () = {
 };
 
 /// A executor like python `concurrent.futures.ThreadPoolExecutor`
+#[derive(Clone)]
 pub struct TokioPoolExecutor {
     runtime: tokio::runtime::Handle,
     tracker: tokio_util::task::TaskTracker,
@@ -371,6 +373,18 @@ impl TokioPoolExecutor {
     }
 
     #[builder]
+    pub fn submit_stream<'py, Ret>(
+        &self,
+        #[builder(start_fn)] py: Python<'py>,
+        #[builder(start_fn)] stream: impl Stream<Item = PyResult<Ret>> + Unpin,
+    ) -> PyResult<Bound<'py, PyFuture>>
+    where
+        for<'p> Ret: IntoPyObject<'p>,
+    {
+        todo!()
+    }
+
+    #[builder]
     // We may use parameters with `'py` in the future,
     // and `async fn` would cause the generated `Future` to capture `'py`,
     // so we use `impl Future` instead.
@@ -399,6 +413,7 @@ impl TokioPoolExecutor {
     }
 }
 
+#[derive(Clone)]
 pub struct FutureNursery {
     runtime: tokio::runtime::Handle,
 }
@@ -454,6 +469,38 @@ impl FutureNursery {
             ret
         })
     }
+}
+
+#[pyclass(frozen)]
+struct PyStream {
+    // Why `Unping`: <https://stackoverflow.com/a/61265318>
+    stream: AtomicCell<Option<Box<dyn Stream<Item = PyResult<PyObject>> + Unpin + Send + Sync>>>,
+    executor: TokioPoolExecutor,
+}
+
+#[pymethods]
+impl PyStream {
+    fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
+        slf
+    }
+
+    fn __next__(&self) -> PyResult<PyObject> {
+        let stream = self
+            .stream
+            .take()
+            .ok_or_else(|| PyRuntimeError::new_err("Unsupported to call this iter concurrently"))?;
+
+        let future = async move {
+            let (item, stream) = stream.into_future().await;
+        };
+
+        todo!()
+    }
+
+    // <https://docs.python.org/3/reference/datamodel.html#object.__length_hint__>
+    // fn __length_hint__(&self) -> PyResult<usize> {
+        
+    // }
 }
 
 struct Defer<T>
