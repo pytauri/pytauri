@@ -4,6 +4,7 @@
         "port": 9552,
         "token": "secret",
     },
+    "lldb.script": { "lang.rust.toolchain": "stable-x86_64-pc-windows-gnu" },
     "rust-analyzer.cargo.targetDir": true,
     "rust-analyzer.cargo.features": [
         "pytauri-core/__private",

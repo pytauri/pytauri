@@ -8,22 +8,16 @@
 use std::{
     cell::Cell,
     convert::Infallible,
-    future::{self, Future as _},
+    future,
     marker::Unpin,
-    pin::pin,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
     },
-    task::Poll,
 };
 
-use async_stream::stream;
 use crossbeam::atomic::AtomicCell;
-use futures::{
-    stream::{poll_fn, Stream, StreamExt as _},
-    FutureExt as _,
-};
+use futures::stream::{Stream, StreamExt as _};
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
     exceptions::{PyRuntimeError, PyStopIteration, PyTypeError},
@@ -31,7 +25,7 @@ use pyo3::{
     prelude::*,
     sync::GILOnceCell,
     type_object::PyTypeInfo,
-    types::{DerefToPyAny, PyCFunction, PyIterator, PyType},
+    types::{DerefToPyAny, PyCFunction, PyType},
 };
 use tokio::sync::{oneshot, Notify};
 
@@ -382,12 +376,12 @@ impl TokioPoolExecutor {
     pub fn submit_stream<'py, Ret>(
         &self,
         #[builder(start_fn)] py: Python<'py>,
-        #[builder(start_fn)] stream: impl Stream<Item = PyResult<Ret>> + Unpin + Send + 'static,
-    ) -> PyResult<PyStreamIter>
+        #[builder(start_fn)] stream: impl Stream<Item = PyResult<Ret>> + Send + Sync,
+    ) -> PyResult<Bound<'py, PyAny>>
     where
         for<'p> Ret: IntoPyObject<'p>,
     {
-        PyStreamIter::new(py, stream, self.clone())
+        PyStreamIter::new(Box::new(stream), self.clone()).into_bound_py_any(py)
     }
 
     #[builder]
@@ -475,144 +469,39 @@ impl FutureNursery {
             ret
         })
     }
-
-    #[builder]
-    pub fn wait_stream(
-        &self,
-        #[builder(start_fn)] stream: Py<PyIterator>,
-    ) -> PyResult<impl Stream<Item = PyResult<PyObject>> + Send + Sync + 'static> {
-        let nursery = self.clone();
-        // TODO: `fn size_hint`
-        // TODO: handle cancellation
-        let rs_stream = stream!({
-            loop {
-                let rs_future = Python::with_gil(|py| {
-                    // TODO: avoid cloning `stream`?
-                    let mut stream = stream.bind(py).into_iter();
-                    let py_future = match stream.next() {
-                        Some(item) => item,
-                        None => return None,
-                    };
-                    let py_future = match py_future {
-                        Ok(item) => item,
-                        Err(err) => return Some(Err(err)),
-                    };
-                    let py_future = match py_future.downcast_into::<PyFuture>() {
-                        Ok(item) => item,
-                        Err(err) => return Some(Err(err.into())),
-                    };
-                    let rs_future = nursery.wait(py_future).call();
-                    Some(rs_future)
-                });
-                let rs_future = match rs_future {
-                    Some(rs_future) => match rs_future {
-                        Ok(rs_future) => rs_future,
-                        Err(err) => {
-                            yield Err(err);
-                            continue;
-                        }
-                    },
-                    None => return,
-                };
-
-                let ret = rs_future.await;
-                if let Err(err) = &ret {
-                    if Python::with_gil(|py| err.is_instance_of::<PyStopIteration>(py)) {
-                        return;
-                    }
-                }
-                yield ret;
-            }
-        });
-        Ok(rs_stream)
-    }
-
-    // #[builder]
-    // pub fn wait_stream<'py>(
-    //     &self,
-    //     #[builder(start_fn)] mut stream: Bound<'py, PyIterator>,
-    // ) -> PyResult<impl Stream<Item = PyResult<PyObject>> + 'py> {
-    //     let nursery = self.clone();
-    //     let rs_stream = poll_fn(move |cx| {
-    //         let py = stream.py();
-    //         let item = stream.next();
-    //         let item = match item {
-    //             Some(item) => item,
-    //             None => return Poll::Ready(None),
-    //         };
-    //         let item = match item {
-    //             Ok(item) => item,
-    //             Err(err) => return Poll::Ready(Some(Err(err))),
-    //         };
-    //         let py_future = match item.downcast_into::<PyFuture>() {
-    //             Ok(item) => item,
-    //             Err(err) => return Poll::Ready(Some(Err(err.into()))),
-    //         };
-    //         let rs_future = match nursery.wait(py_future).call() {
-    //             Ok(rs_future) => rs_future,
-    //             Err(err) => return Poll::Ready(Some(Err(err))),
-    //         };
-
-    //         pin!(rs_future.map(|ret| {
-    //             if let Err(err) = &ret {
-    //                 if err.is_instance_of::<PyStopIteration>(py) {
-    //                     return None;
-    //                 }
-    //             }
-    //             Some(ret)
-    //         }))
-    //         .poll(cx)
-    //     });
-    //     Ok(rs_stream)
-    // }
 }
 
-type PyStreamIterNextItem = PyFuture;
+trait DynIntoPyObjectExt {
+    fn dyn_into_bound_py_any<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>>;
+}
+
+impl<T> DynIntoPyObjectExt for T
+where
+    for<'a, 'p> &'a T: IntoPyObject<'p>,
+{
+    fn dyn_into_bound_py_any<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        self.into_bound_py_any(py)
+    }
+}
+
+// Why `Unping`: <https://stackoverflow.com/a/61265318>
+type BoxDynStream = Box<dyn Stream<Item = PyResult<PyObject>> + Unpin + Send + Sync>;
 
 #[pyclass(frozen)]
 struct PyStreamIter {
-    next: Py<PyCFunction>,
-    length_hint: Option<usize>,
+    stream: Arc<AtomicCell<Option<BoxDynStream>>>,
+    executor: TokioPoolExecutor,
+    length_hint: usize,
 }
 
 impl PyStreamIter {
-    fn new<Ret>(
-        py: Python<'_>,
-        stream: impl Stream<Item = PyResult<Ret>> + Unpin + Send + 'static,
-        executor: TokioPoolExecutor,
-    ) -> PyResult<Self>
-    where
-        for<'p> Ret: IntoPyObject<'p>,
-    {
-        let length_hint = stream.size_hint().1;
-        let stream_cell = Arc::new(AtomicCell::new(Some(stream)));
-        let next = PyCFunction::new_closure(
-            py,
-            None,
-            None,
-            // Safety: see `PyStreamIter::__next__`
-            move |args, _| -> PyResult<Py<PyStreamIterNextItem>> {
-                let py = args.py();
-                let stream = stream_cell.take().ok_or_else(|| {
-                    PyRuntimeError::new_err("Unsupported to call this iter concurrently")
-                })?;
-
-                // TODO: handle cancellation
-                let stream_cell1 = stream_cell.clone();
-                let rs_future = async move {
-                    let (item, stream) = stream.into_future().await;
-                    stream_cell1.store(Some(stream));
-                    item.unwrap_or_else(|| Err(PyStopIteration::new_err(())))
-                };
-                executor
-                    .submit(py, move |_| rs_future, ())
-                    .call()
-                    .map(|ob| ob.unbind())
-            },
-        )?
-        .unbind();
-
-        Ok(Self { next, length_hint })
+    fn new(stream: BoxDynStream, executor: TokioPoolExecutor) -> Self {
+        let length_hint = stream.size_hint().0;
+        Self {
+            stream: Arc::new(AtomicCell::new(Some(stream))),
+            executor,
+            length_hint,
+        }
     }
 }
 
@@ -623,22 +512,24 @@ impl PyStreamIter {
     }
 
     fn __next__<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyFuture>> {
-        let next = self.next.bind(py);
-        let item = next.call0()?;
-        // Safety: we ensure that the return value of `next` is always a `PyStreamIterNextItem`
-        unsafe { Ok(item.downcast_into_unchecked::<PyStreamIterNextItem>()) }
+        let stream = self
+            .stream
+            .take()
+            .ok_or_else(|| PyRuntimeError::new_err("Unsupported to call this iter concurrently"))?;
+
+        // TODO: handle cancellation
+        let stream_arc = self.stream.clone();
+        let rs_future = async move {
+            let (item, stream) = stream.into_future().await;
+            stream_arc.store(Some(stream));
+            item.unwrap_or_else(|| Err(PyStopIteration::new_err(())))
+        };
+        self.executor.submit(py, move |_| rs_future, ()).call()
     }
 
     // <https://docs.python.org/3/reference/datamodel.html#object.__length_hint__>
-    fn __length_hint__(&self, py: Python<'_>) -> PyObject {
-        // TODO: dynamically get length hint from `stream_cell`
-        match self.length_hint {
-            Some(hint) => {
-                let Ok(hint) = hint.into_pyobject(py);
-                hint.into_any().unbind()
-            }
-            None => py.NotImplemented(),
-        }
+    fn __length_hint__(&self) -> usize {
+        self.length_hint
     }
 }
 
@@ -676,7 +567,6 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use pyo3::py_run;
 
     #[test]
     fn test_future() -> anyhow::Result<()> {
@@ -740,186 +630,6 @@ mod tests {
                 .exception(ExceptionArgs::builder().build())?
                 .expect("should be Some");
             assert!(exception.is_instance_of::<PyRuntimeError>(py));
-            Ok(())
-        })
-    }
-
-    #[test]
-    fn test_poll_fn() -> anyhow::Result<()> {
-        console_subscriber::init();
-
-        pyo3::prepare_freethreaded_python();
-
-        let runtime = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("Failed building the Runtime");
-
-        runtime.block_on(async {
-            let mut buf = vec![PyResult::Ok(3), PyResult::Ok(2), PyResult::Ok(1)];
-            let mut sleeper = Box::pin(tokio::time::sleep(std::time::Duration::from_millis(1)));
-
-            let mut stream = futures::stream::poll_fn(move |cx| {
-                // 反复用同一个 Sleep
-                if sleeper.as_mut().poll(cx).is_pending() {
-                    return Poll::Pending;
-                }
-                // 一旦 Ready，就重置 Sleep
-                sleeper.set(tokio::time::sleep(std::time::Duration::from_millis(1)));
-                Poll::Ready(buf.pop())
-            });
-
-            let ret: Vec<PyResult<i32>> = stream.collect().await;
-            let ret = ret.into_iter().collect::<Result<Vec<_>, _>>()?;
-            assert_eq!(ret, vec![1, 2, 3]);
-            anyhow::Ok(())
-        })?;
-
-        Ok(())
-    }
-
-    #[test]
-    fn test_stream() -> anyhow::Result<()> {
-        console_subscriber::init();
-
-        pyo3::prepare_freethreaded_python();
-
-        let runtime = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("Failed building the Runtime");
-
-        let executor = TokioPoolExecutor::builder(runtime.handle().clone()).build();
-        let nursery = FutureNursery::builder(runtime.handle().clone()).build();
-
-        Python::with_gil(|py| {
-            let stream =
-                futures::stream::iter(vec![PyResult::Ok(1), PyResult::Ok(2), PyResult::Ok(3)]);
-            let py_stream = executor.submit_stream(py, stream).call()?;
-            assert_eq!(
-                py_stream
-                    .__next__(py)?
-                    .result(ResultArgs::builder().build())?
-                    .extract::<i32>()?,
-                1
-            );
-            assert_eq!(
-                py_stream
-                    .__next__(py)?
-                    .result(ResultArgs::builder().build())?
-                    .extract::<i32>()?,
-                2
-            );
-            assert_eq!(
-                py_stream
-                    .__next__(py)?
-                    .result(ResultArgs::builder().build())?
-                    .extract::<i32>()?,
-                3
-            );
-            let err = py_stream
-                .__next__(py)?
-                .result(ResultArgs::builder().timeout(0.001).build())
-                .unwrap_err();
-            assert!(err.is_instance_of::<PyStopIteration>(py));
-            let err = py_stream
-                .__next__(py)?
-                .result(ResultArgs::builder().timeout(0.001).build())
-                .unwrap_err();
-            assert!(err.is_instance_of::<PyStopIteration>(py));
-
-            Ok(())
-        })
-    }
-
-    #[test]
-    fn test_stream_iter() -> anyhow::Result<()> {
-        console_subscriber::init();
-        pyo3::prepare_freethreaded_python();
-
-        let runtime = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("Failed building the Runtime");
-
-        let executor = TokioPoolExecutor::builder(runtime.handle().clone()).build();
-        let nursery = FutureNursery::builder(runtime.handle().clone()).build();
-
-        Python::with_gil(|py| {
-            let locals = pyo3::types::PyDict::new(py);
-            pyo3::py_run!(
-                py,
-                locals,
-                r#"
-                    def stream_iter():
-                        from concurrent.futures import Future
-                        for i in range(3):
-                            future = Future()
-                            future.set_result(i)
-                            yield future
-                    
-                    locals["stream_iter"] = stream_iter()
-                "#
-            );
-            let stream_iter = locals.get_item("stream_iter")?.unwrap();
-            let stream_iter = PyIterator::from_object(&stream_iter)?;
-            let rs_stream = nursery.wait_stream(stream_iter.unbind()).call()?;
-
-            let ret = py.allow_threads(|| {
-                runtime.block_on(async { rs_stream.collect::<Vec<PyResult<PyObject>>>().await })
-            });
-
-            let mut buf = vec![];
-            for item in ret {
-                let item = item?;
-                let item = item.extract::<i32>(py)?;
-                buf.push(item);
-            }
-            assert_eq!(buf, vec![0, 1, 2]);
-
-            Ok(())
-        })
-    }
-
-    #[test]
-    fn test_stream_nursery() -> anyhow::Result<()> {
-        // console_subscriber::init();
-
-        pyo3::prepare_freethreaded_python();
-
-        let runtime = tokio::runtime::Builder::new_multi_thread()
-            .enable_all()
-            .build()
-            .expect("Failed building the Runtime");
-
-        let executor = TokioPoolExecutor::builder(runtime.handle().clone()).build();
-        let nursery = FutureNursery::builder(runtime.handle().clone()).build();
-
-        Python::with_gil(|py| {
-            // let stream =
-            //     futures::stream::iter(vec![PyResult::Ok(1), PyResult::Ok(2), PyResult::Ok(3)]);
-            let stream = stream!({
-                for i in 1..=3 {
-                    tokio::time::sleep(std::time::Duration::from_millis(1)).await;
-                    println!("Yielding {}", i);
-                    yield PyResult::Ok(i);
-                }
-            });
-            let stream = Box::pin(stream);
-
-            let py_stream = executor.submit_stream(py, stream).call()?;
-            let stream_iter = PyIterator::from_object(&py_stream.into_bound_py_any(py)?)?;
-            let rs_stream = nursery.wait_stream(stream_iter.unbind()).call()?;
-            let ret = py.allow_threads(|| {
-                runtime.block_on(async { rs_stream.collect::<Vec<PyResult<PyObject>>>().await })
-            });
-            let mut buf = vec![];
-            for item in ret {
-                let item = item?;
-                let item = item.extract::<i32>(py)?;
-                buf.push(item);
-            }
-            assert_eq!(buf, vec![1, 2, 3]);
             Ok(())
         })
     }
