@@ -26,7 +26,7 @@ use futures::{
 };
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
-    exceptions::{PyRuntimeError, PyStopIteration, PyTypeError},
+    exceptions::{PyRuntimeError, PyStopAsyncIteration , PyTypeError},
     ffi, intern,
     prelude::*,
     sync::GILOnceCell,
@@ -517,7 +517,7 @@ impl FutureNursery {
 
                 let ret = rs_future.await;
                 if let Err(err) = &ret {
-                    if Python::with_gil(|py| err.is_instance_of::<PyStopIteration>(py)) {
+                    if Python::with_gil(|py| err.is_instance_of::<PyStopAsyncIteration>(py)) {
                         return;
                     }
                 }
@@ -602,7 +602,7 @@ impl PyStreamIter {
                 let rs_future = async move {
                     let (item, stream) = stream.into_future().await;
                     stream_cell1.store(Some(stream));
-                    item.unwrap_or_else(|| Err(PyStopIteration::new_err(())))
+                    item.unwrap_or_else(|| Err(PyStopAsyncIteration::new_err(())))
                 };
                 executor
                     .submit(py, move |_| rs_future, ())
@@ -821,12 +821,12 @@ mod tests {
                 .__next__(py)?
                 .result(ResultArgs::builder().timeout(0.001).build())
                 .unwrap_err();
-            assert!(err.is_instance_of::<PyStopIteration>(py));
+            assert!(err.is_instance_of::<PyStopAsyncIteration>(py));
             let err = py_stream
                 .__next__(py)?
                 .result(ResultArgs::builder().timeout(0.001).build())
                 .unwrap_err();
-            assert!(err.is_instance_of::<PyStopIteration>(py));
+            assert!(err.is_instance_of::<PyStopAsyncIteration>(py));
 
             Ok(())
         })
