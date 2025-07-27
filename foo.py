@@ -7,10 +7,12 @@ from contextlib import (
     ExitStack,
     contextmanager,
 )
+from enum import Enum, auto
 from functools import partial
 from threading import get_ident
 from typing import Any, Awaitable, Callable, Generic, Optional, Union, cast
 
+import anyio
 from anyio import (
     BrokenResourceError,
     CancelScope,
@@ -41,6 +43,12 @@ P = ParamSpec("P")
 P1 = ParamSpec("P1")
 
 
+class _CancelFutures(Enum):
+    NoSet = auto()
+    True_ = auto()
+    False_ = auto()
+
+
 class TaskGroupPoolExecutor(AbstractAsyncContextManager["TaskGroupPoolExecutor"]):
     def __init__(self, portal: BlockingPortal) -> None:
         self._portal = portal
@@ -48,6 +56,7 @@ class TaskGroupPoolExecutor(AbstractAsyncContextManager["TaskGroupPoolExecutor"]
         self._event_loop_ident = get_ident()
         self._exit_stack = AsyncExitStack()
         self._cancelled_exc_class = get_cancelled_exc_class()
+        self._shutdown = _CancelFutures.NoSet
 
     async def __aenter__(self) -> Self:
         await self._exit_stack.enter_async_context(self._task_group)
@@ -59,9 +68,21 @@ class TaskGroupPoolExecutor(AbstractAsyncContextManager["TaskGroupPoolExecutor"]
     def submit(
         self, fn: Callable[[Unpack[Ts]], Awaitable[T]], *args: Unpack[Ts]
     ) -> futures.Future[T]:
+        if self._shutdown is not _CancelFutures.NoSet:
+            raise RuntimeError("Already shutdown")
+
         future = futures.Future[T]()
 
         async def wrapper() -> None:
+            # NOTE: We don't need a lock here, see following comment in `def shutdown`.
+            if self._shutdown is _CancelFutures.True_:
+                future.cancel()
+                return
+
+            if not future.set_running_or_notify_cancel():
+                # Future was already cancelled
+                return
+
             try:
                 result = await fn(*args)
                 future.set_result(result)
@@ -86,7 +107,20 @@ class TaskGroupPoolExecutor(AbstractAsyncContextManager["TaskGroupPoolExecutor"]
 
         return _iterator()
 
-    async def shutdown(self, wait: bool = True) -> None:
+    async def shutdown(
+        self, wait: bool = True, *, cancel_futures: bool = False
+    ) -> None:
+        # NOTE: We don't need a lock here because there are no `await` points in this section,
+        # which makes it atomic for Python's single-threaded async event loop.
+        #
+        # Also, trio/anyio does not have an RWLock suitable for this scenario:
+        #     <https://github.com/python-trio/trio/issues/528>.
+        if self._shutdown is not _CancelFutures.NoSet:
+            return
+        self._shutdown = (
+            _CancelFutures.True_ if cancel_futures else _CancelFutures.False_
+        )
+
         if wait:
             await self._exit_stack.aclose()
 
@@ -112,8 +146,12 @@ class BlockingPortalPoolExecutor(
     def submit_stream(self, stream: AsyncIterator[T]) -> Iterator[futures.Future[T]]:
         return self._portal.call(self._task_group_executor.submit_stream, stream)
 
-    def shutdown(self, wait: bool = True) -> None:
-        return self._portal.call(self._task_group_executor.shutdown, wait)
+    def shutdown(self, wait: bool = True, *, cancel_futures: bool = False) -> None:
+        return self._portal.call(
+            partial(
+                self._task_group_executor.shutdown, wait, cancel_futures=cancel_futures
+            )
+        )
 
 
 @contextmanager
