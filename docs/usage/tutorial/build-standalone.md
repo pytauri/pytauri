@@ -162,6 +162,21 @@ Configure `RUSTFLAGS`:
             -L $(realpath ./src-tauri/pyembed/python/lib)"
         ```
 
+        !!! bug "Patch `install_name` for `libpython3.*.dylib` of `python-build-standalone`"
+
+            See: <https://github.com/pytauri/pytauri/issues/99#issuecomment-2704556726>.
+
+            The `install_name` of `libpython3.*.dylib` built by `python-build-standalone` [does not include `@rpath`](https://github.com/astral-sh/python-build-standalone/blob/d0ed97f7618769996f1dd2a586faec150d7ebcb9/cpython-unix/build-cpython.sh#L611-L624), which makes the `rpath` set for the executable ineffective.
+
+            **Workaround**
+
+            Until this is fixed upstream in `python-build-standalone`, you need to manually patch the `install_name`:
+
+            ```bash
+            # `3.13` is your python version.
+            install_name_tool -id '@rpath/libpython3.13.dylib' ./src-tauri/pyembed/python/lib/libpython3.13.dylib
+            ```
+
 Finally, use `tauri-cli` to bundle:
 
 ```powershell
