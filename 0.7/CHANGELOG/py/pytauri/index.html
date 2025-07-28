@@ -2154,6 +2154,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#072" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.7.2
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#071" class="md-nav__link">
     <span class="md-ellipsis">
       0.7.1
@@ -2164,7 +2188,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       Fixed
     </span>
@@ -2239,7 +2263,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       Fixed
     </span>
@@ -2753,6 +2777,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#072" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.7.2
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#071" class="md-nav__link">
     <span class="md-ellipsis">
       0.7.1
@@ -2763,7 +2811,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     <span class="md-ellipsis">
       Fixed
     </span>
@@ -2838,7 +2886,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     <span class="md-ellipsis">
       Fixed
     </span>
@@ -3044,8 +3092,24 @@
 
 <h1 id="pytauri">pytauri<a class="headerlink" href="#pytauri" title="Permanent link">&para;</a></h1>
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<h2 id="071"><a href="https://github.com/pytauri/pytauri/releases/tag/py/pytauri/v0.7.1">0.7.1</a><a class="headerlink" href="#071" title="Permanent link">&para;</a></h2>
+<h2 id="072"><a href="https://github.com/pytauri/pytauri/releases/tag/py/pytauri/v0.7.2">0.7.2</a><a class="headerlink" href="#072" title="Permanent link">&para;</a></h2>
 <h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/253">#253</a> - fix(pytauri): support deferred evaluation type hint in <code>@command</code>.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@commands</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">async</span> <span class="k">def</span> <span class="nf">my_command</span><span class="p">(</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="c1"># ⭐ Now supported: type hints as string annotations</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">body</span><span class="p">:</span> <span class="s2">&quot;str&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">app_handle</span><span class="p">:</span> <span class="s2">&quot;AppHandle&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;None&quot;</span><span class="p">:</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">pass</span>
+</span></code></pre></div>
+</li>
+</ul>
+<h2 id="071"><a href="https://github.com/pytauri/pytauri/releases/tag/py/pytauri/v0.7.1">0.7.1</a><a class="headerlink" href="#071" title="Permanent link">&para;</a></h2>
+<p><strong>[YANKED]: <a href="https://github.com/pytauri/pytauri/issues/242">https://github.com/pytauri/pytauri/issues/242</a></strong></p>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/240">#240</a> - fix(pytauri): include <code>pytauri_utils</code> in package.
     Yank <code>py/pytauri/v0.7.0</code> release.</li>
@@ -3121,7 +3185,7 @@
 <p><a href="https://github.com/pytauri/pytauri/pull/157">#157</a> - feat: fully implement <code>tauri::RunEvent</code> bindings.</p>
 </li>
 </ul>
-<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/157">#157</a> - fix(typing): namedtuple member name can't start with underscore.</p>
@@ -3220,19 +3284,19 @@ For example, you can use <code>sys.exit(app.run_return())</code> to gracefully f
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/57">#57</a> - refactor: remove <code>RunEventEnum</code>, use matched <code>RunEvent</code> directly.
     Previously:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">run_event_enum</span><span class="p">:</span> <span class="n">RunEventEnumType</span> <span class="o">=</span> <span class="n">run_event</span><span class="o">.</span><span class="n">match_ref</span><span class="p">()</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="k">match</span> <span class="n">run_event_enum</span><span class="p">:</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="k">case</span> <span class="n">RunEventEnum</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">run_event_enum</span><span class="p">:</span> <span class="n">RunEventEnumType</span> <span class="o">=</span> <span class="n">run_event</span><span class="o">.</span><span class="n">match_ref</span><span class="p">()</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="k">match</span> <span class="n">run_event_enum</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="k">case</span> <span class="n">RunEventEnum</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Now:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">match</span> <span class="n">run_event</span><span class="p">:</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>        <span class="k">case</span> <span class="n">RunEvent</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">app_handle</span><span class="p">:</span> <span class="n">AppHandle</span><span class="p">,</span> <span class="n">run_event</span><span class="p">:</span> <span class="n">RunEventType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">match</span> <span class="n">run_event</span><span class="p">:</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="k">case</span> <span class="n">RunEvent</span><span class="o">.</span><span class="n">Ready</span><span class="p">:</span> <span class="o">...</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
 </span></code></pre></div>
 </li>
 <li>
