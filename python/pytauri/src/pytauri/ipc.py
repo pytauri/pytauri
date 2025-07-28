@@ -1,5 +1,6 @@
 """[tauri::ipc](https://docs.rs/tauri/latest/tauri/ipc/index.html)"""
 
+import sys
 from collections import UserDict
 from collections.abc import Awaitable
 from functools import cache, partial, wraps
@@ -299,7 +300,11 @@ class Commands(UserDict[str, _PyInvokHandleData]):
 
         body_key = "body"
 
-        sig = signature(pyfunc)
+        # TODO: drop py39 support: <https://github.com/pytauri/pytauri/issues/249#issuecomment-3123432528>
+        if sys.version_info >= (3, 10):
+            sig = signature(pyfunc, eval_str=True)
+        else:
+            sig = signature(pyfunc)
         parameters = sig.parameters
         return_annotation = sig.return_annotation
 
@@ -438,7 +443,11 @@ class Commands(UserDict[str, _PyInvokHandleData]):
         Raises:
             ValueError: If the signature does not conform to the expected pattern.
         """
-        sig = signature(pyfunc)
+        # TODO: drop py39 support: <https://github.com/pytauri/pytauri/issues/249#issuecomment-3123432528>
+        if sys.version_info >= (3, 10):
+            sig = signature(pyfunc, eval_str=True)
+        else:
+            sig = signature(pyfunc)
         parameters = sig.parameters
         return_annotation = sig.return_annotation
         handled_parameters: ParametersType = {}
