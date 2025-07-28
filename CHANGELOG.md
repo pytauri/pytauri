@@ -46,6 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
         pass
     ```
 
+### Docs
+
+- [#254](https://github.com/pytauri/pytauri/pull/254) - docs(fix): add note on "patching install_name of libpython" for macOS standalone
+
 ## [0.7.1]
 
 ### Fixed
