@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- [#253](https://github.com/pytauri/pytauri/pull/253) - fix(pytauri): support deferred evaluation type hint in `@command`.
+
+    ```python
+    @commands.command()
+    async def my_command(
+        # ⭐ Now supported: type hints as string annotations
+        body: "str",
+        app_handle: "AppHandle",
+    ) -> "None":
+        pass
+    ```
+
 ## [0.7.1]
 
 ### Fixed
