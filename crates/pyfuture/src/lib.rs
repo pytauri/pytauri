@@ -26,7 +26,7 @@ use futures::{
 };
 use pyo3::{
     conversion::{FromPyObject, IntoPyObject, IntoPyObjectExt as _},
-    exceptions::{PyRuntimeError, PyStopAsyncIteration , PyTypeError},
+    exceptions::{PyRuntimeError, PyStopAsyncIteration, PyTypeError},
     ffi, intern,
     prelude::*,
     sync::GILOnceCell,
@@ -901,7 +901,7 @@ mod tests {
             let stream = stream!({
                 for i in 1..=3 {
                     tokio::time::sleep(std::time::Duration::from_millis(1)).await;
-                    println!("Yielding {}", i);
+                    println!("Yielding {i}");
                     yield PyResult::Ok(i);
                 }
             });
@@ -1087,5 +1087,77 @@ mod tests {
         {
             let _defer = Defer::new(|| println!("1"));
         }
+    }
+
+    use std::sync::LazyLock;
+
+    static TOKIO: LazyLock<tokio::runtime::Runtime> = LazyLock::new(|| {
+        let runtime = tokio::runtime::Builder::new_multi_thread()
+            .enable_all()
+            .build()
+            .unwrap();
+        runtime
+    });
+
+    static TOKIO_RUNTIME: LazyLock<TokioPoolExecutor> = LazyLock::new(|| {
+        TokioPoolExecutor::builder(TOKIO.handle().clone()).build()
+    });
+
+    #[test]
+    fn test_e2e() -> anyhow::Result<()> {
+        let executor = TOKIO_RUNTIME.clone();
+        let stream = stream!({
+            for i in 1..=3 {
+                tokio::time::sleep(std::time::Duration::from_millis(1000)).await;
+                println!("Yielding {i}");
+                yield PyResult::Ok(i);
+            }
+        });
+
+        use pytauri::standalone::{PythonInterpreterBuilder, PythonInterpreterEnv, PythonScript};
+        use std::{env::var, path::PathBuf};
+        let venv_dir = var("VIRTUAL_ENV")
+            .map_err(|err| {
+                format!(
+                    "The app is running in tauri dev mode, \
+                please activate the python virtual environment first \
+                or set the `VIRTUAL_ENV` environment variable: {err}",
+                )
+            })
+            .unwrap();
+        let py_env = PythonInterpreterEnv::Venv(PathBuf::from(venv_dir).into());
+        let py_script = PythonScript::REPL;
+        let builder = PythonInterpreterBuilder::new(py_env, py_script, |py| {
+            pyo3::types::PyModule::new(py, "foo").unwrap().unbind()
+        });
+        let interpreter = builder.build()?;
+        interpreter.with_gil(move |py| {
+            let py_stream = executor.submit_stream(py, Box::pin(stream)).call()?;
+            use pyo3::types::IntoPyDict as _;
+            let locals = [("py_stream", py_stream)].into_py_dict(py)?;
+            pyo3::py_run!(
+                py,
+                *locals,
+                r#"
+                    async def main(py_stream):
+                        from collections.abc import Iterator
+                        from concurrent.futures import Future
+                        from typing import TYPE_CHECKING, cast
+
+                        from anyio import run
+                        from anyio.from_thread import BlockingPortal
+                        from pyfuture import FutureNursery, TaskGroupPoolExecutor
+
+                        async with FutureNursery() as nursery:
+                            ret = [i async for i in nursery.wait_stream(py_stream)]
+                        assert ret == [1, 2, 3]
+
+                    from anyio import run
+                    run(main, py_stream)
+                "#
+            );
+            anyhow::Ok(())
+        })?;
+        Ok(())
     }
 }

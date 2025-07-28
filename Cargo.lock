@@ -3579,6 +3579,7 @@ dependencies = [
  "crossbeam",
  "futures",
  "pyo3",
+ "pytauri",
  "tokio",
  "tokio-util",
 ]
