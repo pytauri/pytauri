@@ -13,6 +13,7 @@
         "pytauri/plugin-clipboard-manager",
         "pytauri/plugin-fs",
         "pytauri/plugin-opener",
+        "pytauri/plugin-autostart",
         "pyo3-utils/unstable",
     ],
 }

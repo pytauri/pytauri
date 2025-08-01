@@ -1,3 +1,5 @@
+#[cfg(feature = "plugin-autostart")]
+mod autostart;
 #[cfg(feature = "plugin-clipboard-manager")]
 mod clipboard_manager;
 #[cfg(feature = "plugin-dialog")]
@@ -39,6 +41,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_OPENER: bool = cfg!(feature = "plugin-opener");
 
+    /// Whether the `plugin-autostart` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_AUTOSTART: bool = cfg!(feature = "plugin-autostart");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -58,4 +64,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-opener")]
     #[pymodule_export]
     pub use opener::opener;
+
+    #[cfg(feature = "plugin-autostart")]
+    #[pymodule_export]
+    pub use autostart::autostart;
 }
