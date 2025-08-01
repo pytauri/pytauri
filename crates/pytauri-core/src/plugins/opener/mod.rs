@@ -57,7 +57,7 @@ impl From<plugin::Error> for PluginError {
 /// See also: [tauri_plugin_opener::init]
 #[pyfunction]
 pub fn init() -> Plugin {
-    Plugin::new(|| Box::new(plugin::init::<Runtime>()))
+    Plugin::new(Box::new(|| Box::new(plugin::init::<Runtime>())))
 }
 
 /// See also: [tauri_plugin_opener]

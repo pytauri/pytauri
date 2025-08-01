@@ -29,9 +29,6 @@ tauri-plugin-clipboard-manager = { workspace = true, optional = true }
 tauri-plugin-fs = { workspace = true, optional = true }
 tauri-plugin-opener = { workspace = true, optional = true }
 
-# TODO: remove this
-serde_json = { workspace = true }
-
 pyo3 = { workspace = true }
 
 # workspace dependencies

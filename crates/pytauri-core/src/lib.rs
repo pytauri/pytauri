@@ -151,8 +151,5 @@ pub mod ext_mod {
 
         #[pymodule_export]
         pub use ext_mod_impl::plugin::Plugin;
-
-        #[cfg(feature = "__private")]
-        pub use ext_mod_impl::plugin::BoxedPluginWrapper;
     }
 }
