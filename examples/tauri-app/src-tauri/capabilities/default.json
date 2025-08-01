@@ -10,6 +10,7 @@
     "dialog:default",
     "clipboard-manager:default",
     "fs:default",
-    "opener:default"
+    "opener:default",
+    "autostart:default"
   ]
 }

@@ -37,6 +37,7 @@ pytauri = { workspace = true, features = [
     "plugin-clipboard-manager",
     "plugin-fs",
     "plugin-opener",
+    "plugin-autostart",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
@@ -44,3 +45,4 @@ tauri-plugin-dialog = { workspace = true }
 tauri-plugin-clipboard-manager = { workspace = true }
 tauri-plugin-fs = { workspace = true, features = ["watch"] }
 tauri-plugin-opener = { workspace = true }
+tauri-plugin-autostart = { workspace = true }

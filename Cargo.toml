@@ -32,6 +32,7 @@ tauri-plugin-clipboard-manager = { version = "2.3" }
 tauri-plugin-dialog = { version = "2.3" }
 tauri-plugin-fs = { version = "2.4" }
 tauri-plugin-notification = { version = "2.3" }
+tauri-plugin-autostart = { version = "2.5" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }

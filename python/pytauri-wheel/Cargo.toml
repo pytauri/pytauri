@@ -43,6 +43,7 @@ tauri-plugin-clipboard-manager = { version = "2.3" }
 tauri-plugin-dialog = { version = "2.3" }
 tauri-plugin-fs = { version = "2.4", features = ["watch"] }
 tauri-plugin-notification = { version = "2.3" }
+tauri-plugin-autostart = { version = "2.5" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -58,6 +59,7 @@ pytauri = { version = "0.7", features = [
     "plugin-clipboard-manager",
     "plugin-fs",
     "plugin-opener",
+    "plugin-autostart",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }
