@@ -87,7 +87,7 @@ impl BuilderArgs {
         if let Some(plugins) = plugins.0 {
             for plugin in plugins {
                 let plugin = plugin.get().into_tauri()??;
-                builder = builder.plugin(ext_mod::plugin::BoxedPluginWrapper(plugin));
+                builder = builder.plugin_boxed(plugin);
             }
         }
 

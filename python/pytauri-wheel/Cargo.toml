@@ -21,10 +21,10 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 
 [build-dependencies]
-tauri-build = { version = "2.2" }
+tauri-build = { version = "2.3" }
 
 [dependencies]
-tauri = { version = "2.5.1", features = [
+tauri = { version = "2.7", features = [
     "config-toml",
     "config-json5",
     "devtools",
@@ -33,16 +33,16 @@ tauri = { version = "2.5.1", features = [
 ] }
 # NOTE: pin the minor version of `tauri-utils` because it's unstable,
 # see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
-tauri-utils = { version = "~2.4", features = [
+tauri-utils = { version = "~2.6", features = [
     "config-toml",
     "config-json5",
     "build",
 ] }
-tauri-plugin-opener = { version = "2.3.0" }
-tauri-plugin-clipboard-manager = { version = "2.2.3" }
-tauri-plugin-dialog = { version = "2.2.2" }
-tauri-plugin-fs = { version = "2.3.0", features = ["watch"] }
-tauri-plugin-notification = { version = "2.2.3" }
+tauri-plugin-opener = { version = "2.4" }
+tauri-plugin-clipboard-manager = { version = "2.3" }
+tauri-plugin-dialog = { version = "2.3" }
+tauri-plugin-fs = { version = "2.4", features = ["watch"] }
+tauri-plugin-notification = { version = "2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
