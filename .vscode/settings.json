@@ -10,6 +10,11 @@
         "pytauri/standalone",
         "pytauri/plugin-notification",
         "pytauri/plugin-dialog",
+        "pytauri/plugin-clipboard-manager",
+        "pytauri/plugin-fs",
+        "pytauri/plugin-opener",
+        "pytauri/plugin-autostart",
+        "pytauri/plugin-deep-link",
         "pyo3-utils/unstable",
     ],
 }

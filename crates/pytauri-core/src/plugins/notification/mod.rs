@@ -11,7 +11,7 @@ use pyo3_utils::{
 use tauri_plugin_notification::{self as plugin, NotificationExt as _};
 
 use crate::{
-    ext_mod::{manager_method_impl, ImplManager},
+    ext_mod::{manager_method_impl, plugin::Plugin, ImplManager},
     tauri_runtime::Runtime,
 };
 
@@ -38,6 +38,12 @@ impl From<plugin::Error> for PluginError {
     fn from(value: plugin::Error) -> Self {
         Self(value)
     }
+}
+
+/// See also: [tauri_plugin_notification::init]
+#[pyfunction]
+pub fn init() -> Plugin {
+    Plugin::new(Box::new(|| Box::new(plugin::init::<Runtime>())))
 }
 
 /// See also: [tauri_plugin_notification::NotificationBuilder]
@@ -246,7 +252,7 @@ impl NotificationExt {
 #[pymodule(submodule, gil_used = false)]
 pub mod notification {
     #[pymodule_export]
-    pub use super::{NotificationBuilder, NotificationExt};
+    pub use super::{init, NotificationBuilder, NotificationExt};
 
     pub use super::{ImplNotificationExt, NotificationBuilderArgs};
 }

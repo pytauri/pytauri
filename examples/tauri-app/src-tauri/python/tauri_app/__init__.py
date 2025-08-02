@@ -26,6 +26,15 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
+from pytauri_plugins import (
+    autostart,
+    clipboard_manager,
+    deep_link,
+    dialog,
+    fs,
+    notification,
+    opener,
+)
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
 from pytauri_utils.async_tools import AsyncTools
@@ -131,6 +140,15 @@ def main() -> int:
         app = builder_factory().build(
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),
+            plugins=(
+                dialog.init(),
+                notification.init(),
+                clipboard_manager.init(),
+                fs.init(),
+                opener.init(),
+                autostart.init(),
+                deep_link.init(),
+            ),
         )
         Manager.manage(app, async_tools)
 

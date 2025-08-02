@@ -9,6 +9,7 @@ from types import ModuleType
 from typing import TYPE_CHECKING, final
 
 from pytauri import ImplManager
+from pytauri.plugin import Plugin
 from typing_extensions import TypeAlias, TypedDict, Unpack
 
 from pytauri_plugins import (
@@ -21,6 +22,7 @@ __all__ = [
     "NotificationBuilder",
     "NotificationBuilderArgs",
     "NotificationExt",
+    "init",
 ]
 
 if PLUGIN_NOTIFICATION:
@@ -55,6 +57,10 @@ class NotificationBuilderArgs(TypedDict, total=False):
 
 if TYPE_CHECKING:
 
+    def init() -> Plugin:
+        """[tauri_plugin_notification::init](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/fn.init.html)"""
+        ...
+
     @final
     class NotificationBuilder:
         """[tauri_plugin_notification::NotificationBuilder](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/struct.NotificationBuilder.html)"""
@@ -82,6 +88,7 @@ if TYPE_CHECKING:
             ...
 
 else:
+    init = _notification_mod.init
     NotificationBuilder = _notification_mod.NotificationBuilder
     NotificationExt = _notification_mod.NotificationExt
 
