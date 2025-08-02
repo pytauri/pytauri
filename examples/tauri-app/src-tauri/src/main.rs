@@ -16,14 +16,23 @@ fn main() -> Result<Infallible, Box<dyn Error>> {
         // `cfg(dev)` is set by `tauri-build` in `build.rs`, which means running with `tauri dev`,
         // see: <https://github.com/tauri-apps/tauri/pull/8937>.
 
-        let venv_dir = var("VIRTUAL_ENV").map_err(|err| {
-            format!(
-                "The app is running in tauri dev mode, \
-                please activate the python virtual environment first \
-                or set the `VIRTUAL_ENV` environment variable: {err}",
-            )
-        })?;
-        PythonInterpreterEnv::Venv(PathBuf::from(venv_dir).into())
+        // NOTE: We cannot rely on the `VIRTUAL_ENV` environment variable,
+        // because when launched by `tauri-plugin-deep-link`, this env var is not set.
+        //
+        // `{repo_root}/examples/tauri-app/src-tauri`
+        let mut venv_dir = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        venv_dir.pop();
+        venv_dir.pop();
+        venv_dir.pop();
+        // `{repo_root}/.venv`
+        venv_dir.push(".venv");
+        assert!(
+            venv_dir.is_dir(),
+            "Python virtual environment not found at: {}",
+            venv_dir.display()
+        );
+
+        PythonInterpreterEnv::Venv(venv_dir.into())
     } else {
         // embedded Python, i.e., bundle mode with `tauri build`.
 

@@ -12,6 +12,7 @@ from pytauri import EXT_MOD
 __all__ = [
     "PLUGIN_AUTOSTART",
     "PLUGIN_CLIPBOARD_MANAGER",
+    "PLUGIN_DEEP_LINK",
     "PLUGIN_DIALOG",
     "PLUGIN_FS",
     "PLUGIN_NOTIFICATION",
@@ -32,3 +33,5 @@ PLUGIN_OPENER: Final[bool] = _pytauri_plugins_mod.PLUGIN_OPENER
 """Whether the `plugin-opener` feature is enabled."""
 PLUGIN_AUTOSTART: Final[bool] = _pytauri_plugins_mod.PLUGIN_AUTOSTART
 """Whether the `plugin-autostart` feature is enabled."""
+PLUGIN_DEEP_LINK: Final[bool] = _pytauri_plugins_mod.PLUGIN_DEEP_LINK
+"""Whether the `plugin-deep-link` feature is enabled."""
