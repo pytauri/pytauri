@@ -8,6 +8,8 @@ mod deep_link;
 mod dialog;
 #[cfg(feature = "plugin-fs")]
 mod fs;
+#[cfg(feature = "plugin-http")]
+mod http;
 #[cfg(feature = "plugin-notification")]
 mod notification;
 #[cfg(feature = "plugin-opener")]
@@ -51,6 +53,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_DEEP_LINK: bool = cfg!(feature = "plugin-deep-link");
 
+    /// Whether the `plugin-http` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_HTTP: bool = cfg!(feature = "plugin-http");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -78,4 +84,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-deep-link")]
     #[pymodule_export]
     pub use deep_link::deep_link;
+
+    #[cfg(feature = "plugin-http")]
+    #[pymodule_export]
+    pub use http::http;
 }

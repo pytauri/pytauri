@@ -30,6 +30,7 @@ tauri-plugin-fs = { workspace = true, optional = true }
 tauri-plugin-opener = { workspace = true, optional = true }
 tauri-plugin-autostart = { workspace = true, optional = true }
 tauri-plugin-deep-link = { workspace = true, optional = true }
+tauri-plugin-http = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -45,10 +46,16 @@ __no_test = []          # for allowing use `--all-features` without running test
 plugin-notification = ["dep:tauri-plugin-notification"]
 plugin-dialog = [
     "dep:tauri-plugin-dialog",
-    "plugin-fs",               # `plugin-fs` just for `PluginError`
+    # `plugin-fs` just for `PluginError`
+    "plugin-fs",
 ]
 plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
 plugin-fs = ["dep:tauri-plugin-fs"]
 plugin-opener = ["dep:tauri-plugin-opener"]
 plugin-autostart = ["dep:tauri-plugin-autostart"]
 plugin-deep-link = ["dep:tauri-plugin-deep-link"]
+plugin-http = [
+    "dep:tauri-plugin-http",
+    # `plugin-fs` just for `PluginError`
+    "plugin-fs",
+]

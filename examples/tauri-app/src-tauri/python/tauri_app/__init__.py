@@ -32,6 +32,7 @@ from pytauri_plugins import (
     deep_link,
     dialog,
     fs,
+    http,
     notification,
     opener,
 )
@@ -148,6 +149,7 @@ def main() -> int:
                 opener.init(),
                 autostart.init(),
                 deep_link.init(),
+                http.init(),
             ),
         )
         Manager.manage(app, async_tools)

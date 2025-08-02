@@ -39,6 +39,7 @@ pytauri = { workspace = true, features = [
     "plugin-opener",
     "plugin-autostart",
     "plugin-deep-link",
+    "plugin-http",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
@@ -48,3 +49,4 @@ tauri-plugin-fs = { workspace = true, features = ["watch"] }
 tauri-plugin-opener = { workspace = true }
 tauri-plugin-autostart = { workspace = true }
 tauri-plugin-deep-link = { workspace = true }
+tauri-plugin-http = { workspace = true }

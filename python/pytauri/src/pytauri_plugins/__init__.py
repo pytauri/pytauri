@@ -15,6 +15,7 @@ __all__ = [
     "PLUGIN_DEEP_LINK",
     "PLUGIN_DIALOG",
     "PLUGIN_FS",
+    "PLUGIN_HTTP",
     "PLUGIN_NOTIFICATION",
     "PLUGIN_OPENER",
 ]
@@ -35,3 +36,5 @@ PLUGIN_AUTOSTART: Final[bool] = _pytauri_plugins_mod.PLUGIN_AUTOSTART
 """Whether the `plugin-autostart` feature is enabled."""
 PLUGIN_DEEP_LINK: Final[bool] = _pytauri_plugins_mod.PLUGIN_DEEP_LINK
 """Whether the `plugin-deep-link` feature is enabled."""
+PLUGIN_HTTP: Final[bool] = _pytauri_plugins_mod.PLUGIN_HTTP
+"""Whether the `plugin-http` feature is enabled."""
