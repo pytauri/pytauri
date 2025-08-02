@@ -29,6 +29,7 @@ from pytauri.webview import WebviewWindow
 from pytauri_plugins import (
     autostart,
     clipboard_manager,
+    deep_link,
     dialog,
     fs,
     notification,
@@ -146,6 +147,7 @@ def main() -> int:
                 fs.init(),
                 opener.init(),
                 autostart.init(),
+                deep_link.init(),
             ),
         )
         Manager.manage(app, async_tools)

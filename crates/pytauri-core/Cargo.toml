@@ -29,6 +29,7 @@ tauri-plugin-clipboard-manager = { workspace = true, optional = true }
 tauri-plugin-fs = { workspace = true, optional = true }
 tauri-plugin-opener = { workspace = true, optional = true }
 tauri-plugin-autostart = { workspace = true, optional = true }
+tauri-plugin-deep-link = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -50,3 +51,4 @@ plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
 plugin-fs = ["dep:tauri-plugin-fs"]
 plugin-opener = ["dep:tauri-plugin-opener"]
 plugin-autostart = ["dep:tauri-plugin-autostart"]
+plugin-deep-link = ["dep:tauri-plugin-deep-link"]

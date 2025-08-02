@@ -2,6 +2,8 @@
 mod autostart;
 #[cfg(feature = "plugin-clipboard-manager")]
 mod clipboard_manager;
+#[cfg(feature = "plugin-deep-link")]
+mod deep_link;
 #[cfg(feature = "plugin-dialog")]
 mod dialog;
 #[cfg(feature = "plugin-fs")]
@@ -45,6 +47,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_AUTOSTART: bool = cfg!(feature = "plugin-autostart");
 
+    /// Whether the `plugin-deep-link` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_DEEP_LINK: bool = cfg!(feature = "plugin-deep-link");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -68,4 +74,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-autostart")]
     #[pymodule_export]
     pub use autostart::autostart;
+
+    #[cfg(feature = "plugin-deep-link")]
+    #[pymodule_export]
+    pub use deep_link::deep_link;
 }

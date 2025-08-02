@@ -11,6 +11,7 @@
     "clipboard-manager:default",
     "fs:default",
     "opener:default",
-    "autostart:default"
+    "autostart:default",
+    "deep-link:default"
   ]
 }
