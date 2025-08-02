@@ -33,6 +33,7 @@ tauri-plugin-deep-link = { workspace = true, optional = true }
 tauri-plugin-http = { workspace = true, optional = true }
 tauri-plugin-os = { workspace = true, optional = true }
 tauri-plugin-persisted-scope = { workspace = true, optional = true }
+tauri-plugin-positioner = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -63,3 +64,7 @@ plugin-http = [
 ]
 plugin-os = ["dep:tauri-plugin-os"]
 plugin-persisted-scope = ["dep:tauri-plugin-persisted-scope"]
+plugin-positioner = [
+    "dep:tauri-plugin-positioner",
+    "tauri-plugin-positioner/tray-icon",
+]

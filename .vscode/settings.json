@@ -18,6 +18,7 @@
         "pytauri/plugin-http",
         "pytauri/plugin-os",
         "pytauri/plugin-persisted-scope",
+        "pytauri/plugin-positioner",
         "pyo3-utils/unstable",
     ],
 }

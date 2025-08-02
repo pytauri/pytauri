@@ -48,6 +48,7 @@ tauri-plugin-deep-link = { version = "2.4" }
 tauri-plugin-http = { version = "2.5" }
 tauri-plugin-os = { version = "2.3" }
 tauri-plugin-persisted-scope = { version = "2.3" }
+tauri-plugin-positioner = { version = "2.3", features = ["tray-icon"] }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -68,6 +69,7 @@ pytauri = { version = "0.7", features = [
     "plugin-http",
     "plugin-os",
     "plugin-persisted-scope",
+    "plugin-positioner",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

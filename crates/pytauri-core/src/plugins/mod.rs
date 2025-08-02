@@ -18,6 +18,8 @@ mod opener;
 mod os;
 #[cfg(feature = "plugin-persisted-scope")]
 mod persisted_scope;
+#[cfg(feature = "plugin-positioner")]
+mod positioner;
 
 use pyo3::prelude::*;
 
@@ -69,6 +71,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_PERSISTED_SCOPE: bool = cfg!(feature = "plugin-persisted-scope");
 
+    /// Whether the `plugin-positioner` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_POSITIONER: bool = cfg!(feature = "plugin-positioner");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -108,4 +114,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-persisted-scope")]
     #[pymodule_export]
     pub use persisted_scope::persisted_scope;
+
+    #[cfg(feature = "plugin-positioner")]
+    #[pymodule_export]
+    pub use positioner::positioner;
 }

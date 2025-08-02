@@ -33,6 +33,7 @@ plugin-deep-link = ["pytauri-core/plugin-deep-link"]
 plugin-http = ["pytauri-core/plugin-http"]
 plugin-os = ["pytauri-core/plugin-os"]
 plugin-persisted-scope = ["pytauri-core/plugin-persisted-scope"]
+plugin-positioner = ["pytauri-core/plugin-positioner"]
 
 
 [dependencies]
