@@ -14,6 +14,8 @@ mod http;
 mod notification;
 #[cfg(feature = "plugin-opener")]
 mod opener;
+#[cfg(feature = "plugin-os")]
+mod os;
 
 use pyo3::prelude::*;
 
@@ -57,6 +59,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_HTTP: bool = cfg!(feature = "plugin-http");
 
+    /// Whether the `plugin-os` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_OS: bool = cfg!(feature = "plugin-os");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -88,4 +94,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-http")]
     #[pymodule_export]
     pub use http::http;
+
+    #[cfg(feature = "plugin-os")]
+    #[pymodule_export]
+    pub use os::os;
 }

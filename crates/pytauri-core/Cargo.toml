@@ -31,6 +31,7 @@ tauri-plugin-opener = { workspace = true, optional = true }
 tauri-plugin-autostart = { workspace = true, optional = true }
 tauri-plugin-deep-link = { workspace = true, optional = true }
 tauri-plugin-http = { workspace = true, optional = true }
+tauri-plugin-os = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -59,3 +60,4 @@ plugin-http = [
     # `plugin-fs` just for `PluginError`
     "plugin-fs",
 ]
+plugin-os = ["dep:tauri-plugin-os"]

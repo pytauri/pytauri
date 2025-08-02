@@ -35,6 +35,7 @@ from pytauri_plugins import (
     http,
     notification,
     opener,
+    os,
 )
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
@@ -150,6 +151,7 @@ def main() -> int:
                 autostart.init(),
                 deep_link.init(),
                 http.init(),
+                os.init(),
             ),
         )
         Manager.manage(app, async_tools)

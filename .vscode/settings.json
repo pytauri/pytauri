@@ -16,6 +16,7 @@
         "pytauri/plugin-autostart",
         "pytauri/plugin-deep-link",
         "pytauri/plugin-http",
+        "pytauri/plugin-os",
         "pyo3-utils/unstable",
     ],
 }

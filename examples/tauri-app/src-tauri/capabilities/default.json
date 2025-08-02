@@ -13,6 +13,7 @@
     "opener:default",
     "autostart:default",
     "deep-link:default",
-    "http:default"
+    "http:default",
+    "os:default"
   ]
 }

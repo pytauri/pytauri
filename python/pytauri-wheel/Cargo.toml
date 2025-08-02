@@ -46,6 +46,7 @@ tauri-plugin-notification = { version = "2.3" }
 tauri-plugin-autostart = { version = "2.5" }
 tauri-plugin-deep-link = { version = "2.4" }
 tauri-plugin-http = { version = "2.5" }
+tauri-plugin-os = { version = "2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -64,6 +65,7 @@ pytauri = { version = "0.7", features = [
     "plugin-autostart",
     "plugin-deep-link",
     "plugin-http",
+    "plugin-os",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

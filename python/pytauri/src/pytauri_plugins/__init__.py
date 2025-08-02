@@ -18,6 +18,7 @@ __all__ = [
     "PLUGIN_HTTP",
     "PLUGIN_NOTIFICATION",
     "PLUGIN_OPENER",
+    "PLUGIN_OS",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -38,3 +39,5 @@ PLUGIN_DEEP_LINK: Final[bool] = _pytauri_plugins_mod.PLUGIN_DEEP_LINK
 """Whether the `plugin-deep-link` feature is enabled."""
 PLUGIN_HTTP: Final[bool] = _pytauri_plugins_mod.PLUGIN_HTTP
 """Whether the `plugin-http` feature is enabled."""
+PLUGIN_OS: Final[bool] = _pytauri_plugins_mod.PLUGIN_OS
+"""Whether the `plugin-os` feature is enabled."""

@@ -31,6 +31,7 @@ plugin-opener = ["pytauri-core/plugin-opener"]
 plugin-autostart = ["pytauri-core/plugin-autostart"]
 plugin-deep-link = ["pytauri-core/plugin-deep-link"]
 plugin-http = ["pytauri-core/plugin-http"]
+plugin-os = ["pytauri-core/plugin-os"]
 
 
 [dependencies]
