@@ -17,6 +17,7 @@
         "pytauri/plugin-deep-link",
         "pytauri/plugin-http",
         "pytauri/plugin-os",
+        "pytauri/plugin-persisted-scope",
         "pyo3-utils/unstable",
     ],
 }

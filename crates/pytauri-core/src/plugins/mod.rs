@@ -16,6 +16,8 @@ mod notification;
 mod opener;
 #[cfg(feature = "plugin-os")]
 mod os;
+#[cfg(feature = "plugin-persisted-scope")]
+mod persisted_scope;
 
 use pyo3::prelude::*;
 
@@ -63,6 +65,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_OS: bool = cfg!(feature = "plugin-os");
 
+    /// Whether the `plugin-persisted-scope` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_PERSISTED_SCOPE: bool = cfg!(feature = "plugin-persisted-scope");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -98,4 +104,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-os")]
     #[pymodule_export]
     pub use os::os;
+
+    #[cfg(feature = "plugin-persisted-scope")]
+    #[pymodule_export]
+    pub use persisted_scope::persisted_scope;
 }

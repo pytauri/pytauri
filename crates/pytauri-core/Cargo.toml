@@ -32,6 +32,7 @@ tauri-plugin-autostart = { workspace = true, optional = true }
 tauri-plugin-deep-link = { workspace = true, optional = true }
 tauri-plugin-http = { workspace = true, optional = true }
 tauri-plugin-os = { workspace = true, optional = true }
+tauri-plugin-persisted-scope = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -61,3 +62,4 @@ plugin-http = [
     "plugin-fs",
 ]
 plugin-os = ["dep:tauri-plugin-os"]
+plugin-persisted-scope = ["dep:tauri-plugin-persisted-scope"]

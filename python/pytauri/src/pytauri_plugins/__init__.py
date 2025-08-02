@@ -19,6 +19,7 @@ __all__ = [
     "PLUGIN_NOTIFICATION",
     "PLUGIN_OPENER",
     "PLUGIN_OS",
+    "PLUGIN_PERSISTED_SCOPE",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -41,3 +42,5 @@ PLUGIN_HTTP: Final[bool] = _pytauri_plugins_mod.PLUGIN_HTTP
 """Whether the `plugin-http` feature is enabled."""
 PLUGIN_OS: Final[bool] = _pytauri_plugins_mod.PLUGIN_OS
 """Whether the `plugin-os` feature is enabled."""
+PLUGIN_PERSISTED_SCOPE: Final[bool] = _pytauri_plugins_mod.PLUGIN_PERSISTED_SCOPE
+"""Whether the `plugin-persisted-scope` feature is enabled."""
