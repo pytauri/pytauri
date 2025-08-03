@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{convert::Infallible, env::var, error::Error, path::PathBuf};
+use std::{convert::Infallible, error::Error, path::PathBuf};
 
 use pyo3::wrap_pymodule;
 use pytauri::standalone::{

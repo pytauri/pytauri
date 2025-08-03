@@ -26,6 +26,8 @@ mod process;
 mod shell;
 #[cfg(feature = "plugin-single-instance")]
 mod single_instance;
+#[cfg(feature = "plugin-updater")]
+mod updater;
 
 use pyo3::prelude::*;
 
@@ -93,6 +95,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_SINGLE_INSTANCE: bool = cfg!(feature = "plugin-single-instance");
 
+    /// Whether the `plugin-updater` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_UPDATER: bool = cfg!(feature = "plugin-updater");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -148,4 +154,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-single-instance")]
     #[pymodule_export]
     pub use single_instance::single_instance;
+
+    #[cfg(feature = "plugin-updater")]
+    #[pymodule_export]
+    pub use updater::updater;
 }

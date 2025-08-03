@@ -37,6 +37,7 @@ plugin-positioner = ["pytauri-core/plugin-positioner"]
 plugin-process = ["pytauri-core/plugin-process"]
 plugin-shell = ["pytauri-core/plugin-shell"]
 plugin-single-instance = ["pytauri-core/plugin-single-instance"]
+plugin-updater = ["pytauri-core/plugin-updater"]
 
 
 [dependencies]

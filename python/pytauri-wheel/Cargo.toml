@@ -52,6 +52,7 @@ tauri-plugin-positioner = { version = "2.3", features = ["tray-icon"] }
 tauri-plugin-process = { version = "2.3" }
 tauri-plugin-shell = { version = "2.3" }
 tauri-plugin-single-instance = { version = "2.3", features = ["deep-link"] }
+tauri-plugin-updater = { version = "2.9" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -76,6 +77,7 @@ pytauri = { version = "0.7", features = [
     "plugin-process",
     "plugin-shell",
     "plugin-single-instance",
+    "plugin-updater",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

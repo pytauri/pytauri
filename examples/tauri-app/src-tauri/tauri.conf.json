@@ -30,5 +30,10 @@
       "../../tauri-app-wheel/python/src/tauri_app_wheel/icons/icon.png",
       "../../tauri-app-wheel/python/src/tauri_app_wheel/icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "CONTENT FROM PUBLICKEY.PEM"
+    }
   }
 }

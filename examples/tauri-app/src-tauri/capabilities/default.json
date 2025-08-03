@@ -17,6 +17,7 @@
     "os:default",
     "positioner:default",
     "process:default",
-    "shell:default"
+    "shell:default",
+    "updater:default"
   ]
 }
