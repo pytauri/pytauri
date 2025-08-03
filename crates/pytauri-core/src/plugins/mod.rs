@@ -20,6 +20,8 @@ mod os;
 mod persisted_scope;
 #[cfg(feature = "plugin-positioner")]
 mod positioner;
+#[cfg(feature = "plugin-process")]
+mod process;
 
 use pyo3::prelude::*;
 
@@ -75,6 +77,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_POSITIONER: bool = cfg!(feature = "plugin-positioner");
 
+    /// Whether the `plugin-process` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_PROCESS: bool = cfg!(feature = "plugin-process");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -118,4 +124,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-positioner")]
     #[pymodule_export]
     pub use positioner::positioner;
+
+    #[cfg(feature = "plugin-process")]
+    #[pymodule_export]
+    pub use process::process;
 }

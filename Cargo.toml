@@ -38,6 +38,7 @@ tauri-plugin-http = { version = "2.5" }
 tauri-plugin-os = { version = "2.3" }
 tauri-plugin-persisted-scope = { version = "2.3" }
 tauri-plugin-positioner = { version = "2.3" }
+tauri-plugin-process = { version = "2.3" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }

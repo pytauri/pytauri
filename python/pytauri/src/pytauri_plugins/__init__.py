@@ -21,6 +21,7 @@ __all__ = [
     "PLUGIN_OS",
     "PLUGIN_PERSISTED_SCOPE",
     "PLUGIN_POSITIONER",
+    "PLUGIN_PROCESS",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -47,3 +48,5 @@ PLUGIN_PERSISTED_SCOPE: Final[bool] = _pytauri_plugins_mod.PLUGIN_PERSISTED_SCOP
 """Whether the `plugin-persisted-scope` feature is enabled."""
 PLUGIN_POSITIONER: Final[bool] = _pytauri_plugins_mod.PLUGIN_POSITIONER
 """Whether the `plugin-positioner` feature is enabled."""
+PLUGIN_PROCESS: Final[bool] = _pytauri_plugins_mod.PLUGIN_PROCESS
+"""Whether the `plugin-process` feature is enabled."""

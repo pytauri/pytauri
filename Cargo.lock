@@ -3634,6 +3634,7 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-persisted-scope",
  "tauri-plugin-positioner",
+ "tauri-plugin-process",
 ]
 
 [[package]]
@@ -3673,6 +3674,7 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-persisted-scope",
  "tauri-plugin-positioner",
+ "tauri-plugin-process",
  "tauri-plugin-pytauri",
  "tauri-utils",
 ]
@@ -4766,6 +4768,7 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-persisted-scope",
  "tauri-plugin-positioner",
+ "tauri-plugin-process",
  "tauri-plugin-pytauri",
 ]
 
@@ -5052,6 +5055,16 @@ dependencies = [
  "tauri",
  "tauri-plugin",
  "thiserror 2.0.12",
+]
+
+[[package]]
+name = "tauri-plugin-process"
+version = "2.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7461c622a5ea00eb9cd9f7a08dbd3bf79484499fd5c21aa2964677f64ca651ab"
+dependencies = [
+ "tauri",
+ "tauri-plugin",
 ]
 
 [[package]]

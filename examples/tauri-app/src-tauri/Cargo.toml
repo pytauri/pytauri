@@ -43,6 +43,7 @@ pytauri = { workspace = true, features = [
     "plugin-os",
     "plugin-persisted-scope",
     "plugin-positioner",
+    "plugin-process",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
@@ -56,3 +57,4 @@ tauri-plugin-http = { workspace = true }
 tauri-plugin-os = { workspace = true }
 tauri-plugin-persisted-scope = { workspace = true }
 tauri-plugin-positioner = { workspace = true, features = ["tray-icon"] }
+tauri-plugin-process = { workspace = true }

@@ -15,6 +15,7 @@
     "deep-link:default",
     "http:default",
     "os:default",
-    "positioner:default"
+    "positioner:default",
+    "process:default"
   ]
 }
