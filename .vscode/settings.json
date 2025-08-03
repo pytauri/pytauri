@@ -20,6 +20,7 @@
         "pytauri/plugin-persisted-scope",
         "pytauri/plugin-positioner",
         "pytauri/plugin-process",
+        "pytauri/plugin-shell",
         "pyo3-utils/unstable",
     ],
 }

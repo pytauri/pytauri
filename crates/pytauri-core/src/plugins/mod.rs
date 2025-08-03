@@ -22,6 +22,8 @@ mod persisted_scope;
 mod positioner;
 #[cfg(feature = "plugin-process")]
 mod process;
+#[cfg(feature = "plugin-shell")]
+mod shell;
 
 use pyo3::prelude::*;
 
@@ -81,6 +83,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_PROCESS: bool = cfg!(feature = "plugin-process");
 
+    /// Whether the `plugin-shell` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_SHELL: bool = cfg!(feature = "plugin-shell");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -128,4 +134,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-process")]
     #[pymodule_export]
     pub use process::process;
+
+    #[cfg(feature = "plugin-shell")]
+    #[pymodule_export]
+    pub use shell::shell;
 }

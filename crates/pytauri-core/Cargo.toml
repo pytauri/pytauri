@@ -35,6 +35,7 @@ tauri-plugin-os = { workspace = true, optional = true }
 tauri-plugin-persisted-scope = { workspace = true, optional = true }
 tauri-plugin-positioner = { workspace = true, optional = true }
 tauri-plugin-process = { workspace = true, optional = true }
+tauri-plugin-shell = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -70,3 +71,4 @@ plugin-positioner = [
     "tauri-plugin-positioner/tray-icon",
 ]
 plugin-process = ["dep:tauri-plugin-process"]
+plugin-shell = ["dep:tauri-plugin-shell"]

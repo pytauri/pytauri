@@ -22,6 +22,7 @@ __all__ = [
     "PLUGIN_PERSISTED_SCOPE",
     "PLUGIN_POSITIONER",
     "PLUGIN_PROCESS",
+    "PLUGIN_SHELL",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -50,3 +51,5 @@ PLUGIN_POSITIONER: Final[bool] = _pytauri_plugins_mod.PLUGIN_POSITIONER
 """Whether the `plugin-positioner` feature is enabled."""
 PLUGIN_PROCESS: Final[bool] = _pytauri_plugins_mod.PLUGIN_PROCESS
 """Whether the `plugin-process` feature is enabled."""
+PLUGIN_SHELL: Final[bool] = _pytauri_plugins_mod.PLUGIN_SHELL
+"""Whether the `plugin-shell` feature is enabled."""

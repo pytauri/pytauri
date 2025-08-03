@@ -50,6 +50,7 @@ tauri-plugin-os = { version = "2.3" }
 tauri-plugin-persisted-scope = { version = "2.3" }
 tauri-plugin-positioner = { version = "2.3", features = ["tray-icon"] }
 tauri-plugin-process = { version = "2.3" }
+tauri-plugin-shell = { version = "2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -72,6 +73,7 @@ pytauri = { version = "0.7", features = [
     "plugin-persisted-scope",
     "plugin-positioner",
     "plugin-process",
+    "plugin-shell",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

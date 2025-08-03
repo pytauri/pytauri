@@ -39,6 +39,7 @@ from pytauri_plugins import (
     persisted_scope,
     positioner,
     process,
+    shell,
 )
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
@@ -158,6 +159,7 @@ def main() -> int:
                 persisted_scope.init(),
                 positioner.init(),
                 process.init(),
+                shell.init(),
             ),
         )
         Manager.manage(app, async_tools)

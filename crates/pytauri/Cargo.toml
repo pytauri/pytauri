@@ -35,6 +35,7 @@ plugin-os = ["pytauri-core/plugin-os"]
 plugin-persisted-scope = ["pytauri-core/plugin-persisted-scope"]
 plugin-positioner = ["pytauri-core/plugin-positioner"]
 plugin-process = ["pytauri-core/plugin-process"]
+plugin-shell = ["pytauri-core/plugin-shell"]
 
 
 [dependencies]
