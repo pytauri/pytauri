@@ -18,6 +18,7 @@
     "positioner:default",
     "process:default",
     "shell:default",
-    "updater:default"
+    "updater:default",
+    "upload:default"
   ]
 }

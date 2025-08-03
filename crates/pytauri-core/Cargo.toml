@@ -30,6 +30,7 @@ tauri-plugin-fs = { workspace = true, optional = true }
 tauri-plugin-opener = { workspace = true, optional = true }
 tauri-plugin-autostart = { workspace = true, optional = true }
 tauri-plugin-deep-link = { workspace = true, optional = true }
+tauri-plugin-upload = { workspace = true, optional = true }
 tauri-plugin-http = { workspace = true, optional = true }
 tauri-plugin-os = { workspace = true, optional = true }
 tauri-plugin-persisted-scope = { workspace = true, optional = true }
@@ -65,6 +66,7 @@ plugin-deep-link = [
     # see: <https://tauri.app/plugin/deep-linking/#desktop>
     "tauri-plugin-single-instance?/deep-link",
 ]
+plugin-upload = ["dep:tauri-plugin-upload"]
 plugin-http = [
     "dep:tauri-plugin-http",
     # `plugin-fs` just for `PluginError`

@@ -47,6 +47,7 @@ pytauri = { workspace = true, features = [
     "plugin-shell",
     "plugin-single-instance",
     "plugin-updater",
+    "plugin-upload",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
@@ -64,3 +65,4 @@ tauri-plugin-process = { workspace = true }
 tauri-plugin-shell = { workspace = true }
 tauri-plugin-single-instance = { workspace = true, features = ["deep-link"] }
 tauri-plugin-updater = { workspace = true, features = ["zip"] }
+tauri-plugin-upload = { workspace = true }

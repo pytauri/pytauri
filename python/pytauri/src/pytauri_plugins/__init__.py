@@ -25,6 +25,7 @@ __all__ = [
     "PLUGIN_SHELL",
     "PLUGIN_SINGLE_INSTANCE",
     "PLUGIN_UPDATER",
+    "PLUGIN_UPLOAD",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -59,3 +60,5 @@ PLUGIN_SINGLE_INSTANCE: Final[bool] = _pytauri_plugins_mod.PLUGIN_SINGLE_INSTANC
 """Whether the `plugin-single-instance` feature is enabled."""
 PLUGIN_UPDATER: Final[bool] = _pytauri_plugins_mod.PLUGIN_UPDATER
 """Whether the `plugin-updater` feature is enabled."""
+PLUGIN_UPLOAD: Final[bool] = _pytauri_plugins_mod.PLUGIN_UPLOAD
+"""Whether the `plugin-upload` feature is enabled."""

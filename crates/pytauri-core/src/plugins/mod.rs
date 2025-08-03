@@ -28,6 +28,8 @@ mod shell;
 mod single_instance;
 #[cfg(feature = "plugin-updater")]
 mod updater;
+#[cfg(feature = "plugin-upload")]
+mod upload;
 
 use pyo3::prelude::*;
 
@@ -99,6 +101,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_UPDATER: bool = cfg!(feature = "plugin-updater");
 
+    /// Whether the `plugin-upload` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_UPLOAD: bool = cfg!(feature = "plugin-upload");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -158,4 +164,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-updater")]
     #[pymodule_export]
     pub use updater::updater;
+
+    #[cfg(feature = "plugin-upload")]
+    #[pymodule_export]
+    pub use upload::upload;
 }
