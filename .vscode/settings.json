@@ -21,6 +21,7 @@
         "pytauri/plugin-positioner",
         "pytauri/plugin-process",
         "pytauri/plugin-shell",
+        "pytauri/plugin-single-instance",
         "pyo3-utils/unstable",
     ],
 }

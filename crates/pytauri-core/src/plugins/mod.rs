@@ -24,6 +24,8 @@ mod positioner;
 mod process;
 #[cfg(feature = "plugin-shell")]
 mod shell;
+#[cfg(feature = "plugin-single-instance")]
+mod single_instance;
 
 use pyo3::prelude::*;
 
@@ -87,6 +89,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_SHELL: bool = cfg!(feature = "plugin-shell");
 
+    /// Whether the `plugin-single-instance` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_SINGLE_INSTANCE: bool = cfg!(feature = "plugin-single-instance");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -138,4 +144,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-shell")]
     #[pymodule_export]
     pub use shell::shell;
+
+    #[cfg(feature = "plugin-single-instance")]
+    #[pymodule_export]
+    pub use single_instance::single_instance;
 }

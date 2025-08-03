@@ -36,6 +36,7 @@ tauri-plugin-persisted-scope = { workspace = true, optional = true }
 tauri-plugin-positioner = { workspace = true, optional = true }
 tauri-plugin-process = { workspace = true, optional = true }
 tauri-plugin-shell = { workspace = true, optional = true }
+tauri-plugin-single-instance = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -58,7 +59,11 @@ plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
 plugin-fs = ["dep:tauri-plugin-fs"]
 plugin-opener = ["dep:tauri-plugin-opener"]
 plugin-autostart = ["dep:tauri-plugin-autostart"]
-plugin-deep-link = ["dep:tauri-plugin-deep-link"]
+plugin-deep-link = [
+    "dep:tauri-plugin-deep-link",
+    # see: <https://tauri.app/plugin/deep-linking/#desktop>
+    "tauri-plugin-single-instance?/deep-link",
+]
 plugin-http = [
     "dep:tauri-plugin-http",
     # `plugin-fs` just for `PluginError`
@@ -72,3 +77,4 @@ plugin-positioner = [
 ]
 plugin-process = ["dep:tauri-plugin-process"]
 plugin-shell = ["dep:tauri-plugin-shell"]
+plugin-single-instance = ["dep:tauri-plugin-single-instance"]

@@ -40,6 +40,7 @@ from pytauri_plugins import (
     positioner,
     process,
     shell,
+    single_instance,
 )
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
@@ -122,6 +123,15 @@ async def greet(
     return f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
 
 
+def single_instance_callback(
+    app_handle: AppHandle, _args: list[str], _cwd: str
+) -> None:
+    """Focus on the main window."""
+    main_window = Manager.get_webview_window(app_handle, "main")
+    assert main_window is not None, "no main window"
+    main_window.set_focus()
+
+
 def main() -> int:
     """Run the tauri-app."""
 
@@ -147,6 +157,8 @@ def main() -> int:
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),
             plugins=(
+                # The Single Instance plugin must be the first one to be registered to work well.
+                single_instance.init(single_instance_callback),
                 dialog.init(),
                 notification.init(),
                 clipboard_manager.init(),
