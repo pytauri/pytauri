@@ -7,8 +7,10 @@ use std::{
 use pyo3::{
     exceptions::PyValueError,
     prelude::*,
-    types::{PyDict, PyString, PyTuple},
+    pybacked::PyBackedStr,
+    types::{PyDict, PyTuple},
 };
+use pyo3_utils::from_py_dict::{derive_from_py_dict, FromPyDict as _, NotRequired};
 use pytauri_core::{tauri_runtime::Runtime, utils::TauriError};
 use tauri::{
     image::Image,
@@ -141,13 +143,20 @@ fn load_default_window_icon(
     }
 }
 
-#[derive(FromPyObject)]
-#[pyo3(from_item_all)]
-// TODO: once we upgrade to `pyo3 v0.24`, we can use `#[pyo3(default)]` for NotRequired fields.
+#[derive(Default)]
 struct ContextFactoryKwargs {
-    // TODO: `FromPyObject` in `pyo3 v0.24` currently does not support `Cow<'_, str>`,
-    // need to wait for <https://github.com/PyO3/pyo3/pull/4390>.
-    tauri_config: Option<Py<PyString>>,
+    tauri_config: NotRequired<Option<PyBackedStr>>,
+}
+
+derive_from_py_dict!(ContextFactoryKwargs {
+    #[default]
+    tauri_config,
+});
+
+impl ContextFactoryKwargs {
+    fn from_kwargs(kwargs: Option<&Bound<'_, PyDict>>) -> PyResult<Option<Self>> {
+        kwargs.map(Self::from_py_dict).transpose()
+    }
 }
 
 /// `def context_factory(src_tauri_dir: Path, /, **ContextFactoryKwargs) -> tauri.Context:`
@@ -163,15 +172,10 @@ pub fn context_factory(
     // TODO, PERF: avoid cloning the `PathBuf` data.
     let (src_tauri_dir,): (PathBuf,) = args.extract()?;
 
-    let ContextFactoryKwargs { tauri_config } = match kwargs {
-        Some(kwargs) => kwargs.extract()?,
-        None => return Err(PyValueError::new_err("missing keyword-only argument")),
-    };
-    let tauri_config = tauri_config
-        .as_ref()
-        // TODO: once we drop py39, use `PyString::to_str` instead.
-        .map(|s| s.to_cow(py))
-        .transpose()?;
+    let ContextFactoryKwargs { tauri_config } =
+        ContextFactoryKwargs::from_kwargs(kwargs)?.unwrap_or_default();
+    let tauri_config = tauri_config.0.unwrap_or_default();
+    let tauri_config = tauri_config.as_deref();
 
     let result: FactoryResult<TauriContext> = py.allow_threads(move || {
         let mut ctx = tauri_generate_context();
@@ -186,7 +190,7 @@ pub fn context_factory(
         if let Some(tauri_config) = tauri_config {
             let merge_config: serde_json::Value =
             // TODO: unify the error type
-            serde_json::from_str(&tauri_config).map_err(|e| PyValueError::new_err(format!("Failed to serialize argument `tauri_config`: {e}")))?;
+            serde_json::from_str(tauri_config).map_err(|e| PyValueError::new_err(format!("Failed to serialize argument `tauri_config`: {e}")))?;
             json_patch::merge(&mut config, &merge_config)
         }
         let config: Config =
@@ -309,63 +313,12 @@ pub fn context_factory(
     result.map_err(|err| err.into_py_err(py))
 }
 
-#[derive(FromPyObject)]
-#[pyo3(from_item_all)]
-// TODO: once we upgrade to `pyo3 v0.24`, we can use `#[pyo3(default)]` for `NotRequired` fields.
-struct BuilderFactoryKwargs {
-    opener: bool,
-    clipboard_manager: bool,
-    dialog: bool,
-    fs: bool,
-    notification: bool,
-}
-
-// TODO: once we support `NotRequired` fields for `FromPyObject` in `pyo3 v0.24`,
-// move plugins config to a separate parameter:
-//     class PluginConfig(TypedDict):
-//         opener: NotRequired[bool]
-//         ...
-//     def builder_factory(..., *, plugins: Optional[PluginConfig] = None) -> tauri.Builder:
-//
-/// `def def builder_factory(**BuilderFactoryKwargs) -> tauri.Builder:`
+/// `def builder_factory() -> tauri.Builder:`
 pub fn builder_factory(
     _args: &Bound<'_, PyTuple>,
-    kwargs: Option<&Bound<'_, PyDict>>,
+    _kwargs: Option<&Bound<'_, PyDict>>,
 ) -> PyResult<tauri::Builder<Runtime>> {
-    let py = _args.py();
-    let BuilderFactoryKwargs {
-        opener,
-        clipboard_manager,
-        dialog,
-        fs,
-        notification,
-    } = match kwargs {
-        Some(kwargs) => kwargs.extract()?,
-        None => return Err(PyValueError::new_err("missing keyword-only argument")),
-    };
-
-    py.allow_threads(move || {
-        let mut builder = tauri::Builder::default();
-
-        // TODO: more plugins
-        if opener {
-            builder = builder.plugin(tauri_plugin_opener::init());
-        }
-        if clipboard_manager {
-            builder = builder.plugin(tauri_plugin_clipboard_manager::init());
-        }
-        if dialog {
-            builder = builder.plugin(tauri_plugin_dialog::init());
-        }
-        if fs {
-            builder = builder.plugin(tauri_plugin_fs::init());
-        }
-        if notification {
-            builder = builder.plugin(tauri_plugin_notification::init());
-        }
-
-        Ok(builder)
-    })
+    Ok(tauri::Builder::default())
 }
 
 enum FactoryError {

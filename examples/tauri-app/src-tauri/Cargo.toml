@@ -27,7 +27,6 @@ tauri-build = { workspace = true }
 
 [dependencies]
 tauri = { workspace = true }
-tauri-plugin-opener = { workspace = true }
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
@@ -35,7 +34,41 @@ pyo3 = { workspace = true }
 pytauri = { workspace = true, features = [
     "plugin-notification",
     "plugin-dialog",
+    "plugin-clipboard-manager",
+    "plugin-fs",
+    "plugin-opener",
+    "plugin-autostart",
+    "plugin-deep-link",
+    "plugin-http",
+    "plugin-os",
+    "plugin-persisted-scope",
+    "plugin-positioner",
+    "plugin-process",
+    "plugin-shell",
+    "plugin-single-instance",
+    "plugin-updater",
+    "plugin-upload",
+    "plugin-websocket",
+    "plugin-window-state",
+    "plugin-global-shortcut",
 ] }
 tauri-plugin-pytauri = { workspace = true }
 tauri-plugin-notification = { workspace = true }
 tauri-plugin-dialog = { workspace = true }
+tauri-plugin-clipboard-manager = { workspace = true }
+tauri-plugin-fs = { workspace = true, features = ["watch"] }
+tauri-plugin-opener = { workspace = true }
+tauri-plugin-autostart = { workspace = true }
+tauri-plugin-deep-link = { workspace = true }
+tauri-plugin-http = { workspace = true }
+tauri-plugin-os = { workspace = true }
+tauri-plugin-persisted-scope = { workspace = true }
+tauri-plugin-positioner = { workspace = true, features = ["tray-icon"] }
+tauri-plugin-process = { workspace = true }
+tauri-plugin-shell = { workspace = true }
+tauri-plugin-single-instance = { workspace = true, features = ["deep-link"] }
+tauri-plugin-updater = { workspace = true, features = ["zip"] }
+tauri-plugin-upload = { workspace = true }
+tauri-plugin-websocket = { workspace = true }
+tauri-plugin-window-state = { workspace = true }
+tauri-plugin-global-shortcut = { workspace = true }

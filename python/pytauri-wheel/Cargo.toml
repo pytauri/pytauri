@@ -3,7 +3,8 @@
 
 [package]
 name = "pytauri-wheel"
-version = "0.7.0" # ❗ when bumping, remember to update workspace dependencies
+# ❗ when bumping, remember to update workspace dependencies
+version = "0.7.0"
 description = "Precompiled wheels for PyTauri"
 authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 edition = "2021"
@@ -20,10 +21,10 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 
 [build-dependencies]
-tauri-build = { version = "2.2" }
+tauri-build = { version = "2.3" }
 
 [dependencies]
-tauri = { version = "2.5.1", features = [
+tauri = { version = "2.7", features = [
     "config-toml",
     "config-json5",
     "devtools",
@@ -32,16 +33,30 @@ tauri = { version = "2.5.1", features = [
 ] }
 # NOTE: pin the minor version of `tauri-utils` because it's unstable,
 # see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
-tauri-utils = { version = "~2.4", features = [
+tauri-utils = { version = "~2.6", features = [
     "config-toml",
     "config-json5",
     "build",
 ] }
-tauri-plugin-opener = { version = "2.3.0" }
-tauri-plugin-clipboard-manager = { version = "2.2.3" }
-tauri-plugin-dialog = { version = "2.2.2" }
-tauri-plugin-fs = { version = "2.3.0" }
-tauri-plugin-notification = { version = "2.2.3" }
+tauri-plugin-opener = { version = "2.4" }
+tauri-plugin-clipboard-manager = { version = "2.3" }
+tauri-plugin-dialog = { version = "2.3" }
+tauri-plugin-fs = { version = "2.4", features = ["watch"] }
+tauri-plugin-notification = { version = "2.3" }
+tauri-plugin-autostart = { version = "2.5" }
+tauri-plugin-deep-link = { version = "2.4" }
+tauri-plugin-http = { version = "2.5" }
+tauri-plugin-os = { version = "2.3" }
+tauri-plugin-persisted-scope = { version = "2.3" }
+tauri-plugin-positioner = { version = "2.3", features = ["tray-icon"] }
+tauri-plugin-process = { version = "2.3" }
+tauri-plugin-shell = { version = "2.3" }
+tauri-plugin-single-instance = { version = "2.3", features = ["deep-link"] }
+tauri-plugin-updater = { version = "2.9" }
+tauri-plugin-upload = { version = "2.3" }
+tauri-plugin-websocket = { version = "2.4" }
+tauri-plugin-window-state = { version = "2.4" }
+tauri-plugin-global-shortcut = { version = "2.3" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -51,6 +66,28 @@ pyo3 = { version = "0.25" }
 # ❗ when bumping, remember to update workspace dependencies.
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
-pytauri = { version = "0.7", features = ["plugin-notification", "plugin-dialog"] }
+pytauri = { version = "0.7", features = [
+    "plugin-notification",
+    "plugin-dialog",
+    "plugin-clipboard-manager",
+    "plugin-fs",
+    "plugin-opener",
+    "plugin-autostart",
+    "plugin-deep-link",
+    "plugin-http",
+    "plugin-os",
+    "plugin-persisted-scope",
+    "plugin-positioner",
+    "plugin-process",
+    "plugin-shell",
+    "plugin-single-instance",
+    "plugin-updater",
+    "plugin-upload",
+    "plugin-websocket",
+    "plugin-window-state",
+    "plugin-global-shortcut",
+] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }
+pyo3-utils = { version = "0.3", features = ["unstable"] }
+# 👆

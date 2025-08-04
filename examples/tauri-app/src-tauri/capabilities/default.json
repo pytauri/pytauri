@@ -5,9 +5,23 @@
   "windows": ["main"],
   "permissions": [
     "core:default",
-    "opener:default",
     "pytauri:default",
     "notification:default",
-    "dialog:default"
+    "dialog:default",
+    "clipboard-manager:default",
+    "fs:default",
+    "opener:default",
+    "autostart:default",
+    "deep-link:default",
+    "http:default",
+    "os:default",
+    "positioner:default",
+    "process:default",
+    "shell:default",
+    "updater:default",
+    "upload:default",
+    "websocket:default",
+    "window-state:default",
+    "global-shortcut:default"
   ]
 }

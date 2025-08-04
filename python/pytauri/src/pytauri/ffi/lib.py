@@ -3,7 +3,7 @@
 """[tauri::self](https://docs.rs/tauri/latest/tauri/index.html)"""
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from enum import Enum, auto
 from pathlib import Path
 from typing import (
@@ -131,6 +131,7 @@ if TYPE_CHECKING:
     from pytauri.ffi.image import Image
     from pytauri.ffi.menu import Menu, MenuEvent
     from pytauri.ffi.path import PathResolver
+    from pytauri.ffi.plugin import Plugin
     from pytauri.ffi.tray import TrayIcon, TrayIconEventType
     from pytauri.ffi.webview import WebviewWindow
 
@@ -223,6 +224,7 @@ if TYPE_CHECKING:
             """
             ...
 
+        def plugin(self, plugin: "Plugin", /) -> None: ...
         def exit(self, exit_code: int, /) -> None: ...
         def restart(self, /) -> Never: ...
         def on_menu_event(
@@ -957,6 +959,8 @@ class BuilderArgs(TypedDict, total=False):
     """
     setup: Callable[[AppHandle], object]
     """See rust `tauri::Builder::setup`"""
+    plugins: Sequence["Plugin"]
+    """See rust `tauri::Builder::plugin`"""
 
 
 RunEventType = TypeAliasType(

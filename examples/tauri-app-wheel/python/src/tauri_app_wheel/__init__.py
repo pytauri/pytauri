@@ -20,10 +20,32 @@ from anyio.from_thread import start_blocking_portal
 from pydantic import BaseModel, ConfigDict, RootModel
 from pydantic.alias_generators import to_camel
 from pytauri import (
+    AppHandle,
     Commands,
+    Manager,
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
+from pytauri_plugins import (
+    autostart,
+    clipboard_manager,
+    deep_link,
+    dialog,
+    fs,
+    global_shortcut,
+    http,
+    notification,
+    opener,
+    os,
+    persisted_scope,
+    positioner,
+    process,
+    shell,
+    single_instance,
+    upload,
+    websocket,
+    window_state,
+)
 from pytauri_wheel.lib import builder_factory, context_factory
 
 SRC_TAURI_DIR = Path(__file__).parent.absolute()
@@ -98,6 +120,15 @@ async def greet(body: Person, webview_window: WebviewWindow) -> str:
 task_group: TaskGroup
 
 
+def single_instance_callback(
+    app_handle: AppHandle, _args: list[str], _cwd: str
+) -> None:
+    """Focus on the main window."""
+    main_window = Manager.get_webview_window(app_handle, "main")
+    assert main_window is not None, "no main window"
+    main_window.set_focus()
+
+
 def main() -> int:
     """Run the tauri-app."""
     global task_group
@@ -120,6 +151,27 @@ def main() -> int:
         app = builder_factory().build(
             context=context_factory(SRC_TAURI_DIR, tauri_config=tauri_config),
             invoke_handler=commands.generate_handler(portal),
+            plugins=(
+                # The Single Instance plugin must be the first one to be registered to work well.
+                single_instance.init(single_instance_callback),
+                dialog.init(),
+                notification.init(),
+                clipboard_manager.init(),
+                fs.init(),
+                opener.init(),
+                autostart.init(),
+                deep_link.init(),
+                http.init(),
+                os.init(),
+                persisted_scope.init(),
+                positioner.init(),
+                process.init(),
+                shell.init(),
+                upload.init(),
+                websocket.init(),
+                window_state.Builder.build(),
+                global_shortcut.Builder.build(),
+            ),
         )
         exit_code = app.run_return()
         return exit_code

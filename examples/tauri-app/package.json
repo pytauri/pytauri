@@ -10,12 +10,12 @@
     "tauri": "tauri"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.5",
-    "@tauri-apps/plugin-opener": "^2.2",
+    "@tauri-apps/api": "catalog:",
+    "@tauri-apps/plugin-opener": "catalog:",
     "tauri-plugin-pytauri-api": "workspace:*"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.5",
+    "@tauri-apps/cli": "catalog:",
     "vite": "^6.1.6",
     "typescript": "~5.6.2",
     "json-schema-to-typescript": "15.0.4"
