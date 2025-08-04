@@ -3746,6 +3746,7 @@ version = "0.7.0"
 dependencies = [
  "json-patch",
  "pyo3",
+ "pyo3-utils",
  "pytauri",
  "pytauri-core",
  "serde",

@@ -28,10 +28,10 @@ ext_mod = "pytauri_wheel.ext_mod"
 
 [build-system]
 requires = [
-    "setuptools>=61",
-    "setuptools-rust==1.*",
-    "setuptools_scm>=8",
-    "packaging>=24",
+    "setuptools == 80.*",
+    "setuptools-rust == 1.*",
+    "setuptools_scm == 9.*",
+    "packaging == 25.*",
 ]
 build-backend = "setuptools.build_meta"
 

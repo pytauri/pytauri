@@ -73,6 +73,7 @@ pyo3-utils = { path = "crates/pyo3-utils", version = "0.3" }
 pytauri = { path = "crates/pytauri" }
 pytauri-core = { path = "crates/pytauri-core" }
 tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri" }
+pyo3-utils = { path = "crates/pyo3-utils" }
 # 👆
 
 
