@@ -40,6 +40,7 @@ plugin-single-instance = ["pytauri-core/plugin-single-instance"]
 plugin-updater = ["pytauri-core/plugin-updater"]
 plugin-upload = ["pytauri-core/plugin-upload"]
 plugin-websocket = ["pytauri-core/plugin-websocket"]
+plugin-window-state = ["pytauri-core/plugin-window-state"]
 
 
 [dependencies]

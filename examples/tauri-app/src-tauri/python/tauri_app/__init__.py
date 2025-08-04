@@ -44,6 +44,7 @@ from pytauri_plugins import (
     updater,
     upload,
     websocket,
+    window_state,
 )
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
@@ -178,6 +179,7 @@ def main() -> int:
                 updater.Builder.build(),
                 upload.init(),
                 websocket.init(),
+                window_state.Builder.build(),
             ),
         )
         Manager.manage(app, async_tools)

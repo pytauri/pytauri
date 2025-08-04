@@ -25,6 +25,7 @@
         "pytauri/plugin-updater",
         "pytauri/plugin-upload",
         "pytauri/plugin-websocket",
+        "pytauri/plugin-window-state",
         "pyo3-utils/unstable",
     ],
 }

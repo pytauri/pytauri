@@ -32,6 +32,8 @@ mod updater;
 mod upload;
 #[cfg(feature = "plugin-websocket")]
 mod websocket;
+#[cfg(feature = "plugin-window-state")]
+mod window_state;
 
 use pyo3::prelude::*;
 
@@ -111,6 +113,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_WEBSOCKET: bool = cfg!(feature = "plugin-websocket");
 
+    /// Whether the `plugin-window-state` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_WINDOW_STATE: bool = cfg!(feature = "plugin-window-state");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -178,4 +184,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-websocket")]
     #[pymodule_export]
     pub use websocket::websocket;
+
+    #[cfg(feature = "plugin-window-state")]
+    #[pymodule_export]
+    pub use window_state::window_state;
 }

@@ -40,6 +40,7 @@ tauri-plugin-process = { workspace = true, optional = true }
 tauri-plugin-shell = { workspace = true, optional = true }
 tauri-plugin-single-instance = { workspace = true, optional = true }
 tauri-plugin-updater = { workspace = true, optional = true }
+tauri-plugin-window-state = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -84,3 +85,4 @@ plugin-process = ["dep:tauri-plugin-process"]
 plugin-shell = ["dep:tauri-plugin-shell"]
 plugin-single-instance = ["dep:tauri-plugin-single-instance"]
 plugin-updater = ["dep:tauri-plugin-updater", "tauri-plugin-updater/zip"]
+plugin-window-state = ["dep:tauri-plugin-window-state"]

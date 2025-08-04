@@ -55,6 +55,7 @@ tauri-plugin-single-instance = { version = "2.3", features = ["deep-link"] }
 tauri-plugin-updater = { version = "2.9" }
 tauri-plugin-upload = { version = "2.3" }
 tauri-plugin-websocket = { version = "2.4" }
+tauri-plugin-window-state = { version = "2.4" }
 # Keep it the same as the version specified in `tauri-utils`,
 # TODO, FIXME: or we can create a feature request to tauri to re-export it.
 json-patch = { version = "3" }
@@ -82,6 +83,7 @@ pytauri = { version = "0.7", features = [
     "plugin-updater",
     "plugin-upload",
     "plugin-websocket",
+    "plugin-window-state",
 ] }
 pytauri-core = { version = "0.7" }
 tauri-plugin-pytauri = { version = "0.7" }

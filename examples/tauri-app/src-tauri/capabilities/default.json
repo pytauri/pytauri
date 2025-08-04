@@ -20,6 +20,7 @@
     "shell:default",
     "updater:default",
     "upload:default",
-    "websocket:default"
+    "websocket:default",
+    "window-state:default"
   ]
 }
