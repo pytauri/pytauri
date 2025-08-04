@@ -44,7 +44,7 @@ tools = ["pre-commit ==4.2.0"]
 "build-system" = [
     "setuptools == 80.*",
     "setuptools-rust == 1.*",
-    "setuptools-scm == 9.*",
+    "setuptools-scm == 8.*",
     "Cython == 3.*",
     "packaging == 25.*",
 ]

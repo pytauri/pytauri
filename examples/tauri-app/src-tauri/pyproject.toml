@@ -17,7 +17,7 @@ ext_mod = "tauri_app.ext_mod"
 requires = [
     "setuptools == 80.*",
     "setuptools-rust == 1.*",
-    "setuptools_scm == 9.*",
+    "setuptools-scm == 8.*",
     "Cython == 3.*",
 ]
 build-backend = "setuptools.build_meta"
@@ -34,7 +34,7 @@ python-source = "python"
 module-name = "tauri_app.ext_mod"
 # see `setup.py`
 features = ["pyo3/extension-module", "tauri/custom-protocol", "pyo3/abi3-py39"]
-# equivalent to `setuptools_scm`
+# equivalent to `setuptools-scm`
 sdist-generator = "git"
 # equivalent to `MANIFEST.in`
 include = [{ path = "frontend/**/*", format = "sdist" }]

@@ -30,7 +30,7 @@ ext_mod = "pytauri_wheel.ext_mod"
 requires = [
     "setuptools == 80.*",
     "setuptools-rust == 1.*",
-    "setuptools_scm == 9.*",
+    "setuptools-scm == 8.*",
     "packaging == 25.*",
 ]
 build-backend = "setuptools.build_meta"
@@ -47,7 +47,7 @@ python-source = "python"
 module-name = "pytauri_wheel.ext_mod"
 # see `setup.py`
 features = ["pyo3/extension-module", "tauri/custom-protocol"]
-# equivalent to `setuptools_scm`
+# equivalent to `setuptools-scm`
 sdist-generator = "git"
 
 

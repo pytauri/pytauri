@@ -21,7 +21,7 @@ dependencies = [
 ext_mod = "nicegui_app.ext_mod"
 
 [build-system]
-requires = ["setuptools == 80.*", "setuptools-rust == 1.*", "setuptools-scm == 9.*"]
+requires = ["setuptools == 80.*", "setuptools-rust == 1.*", "setuptools-scm == 8.*"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages]
@@ -36,7 +36,7 @@ python-source = "python"
 module-name = "nicegui_app.ext_mod"
 # see `setup.py`
 features = ["pyo3/extension-module", "tauri/custom-protocol", "pyo3/abi3-py39"]
-# equivalent to `setuptools_scm`
+# equivalent to `setuptools-scm`
 sdist-generator = "git"
 
 

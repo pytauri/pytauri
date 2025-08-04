@@ -2009,7 +2009,7 @@ build-system = [
     { name = "packaging", specifier = "==25.*" },
     { name = "setuptools", specifier = "==80.*" },
     { name = "setuptools-rust", specifier = "==1.*" },
-    { name = "setuptools-scm", specifier = "==9.*" },
+    { name = "setuptools-scm", specifier = "==8.*" },
 ]
 dev = [
     { name = "codelldb", editable = "python/codelldb" },
@@ -2040,7 +2040,7 @@ dev = [
     { name = "ruff", specifier = "==0.12.4" },
     { name = "setuptools", specifier = "==80.*" },
     { name = "setuptools-rust", specifier = "==1.*" },
-    { name = "setuptools-scm", specifier = "==9.*" },
+    { name = "setuptools-scm", specifier = "==8.*" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
     { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
     { name = "trio", specifier = "==0.30.0" },
@@ -2335,17 +2335,18 @@ wheels = [
 
 [[package]]
 name = "setuptools-scm"
-version = "9.0.0"
+version = "8.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
+    { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
     { name = "packaging" },
     { name = "setuptools" },
     { name = "tomli", marker = "python_full_version < '3.11'" },
     { name = "typing-extensions", marker = "python_full_version < '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c8/b7/7d94697d2192be602497ac82c9465496d215de7228ab4fe5c3bf641e54fb/setuptools_scm-9.0.0.tar.gz", hash = "sha256:a237477abd152e707b739fc082c9b45e1cebf3a14249de8ed4d15ee01e72c5e6", size = 184752, upload-time = "2025-08-04T09:21:20.788Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/b9/19/7ae64b70b2429c48c3a7a4ed36f50f94687d3bfcd0ae2f152367b6410dff/setuptools_scm-8.3.1.tar.gz", hash = "sha256:3d555e92b75dacd037d32bafdf94f97af51ea29ae8c7b234cf94b7a5bd242a63", size = 78088, upload-time = "2025-04-23T11:53:19.739Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/c2/d5c5722178eb4f8d449d96dd7d6ea894fd0cb3313a24efb8bfef65fcc411/setuptools_scm-9.0.0-py3-none-any.whl", hash = "sha256:6768003ef91d3343b3f7194f911c22bcbd82ee7844e8907c5e4b35158f128b2e", size = 57796, upload-time = "2025-08-04T09:21:19.226Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/ac/8f96ba9b4cfe3e4ea201f23f4f97165862395e9331a424ed325ae37024a8/setuptools_scm-8.3.1-py3-none-any.whl", hash = "sha256:332ca0d43791b818b841213e76b1971b7711a960761c5bea5fc5cdb5196fbce3", size = 43935, upload-time = "2025-04-23T11:53:17.922Z" },
 ]
 
 [[package]]
