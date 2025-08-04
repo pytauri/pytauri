@@ -45,6 +45,7 @@ tauri-plugin-shell = { version = "2.3" }
 tauri-plugin-single-instance = { version = "2.3" }
 tauri-plugin-updater = { version = "2.9" }
 tauri-plugin-window-state = { version = "2.4" }
+tauri-plugin-global-shortcut = { version = "2.3" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }

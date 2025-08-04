@@ -32,6 +32,7 @@ from pytauri_plugins import (
     deep_link,
     dialog,
     fs,
+    global_shortcut,
     http,
     notification,
     opener,
@@ -180,6 +181,7 @@ def main() -> int:
                 upload.init(),
                 websocket.init(),
                 window_state.Builder.build(),
+                global_shortcut.Builder.build(),
             ),
         )
         Manager.manage(app, async_tools)

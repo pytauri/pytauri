@@ -26,6 +26,7 @@
         "pytauri/plugin-upload",
         "pytauri/plugin-websocket",
         "pytauri/plugin-window-state",
+        "pytauri/plugin-global-shortcut",
         "pyo3-utils/unstable",
     ],
 }

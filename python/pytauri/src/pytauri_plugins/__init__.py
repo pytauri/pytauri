@@ -15,6 +15,7 @@ __all__ = [
     "PLUGIN_DEEP_LINK",
     "PLUGIN_DIALOG",
     "PLUGIN_FS",
+    "PLUGIN_GLOBAL_SHORTCUT",
     "PLUGIN_HTTP",
     "PLUGIN_NOTIFICATION",
     "PLUGIN_OPENER",
@@ -68,3 +69,5 @@ PLUGIN_WEBSOCKET: Final[bool] = _pytauri_plugins_mod.PLUGIN_WEBSOCKET
 """Whether the `plugin-websocket` feature is enabled."""
 PLUGIN_WINDOW_STATE: Final[bool] = _pytauri_plugins_mod.PLUGIN_WINDOW_STATE
 """Whether the `plugin-window-state` feature is enabled."""
+PLUGIN_GLOBAL_SHORTCUT: Final[bool] = _pytauri_plugins_mod.PLUGIN_GLOBAL_SHORTCUT
+"""Whether the `plugin-global-shortcut` feature is enabled."""

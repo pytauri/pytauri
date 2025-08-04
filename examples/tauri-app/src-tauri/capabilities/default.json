@@ -21,6 +21,7 @@
     "updater:default",
     "upload:default",
     "websocket:default",
-    "window-state:default"
+    "window-state:default",
+    "global-shortcut:default"
   ]
 }

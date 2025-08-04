@@ -8,6 +8,8 @@ mod deep_link;
 mod dialog;
 #[cfg(feature = "plugin-fs")]
 mod fs;
+#[cfg(feature = "plugin-global-shortcut")]
+mod global_shortcut;
 #[cfg(feature = "plugin-http")]
 mod http;
 #[cfg(feature = "plugin-notification")]
@@ -60,6 +62,10 @@ pub mod pytauri_plugins {
     /// Whether the `plugin-fs` feature is enabled.
     #[pymodule_export]
     pub const PLUGIN_FS: bool = cfg!(feature = "plugin-fs");
+
+    /// Whether the `plugin-global-shortcut` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_GLOBAL_SHORTCUT: bool = cfg!(feature = "plugin-global-shortcut");
 
     /// Whether the `plugin-opener` feature is enabled.
     #[pymodule_export]
@@ -132,6 +138,10 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-fs")]
     #[pymodule_export]
     pub use fs::fs;
+
+    #[cfg(feature = "plugin-global-shortcut")]
+    #[pymodule_export]
+    pub use global_shortcut::global_shortcut;
 
     #[cfg(feature = "plugin-opener")]
     #[pymodule_export]
