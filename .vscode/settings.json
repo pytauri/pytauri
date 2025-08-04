@@ -23,7 +23,8 @@
         "pytauri/plugin-shell",
         "pytauri/plugin-single-instance",
         "pytauri/plugin-updater",
-        "pyo3-utils/unstable",
         "pytauri/plugin-upload",
+        "pytauri/plugin-websocket",
+        "pyo3-utils/unstable",
     ],
 }

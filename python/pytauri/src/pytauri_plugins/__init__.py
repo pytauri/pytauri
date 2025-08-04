@@ -26,6 +26,7 @@ __all__ = [
     "PLUGIN_SINGLE_INSTANCE",
     "PLUGIN_UPDATER",
     "PLUGIN_UPLOAD",
+    "PLUGIN_WEBSOCKET",
 ]
 
 _pytauri_plugins_mod: ModuleType = EXT_MOD.pytauri_plugins
@@ -62,3 +63,5 @@ PLUGIN_UPDATER: Final[bool] = _pytauri_plugins_mod.PLUGIN_UPDATER
 """Whether the `plugin-updater` feature is enabled."""
 PLUGIN_UPLOAD: Final[bool] = _pytauri_plugins_mod.PLUGIN_UPLOAD
 """Whether the `plugin-upload` feature is enabled."""
+PLUGIN_WEBSOCKET: Final[bool] = _pytauri_plugins_mod.PLUGIN_WEBSOCKET
+"""Whether the `plugin-websocket` feature is enabled."""

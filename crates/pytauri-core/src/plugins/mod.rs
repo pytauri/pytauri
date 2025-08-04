@@ -30,6 +30,8 @@ mod single_instance;
 mod updater;
 #[cfg(feature = "plugin-upload")]
 mod upload;
+#[cfg(feature = "plugin-websocket")]
+mod websocket;
 
 use pyo3::prelude::*;
 
@@ -105,6 +107,10 @@ pub mod pytauri_plugins {
     #[pymodule_export]
     pub const PLUGIN_UPLOAD: bool = cfg!(feature = "plugin-upload");
 
+    /// Whether the `plugin-websocket` feature is enabled.
+    #[pymodule_export]
+    pub const PLUGIN_WEBSOCKET: bool = cfg!(feature = "plugin-websocket");
+
     #[cfg(feature = "plugin-notification")]
     #[pymodule_export]
     pub use notification::notification;
@@ -168,4 +174,8 @@ pub mod pytauri_plugins {
     #[cfg(feature = "plugin-upload")]
     #[pymodule_export]
     pub use upload::upload;
+
+    #[cfg(feature = "plugin-websocket")]
+    #[pymodule_export]
+    pub use websocket::websocket;
 }
