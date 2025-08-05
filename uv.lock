@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.9"
 
 [manifest]
@@ -1095,7 +1095,7 @@ wheels = [
 
 [[package]]
 name = "mkdocs-git-revision-date-localized-plugin"
-version = "1.4.7"
+version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "babel" },
@@ -1103,9 +1103,9 @@ dependencies = [
     { name = "mkdocs" },
     { name = "pytz" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/f8/a17ec39a4fc314d40cc96afdc1d401e393ebd4f42309d454cc940a2cf38a/mkdocs_git_revision_date_localized_plugin-1.4.7.tar.gz", hash = "sha256:10a49eff1e1c3cb766e054b9d8360c904ce4fe8c33ac3f6cc083ac6459c91953", size = 450473, upload-time = "2025-05-28T18:26:20.697Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/73/85/6dc9d4eca486ed5734a05f7fd5c612a8e60a35e65610dad6aa9c58118c3f/mkdocs_git_revision_date_localized_plugin-1.3.0.tar.gz", hash = "sha256:439e2f14582204050a664c258861c325064d97cdc848c541e48bb034a6c4d0cb", size = 384797, upload-time = "2024-10-22T12:45:13.114Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/53/b6/106fcc15287e7228658fbd0ad9e8b0d775becced0a089cc39984641f4a0f/mkdocs_git_revision_date_localized_plugin-1.4.7-py3-none-any.whl", hash = "sha256:056c0a90242409148f1dc94d5c9d2c25b5b8ddd8de45489fa38f7fa7ccad2bc4", size = 25382, upload-time = "2025-05-28T18:26:18.907Z" },
+    { url = "https://files.pythonhosted.org/packages/67/e5/ffeb92db53af8c3aa2d92e21a3cf6b5f83eee7e03b9cf9234ef6b30230d5/mkdocs_git_revision_date_localized_plugin-1.3.0-py3-none-any.whl", hash = "sha256:c99377ee119372d57a9e47cff4e68f04cce634a74831c06bc89b33e456e840a1", size = 22549, upload-time = "2024-10-22T12:45:11.339Z" },
 ]
 
 [[package]]
@@ -2021,7 +2021,7 @@ dev = [
     { name = "mike", specifier = "==2.1.*" },
     { name = "mkdocs-gen-files", specifier = "==0.5.*" },
     { name = "mkdocs-git-committers-plugin-2", specifier = "==2.5.*" },
-    { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
+    { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.3.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
     { name = "mkdocs-section-index", specifier = "~=0.3.10" },
@@ -2053,7 +2053,7 @@ docs = [
     { name = "mike", specifier = "==2.1.*" },
     { name = "mkdocs-gen-files", specifier = "==0.5.*" },
     { name = "mkdocs-git-committers-plugin-2", specifier = "==2.5.*" },
-    { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.4.*" },
+    { name = "mkdocs-git-revision-date-localized-plugin", specifier = "==1.3.*" },
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
     { name = "mkdocs-section-index", specifier = "~=0.3.10" },

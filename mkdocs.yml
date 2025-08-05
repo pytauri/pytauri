@@ -187,10 +187,12 @@ plugins:
 
   # Remember: https://github.com/timvink/mkdocs-git-revision-date-localized-plugin#note-when-using-build-environments
   - git-revision-date-localized:
+      enabled: !ENV [CI, false]
       fallback_to_build_date: true
       enable_creation_date: true
       type: timeago
   - git-committers:
+      enabled: !ENV [CI, false]
       repository: pytauri/pytauri
       branch: main
 
