@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-
 site_name: PyTauri
 site_url: https://pytauri.github.io/pytauri/
 
@@ -20,7 +18,8 @@ theme:
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
-    - navigation.instant.preview
+    # # insiders for `9.6.16`: <https://squidfunk.github.io/mkdocs-material/insiders/benefits/#22000-habanero-orange>
+    # - navigation.instant.preview
     - navigation.top
     - navigation.tabs
     - navigation.path
