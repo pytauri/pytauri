@@ -123,6 +123,7 @@ plugins:
   - section-index
   - mkdocstrings:
       # Modified: https://github.com/mkdocstrings/python/blob/eaf9b8240069f7369f401fe048892043c8b173d3/mkdocs.yml#L140-L166
+      enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
       default_handler: python
       handlers:
         python:
