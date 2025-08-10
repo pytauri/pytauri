@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
+
+    `from_py_dict::derive_from_py_dict!` can now accept struct with no fields:
+
+    ```rust
+    derive_from_py_dict!(Foo {});
+    ```
+
 ## [0.3.0]
 
 ### Added

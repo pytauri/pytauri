@@ -126,7 +126,7 @@ python main.py
 
 If you want to use frontend dev server such as `vite` in development, or you want to dynamically/programmatically set tarui config, please refer to [pytauri_wheel.lib.context_factory(tauri_config)][]
 
-## PyTauri/Tauri Plugins
+## PyTauri Plugins
 
 `pytauri-wheel` enables all [pytauri plugin features](../tutorial/using-plugins.md#all-plugins-we-support).
 
