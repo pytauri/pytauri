@@ -32,7 +32,7 @@ tauri = { version = "2.5.1", features = [
 ] }
 # NOTE: pin the minor version of `tauri-utils` because it's unstable,
 # see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
-tauri-utils = { version = "~2.4", features = [
+tauri-utils = { version = "~2.6.0", features = [
     "config-toml",
     "config-json5",
     "build",

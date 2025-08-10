@@ -25,7 +25,7 @@ importers:
         version: 12.1.4(rollup@4.45.1)(tslib@2.8.1)(typescript@5.8.3)
       '@tauri-apps/api':
         specifier: ^2.5
-        version: 2.5.0
+        version: 2.7.0
       '@types/node':
         specifier: ^22.7.4
         version: 22.16.5
@@ -67,13 +67,13 @@ importers:
     dependencies:
       '@tauri-apps/api':
         specifier: ^2.5
-        version: 2.5.0
+        version: 2.7.0
 
   examples/tauri-app:
     dependencies:
       '@tauri-apps/api':
         specifier: ^2.5
-        version: 2.5.0
+        version: 2.7.0
       '@tauri-apps/plugin-opener':
         specifier: ^2.2
         version: 2.2.2
@@ -98,7 +98,7 @@ importers:
     dependencies:
       '@tauri-apps/api':
         specifier: ^2.5
-        version: 2.5.0
+        version: 2.7.0
       '@tauri-apps/plugin-dialog':
         specifier: ^2.2
         version: 2.2.0
@@ -534,8 +534,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@tauri-apps/api@2.5.0':
-    resolution: {integrity: sha512-Ldux4ip+HGAcPUmuLT8EIkk6yafl5vK0P0c0byzAKzxJh7vxelVtdPONjfgTm96PbN24yjZNESY8CKo8qniluA==}
+  '@tauri-apps/api@2.7.0':
+    resolution: {integrity: sha512-v7fVE8jqBl8xJFOcBafDzXFc8FnicoH3j8o8DNNs0tHuEBmXUDqrCOAzMRX0UkfpwqZLqvrvK0GNQ45DfnoVDg==}
 
   '@tauri-apps/cli-darwin-arm64@2.5.0':
     resolution: {integrity: sha512-VuVAeTFq86dfpoBDNYAdtQVLbP0+2EKCHIIhkaxjeoPARR0sLpFHz2zs0PcFU76e+KAaxtEtAJAXGNUc8E1PzQ==}
@@ -1555,7 +1555,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.45.1':
     optional: true
 
-  '@tauri-apps/api@2.5.0': {}
+  '@tauri-apps/api@2.7.0': {}
 
   '@tauri-apps/cli-darwin-arm64@2.5.0':
     optional: true
@@ -1606,11 +1606,11 @@ snapshots:
 
   '@tauri-apps/plugin-dialog@2.2.0':
     dependencies:
-      '@tauri-apps/api': 2.5.0
+      '@tauri-apps/api': 2.7.0
 
   '@tauri-apps/plugin-opener@2.2.2':
     dependencies:
-      '@tauri-apps/api': 2.5.0
+      '@tauri-apps/api': 2.7.0
 
   '@types/conventional-commits-parser@5.0.1':
     dependencies:
