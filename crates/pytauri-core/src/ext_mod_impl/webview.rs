@@ -342,7 +342,7 @@ impl WebviewWindow {
         py.allow_threads(|| delegate_inner!(self, print,))
     }
 
-    fn url(&self, py: Python<'_>) -> PyResult<Url> {
+    fn url(&self, py: Python<'_>) -> PyResult<Url<'_>> {
         let url = py.allow_threads(|| delegate_inner!(self, url,))?;
         Ok(url.into())
     }
