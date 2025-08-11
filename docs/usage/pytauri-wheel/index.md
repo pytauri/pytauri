@@ -53,7 +53,9 @@ This requires you to meet the [`tutorial/#prerequisites`](../tutorial/index.md#p
 
 ## Usage
 
-The development experience of `pytauri-wheel` is almost the same as Rust `tauri`. You can find a complete example in [`examples/tauri-app-wheel`](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel).
+The development experience of `pytauri-wheel` is almost the same as Rust `tauri`. You can find a complete example in [examples/tauri-app-wheel].
+
+[examples/tauri-app-wheel]: https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel
 
 ### Tauri Config
 
@@ -64,7 +66,7 @@ First, we need to create a `Tauri.toml`, refer to <https://tauri.app/develop/con
 ```
 
 !!! tip
-    `pytauri-wheel` also support `tauri.conf.json` and `tauri.conf.json` and [`tauri.linux.conf.json`](https://tauri.app/develop/configuration-files/#platform-specific-configuration) and etc.
+    `pytauri-wheel` also support `tauri.conf.json`, `tauri.conf.json5`, [`tauri.linux.conf.json`](https://tauri.app/develop/configuration-files/#platform-specific-configuration) and etc.
 
 ### Capabilities
 
@@ -96,7 +98,7 @@ The final step, refer to:
 ```
 
 !!! note
-    The frontend assets directory must the same as the one in `Tauri.toml`.
+    The frontend assets directory must the same as the `[build].frontendDist` in `Tauri.toml`.
 
 ```html title="/frontend/index.html"
 --8<-- "docs_src/pytauri_wheel/example/frontend/index.html"
@@ -124,9 +126,16 @@ python main.py
 
 If you want to use frontend dev server such as `vite` in development, or you want to dynamically/programmatically set tarui config, please refer to [pytauri_wheel.lib.context_factory(tauri_config)][]
 
-## Tauri Plugins
+## PyTauri/Tauri Plugins
 
-`pytauri-wheel` enables a set of Tauri plugins during compilation, please refer to [pytauri_wheel.lib.builder_factory][].
+`pytauri-wheel` enables all [pytauri plugin features](../tutorial/using-plugins.md#all-plugins-we-support).
+
+As long as you have completed the Python and frontend initialization steps described in [tutorial/using-plugins](../tutorial/using-plugins.md#install-tauri-plugin):
+
+- Registering the plugin from Python
+- Adding the required permissions to your capabilities file
+
+you can use plugins in both Python and the frontend.
 
 For example, the [tauri-plugin-dialog](https://tauri.app/plugin/dialog/) can be used in the frontend as follows:
 
@@ -136,7 +145,11 @@ import { ask } from '@tauri-apps/plugin-dialog';
 // const { ask } = window.__TAURI__.dialog;
 ```
 
-!!! warning
-    Remember to enable the permissions for these plugins in `/capabilities`, otherwise you will receive an error on the frontend.
+## Best Practices
 
-Additionally, `pytauri-wheel` has integrated all the plugins from [pytauri_plugins][], making it easy for you to use them through the Python API.
+Although the above example uses `pytauri-wheel` as a single-file script (`python main.py`), we strongly recommend that you organize your project in the [standard `pyproject.toml`](https://docs.astral.sh/uv/concepts/projects/) way as shown in [examples/tauri-app-wheel], and generate a venv *standalone*[^venv-standalone-exe] executable via [`[project.scripts]` / `[project.gui-scripts]`](https://docs.astral.sh/uv/concepts/projects/config/#command-line-interfaces) ([example](https://github.com/pytauri/pytauri/blob/10206e89f4925b35569c93d6797bfd401dea267b/examples/tauri-app-wheel/python/pyproject.toml#L14-L18)).
+
+Some Tauri APIs/plugins (such as `tauri-plugin-deep-link` and `tauri-plugin-single-instance`) assume your app is a *standalone*[^venv-standalone-exe] executable, rather than all scripts sharing the same `python(.exe)` executable.
+
+[^venv-standalone-exe]:
+    Do not confuse this with the pytauri standalone app described in [tutorial/build-standalone](../tutorial/build-standalone.md). Executables generated via `[project.scripts]` / `[project.gui-scripts]` depend on the virtual environment and are not portable/distributable.
