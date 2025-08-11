@@ -2,6 +2,39 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
+
+    added:
+
+    - `tauri::`
+        - `mod plugin`
+        - `field BuilderArgs::plugins`
+        - `fn AppHandle::plugin`
+    - `tauri_plugin_dialog::`
+        - `fn init`
+    - `tauri_plugin_notification::`
+        - `fn init`
+    - `mod tauri_plugin_clipboard_manager`
+    - `mod tauri_plugin_fs`
+    - `mod tauri_plugin_opener`
+    - `mod tauri_plugin_autostart`
+    - `mod tauri_plugin_deep_link`
+    - `mod tauri_plugin_deep_link`
+    - `mod tauri_plugin_http`
+    - `mod tauri_plugin_os`
+    - `mod tauri_plugin_persisted_scope`
+    - `mod tauri_plugin_positioner`
+    - `mod tauri_plugin_process`
+    - `mod tauri_plugin_shell`
+    - `mod tauri_plugin_single_instance`
+    - `mod tauri_plugin_updater`
+    - `mod tauri_plugin_upload`
+    - `mod tauri_plugin_websocket`
+    - `mod tauri_plugin_window_state`
+    - `mod tauri_plugin_global_shortcut`
+
 ## [0.7.2]
 
 ### Fixed

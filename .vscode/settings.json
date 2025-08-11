@@ -1,4 +1,19 @@
 {
+    // see:
+    // - <https://squidfunk.github.io/mkdocs-material/creating-your-site/#minimal-configuration-visual-studio-code>
+    // - <https://github.com/redhat-developer/vscode-yaml/issues/238#issuecomment-2776729405>
+    "yaml.schemas": {
+        "https://squidfunk.github.io/mkdocs-material/schema.json": "mkdocs.yml"
+    },
+    "yaml.customTags": [
+        "!ENV scalar",
+        "!ENV sequence",
+        "!relative scalar",
+        "tag:yaml.org,2002:python/name:material.extensions.emoji.to_svg",
+        "tag:yaml.org,2002:python/name:material.extensions.emoji.twemoji",
+        "tag:yaml.org,2002:python/name:pymdownx.superfences.fence_code_format",
+        "tag:yaml.org,2002:python/object/apply:pymdownx.slugs.slugify mapping"
+    ],
     "lldb.rpcServer": {
         "host": "localhost",
         "port": 9552,
@@ -10,6 +25,23 @@
         "pytauri/standalone",
         "pytauri/plugin-notification",
         "pytauri/plugin-dialog",
+        "pytauri/plugin-clipboard-manager",
+        "pytauri/plugin-fs",
+        "pytauri/plugin-opener",
+        "pytauri/plugin-autostart",
+        "pytauri/plugin-deep-link",
+        "pytauri/plugin-http",
+        "pytauri/plugin-os",
+        "pytauri/plugin-persisted-scope",
+        "pytauri/plugin-positioner",
+        "pytauri/plugin-process",
+        "pytauri/plugin-shell",
+        "pytauri/plugin-single-instance",
+        "pytauri/plugin-updater",
+        "pytauri/plugin-upload",
+        "pytauri/plugin-websocket",
+        "pytauri/plugin-window-state",
+        "pytauri/plugin-global-shortcut",
         "pyo3-utils/unstable",
     ],
 }

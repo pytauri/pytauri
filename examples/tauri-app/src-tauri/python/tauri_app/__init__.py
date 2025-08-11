@@ -26,6 +26,27 @@ from pytauri import (
 )
 from pytauri.ipc import Channel, JavaScriptChannelId
 from pytauri.webview import WebviewWindow
+from pytauri_plugins import (
+    autostart,
+    clipboard_manager,
+    deep_link,
+    dialog,
+    fs,
+    global_shortcut,
+    http,
+    notification,
+    opener,
+    os,
+    persisted_scope,
+    positioner,
+    process,
+    shell,
+    single_instance,
+    updater,
+    upload,
+    websocket,
+    window_state,
+)
 from pytauri_plugins.dialog import DialogExt, MessageDialogButtons, MessageDialogKind
 from pytauri_plugins.notification import NotificationExt
 from pytauri_utils.async_tools import AsyncTools
@@ -107,6 +128,15 @@ async def greet(
     return f"Hello, {body.name}! You've been greeted from Python {sys.version}!"
 
 
+def single_instance_callback(
+    app_handle: AppHandle, _args: list[str], _cwd: str
+) -> None:
+    """Focus on the main window."""
+    main_window = Manager.get_webview_window(app_handle, "main")
+    assert main_window is not None, "no main window"
+    main_window.set_focus()
+
+
 def main() -> int:
     """Run the tauri-app."""
 
@@ -131,6 +161,28 @@ def main() -> int:
         app = builder_factory().build(
             context=context_factory(),
             invoke_handler=commands.generate_handler(portal),
+            plugins=(
+                # The Single Instance plugin must be the first one to be registered to work well.
+                single_instance.init(single_instance_callback),
+                dialog.init(),
+                notification.init(),
+                clipboard_manager.init(),
+                fs.init(),
+                opener.init(),
+                autostart.init(),
+                deep_link.init(),
+                http.init(),
+                os.init(),
+                persisted_scope.init(),
+                positioner.init(),
+                process.init(),
+                shell.init(),
+                updater.Builder.build(),
+                upload.init(),
+                websocket.init(),
+                window_state.Builder.build(),
+                global_shortcut.Builder.build(),
+            ),
         )
         Manager.manage(app, async_tools)
 

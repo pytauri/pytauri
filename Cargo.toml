@@ -23,13 +23,29 @@ authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 pyo3 = { version = "0.25" }
 pyo3-build-config = { version = "0.25" }
 
-tauri = { version = "2.5.1" }
-tauri-build = { version = "2.2" }
-tauri-plugin = { version = "2.2" }
+tauri = { version = "2.7" }
+tauri-build = { version = "2.3" }
+tauri-plugin = { version = "2.3" }
 
-tauri-plugin-notification = { version = "2.2.3" }
-tauri-plugin-opener = { version = "2.3.0" }
-tauri-plugin-dialog = { version = "2.2.2" }
+tauri-plugin-opener = { version = "2.4" }
+tauri-plugin-clipboard-manager = { version = "2.3" }
+tauri-plugin-dialog = { version = "2.3" }
+tauri-plugin-fs = { version = "2.4" }
+tauri-plugin-notification = { version = "2.3" }
+tauri-plugin-autostart = { version = "2.5" }
+tauri-plugin-deep-link = { version = "2.4" }
+tauri-plugin-upload = { version = "2.3" }
+tauri-plugin-websocket = { version = "2.4" }
+tauri-plugin-http = { version = "2.5" }
+tauri-plugin-os = { version = "2.3" }
+tauri-plugin-persisted-scope = { version = "2.3" }
+tauri-plugin-positioner = { version = "2.3" }
+tauri-plugin-process = { version = "2.3" }
+tauri-plugin-shell = { version = "2.3" }
+tauri-plugin-single-instance = { version = "2.3" }
+tauri-plugin-updater = { version = "2.9" }
+tauri-plugin-window-state = { version = "2.4" }
+tauri-plugin-global-shortcut = { version = "2.3" }
 
 serde = { version = "1" }
 serde_json = { version = "1" }
@@ -57,6 +73,7 @@ pyo3-utils = { path = "crates/pyo3-utils", version = "0.3" }
 pytauri = { path = "crates/pytauri" }
 pytauri-core = { path = "crates/pytauri-core" }
 tauri-plugin-pytauri = { path = "crates/tauri-plugin-pytauri" }
+pyo3-utils = { path = "crates/pyo3-utils" }
 # 👆
 
 

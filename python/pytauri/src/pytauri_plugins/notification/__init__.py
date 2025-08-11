@@ -5,6 +5,7 @@ from pytauri_plugins.notification.ffi import (
     NotificationBuilder,
     NotificationBuilderArgs,
     NotificationExt,
+    init,
 )
 
 __all__ = [
@@ -12,4 +13,5 @@ __all__ = [
     "NotificationBuilder",
     "NotificationBuilderArgs",
     "NotificationExt",
+    "init",
 ]

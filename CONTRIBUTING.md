@@ -77,7 +77,7 @@ The documentation source code is in `docs/`, `docs_src/`, `mkdocs.yml`, and `uti
 Live-reloading main docs:
 
 ```bash
-mkdocs serve
+mkdocs serve  # --dirty # 👈 optional to speed up hot-reload
 ```
 
 Live-reloading versioned docs:

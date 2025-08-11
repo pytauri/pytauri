@@ -11,6 +11,12 @@ dependencies = [
     "pytauri-wheel == 0.3.*",
 ]
 
+[project.scripts]
+tauri-app-wheel-console = "tauri_app_wheel:main"
+
+[project.gui-scripts]
+tauri-app-wheel = "tauri_app_wheel:main"
+
 
 [build-system]
 requires = ["hatchling"]

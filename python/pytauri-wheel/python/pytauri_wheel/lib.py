@@ -23,37 +23,12 @@ from pytauri import (
 __all__ = ["builder_factory", "context_factory"]
 
 
-def builder_factory(
-    *,
-    opener: bool = True,
-    clipboard_manager: bool = True,
-    dialog: bool = True,
-    fs: bool = True,
-    notification: bool = True,
-) -> Builder:
+def builder_factory() -> Builder:
     """A factory function for creating a [pytauri.Builder][] instance.
 
     This is a type-hinted wrapper function for [pytauri.builder_factory][].
-
-    Args:
-        opener: Whether to enable the plugin [opener]
-            [opener]: https://tauri.app/plugin/opener/
-        clipboard_manager: Whether to enable the plugin [clipboard-manager]
-            [clipboard-manager]: https://tauri.app/plugin/clipboard/
-        dialog: Whether to enable the plugin [dialog]
-            [dialog]: https://tauri.app/plugin/dialog/
-        fs: Whether to enable the plugin [fs]
-            [fs]: https://tauri.app/plugin/file-system/
-        notification: Whether to enable the plugin [notification]
-            [notification]: https://tauri.app/plugin/notification/
     """
-    return pytauri_builder_factory(
-        opener=opener,
-        clipboard_manager=clipboard_manager,
-        dialog=dialog,
-        fs=fs,
-        notification=notification,
-    )
+    return pytauri_builder_factory()
 
 
 def context_factory(

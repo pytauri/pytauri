@@ -1,5 +1,3 @@
-# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
-
 site_name: PyTauri
 site_url: https://pytauri.github.io/pytauri/
 
@@ -20,7 +18,8 @@ theme:
     - navigation.instant
     - navigation.instant.prefetch
     - navigation.instant.progress
-    - navigation.instant.preview
+    # # insiders for `9.6.16`: <https://squidfunk.github.io/mkdocs-material/insiders/benefits/#22000-habanero-orange>
+    # - navigation.instant.preview
     - navigation.top
     - navigation.tabs
     - navigation.path
@@ -124,6 +123,7 @@ plugins:
   - section-index
   - mkdocstrings:
       # Modified: https://github.com/mkdocstrings/python/blob/eaf9b8240069f7369f401fe048892043c8b173d3/mkdocs.yml#L140-L166
+      enabled: !ENV [ENABLE_MKDOCSTRINGS, true]
       default_handler: python
       handlers:
         python:
@@ -187,10 +187,12 @@ plugins:
 
   # Remember: https://github.com/timvink/mkdocs-git-revision-date-localized-plugin#note-when-using-build-environments
   - git-revision-date-localized:
+      enabled: !ENV [CI, false]
       fallback_to_build_date: true
       enable_creation_date: true
       type: timeago
   - git-committers:
+      enabled: !ENV [CI, false]
       repository: pytauri/pytauri
       branch: main
 

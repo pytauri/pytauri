@@ -25,6 +25,23 @@ tauri = { workspace = true, features = ["wry", "tray-icon"] }
 # tauri plugins
 tauri-plugin-notification = { workspace = true, optional = true }
 tauri-plugin-dialog = { workspace = true, optional = true }
+tauri-plugin-clipboard-manager = { workspace = true, optional = true }
+tauri-plugin-fs = { workspace = true, optional = true }
+tauri-plugin-opener = { workspace = true, optional = true }
+tauri-plugin-autostart = { workspace = true, optional = true }
+tauri-plugin-deep-link = { workspace = true, optional = true }
+tauri-plugin-upload = { workspace = true, optional = true }
+tauri-plugin-websocket = { workspace = true, optional = true }
+tauri-plugin-http = { workspace = true, optional = true }
+tauri-plugin-os = { workspace = true, optional = true }
+tauri-plugin-persisted-scope = { workspace = true, optional = true }
+tauri-plugin-positioner = { workspace = true, optional = true }
+tauri-plugin-process = { workspace = true, optional = true }
+tauri-plugin-shell = { workspace = true, optional = true }
+tauri-plugin-single-instance = { workspace = true, optional = true }
+tauri-plugin-updater = { workspace = true, optional = true }
+tauri-plugin-window-state = { workspace = true, optional = true }
+tauri-plugin-global-shortcut = { workspace = true, optional = true }
 
 pyo3 = { workspace = true }
 
@@ -38,4 +55,36 @@ __test = ["tauri/test"]
 __no_test = []          # for allowing use `--all-features` without running tests
 
 plugin-notification = ["dep:tauri-plugin-notification"]
-plugin-dialog = ["dep:tauri-plugin-dialog"]
+plugin-dialog = [
+    "dep:tauri-plugin-dialog",
+    # `plugin-fs` just for `PluginError`
+    "plugin-fs",
+]
+plugin-clipboard-manager = ["dep:tauri-plugin-clipboard-manager"]
+plugin-fs = ["dep:tauri-plugin-fs"]
+plugin-opener = ["dep:tauri-plugin-opener"]
+plugin-autostart = ["dep:tauri-plugin-autostart"]
+plugin-deep-link = [
+    "dep:tauri-plugin-deep-link",
+    # see: <https://tauri.app/plugin/deep-linking/#desktop>
+    "tauri-plugin-single-instance?/deep-link",
+]
+plugin-upload = ["dep:tauri-plugin-upload"]
+plugin-websocket = ["dep:tauri-plugin-websocket"]
+plugin-http = [
+    "dep:tauri-plugin-http",
+    # `plugin-fs` just for `PluginError`
+    "plugin-fs",
+]
+plugin-os = ["dep:tauri-plugin-os"]
+plugin-persisted-scope = ["dep:tauri-plugin-persisted-scope"]
+plugin-positioner = [
+    "dep:tauri-plugin-positioner",
+    "tauri-plugin-positioner/tray-icon",
+]
+plugin-process = ["dep:tauri-plugin-process"]
+plugin-shell = ["dep:tauri-plugin-shell"]
+plugin-single-instance = ["dep:tauri-plugin-single-instance"]
+plugin-updater = ["dep:tauri-plugin-updater", "tauri-plugin-updater/zip"]
+plugin-window-state = ["dep:tauri-plugin-window-state"]
+plugin-global-shortcut = ["dep:tauri-plugin-global-shortcut"]

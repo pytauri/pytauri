@@ -203,7 +203,7 @@ macro_rules! __derive_from_py_dict {
 
     (
         $name:ty {
-            $($( #[$meta:ident] )? $field:ident, )+
+            $($( #[$meta:ident] )? $field:ident, )*
         }
     ) => {
         impl $crate::from_py_dict::FromPyDict for $name {
@@ -220,7 +220,7 @@ macro_rules! __derive_from_py_dict {
                             stringify!($name),
                             stringify!($field),
                         )?,
-                    )+
+                    )*
                 })
             }
         }
