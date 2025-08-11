@@ -30,7 +30,7 @@ else:
 if TYPE_CHECKING:
 
     def init() -> Plugin:
-        """[tauri_plugin_notification::init](https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/fn.init.html)"""
+        """[tauri_plugin_clipboard_manager::init](https://docs.rs/tauri-plugin-clipboard-manager/latest/tauri_plugin_clipboard_manager/fn.init.html)"""
         ...
 
 else:
