@@ -1,5 +1,7 @@
 //! See: <https://github.com/PyO3/pyo3/issues/5163>
 
+use std::borrow::{Cow, ToOwned};
+
 use pyo3::{
     conversion::{FromPyObjectBound, IntoPyObjectExt as _},
     exceptions::PyTypeError,
@@ -10,7 +12,7 @@ use pyo3::{
 /// Inspired by [`typing.NotRequired`](https://docs.python.org/3/library/typing.html#typing.NotRequired)
 ///
 /// See also: [derive_from_py_dict].
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 pub struct NotRequired<T>(pub Option<T>);
 
 // DO NOT use `#[derive(Default)]`, it requires `T: Default`.
@@ -30,46 +32,74 @@ where
     }
 }
 
-fn not_required_into_pyobject_err(py: Python<'_>) -> PyErr {
-    const NOT_REQUIRED_INTO_PYOBJECT_ERR: &str =
-        "`NotRequired` value does not exist, cannot convert to PyObject";
-
-    PyTypeError::new_err(
-        pyo3::intern!(py, NOT_REQUIRED_INTO_PYOBJECT_ERR)
-            .clone()
-            .unbind(),
-    )
-}
-
-impl<'py, T> IntoPyObject<'py> for NotRequired<T>
+impl<'py, T> NotRequired<T>
 where
+    for<'a> &'a T: IntoPyObject<'py>,
     T: IntoPyObject<'py>,
+    // TODO, FIXME: We could have avoided this constraint,
+    // but it is imposed on us by the `Cow` used in pyo3.
+    // We should create an issue for pyo3 about this.
+    Self: ToOwned<Owned = Self>,
+    // 👆
 {
-    type Output = <T as IntoPyObject<'py>>::Output;
-    type Target = <T as IntoPyObject<'py>>::Target;
-    type Error = PyErr;
-
-    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-        match self.0 {
-            Some(value) => value.into_pyobject_or_pyerr(py),
-            None => Err(not_required_into_pyobject_err(py)),
+    /// See: <https://pyo3.rs/v0.25.1/conversions/traits.html#deriveintopyobjectderiveintopyobjectref-field-attributes>
+    ///
+    /// You should always specify the type `T` like [NotRequired::<T>::into_py_with] when using these methods,
+    /// otherwise you may encounter a recursive `IntoPyObject` error.
+    pub fn into_py_with(
+        f: impl FnOnce(Python<'py>) -> PyResult<Bound<'py, PyAny>>,
+    ) -> impl FnOnce(Cow<'_, Self>, Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        move |value, py| match value {
+            Cow::Borrowed(v) => match &v.0 {
+                Some(inner) => inner.into_bound_py_any(py),
+                None => f(py),
+            },
+            Cow::Owned(v) => match v.0 {
+                Some(inner) => inner.into_bound_py_any(py),
+                None => f(py),
+            },
         }
     }
-}
 
-impl<'a, 'py, T> IntoPyObject<'py> for &'a NotRequired<T>
-where
-    &'a T: IntoPyObject<'py>,
-{
-    type Output = <&'a T as IntoPyObject<'py>>::Output;
-    type Target = <&'a T as IntoPyObject<'py>>::Target;
-    type Error = PyErr;
-
-    fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
-        match &self.0 {
-            Some(value) => value.into_pyobject_or_pyerr(py),
-            None => Err(not_required_into_pyobject_err(py)),
+    #[inline]
+    /// See also: [NotRequired::into_py_with]
+    pub fn into_py_with_none(slf: Cow<'_, Self>, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        fn none(py: Python<'_>) -> PyResult<Bound<'_, PyAny>> {
+            Ok(py.None().into_bound(py))
         }
+        Self::into_py_with(none)(slf, py)
+    }
+
+    #[inline]
+    /// See also: [NotRequired::into_py_with]
+    pub fn into_py_with_default(slf: Cow<'_, Self>, py: Python<'py>) -> PyResult<Bound<'py, PyAny>>
+    where
+        T: Default,
+    {
+        fn default<'py, T>(py: Python<'py>) -> PyResult<Bound<'py, PyAny>>
+        where
+            T: Default + IntoPyObject<'py>,
+        {
+            T::default().into_bound_py_any(py)
+        }
+        Self::into_py_with(default::<'py, T>)(slf, py)
+    }
+
+    #[inline]
+    /// See also: [NotRequired::into_py_with]
+    pub fn into_py_with_err(slf: Cow<'_, Self>, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        fn not_required_into_pyobject_err(py: Python<'_>) -> PyResult<Bound<'_, PyAny>> {
+            const NOT_REQUIRED_INTO_PYOBJECT_ERR: &str =
+                "`NotRequired` value does not exist, cannot convert to PyObject";
+
+            Err(PyTypeError::new_err(
+                pyo3::intern!(py, NOT_REQUIRED_INTO_PYOBJECT_ERR)
+                    .clone()
+                    .unbind(),
+            ))
+        }
+
+        Self::into_py_with(not_required_into_pyobject_err)(slf, py)
     }
 }
 

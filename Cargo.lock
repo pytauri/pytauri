@@ -3629,6 +3629,7 @@ dependencies = [
  "pyo3-build-config",
  "pyo3-ffi",
  "pyo3-macros",
+ "time",
  "unindent",
 ]
 
@@ -3702,8 +3703,10 @@ dependencies = [
 name = "pytauri-core"
 version = "0.7.0"
 dependencies = [
+ "cookie",
  "pyo3",
  "pyo3-utils",
+ "pythonize",
  "tauri",
  "tauri-plugin-autostart",
  "tauri-plugin-clipboard-manager",
@@ -3774,6 +3777,16 @@ dependencies = [
  "tauri-plugin-websocket",
  "tauri-plugin-window-state",
  "tauri-utils",
+]
+
+[[package]]
+name = "pythonize"
+version = "0.25.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "597907139a488b22573158793aa7539df36ae863eba300c75f3a0d65fc475e27"
+dependencies = [
+ "pyo3",
+ "serde",
 ]
 
 [[package]]

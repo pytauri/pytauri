@@ -8,7 +8,7 @@ pub(crate) mod listener;
 pub(crate) mod manager;
 pub(crate) mod rect;
 pub(crate) mod run_event;
-pub(crate) mod theme;
+pub(crate) mod runtime;
 pub(crate) mod url;
 
 use pyo3::{exceptions::PyRuntimeError, prelude::*};

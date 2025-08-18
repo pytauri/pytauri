@@ -5,7 +5,7 @@ use crate::{ext_mod::PyAssets, tauri_runtime::Runtime};
 
 type TauriContext = tauri::Context<Runtime>;
 
-/// see also: [tauri::Context]
+/// See also: [tauri::Context]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Context(pub PyWrapper<PyWrapperT2<TauriContext>>);

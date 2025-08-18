@@ -16,7 +16,7 @@ use crate::{
     utils::PyResultExt as _,
 };
 
-/// see also: [tauri::utils::assets::AssetKey]
+/// See also: [tauri::utils::assets::AssetKey]
 //
 // TODO: export this type in [ext_mod::utils::assets] namespace
 type AssetKey = PyString;

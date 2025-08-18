@@ -2,6 +2,7 @@
 
 """[tauri::self](https://docs.rs/tauri/latest/tauri/index.html)"""
 
+import sys
 from abc import ABC, abstractmethod
 from collections.abc import Iterator, Sequence
 from enum import Enum, auto
@@ -45,6 +46,7 @@ __all__ = [
     "BuilderArgs",
     "CloseRequestApi",
     "Context",
+    "CursorIcon",
     "DragDropEvent",
     "DragDropEventType",
     "Emitter",
@@ -57,7 +59,9 @@ __all__ = [
     "ImplListener",
     "ImplManager",
     "Listener",
+    "LogicalRect",
     "Manager",
+    "PhysicalRect",
     "Position",
     "PositionType",
     "Rect",
@@ -67,6 +71,7 @@ __all__ = [
     "SizeType",
     "Theme",
     "Url",
+    "UserAttentionType",
     "WebviewEvent",
     "WebviewEventType",
     "WindowEvent",
@@ -134,6 +139,7 @@ if TYPE_CHECKING:
     from pytauri.ffi.plugin import Plugin
     from pytauri.ffi.tray import TrayIcon, TrayIconEventType
     from pytauri.ffi.webview import WebviewWindow
+    from pytauri.ffi.window import Monitor
 
     def webview_version() -> str:
         """[tauri::webview_version](https://docs.rs/tauri/latest/tauri/fn.webview_version.html)
@@ -153,6 +159,18 @@ if TYPE_CHECKING:
             - And you need to ensure it is garbage collected on the thread it was created on,
                 otherwise it will cause memory leaks.
         """
+
+        def run_on_main_thread(self, handler: Callable[[], object], /) -> None:
+            """Runs the given closure on the main thread.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+            ...
+
+        def handle(self, /) -> "AppHandle":
+            """Get a handle to this app, which can be used to interact with the app from another thread."""
+            ...
 
         def run(self, callback: Optional[_AppRunCallbackType] = None, /) -> NoReturn:
             """Consume and run this app, will block until the app is exited.
@@ -208,10 +226,6 @@ if TYPE_CHECKING:
             **You should always exit the tauri app immediately after this function returns and not use any tauri-related APIs.**
             """
 
-        def handle(self, /) -> "AppHandle":
-            """Get a handle to this app, which can be used to interact with the app from another thread."""
-            ...
-
     @final
     class AppHandle:
         """[tauri::AppHandle](https://docs.rs/tauri/latest/tauri/app/struct.AppHandle.html)"""
@@ -225,8 +239,15 @@ if TYPE_CHECKING:
             ...
 
         def plugin(self, plugin: "Plugin", /) -> None: ...
+        def remove_plugin(self, plugin: str, /) -> bool: ...
         def exit(self, exit_code: int, /) -> None: ...
         def restart(self, /) -> Never: ...
+        def request_restart(self, /) -> None: ...
+
+        if sys.platform == "darwin":
+
+            def set_dock_visibility(self, visible: bool, /) -> None: ...
+
         def on_menu_event(
             self, handler: Callable[["Self", "MenuEvent"], None], /
         ) -> None:
@@ -247,6 +268,11 @@ if TYPE_CHECKING:
 
         def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
         def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
+        def config(self) -> Any: ...
+        def primary_monitor(self) -> Optional["Monitor"]: ...
+        def monitor_from_point(self, x: float, y: float, /) -> Optional["Monitor"]: ...
+        def available_monitors(self) -> list["Monitor"]: ...
+        def cursor_position(self) -> "_PhysicalPositionF64": ...
         def set_theme(self, theme: Optional["Theme"], /) -> None: ...
         def default_window_icon(self, /) -> Optional[Image]:
             """Returns the default window icon.
@@ -261,6 +287,7 @@ if TYPE_CHECKING:
         def remove_menu(self) -> Optional[Menu]: ...
         def hide_menu(self) -> None: ...
         def show_menu(self) -> None: ...
+        def cleanup_before_exit(self) -> None: ...
         def invoke_key(self) -> str: ...
 
     @final
@@ -803,6 +830,40 @@ if TYPE_CHECKING:
         def size(self) -> "SizeType": ...
 
     @final
+    class PhysicalRect:
+        """[tauri::PhysicalRect](https://docs.rs/tauri/latest/tauri/struct.PhysicalRect.html)"""
+
+        def __new__(
+            cls,
+            /,
+            *,
+            position: "_PhysicalPositionI32",
+            size: "_PhysicalSizeU32",
+        ) -> Self: ...
+
+        @property
+        def position(self) -> "_PhysicalPositionI32": ...
+        @property
+        def size(self) -> "_PhysicalSizeU32": ...
+
+    @final
+    class LogicalRect:
+        """[tauri::LogicalRect](https://docs.rs/tauri/latest/tauri/struct.LogicalRect.html)"""
+
+        def __new__(
+            cls,
+            /,
+            *,
+            position: "_LogicalPositionF64",
+            size: "_LogicalSizeF64",
+        ) -> Self: ...
+
+        @property
+        def position(self) -> "_LogicalPositionF64": ...
+        @property
+        def size(self) -> "_LogicalSizeF64": ...
+
+    @final
     class EventTarget:
         """[tauri::EventTarget](https://docs.rs/tauri/latest/tauri/enum.EventTarget.html)"""
 
@@ -911,6 +972,53 @@ if TYPE_CHECKING:
         Dark = auto()
         _NonExhaustive = object()
 
+    @final
+    class UserAttentionType(Enum):
+        """[tauri::UserAttentionType](https://docs.rs/tauri/latest/tauri/enum.UserAttentionType.html)"""
+
+        Critical = auto()
+        Informational = auto()
+
+    @final
+    class CursorIcon(Enum):
+        """[tauri::CursorIcon](https://docs.rs/tauri/latest/tauri/enum.CursorIcon.html)"""
+
+        Default = auto()
+        Crosshair = auto()
+        Hand = auto()
+        Arrow = auto()
+        Move = auto()
+        Text = auto()
+        Wait = auto()
+        Help = auto()
+        Progress = auto()
+        NotAllowed = auto()
+        ContextMenu = auto()
+        Cell = auto()
+        VerticalText = auto()
+        Alias = auto()
+        Copy = auto()
+        NoDrop = auto()
+        Grab = auto()
+        Grabbing = auto()
+        AllScroll = auto()
+        ZoomIn = auto()
+        ZoomOut = auto()
+        EResize = auto()
+        NResize = auto()
+        NeResize = auto()
+        NwResize = auto()
+        SResize = auto()
+        SeResize = auto()
+        SwResize = auto()
+        WResize = auto()
+        EwResize = auto()
+        NsResize = auto()
+        NeswResize = auto()
+        NwseResize = auto()
+        ColResize = auto()
+        RowResize = auto()
+        _NonExhaustive = object()
 
 else:
     webview_version = pytauri_mod.webview_version
@@ -932,9 +1040,13 @@ else:
     Position = pytauri_mod.Position
     Size = pytauri_mod.Size
     Rect = pytauri_mod.Rect
+    PhysicalRect = pytauri_mod.PhysicalRect
+    LogicalRect = pytauri_mod.LogicalRect
     EventTarget = pytauri_mod.EventTarget
     Emitter = pytauri_mod.Emitter
     Theme = pytauri_mod.Theme
+    UserAttentionType = pytauri_mod.UserAttentionType
+    CursorIcon = pytauri_mod.CursorIcon
 
 
 class BuilderArgs(TypedDict, total=False):

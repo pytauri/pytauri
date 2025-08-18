@@ -21,6 +21,10 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 
 [dependencies]
+# dependency of tauri, we should submit a PR to let tauri re-export it.
+# PR: <https://github.com/tauri-apps/tauri/pull/13661>
+cookie = { workspace = true }
+# 👆
 tauri = { workspace = true, features = ["wry", "tray-icon"] }
 # tauri plugins
 tauri-plugin-notification = { workspace = true, optional = true }
@@ -43,7 +47,10 @@ tauri-plugin-updater = { workspace = true, optional = true }
 tauri-plugin-window-state = { workspace = true, optional = true }
 tauri-plugin-global-shortcut = { workspace = true, optional = true }
 
-pyo3 = { workspace = true }
+pyo3 = { workspace = true, features = [
+    "time", # for `cookie::time` conversion
+] }
+pythonize = { workspace = true }
 
 # workspace dependencies
 pyo3-utils = { workspace = true, features = ["unstable"] }
@@ -53,6 +60,9 @@ pyo3-utils = { workspace = true, features = ["unstable"] }
 __private = []
 __test = ["tauri/test"]
 __no_test = []          # for allowing use `--all-features` without running tests
+
+
+tauri-devtools = ["tauri/devtools"]
 
 plugin-notification = ["dep:tauri-plugin-notification"]
 plugin-dialog = [

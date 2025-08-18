@@ -9,7 +9,7 @@ use crate::{
         debug_assert_app_handle_py_is_rs, AppHandle, PyAppHandleExt as _, RunEvent, TauriAppHandle,
     },
     tauri_runtime::Runtime,
-    utils::PyResultExt as _,
+    utils::{PyResultExt as _, TauriError},
 };
 
 pub(crate) type TauriApp = tauri::App<Runtime>;
@@ -56,12 +56,42 @@ impl App {
 
 #[pymethods]
 impl App {
+    fn run_on_main_thread(&self, py: Python<'_>, handler: PyObject) -> PyResult<()> {
+        unsafe {
+            // TODO, PREF: do we really need to release the GIL here?
+            // It seems that `App::run_on_main_thread` will be called immediately.
+            //
+            // Safety: `tauri::App` does not hold the GIL, so this is safe
+            py.allow_threads_unsend(self, |slf| {
+                let app = slf.0.try_lock_inner_ref()??;
+                app.run_on_main_thread(move || {
+                    Python::with_gil(|py| {
+                        let handler = handler.bind(py);
+                        let result = handler.call0();
+                        result.unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `App::run_on_main_thread`"
+                        });
+                    })
+                })
+                .map_err(TauriError::from)
+                .map_err(PyErr::from)
+            })
+        }
+    }
+
+    fn handle(&self, py: Python<'_>) -> PyResult<Py<AppHandle>> {
+        let app = self.0.try_lock_inner_ref()??;
+        // TODO, PERF: release the GIL?
+        let app_handle = app.py_app_handle().clone_ref(py);
+        Ok(app_handle)
+    }
+
     #[pyo3(signature = (callback = None, /))]
     fn run(&self, py: Python<'_>, callback: Option<PyObject>) -> PyResult<()> {
         let app = self.0.try_take_inner()??;
         let py_app_handle = app.py_app_handle().clone_ref(py);
         unsafe {
-            // `tauri::App` does not hold the GIL, so this is safe
+            // Safety: `tauri::App` does not hold the GIL, so this is safe
             py.allow_threads_unsend(app, move |app| {
                 match callback {
                     Some(callback) => app.run(Self::py_cb_to_rs_cb(callback, py_app_handle)),
@@ -77,7 +107,7 @@ impl App {
         let app = self.0.try_take_inner()??;
         let py_app_handle = app.py_app_handle().clone_ref(py);
         unsafe {
-            // `tauri::App` does not hold the GIL, so this is safe
+            // Safety: `tauri::App` does not hold the GIL, so this is safe
             py.allow_threads_unsend(app, move |app| {
                 let exit_code = match callback {
                     Some(callback) => app.run_return(Self::py_cb_to_rs_cb(callback, py_app_handle)),
@@ -94,7 +124,7 @@ impl App {
         let app = self.0.try_lock_inner_mut()??;
         let py_app_handle = app.py_app_handle().clone_ref(py);
         unsafe {
-            // `&mut tauri::App` does not hold the GIL, so this is safe
+            // Safety: `&mut tauri::App` does not hold the GIL, so this is safe
             py.allow_threads_unsend(app, |mut app| {
                 match callback {
                     Some(callback) => {
@@ -108,20 +138,13 @@ impl App {
     }
 
     fn cleanup_before_exit(&self, py: Python<'_>) -> PyResult<()> {
-        // `self: &App` does not hold the GIL, so this is safe
         unsafe {
+            // Safety: `self: &App` does not hold the GIL, so this is safe
             py.allow_threads_unsend(self, |slf| {
                 let app = slf.0.try_lock_inner_ref()??;
                 app.cleanup_before_exit();
                 Ok(())
             })
         }
-    }
-
-    fn handle(&self, py: Python<'_>) -> PyResult<Py<AppHandle>> {
-        let app = self.0.try_lock_inner_ref()??;
-        // TODO, PERF: release the GIL?
-        let app_handle = app.py_app_handle().clone_ref(py);
-        Ok(app_handle)
     }
 }
