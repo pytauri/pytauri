@@ -43,10 +43,12 @@ pub(crate) type TauriPhysicalRect = tauri::PhysicalRect<i32, u32>;
 
 /// See also: [tauri::PhysicalRect]
 #[pyclass(frozen)]
-pub(crate) struct PhysicalRect {
+pub struct PhysicalRect {
     #[pyo3(get)]
+    #[expect(private_interfaces)]
     pub position: PhysicalPositionI32,
     #[pyo3(get)]
+    #[expect(private_interfaces)]
     pub size: PhysicalSizeU32,
 }
 
@@ -80,10 +82,12 @@ pub(crate) type TauriLogicalRect = tauri::LogicalRect<f64, f64>;
 
 /// See also: [tauri::LogicalRect]
 #[pyclass(frozen)]
-pub(crate) struct LogicalRect {
+pub struct LogicalRect {
     #[pyo3(get)]
+    #[expect(private_interfaces)]
     pub position: LogicalPositionF64,
     #[pyo3(get)]
+    #[expect(private_interfaces)]
     pub size: LogicalSizeF64,
 }
 

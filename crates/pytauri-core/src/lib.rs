@@ -30,7 +30,7 @@ pub mod ext_mod {
         event::{Event, EventTarget},
         listener::Listener,
         manager::Manager,
-        rect::{Position, Rect, Size},
+        rect::{LogicalRect, PhysicalRect, Position, Rect, Size},
         run_event::{
             CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent, WebviewEvent, WindowEvent,
         },
@@ -56,13 +56,13 @@ pub mod ext_mod {
     };
 
     #[expect(unused_imports)] // TODO
-    pub(crate) use ext_mod_impl::lib::rect::{LogicalRect, TauriLogicalRect, TauriPhysicalRect};
+    pub(crate) use ext_mod_impl::lib::rect::{TauriLogicalRect, TauriPhysicalRect};
     pub(crate) use ext_mod_impl::lib::{
         app::TauriApp,
         app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
         assets::PyAssets,
         manager::{manager_method_impl, StateManager},
-        rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalRect, PhysicalSizeU32},
+        rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32},
     };
 
     /// See also: [tauri::ipc]

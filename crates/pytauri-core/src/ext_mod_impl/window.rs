@@ -207,13 +207,16 @@ impl Effects {
 }
 
 macro_rules! progress_bar_status_impl {
-    ($ident:ident => : $($variant:ident),*) => {
+    ($ident:ident => : $( $(#[$meta:meta])* $variant:ident ),*) => {
         /// See also: [tauri::window::ProgressBarStatus]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         #[non_exhaustive]
         pub enum $ident {
-            $($variant,)*
+            $(
+                $(#[$meta])*
+                $variant,
+            )*
         }
 
         impl From<tauri::window::ProgressBarStatus> for $ident {
@@ -237,6 +240,7 @@ macro_rules! progress_bar_status_impl {
 // See also: [tauri::window::ProgressBarStatus]
 progress_bar_status_impl!(
     ProgressBarStatus => :
+    #[pyo3(name = "None_")]
     None,
     Normal,
     Indeterminate,
