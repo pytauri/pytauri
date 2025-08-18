@@ -19,12 +19,12 @@ use crate::{
 
 type TauriTrayIcon = tray::TrayIcon<Runtime>;
 
-/// see also: [tauri::tray::TrayIconId]
+/// See also: [tauri::tray::TrayIconId]
 ///
 /// Remember use [TrayIconId::intern] to create a new instance.
 pub type TrayIconId = PyString;
 
-/// see also: [tauri::tray::TrayIcon]
+/// See also: [tauri::tray::TrayIcon]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct TrayIcon(pub PyWrapper<PyWrapperT0<TauriTrayIcon>>);
@@ -152,7 +152,7 @@ impl TrayIcon {
         py.allow_threads(|| delegate_inner!(self, set_visible, visible))
     }
 
-    // PERF: `pyo3` didn't implement `FromPyObject` for `&path`,
+    // TODO, PERF: `pyo3` didn't implement `FromPyObject` for `&path`,
     // see: <https://github.com/PyO3/pyo3/blob/2c732a7ab42af4b11c2a9a8da9f838b592712d95/src/conversions/std/path.rs#L22>
     #[pyo3(signature = (path))]
     fn set_temp_dir_path(&self, py: Python<'_>, path: Option<PathBuf>) -> PyResult<()> {
@@ -176,7 +176,7 @@ impl TrayIcon {
     }
 }
 
-/// see also: [tauri::tray::TrayIconEvent]
+/// See also: [tauri::tray::TrayIconEvent]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub enum TrayIconEvent {
@@ -292,7 +292,7 @@ impl TrayIconEvent {
 
 macro_rules! mouse_button_impl {
     ($ident:ident => : $($variant:ident),*) => {
-        /// see also: [tauri::tray::MouseButton]
+        /// See also: [tauri::tray::MouseButton]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         pub enum $ident {
@@ -326,7 +326,7 @@ mouse_button_impl! {
 
 macro_rules! mouse_button_state_impl {
     ($ident:ident => : $($variant:ident),*) => {
-        /// see also: [tauri::tray::MouseButtonState]
+        /// See also: [tauri::tray::MouseButtonState]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         pub enum $ident {

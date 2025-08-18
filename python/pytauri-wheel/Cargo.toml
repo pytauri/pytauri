@@ -67,6 +67,7 @@ pyo3 = { version = "0.25" }
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
 pytauri = { version = "0.7", features = [
+    "tauri-devtools",
     "plugin-notification",
     "plugin-dialog",
     "plugin-clipboard-manager",

@@ -36,7 +36,7 @@ impl From<plugin::Error> for PluginError {
 
 macro_rules! macos_launcher_impl {
     ($ident:ident => : $($variant:ident),*) => {
-        /// see also: [tauri_plugin_autostart::MacosLauncher]
+        /// See also: [tauri_plugin_autostart::MacosLauncher]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         pub enum $ident {
@@ -71,17 +71,24 @@ macos_launcher_impl! (
 /// See also: [tauri_plugin_autostart::init]
 #[pyfunction]
 #[pyo3(signature = (macos_launcher = MacosLauncher::LaunchAgent, args = None))]
-pub fn init(macos_launcher: MacosLauncher, args: Option<Vec<String>>) -> Plugin {
-    // TODO, FIXME, XXX: `tauri_plugin_autostart::init` requires `'static`,
-    // so we have to leak it. We should submit a PR to tauri to fix this issue.
-    let args = args.map(|s| {
-        s.into_iter()
-            .map(|s| &*Box::leak::<'static>(s.into_boxed_str()))
-            .collect()
-    });
-    Plugin::new(Box::new(move || {
-        Box::new(plugin::init::<Runtime>(macos_launcher.into(), args))
-    }))
+pub fn init(
+    #[cfg_attr(not(target_os = "macos"), expect(unused_variables))] macos_launcher: MacosLauncher,
+    args: Option<Vec<String>>,
+) -> Plugin {
+    // TODO: `tauri_plugin_autostart::init` requires `'static`,
+    // so we have to use `Builder` instead, see: <https://github.com/tauri-apps/plugins-workspace/pull/2909>.
+    // We should deprecate this function in favor of the `Builder` binding.
+    let mut builder = plugin::Builder::new();
+
+    if let Some(args) = args {
+        builder = builder.args(args);
+    }
+    #[cfg(target_os = "macos")]
+    {
+        builder = builder.macos_launcher(macos_launcher.into());
+    }
+
+    Plugin::new(Box::new(move || Box::new(builder.build::<Runtime>())))
 }
 
 /// See also: [tauri_plugin_autostart]

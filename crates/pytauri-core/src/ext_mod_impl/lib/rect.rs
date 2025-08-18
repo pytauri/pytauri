@@ -1,6 +1,6 @@
 use pyo3::{prelude::*, types::PyTuple};
 
-/// see also: [tauri::Rect]
+/// See also: [tauri::Rect]
 #[pyclass(frozen)]
 pub struct Rect {
     // use `Py<T>` to avoid creating new obj every time visiting the field,
@@ -39,6 +39,81 @@ impl Rect {
     }
 }
 
+pub(crate) type TauriPhysicalRect = tauri::PhysicalRect<i32, u32>;
+
+/// See also: [tauri::PhysicalRect]
+#[pyclass(frozen)]
+pub(crate) struct PhysicalRect {
+    #[pyo3(get)]
+    pub position: PhysicalPositionI32,
+    #[pyo3(get)]
+    pub size: PhysicalSizeU32,
+}
+
+impl PhysicalRect {
+    pub(crate) fn from_tauri(py: Python<'_>, rect: TauriPhysicalRect) -> PyResult<Self> {
+        let position = PhysicalPositionI32::from_tauri(py, rect.position)?;
+        let size = PhysicalSizeU32::from_tauri(py, rect.size)?;
+        Ok(Self { position, size })
+    }
+
+    #[expect(dead_code)] // TODO
+    pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<TauriPhysicalRect> {
+        let ret = TauriPhysicalRect {
+            position: self.position.to_tauri(py)?,
+            size: self.size.to_tauri(py)?,
+        };
+        Ok(ret)
+    }
+}
+
+#[pymethods]
+impl PhysicalRect {
+    #[new]
+    #[pyo3(signature = (*, position, size))]
+    fn __new__(position: PhysicalPositionI32, size: PhysicalSizeU32) -> Self {
+        Self { position, size }
+    }
+}
+
+pub(crate) type TauriLogicalRect = tauri::LogicalRect<f64, f64>;
+
+/// See also: [tauri::LogicalRect]
+#[pyclass(frozen)]
+pub(crate) struct LogicalRect {
+    #[pyo3(get)]
+    pub position: LogicalPositionF64,
+    #[pyo3(get)]
+    pub size: LogicalSizeF64,
+}
+
+impl LogicalRect {
+    #[expect(dead_code)] // TODO
+    pub(crate) fn from_tauri(py: Python<'_>, rect: TauriLogicalRect) -> PyResult<Self> {
+        let position = LogicalPositionF64::from_tauri(py, rect.position)?;
+        let size = LogicalSizeF64::from_tauri(py, rect.size)?;
+        Ok(Self { position, size })
+    }
+
+    #[expect(dead_code)] // TODO
+    pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<TauriLogicalRect> {
+        let ret = TauriLogicalRect {
+            position: self.position.to_tauri(py)?,
+            size: self.size.to_tauri(py)?,
+        };
+        Ok(ret)
+    }
+}
+
+#[pymethods]
+impl LogicalRect {
+    #[new]
+    #[pyo3(signature = (*, position, size))]
+    fn __new__(position: LogicalPositionF64, size: LogicalSizeF64) -> Self {
+        Self { position, size }
+    }
+}
+
 /// See also: [tauri::Position]
 #[pyclass(frozen)]
 pub enum Position {
@@ -69,7 +144,7 @@ impl Position {
     }
 }
 
-/// see also: [tauri::Size]
+/// See also: [tauri::Size]
 #[pyclass(frozen)]
 pub enum Size {
     #[expect(private_interfaces)]

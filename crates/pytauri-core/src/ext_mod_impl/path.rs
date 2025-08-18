@@ -8,7 +8,7 @@ use crate::{tauri_runtime::Runtime, utils::delegate_inner};
 
 type TauriPathResolver = path::PathResolver<Runtime>;
 
-/// see also: [tauri::path::PathResolver].
+/// See also: [tauri::path::PathResolver].
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct PathResolver(PyWrapper<PyWrapperT0<TauriPathResolver>>);

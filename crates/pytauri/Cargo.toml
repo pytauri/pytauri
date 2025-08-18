@@ -23,6 +23,9 @@ rustdoc-args = ["--cfg", "docsrs"]
 [features]
 standalone = ["dep:libc", "dep:dunce"]
 
+
+tauri-devtools = ["pytauri-core/tauri-devtools"]
+
 plugin-notification = ["pytauri-core/plugin-notification"]
 plugin-dialog = ["pytauri-core/plugin-dialog"]
 plugin-clipboard-manager = ["pytauri-core/plugin-clipboard-manager"]
