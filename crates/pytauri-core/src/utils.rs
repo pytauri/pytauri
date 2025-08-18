@@ -115,3 +115,29 @@ macro_rules! delegate_inner {
 }
 
 pub(crate) use delegate_inner;
+
+pub(crate) fn non_exhaustive_panic() -> ! {
+    panic!("NonExhaustive is reserved for `#[non_exhaustive]`");
+}
+
+/// Only compiles the code block if the cfg is satisfied, otherwise returns a [PyResult<ty>.Err].
+macro_rules! cfg_impl {
+    (|$cfg:meta| -> $ty:ty $body:block) => {
+        {
+            let ret: ::pyo3::PyResult::<$ty> = {
+                #[cfg($cfg)]
+                $body
+                #[cfg(not($cfg))]
+                {
+                    use pyo3::exceptions::PyNotImplementedError;
+
+                    const MSG: &str = concat!("Available on pytauri `#[cfg(", stringify!($cfg), ")]` only.");
+                    Err(PyNotImplementedError::new_err(MSG))
+                }
+            };
+            ret
+        }
+    };
+}
+
+pub(crate) use cfg_impl;

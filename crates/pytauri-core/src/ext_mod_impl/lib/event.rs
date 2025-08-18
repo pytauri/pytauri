@@ -1,5 +1,7 @@
 use pyo3::{prelude::*, types::PyString};
 
+use crate::utils::non_exhaustive_panic;
+
 /// See also: [tauri::EventId].
 pub use tauri::EventId;
 
@@ -66,7 +68,7 @@ impl EventTarget {
             Self::WebviewWindow { label } => tauri::EventTarget::WebviewWindow {
                 label: label.bind(py).to_cow()?.into_owned(),
             },
-            Self::_NonExhaustive() => panic!("NonExhaustive is reserved for `#[non_exhaustive]`"),
+            Self::_NonExhaustive() => non_exhaustive_panic(),
         };
         Ok(value)
     }

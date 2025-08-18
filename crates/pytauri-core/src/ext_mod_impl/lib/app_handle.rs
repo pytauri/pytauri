@@ -1,4 +1,5 @@
 use std::{
+    borrow::Cow,
     convert::Infallible,
     error::Error,
     fmt::{Debug, Display},
@@ -6,6 +7,7 @@ use std::{
 
 use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject};
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
+use pythonize::pythonize;
 
 use crate::{
     ext_mod::{
@@ -13,7 +15,8 @@ use crate::{
         menu::{Menu, MenuEvent},
         plugin::Plugin,
         tray::{TrayIcon, TrayIconEvent},
-        Theme,
+        window::Monitor,
+        PhysicalPositionF64, Theme,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -54,6 +57,8 @@ impl AppHandle {
 
 #[pymethods]
 impl AppHandle {
+    // TODO: fetch_data_store_identifiers, remove_data_store
+
     fn run_on_main_thread(&self, py: Python<'_>, handler: PyObject) -> PyResult<()> {
         py.allow_threads(|| {
             delegate_inner!(self, run_on_main_thread, move || {
@@ -75,14 +80,39 @@ impl AppHandle {
         })
     }
 
+    // TODO, PERF: once we drop py39 support, we can use [PyStringMethods::to_str] directly.
+    fn remove_plugin(&self, py: Python<'_>, plugin: Cow<'_, str>) -> bool {
+        py.allow_threads(|| {
+            // TODO, FIXME, XXX: `tauri_plugin_autostart::init` requires `'static`,
+            // so we have to leak it. We should submit a PR to tauri to fix this issue.
+            // PR: <https://github.com/tauri-apps/tauri/pull/14007>
+            let plugin = Box::leak::<'static>(plugin.into_owned().into_boxed_str());
+            self.0.inner_ref().remove_plugin(plugin)
+        })
+    }
+
     fn exit(&self, py: Python<'_>, exit_code: i32) {
         py.allow_threads(|| self.0.inner_ref().exit(exit_code))
     }
 
     /// NoReturn
+    // TODO, FIXME: submit a PR to pyo3 to `impl IntoPyObject for Infallible`.
     fn restart(&self, py: Python<'_>) {
         let _: Infallible = py.allow_threads(|| self.0.inner_ref().restart());
     }
+
+    fn request_restart(&self, py: Python<'_>) {
+        py.allow_threads(|| self.0.inner_ref().request_restart())
+    }
+
+    // TODO: set_activation_policy
+
+    #[cfg(target_os = "macos")]
+    fn set_dock_visibility(&self, py: Python<'_>, visible: bool) -> PyResult<()> {
+        py.allow_threads(|| delegate_inner!(self, set_dock_visibility, visible))
+    }
+
+    // TODO: set_device_event_filter, see <https://github.com/tauri-apps/tauri/pull/14008>
 
     pub(crate) fn on_menu_event(slf: Py<Self>, py: Python<'_>, handler: PyObject) {
         let moved_slf = slf.clone_ref(py);
@@ -140,6 +170,44 @@ impl AppHandle {
         py.allow_threads(|| self.0.inner_ref().remove_tray_by_id(id).map(TrayIcon::new))
     }
 
+    // Benchmark(less is better):
+    // - pythonize: 0.9
+    // - PyString::new(serde_json::to_string): 0.6
+    // - json.loads(PyString::new(serde_json::to_string)): 1.2
+    fn config<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
+        let slf = self.0.inner_ref();
+        let config = pythonize(py, slf.config())?;
+        Ok(config)
+    }
+
+    // TODO: package_info
+
+    fn primary_monitor(&self, py: Python<'_>) -> PyResult<Option<Monitor>> {
+        let monitor = py.allow_threads(|| delegate_inner!(self, primary_monitor,))?;
+        let monitor = monitor.map(|m| Monitor::from_tauri(py, m)).transpose()?;
+        Ok(monitor)
+    }
+
+    fn monitor_from_point(&self, py: Python<'_>, x: f64, y: f64) -> PyResult<Option<Monitor>> {
+        let monitor = py.allow_threads(|| delegate_inner!(self, monitor_from_point, x, y))?;
+        let monitor = monitor.map(|m| Monitor::from_tauri(py, m)).transpose()?;
+        Ok(monitor)
+    }
+
+    fn available_monitors(&self, py: Python<'_>) -> PyResult<Vec<Monitor>> {
+        let monitors = py.allow_threads(|| delegate_inner!(self, available_monitors,))?;
+        let monitors = monitors
+            .into_iter()
+            .map(|m| Monitor::from_tauri(py, m))
+            .collect::<PyResult<Vec<_>>>()?;
+        Ok(monitors)
+    }
+
+    fn cursor_position(&self, py: Python<'_>) -> PyResult<PhysicalPositionF64> {
+        let position = py.allow_threads(|| delegate_inner!(self, cursor_position,))?;
+        PhysicalPositionF64::from_tauri(py, position)
+    }
+
     fn set_theme(&self, py: Python<'_>, theme: Option<Theme>) {
         py.allow_threads(|| self.0.inner_ref().set_theme(theme.map(Into::into)))
     }
@@ -177,6 +245,10 @@ impl AppHandle {
 
     fn show_menu(&self, py: Python<'_>) -> PyResult<()> {
         py.allow_threads(|| delegate_inner!(self, show_menu,))
+    }
+
+    fn cleanup_before_exit(&self, py: Python<'_>) {
+        py.allow_threads(|| self.0.inner_ref().cleanup_before_exit())
     }
 
     fn invoke_key<'py>(&self, py: Python<'py>) -> Bound<'py, PyString> {

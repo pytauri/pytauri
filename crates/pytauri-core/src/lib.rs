@@ -34,7 +34,7 @@ pub mod ext_mod {
         run_event::{
             CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent, WebviewEvent, WindowEvent,
         },
-        theme::Theme,
+        runtime::{CursorIcon, Theme, UserAttentionType},
         webview_version,
     };
     // TODO: constants defined outside a module and then re-exported are not supported,
@@ -55,15 +55,17 @@ pub mod ext_mod {
         url::Url,
     };
 
+    #[expect(unused_imports)] // TODO
+    pub(crate) use ext_mod_impl::lib::rect::{LogicalRect, TauriLogicalRect, TauriPhysicalRect};
     pub(crate) use ext_mod_impl::lib::{
         app::TauriApp,
         app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
         assets::PyAssets,
         manager::{manager_method_impl, StateManager},
-        rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32},
+        rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalRect, PhysicalSizeU32},
     };
 
-    /// see also: [tauri::ipc]
+    /// See also: [tauri::ipc]
     #[pymodule]
     pub mod ipc {
         use super::*;
@@ -72,18 +74,20 @@ pub mod ext_mod {
         pub use ext_mod_impl::ipc::{Channel, Invoke, InvokeResolver, JavaScriptChannelId};
     }
 
-    /// see also: [tauri::webview]
+    /// See also: [tauri::webview]
     #[pymodule]
     pub mod webview {
         use super::*;
 
         #[pymodule_export]
-        pub use ext_mod_impl::webview::{Webview, WebviewWindow};
+        pub use ext_mod_impl::webview::{SameSite, Webview, WebviewWindow};
+
+        pub use ext_mod_impl::webview::{Color, Cookie};
 
         pub(crate) use ext_mod_impl::webview::TauriWebviewWindow;
     }
 
-    /// see also: [tauri::menu]
+    /// See also: [tauri::menu]
     #[pymodule]
     pub mod menu {
         use super::*;
@@ -106,7 +110,7 @@ pub mod ext_mod {
         pub(crate) use ext_mod_impl::menu::context_menu_impl;
     }
 
-    /// see also: [tauri::image]
+    /// See also: [tauri::image]
     #[pymodule]
     pub mod image {
         use super::*;
@@ -115,16 +119,20 @@ pub mod ext_mod {
         pub use ext_mod_impl::image::Image;
     }
 
-    /// see also: [tauri::window]
+    /// See also: [tauri::window]
     #[pymodule]
     pub mod window {
         use super::*;
 
         #[pymodule_export]
-        pub use ext_mod_impl::window::Window;
+        pub use ext_mod_impl::window::{
+            Effect, EffectState, Monitor, ProgressBarStatus, TitleBarStyle, Window,
+        };
+
+        pub use ext_mod_impl::window::{Effects, ProgressBarState};
     }
 
-    /// see also: [tauri::tray]
+    /// See also: [tauri::tray]
     #[pymodule]
     pub mod tray {
         use super::*;
@@ -135,7 +143,7 @@ pub mod ext_mod {
         pub use ext_mod_impl::tray::TrayIconId;
     }
 
-    /// see also: [tauri::path]
+    /// See also: [tauri::path]
     #[pymodule]
     pub mod path {
         use super::*;
@@ -144,7 +152,7 @@ pub mod ext_mod {
         pub use ext_mod_impl::path::PathResolver;
     }
 
-    /// see also: [tauri::plugin]
+    /// See also: [tauri::plugin]
     #[pymodule]
     pub mod plugin {
         use super::*;

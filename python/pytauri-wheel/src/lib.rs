@@ -145,6 +145,7 @@ fn load_default_window_icon(
 
 #[derive(Default)]
 struct ContextFactoryKwargs {
+    // TODO: use `pythonize` for `PyDict` (`Union[str, dict]` as parameter)
     tauri_config: NotRequired<Option<PyBackedStr>>,
 }
 
