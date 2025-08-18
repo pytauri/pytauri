@@ -619,13 +619,16 @@ impl<'py> FromPyObject<'py> for Color {
 }
 
 macro_rules! same_site_impl {
-    ($ident:ident => : $($variant:ident),*) => {
+    ($ident:ident => : $( $(#[$meta:meta])* $variant:ident ),*) => {
         /// See also: [cookie::SameSite]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         #[non_exhaustive]
         pub enum $ident {
-            $($variant,)*
+            $(
+                $(#[$meta])*
+                $variant,
+            )*
         }
 
         impl From<cookie::SameSite> for $ident {
@@ -646,7 +649,7 @@ macro_rules! same_site_impl {
     };
 }
 
-same_site_impl!(SameSite => : Strict, Lax, None);
+same_site_impl!(SameSite => : Strict, Lax, #[pyo3(name = "None_")] None);
 
 // NOTE: we need to implement this manually
 // because [NotRequired::into_py_with_none] requires `'&T: IntoPyObject`
