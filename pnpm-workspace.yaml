@@ -5,9 +5,9 @@ packages:
   - "crates/tauri-plugin-pytauri/guest-js"
 
 catalog:
-  "@tauri-apps/cli": ^2.7
-  "@tauri-apps/api": ^2.7
-  "@tauri-apps/plugin-opener": ^2.4
+  "@tauri-apps/cli": ^2.8
+  "@tauri-apps/api": ^2.8
+  "@tauri-apps/plugin-opener": ^2.5
   "@tauri-apps/plugin-dialog": ^2.3
 
 catalogMode: prefer
