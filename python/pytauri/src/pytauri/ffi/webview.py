@@ -73,6 +73,15 @@ if TYPE_CHECKING:
                 `handler` has the same restrictions as [App.run][pytauri.App.run].
             """
 
+        def on_webview_event(
+            self, handler: Callable[[WebviewEventType], None], /
+        ) -> None:
+            """Registers a window event listener.
+
+            !!! warning
+                `handler` has the same restrictions as [App.run][pytauri.App.run].
+            """
+
         def on_menu_event(
             self, handler: Callable[["Self", "MenuEvent"], None], /
         ) -> None:
@@ -184,15 +193,9 @@ if TYPE_CHECKING:
         def clear_all_browsing_data(self) -> None: ...
         def cookies_for_url(self, url: Url, /) -> list["Cookie"]: ...
         def cookies(self) -> list["Cookie"]: ...
+        def set_cookie(self, cookie: "Cookie", /) -> None: ...
+        def delete_cookie(self, cookie: "Cookie", /) -> None: ...
         def as_ref_webview(self) -> "Webview": ...
-        def on_webview_event(
-            self, handler: Callable[[WebviewEventType], None], /
-        ) -> None:
-            """Registers a window event listener.
-
-            !!! warning
-                `handler` has the same restrictions as [App.run][pytauri.App.run].
-            """
 
     @final
     class Webview:

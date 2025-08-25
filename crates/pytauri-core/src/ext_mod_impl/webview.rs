@@ -573,6 +573,16 @@ impl WebviewWindow {
         Ok(cookies)
     }
 
+    fn set_cookie(&self, py: Python<'_>, cookie: Cookie) -> PyResult<()> {
+        let cookie = cookie.to_tauri(py)?;
+        py.allow_threads(|| delegate_inner!(self, set_cookie, cookie))
+    }
+
+    fn delete_cookie(&self, py: Python<'_>, cookie: Cookie) -> PyResult<()> {
+        let cookie = cookie.to_tauri(py)?;
+        py.allow_threads(|| delegate_inner!(self, delete_cookie, cookie))
+    }
+
     /// See also: [tauri::webview::WebviewWindow::as_ref]
     fn as_ref_webview(&self) -> Webview {
         let webview = self.0.inner_ref().as_ref().clone();
@@ -733,7 +743,6 @@ impl Cookie {
         }
     }
 
-    #[expect(dead_code)] // TODO
     pub(crate) fn to_tauri(&self, py: Python<'_>) -> PyResult<webview::Cookie<'_>> {
         let Self {
             key,
