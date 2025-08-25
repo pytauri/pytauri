@@ -1,4 +1,3 @@
-use cookie::{self, time::OffsetDateTime};
 use pyo3::{
     prelude::*,
     types::{PyDict, PyString},
@@ -7,7 +6,10 @@ use pyo3_utils::{
     from_py_dict::{derive_from_py_dict, FromPyDict as _},
     py_wrapper::{PyWrapper, PyWrapperT0},
 };
-use tauri::webview;
+use tauri::webview::{
+    self,
+    cookie::{self, time::OffsetDateTime},
+};
 
 use crate::{
     ext_mod::{
@@ -71,6 +73,24 @@ impl WebviewWindow {
                     let result = handler.call1((window_event,));
                     result.unwrap_unraisable_py_result(py, Some(handler), || {
                         "Python exception occurred in `WebviewWindow::on_window_event` handler"
+                    });
+                })
+            })
+        })
+    }
+
+    fn on_webview_event(&self, py: Python<'_>, handler: PyObject) {
+        py.allow_threads(|| {
+            self.0.inner_ref().on_webview_event(move |webview_event| {
+                Python::with_gil(|py| {
+                    let webview_event: WebviewEvent = WebviewEvent::from_tauri(py, webview_event)
+                        // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
+                        .expect("Failed to convert `WebviewEvent` to pyobject");
+
+                    let handler = handler.bind(py);
+                    let result = handler.call1((webview_event,));
+                    result.unwrap_unraisable_py_result(py, Some(handler), || {
+                        "Python exception occurred in `WebviewWindow::on_webview_event` handler"
                     });
                 })
             })
@@ -560,31 +580,6 @@ impl WebviewWindow {
     }
 
     // TODO: `as_ref_windows`, see <https://github.com/tauri-apps/tauri/pull/14012>
-
-    // TODO: This method only exists in [tauri::webview::Webview],
-    // we should submit a PR to synchronize it to [tauri::webview::WebviewWindow].
-    // PR: <https://github.com/tauri-apps/tauri/pull/14012>
-    fn on_webview_event(&self, py: Python<'_>, handler: PyObject) {
-        py.allow_threads(|| {
-            self.0
-                .inner_ref()
-                .as_ref()
-                .on_webview_event(move |webview_event| {
-                    Python::with_gil(|py| {
-                        let webview_event: WebviewEvent =
-                            WebviewEvent::from_tauri(py, webview_event)
-                                // TODO: maybe we should only `write_unraisable` and log it instead of `panic` here?
-                                .expect("Failed to convert `WebviewEvent` to pyobject");
-
-                        let handler = handler.bind(py);
-                        let result = handler.call1((webview_event,));
-                        result.unwrap_unraisable_py_result(py, Some(handler), || {
-                            "Python exception occurred in `WebviewWindow::on_webview_event` handler"
-                        });
-                    })
-                })
-        })
-    }
 }
 
 /// See also: [tauri::webview::Webview]

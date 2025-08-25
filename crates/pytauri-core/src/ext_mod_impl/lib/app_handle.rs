@@ -82,13 +82,7 @@ impl AppHandle {
 
     // TODO, PERF: once we drop py39 support, we can use [PyStringMethods::to_str] directly.
     fn remove_plugin(&self, py: Python<'_>, plugin: Cow<'_, str>) -> bool {
-        py.allow_threads(|| {
-            // TODO, FIXME, XXX: `tauri_plugin_autostart::init` requires `'static`,
-            // so we have to leak it. We should submit a PR to tauri to fix this issue.
-            // PR: <https://github.com/tauri-apps/tauri/pull/14007>
-            let plugin = Box::leak::<'static>(plugin.into_owned().into_boxed_str());
-            self.0.inner_ref().remove_plugin(plugin)
-        })
+        py.allow_threads(|| self.0.inner_ref().remove_plugin(&plugin))
     }
 
     fn exit(&self, py: Python<'_>, exit_code: i32) {

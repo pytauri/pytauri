@@ -24,10 +24,6 @@ pyo3 = { version = "0.25" }
 pyo3-build-config = { version = "0.25" }
 pythonize = { version = "0.25" }
 
-# TODO: dependency of tauri, we should submit a PR to let tauri re-export it.
-# PR: <https://github.com/tauri-apps/tauri/pull/13661>
-cookie = { version = "*" }
-# 👆
 tauri = { version = "2.8" }
 tauri-build = { version = "2.4" }
 tauri-plugin = { version = "2.4" }

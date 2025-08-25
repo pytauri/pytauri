@@ -3715,7 +3715,6 @@ dependencies = [
 name = "pytauri-core"
 version = "0.7.0"
 dependencies = [
- "cookie",
  "pyo3",
  "pyo3-utils",
  "pythonize",

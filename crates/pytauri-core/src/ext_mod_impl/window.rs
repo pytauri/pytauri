@@ -279,11 +279,9 @@ impl ProgressBarState {
     }
 }
 
-// TODO, FIXME: submit a PR to tauri to re-export `TitleBarStyle` in `tauri::window`.
-// PR: <https://github.com/tauri-apps/tauri/pull/14013>
 macro_rules! title_bar_style_impl {
     ($ident:ident => : $($variant:ident),*) => {
-        /// See also: [tauri::utils::TitleBarStyle]
+        /// See also: [tauri::TitleBarStyle]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         #[non_exhaustive]
@@ -292,19 +290,19 @@ macro_rules! title_bar_style_impl {
             _NonExhaustive,
         }
 
-        impl From<tauri::utils::TitleBarStyle> for $ident {
-            fn from(val: tauri::utils::TitleBarStyle) -> Self {
+        impl From<tauri::TitleBarStyle> for $ident {
+            fn from(val: tauri::TitleBarStyle) -> Self {
                 match val {
-                    $(tauri::utils::TitleBarStyle::$variant => $ident::$variant,)*
+                    $(tauri::TitleBarStyle::$variant => $ident::$variant,)*
                     _ => { $ident::_NonExhaustive }
                 }
             }
         }
 
-        impl From<$ident> for tauri::utils::TitleBarStyle {
+        impl From<$ident> for tauri::TitleBarStyle {
             fn from(val: $ident) -> Self {
                 match val {
-                    $($ident::$variant => tauri::utils::TitleBarStyle::$variant,)*
+                    $($ident::$variant => tauri::TitleBarStyle::$variant,)*
                     $ident::_NonExhaustive => non_exhaustive_panic(),
                 }
             }
