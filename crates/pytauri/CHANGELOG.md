@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Added
+
+- [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
+
+    Added `tauri-devtools` feature.
+
 ## [0.7.0]
 
 ## [0.6.1]
