@@ -4436,6 +4436,29 @@
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
+<p><a href="https://github.com/pytauri/pytauri/pull/259">#259</a> - feat(pytauri): more <code>WebviewWindow</code> and <code>AppHandle</code> bindings.</p>
+<details class="tip">
+<summary>Added APIs</summary>
+<ul>
+<li><code>mod tauri::</code><ul>
+<li>fn <code>App::{run_on_main_thread}</code></li>
+<li>fn <code>AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}</code></li>
+<li>struct <code>{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}</code></li>
+<li><code>mod webview::</code><ul>
+<li>fn <code>WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}</code></li>
+<li>struct <code>{Color, SameSite, Cookie}</code></li>
+</ul>
+</li>
+<li><code>mod window::</code><ul>
+<li>struct <code>{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</details>
+</li>
+<li>
 <p><a href="https://github.com/pytauri/pytauri/pull/220">#220</a> - feat: support registering plugin from python.</p>
 <p>added:</p>
 <ul>
