@@ -34,6 +34,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### More `WebviewWindow` and `AppHandle` bindings
+
+> - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
+
+??? tip "Added APIs"
+    - `mod tauri::`
+        - fn `App::{run_on_main_thread}`
+        - fn `AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}`
+        - struct `{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}`
+        - `mod webview::`
+            - fn `WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}`
+            - struct `{Color, SameSite, Cookie}`
+        - `mod window::`
+            - struct `{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}`
+
 #### Registering Plugin From Python
 
 > - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
@@ -109,16 +124,14 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
 
 ### Added
 
-- [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
-
-    bump:
+- [#220](https://github.com/pytauri/pytauri/pull/220) - [#259](https://github.com/pytauri/pytauri/pull/259) - chore: bump `tauri` dependencies:
 
     ```toml
-    tauri = { version = "2.7" }
-    tauri-build = { version = "2.3" }
-    tauri-plugin = { version = "2.3" }
-    tauri-utils = { version = "~2.6" }
-    tauri-plugin-opener = { version = "2.4" }
+    tauri = { version = "2.8" }
+    tauri-build = { version = "2.4" }
+    tauri-plugin = { version = "2.4" }
+    tauri-utils = { version = "~2.7" }
+    tauri-plugin-opener = { version = "2.5" }
     tauri-plugin-clipboard-manager = { version = "2.3" }
     tauri-plugin-dialog = { version = "2.3" }
     tauri-plugin-fs = { version = "2.4" }
@@ -140,9 +153,9 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
     ```
 
     ```yaml
-    "@tauri-apps/cli": ^2.7
-    "@tauri-apps/api": ^2.7
-    "@tauri-apps/plugin-opener": ^2.4
+    "@tauri-apps/cli": ^2.8
+    "@tauri-apps/api": ^2.8
+    "@tauri-apps/plugin-opener": ^2.5
     "@tauri-apps/plugin-dialog": ^2.3
     ```
 

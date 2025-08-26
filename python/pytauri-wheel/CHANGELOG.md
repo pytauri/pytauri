@@ -44,6 +44,10 @@
 
 ### Added
 
+- [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
+
+    Enabled `pytauri/tauri-devtools` feature.
+
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
 
     enabled following plugin features:

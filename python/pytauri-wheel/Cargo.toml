@@ -21,10 +21,10 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 
 [build-dependencies]
-tauri-build = { version = "2.3" }
+tauri-build = { version = "2.4" }
 
 [dependencies]
-tauri = { version = "2.7", features = [
+tauri = { version = "2.8", features = [
     "config-toml",
     "config-json5",
     "devtools",
@@ -33,12 +33,12 @@ tauri = { version = "2.7", features = [
 ] }
 # NOTE: pin the minor version of `tauri-utils` because it's unstable,
 # see: <https://github.com/tauri-apps/tauri/pull/12890#discussion_r2008992986>
-tauri-utils = { version = "~2.6", features = [
+tauri-utils = { version = "~2.7", features = [
     "config-toml",
     "config-json5",
     "build",
 ] }
-tauri-plugin-opener = { version = "2.4" }
+tauri-plugin-opener = { version = "2.5" }
 tauri-plugin-clipboard-manager = { version = "2.3" }
 tauri-plugin-dialog = { version = "2.3" }
 tauri-plugin-fs = { version = "2.4", features = ["watch"] }
@@ -67,6 +67,7 @@ pyo3 = { version = "0.25" }
 # 👇 when adding new workspace dependencies,
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
 pytauri = { version = "0.7", features = [
+    "tauri-devtools",
     "plugin-notification",
     "plugin-dialog",
     "plugin-clipboard-manager",

@@ -299,7 +299,7 @@ impl Invoke {
     }
 }
 
-/// see also: [tauri::ipc::JavaScriptChannelId]
+/// See also: [tauri::ipc::JavaScriptChannelId]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct JavaScriptChannelId(PyWrapper<PyWrapperT0<ipc::JavaScriptChannelId>>);
@@ -343,7 +343,7 @@ impl JavaScriptChannelId {
     }
 }
 
-/// see also: [tauri::ipc::Channel]
+/// See also: [tauri::ipc::Channel]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Channel(PyWrapper<PyWrapperT0<ipc::Channel>>);

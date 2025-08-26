@@ -22,12 +22,13 @@ authors = ["Sean Wang <126865849+WSH032@users.noreply.github.com>"]
 [workspace.dependencies]
 pyo3 = { version = "0.25" }
 pyo3-build-config = { version = "0.25" }
+pythonize = { version = "0.25" }
 
-tauri = { version = "2.7" }
-tauri-build = { version = "2.3" }
-tauri-plugin = { version = "2.3" }
+tauri = { version = "2.8" }
+tauri-build = { version = "2.4" }
+tauri-plugin = { version = "2.4" }
 
-tauri-plugin-opener = { version = "2.4" }
+tauri-plugin-opener = { version = "2.5" }
 tauri-plugin-clipboard-manager = { version = "2.3" }
 tauri-plugin-dialog = { version = "2.3" }
 tauri-plugin-fs = { version = "2.4" }

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### BREAKING
+
+- [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
+
+    Removed `impl IntoPyObject for from_py_dict::NotRequired<T>` in favor of `#[pyo3(into_py_with)]` and `NotRequired::{into_py_with, into_py_with_none, into_py_with_default, into_py_with_err}`.
+
 ### Added
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.

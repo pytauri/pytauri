@@ -4,6 +4,19 @@
 
 ### Added
 
+- [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
+
+    ??? tip "Added APIs"
+        - `mod tauri::`
+            - fn `App::{run_on_main_thread}`
+            - fn `AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}`
+            - struct `{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}`
+            - `mod webview::`
+                - fn `WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}`
+                - struct `{Color, SameSite, Cookie}`
+            - `mod window::`
+                - struct `{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}`
+
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
 
     added:

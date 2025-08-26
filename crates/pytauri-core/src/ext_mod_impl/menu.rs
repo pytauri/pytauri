@@ -21,11 +21,11 @@ type TauriCheckMenuItem = menu::CheckMenuItem<Runtime>;
 type TauriIconMenuItem = menu::IconMenuItem<Runtime>;
 type TauriMenuItemKind = menu::MenuItemKind<Runtime>;
 
-/// see also: [tauri::menu::MenuId].
+/// See also: [tauri::menu::MenuId].
 ///
 /// Remember use [MenuID::intern] to create a new instance.
 pub type MenuID = PyString;
-/// see also: [tauri::menu::MenuEvent]
+/// See also: [tauri::menu::MenuEvent]
 ///
 /// Remember use [MenuEvent::intern] to create a new instance.
 pub type MenuEvent = MenuID;
@@ -182,7 +182,7 @@ impl MenuItemKind {
     }
 }
 
-/// see also: [tauri::menu::Menu]
+/// See also: [tauri::menu::Menu]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Menu(pub PyWrapper<PyWrapperT0<TauriMenu>>);
@@ -425,7 +425,7 @@ impl Menu {
     }
 }
 
-/// see also: [tauri::menu::Submenu]
+/// See also: [tauri::menu::Submenu]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct Submenu(pub PyWrapper<PyWrapperT0<TauriSubmenu>>);
@@ -689,7 +689,7 @@ impl Submenu {
     }
 }
 
-/// see also: [tauri::menu::MenuItem]
+/// See also: [tauri::menu::MenuItem]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct MenuItem(pub PyWrapper<PyWrapperT0<TauriMenuItem>>);
@@ -820,7 +820,7 @@ impl MenuItem {
     }
 }
 
-/// see also: [tauri::menu::PredefinedMenuItem]
+/// See also: [tauri::menu::PredefinedMenuItem]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct PredefinedMenuItem(pub PyWrapper<PyWrapperT0<TauriPredefinedMenuItem>>);
@@ -1057,7 +1057,7 @@ impl PredefinedMenuItem {
     }
 }
 
-/// see also: [tauri::menu::CheckMenuItem]
+/// See also: [tauri::menu::CheckMenuItem]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct CheckMenuItem(pub PyWrapper<PyWrapperT0<TauriCheckMenuItem>>);
@@ -1217,7 +1217,7 @@ trait PyStrToRs {
 impl PyStrToRs for Py<PyString> {
     type Output = PyResult<String>;
     fn to_rs(&self, py: Python<'_>) -> Self::Output {
-        // PERF: once we drop py39 support, we can use [PyStringMethods::to_str] directly.
+        // TODO, PERF: once we drop py39 support, we can use [PyStringMethods::to_str] directly.
         Ok(self.to_cow(py)?.into_owned())
     }
 }
@@ -1336,7 +1336,7 @@ enum IconOrNative<'a> {
     Native(Option<menu::NativeIcon>),
 }
 
-/// see also: [tauri::menu::IconMenuItem]
+/// See also: [tauri::menu::IconMenuItem]
 #[pyclass(frozen)]
 #[non_exhaustive]
 pub struct IconMenuItem(pub PyWrapper<PyWrapperT0<TauriIconMenuItem>>);
@@ -1580,7 +1580,7 @@ impl IconMenuItem {
 
 macro_rules! native_icon_impl {
     ($ident:ident => : $($variant:ident),*) => {
-        /// see also: [tauri::menu::NativeIcon]
+        /// See also: [tauri::menu::NativeIcon]
         #[pyclass(frozen, eq, eq_int)]
         #[derive(PartialEq, Clone, Copy)]
         pub enum $ident {
