@@ -48,6 +48,10 @@
     - `mod tauri_plugin_window_state`
     - `mod tauri_plugin_global_shortcut`
 
+### Internal
+
+- [#262](https://github.com/pytauri/pytauri/pull/262) - refactor: use `pyo3_utils::serde` to replace `pythonize` crate dependency.
+
 ## [0.7.0]
 
 ### Added

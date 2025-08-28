@@ -159,6 +159,12 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
     "@tauri-apps/plugin-dialog": ^2.3
     ```
 
+### Docs
+
+- [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
+
+    Use a `dict` instead of `json.dumps({...})` as the input for `context_factory(tauri_config)` in the `pytauri-wheel` documentation.
+
 ### Internal
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
