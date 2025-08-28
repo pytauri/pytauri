@@ -46,7 +46,6 @@ tauri-plugin-global-shortcut = { workspace = true, optional = true }
 pyo3 = { workspace = true, features = [
     "time", # for `cookie::time` conversion
 ] }
-pythonize = { workspace = true }
 
 # workspace dependencies
 pyo3-utils = { workspace = true, features = ["unstable"] }

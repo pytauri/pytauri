@@ -55,14 +55,18 @@ pub mod ext_mod {
         url::Url,
     };
 
-    #[expect(unused_imports)] // TODO
-    pub(crate) use ext_mod_impl::lib::rect::{TauriLogicalRect, TauriPhysicalRect};
     pub(crate) use ext_mod_impl::lib::{
         app::TauriApp,
         app_handle::{debug_assert_app_handle_py_is_rs, TauriAppHandle},
         assets::PyAssets,
         manager::{manager_method_impl, StateManager},
         rect::{PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32},
+        runtime::ConfigInto,
+    };
+    #[expect(unused_imports)] // TODO
+    pub(crate) use ext_mod_impl::lib::{
+        rect::{TauriLogicalRect, TauriPhysicalRect},
+        runtime::ConfigFrom,
     };
 
     /// See also: [tauri::ipc]

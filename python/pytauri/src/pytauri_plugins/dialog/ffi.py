@@ -13,7 +13,7 @@ from types import ModuleType
 from typing import TYPE_CHECKING, Callable, Optional, Union, final
 
 from pytauri import ImplManager
-from pytauri.ffi._typing import Pyo3Path, StrictPyo3Path
+from pytauri.ffi._typing import Pyo3PathFrom, Pyo3PathInto
 from pytauri.plugin import Plugin
 from pytauri.webview import WebviewWindow
 from typing_extensions import Self, TypeAlias, TypeAliasType, TypedDict, Unpack
@@ -48,8 +48,8 @@ _HasWindowHandleAndHasDisplayHandle: TypeAlias = WebviewWindow
 
 # TODO: unify this type with [tauri_plugin_fs::FilePath]
 # NOTE: In the future, we may use `Union[str, Path]` to distinguish between Union[FilePath::Url, FilePath::Path],
-#       so we use `StrictPyo3Path` instead of `Pyo3Path` here.
-FilePath = TypeAliasType("FilePath", StrictPyo3Path)
+#       so we use `Pyo3PathInto` instead of `Pyo3PathFrom` here.
+FilePath = TypeAliasType("FilePath", Pyo3PathInto)
 """[tauri_plugin_dialog::FilePath](https://docs.rs/tauri-plugin-dialog/latest/tauri_plugin_dialog/enum.FilePath.html)"""
 
 if TYPE_CHECKING:
@@ -212,7 +212,7 @@ class FileDialogBuilderArgs(TypedDict, total=False):
 
     add_filter: tuple[str, Sequence[str]]
     """(name, extensions)"""
-    set_directory: Pyo3Path
+    set_directory: Pyo3PathFrom
     set_file_name: str
     set_parent: _HasWindowHandleAndHasDisplayHandle
     set_title: str

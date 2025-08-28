@@ -4,7 +4,7 @@
 
 import sys
 from abc import ABC, abstractmethod
-from collections.abc import Iterator, Sequence
+from collections.abc import Iterator, Mapping, Sequence
 from enum import Enum, auto
 from pathlib import Path
 from typing import (
@@ -113,6 +113,11 @@ _VecPathBuf = list[Path]
 # TODO: export this type in rust [ext_mod::utils::assets] namespace
 _AssetKey = TypeAliasType("_AssetKey", str)
 """[tauri::utils::assets::AssetKey](https://docs.rs/tauri-utils/latest/tauri_utils/assets/struct.AssetKey.html)"""
+
+_ConfigInto = TypeAliasType("_ConfigInto", dict[str, Any])
+"""[tauri::Config](https://docs.rs/tauri/latest/tauri/struct.Config.html)"""
+_ConfigFrom = TypeAliasType("_ConfigFrom", Mapping[str, Any])
+"""[tauri::Config](https://docs.rs/tauri/latest/tauri/struct.Config.html)"""
 
 
 RESTART_EXIT_CODE: Final[int] = pytauri_mod.RESTART_EXIT_CODE
@@ -268,7 +273,7 @@ if TYPE_CHECKING:
 
         def tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
         def remove_tray_by_id(self, id: str, /) -> Optional[TrayIcon]: ...  # noqa: A002
-        def config(self) -> Any: ...
+        def config(self) -> _ConfigInto: ...
         def primary_monitor(self) -> Optional["Monitor"]: ...
         def monitor_from_point(self, x: float, y: float, /) -> Optional["Monitor"]: ...
         def available_monitors(self) -> list["Monitor"]: ...

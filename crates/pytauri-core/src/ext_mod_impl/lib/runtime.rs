@@ -1,6 +1,15 @@
+use std::borrow::Cow;
+
 use pyo3::prelude::*;
+use pyo3_utils::serde::PySerde;
 
 use crate::utils::non_exhaustive_panic;
+
+/// See also: [tauri::Config]
+#[expect(dead_code)] // TODO
+pub(crate) type ConfigFrom = PySerde<tauri::Config>;
+/// See also: [tauri::Config]
+pub(crate) type ConfigInto<'a> = PySerde<Cow<'a, tauri::Config>>;
 
 macro_rules! theme_impl {
     ($ident:ident => : $($variant:ident),*) => {

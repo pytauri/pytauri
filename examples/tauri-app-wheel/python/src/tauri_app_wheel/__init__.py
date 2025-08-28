@@ -9,7 +9,6 @@ environ["_PYTAURI_DIST"] = "pytauri-wheel"
 ################################################################################
 
 
-import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -138,13 +137,11 @@ def main() -> int:
     ):
         if TAURI_APP_WHEEL_DEV:
             # In development mode, we use the Vite development server to serve frontend assets
-            tauri_config = json.dumps(
-                {
-                    "build": {
-                        "frontendDist": "http://localhost:1420",
-                    },
-                }
-            )
+            tauri_config = {
+                "build": {
+                    "frontendDist": "http://localhost:1420",
+                },
+            }
         else:
             tauri_config = None
 

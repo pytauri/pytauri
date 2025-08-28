@@ -11,6 +11,7 @@ description = "Precompiled wheels for pytauri"
 
 # <https://iscinumpy.dev/post/bound-version-constraints/>
 dependencies = [
+    "typing-extensions >= 4.14",
     # ❗ workspaces, must use `==`
     "pytauri == 0.7.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
 ]
