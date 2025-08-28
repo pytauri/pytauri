@@ -9,8 +9,9 @@ which means you can normally use the `pytauri` API, except for the following API
 - [pytauri.context_factory][] -> [pytauri_wheel.lib.context_factory][]
 """
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional, Union
 
 from pytauri import Builder, Context
 from pytauri import (
@@ -19,8 +20,20 @@ from pytauri import (
 from pytauri import (
     context_factory as pytauri_context_factory,
 )
+from typing_extensions import TypeAliasType, TypeVar
 
 __all__ = ["builder_factory", "context_factory"]
+
+
+_T = TypeVar("_T", infer_variance=True)
+
+# TODO: move this to `pytauri.ffi._typing`
+_PySerdeFrom = TypeAliasType("_PySerdeFrom", Union[str, bytes, _T], type_params=(_T,))
+"""If `str` or `bytes` is provided, it will be JSON-deserialized into object `T`."""
+
+# TODO: move this to `pytauri.ffi.lib`
+_ConfigFrom = TypeAliasType("_ConfigFrom", Mapping[str, Any])
+"""[tauri::Config](https://docs.rs/tauri/latest/tauri/struct.Config.html)"""
 
 
 def builder_factory() -> Builder:
@@ -32,7 +45,10 @@ def builder_factory() -> Builder:
 
 
 def context_factory(
-    src_tauri_dir: Path, /, *, tauri_config: Optional[str] = None
+    src_tauri_dir: Path,
+    /,
+    *,
+    tauri_config: Optional[_PySerdeFrom[_ConfigFrom]] = None,
 ) -> Context:
     """Generate a `Context` based on `tauri.conf.json`, `capabilities/` and etc in the `src_tauri_dir` directory.
 
@@ -49,8 +65,28 @@ def context_factory(
                     capabilities/
                     ...
                 ```
-        tauri_config: The config JSON string to be merged with `tauri.conf.json`, equivalent to the `--config` of `tauri-cli`.
+        tauri_config: The config to be merged with `tauri.conf.json`, equivalent to the `--config` of `tauri-cli`.
             See: <https://tauri.app/develop/configuration-files/#extending-the-configuration>.
+
+            If `str` or `bytes` is provided, it will be deserialized into a JSON object.
+
+            ```python
+            tauri_config = {
+                "build": {
+                    "frontendDist": "http://localhost:1420",
+                },
+            }
+
+            # Or
+
+            tauri_config = json.dumps(
+                {
+                    "build": {
+                        "frontendDist": "http://localhost:1420",
+                    },
+                }
+            )
+            ```
     """
     if not src_tauri_dir.is_absolute():
         raise ValueError("`src_tauri_dir` must be an absolute path.")

@@ -5,8 +5,10 @@
     doc(cfg_hide(doc))
 )]
 
-#[cfg(feature = "unstable")]
+#[cfg(feature = "unstable-from-py-dict")]
 pub mod from_py_dict;
 pub mod py_match;
 pub mod py_wrapper;
+#[cfg(feature = "unstable-serde")]
+pub mod serde;
 pub mod ungil;

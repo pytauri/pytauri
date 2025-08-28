@@ -2,6 +2,34 @@
 
 ## [Unreleased]
 
+### Highlights
+
+#### Support `dict` as input for `context_factory(tauri_config)`
+
+> - [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
+
+You can now provide a JSON `str`, `bytes`, or a `dict` as the input to `context_factory(tauri_config)`. If a `str` or `bytes` is provided, it will be deserialized into a JSON object.
+
+??? example
+
+    ```python
+    tauri_config = {
+        "build": {
+            "frontendDist": "http://localhost:1420",
+        },
+    }
+
+    # Or
+
+    tauri_config = json.dumps(
+        {
+            "build": {
+                "frontendDist": "http://localhost:1420",
+            },
+        }
+    )
+    ```
+
 ### BREAKING
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.

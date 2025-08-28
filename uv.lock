@@ -1908,10 +1908,14 @@ version = "0.7.0"
 source = { editable = "python/pytauri-wheel" }
 dependencies = [
     { name = "pytauri" },
+    { name = "typing-extensions" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pytauri", editable = "python/pytauri" }]
+requires-dist = [
+    { name = "pytauri", editable = "python/pytauri" },
+    { name = "typing-extensions", specifier = ">=4.14" },
+]
 
 [[package]]
 name = "pytauri-workspace"

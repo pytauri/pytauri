@@ -7,10 +7,12 @@ use std::{
 use pyo3::{
     exceptions::PyValueError,
     prelude::*,
-    pybacked::PyBackedStr,
     types::{PyDict, PyTuple},
 };
-use pyo3_utils::from_py_dict::{derive_from_py_dict, FromPyDict as _, NotRequired};
+use pyo3_utils::{
+    from_py_dict::{derive_from_py_dict, FromPyDict as _, NotRequired},
+    serde::PySerde,
+};
 use pytauri_core::{tauri_runtime::Runtime, utils::TauriError};
 use tauri::{
     image::Image,
@@ -145,8 +147,8 @@ fn load_default_window_icon(
 
 #[derive(Default)]
 struct ContextFactoryKwargs {
-    // TODO: use `pythonize` for `PyDict` (`Union[str, dict]` as parameter)
-    tauri_config: NotRequired<Option<PyBackedStr>>,
+    // TODO: use `pytauri::ext_mod::ConfigFrom` (`tauri::Config`) as the type
+    tauri_config: NotRequired<Option<PySerde<serde_json::Value>>>,
 }
 
 derive_from_py_dict!(ContextFactoryKwargs {
@@ -176,7 +178,6 @@ pub fn context_factory(
     let ContextFactoryKwargs { tauri_config } =
         ContextFactoryKwargs::from_kwargs(kwargs)?.unwrap_or_default();
     let tauri_config = tauri_config.0.unwrap_or_default();
-    let tauri_config = tauri_config.as_deref();
 
     let result: FactoryResult<TauriContext> = py.allow_threads(move || {
         let mut ctx = tauri_generate_context();
@@ -189,13 +190,11 @@ pub fn context_factory(
             .map_err(|e| PyValueError::new_err(format!("Failed to read tauri config: {e}")))?
             .0;
         if let Some(tauri_config) = tauri_config {
-            let merge_config: serde_json::Value =
-            // TODO: unify the error type
-            serde_json::from_str(tauri_config).map_err(|e| PyValueError::new_err(format!("Failed to serialize argument `tauri_config`: {e}")))?;
-            json_patch::merge(&mut config, &merge_config)
+            json_patch::merge(&mut config, &tauri_config.into_inner());
         }
-        let config: Config =
-            serde_json::from_value(config).map_err(|e| PyValueError::new_err(format!("Failed to serialize merged tauri config: {e}")))?;
+        let config: Config = serde_json::from_value(config).map_err(|e| {
+            PyValueError::new_err(format!("Failed to serialize merged tauri config: {e}"))
+        })?;
         // NOTE: modify the `config` field first, because following code will use it.
         *ctx.config_mut() = config;
 
@@ -225,9 +224,9 @@ pub fn context_factory(
                     ctx.set_assets(Box::new(DirAssets(abs_assert_dir)));
                 }
                 FrontendDist::Files(_) => {
-                    return Err(PyValueError::new_err(
-                        "frontend_dist: Files is not supported yet",
-                    ).into());
+                    return Err(
+                        PyValueError::new_err("frontend_dist: Files is not supported yet").into(),
+                    );
                 }
                 unknown => unimplemented!("unimplemented frontend_dist type: {:?}", unknown),
             }
@@ -246,7 +245,9 @@ pub fn context_factory(
         })?;
         let mut capabilities_from_files = parse_capabilities(capabilities_pattern)
             // TODO: unify the error type
-            .map_err(|e| PyValueError::new_err(format!("Failed to parse capabilities files: {e}")))?;
+            .map_err(|e| {
+                PyValueError::new_err(format!("Failed to parse capabilities files: {e}"))
+            })?;
 
         // Patch `capabilities` from `config`.
         // ref: <https://github.com/tauri-apps/tauri/blob/339a075e33292dab67766d56a8b988e46640f490/crates/tauri-codegen/src/context.rs#L388-L416>
@@ -294,15 +295,14 @@ pub fn context_factory(
         if target.is_desktop() {
             if let Some(tray) = &ctx.config().app.tray_icon {
                 let tray_icon_path = src_tauri_dir.join(&tray.icon_path);
-                let icon = Image::from_path(&tray_icon_path)
-                    .map_err(|cause| {
-                        let err = PyValueError::new_err(format!(
-                            "Failed to load tray icon at {}",
-                            tray_icon_path.display()
-                        ));
-                        (err, cause)
-                    })?;
-                    ctx.set_tray_icon(Some(icon));
+                let icon = Image::from_path(&tray_icon_path).map_err(|cause| {
+                    let err = PyValueError::new_err(format!(
+                        "Failed to load tray icon at {}",
+                        tray_icon_path.display()
+                    ));
+                    (err, cause)
+                })?;
+                ctx.set_tray_icon(Some(icon));
             }
         }
 

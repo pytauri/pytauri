@@ -48,6 +48,12 @@
     - `mod tauri_plugin_window_state`
     - `mod tauri_plugin_global_shortcut`
 
+### Internal
+
+- [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
+
+    Change the return type annotation of `AppHandle.config()` from `Any` to `dict[str, Any]`.
+
 ## [0.7.2]
 
 ### Fixed

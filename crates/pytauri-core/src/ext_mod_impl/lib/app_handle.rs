@@ -7,7 +7,6 @@ use std::{
 
 use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyString, IntoPyObject};
 use pyo3_utils::py_wrapper::{PyWrapper, PyWrapperT0};
-use pythonize::pythonize;
 
 use crate::{
     ext_mod::{
@@ -16,7 +15,7 @@ use crate::{
         plugin::Plugin,
         tray::{TrayIcon, TrayIconEvent},
         window::Monitor,
-        PhysicalPositionF64, Theme,
+        ConfigInto, PhysicalPositionF64, Theme,
     },
     tauri_runtime::Runtime,
     utils::{delegate_inner, PyResultExt as _},
@@ -164,14 +163,11 @@ impl AppHandle {
         py.allow_threads(|| self.0.inner_ref().remove_tray_by_id(id).map(TrayIcon::new))
     }
 
-    // Benchmark(less is better):
-    // - pythonize: 0.9
-    // - PyString::new(serde_json::to_string): 0.6
-    // - json.loads(PyString::new(serde_json::to_string)): 1.2
+    // TODO: use `PySerde<&tauri::Config>` as return type signature,
+    // currently we cant borrow `slf` out of this method lifetime.
     fn config<'py>(&self, py: Python<'py>) -> PyResult<Bound<'py, PyAny>> {
         let slf = self.0.inner_ref();
-        let config = pythonize(py, slf.config())?;
-        Ok(config)
+        ConfigInto::new(Cow::Borrowed(slf.config())).into_pyobject(py)
     }
 
     // TODO: package_info

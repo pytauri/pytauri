@@ -8,7 +8,6 @@ environ["_PYTAURI_DIST"] = "pytauri-wheel"
 
 # --8<-- [start:code]
 
-import json
 import sys
 from os import environ
 from pathlib import Path
@@ -42,13 +41,11 @@ async def greet() -> str:
 
 if DEV_SERVER is not None:
     # ref: <https://tauri.app/reference/config/#frontenddist-1>
-    tauri_config = json.dumps(
-        {
-            "build": {
-                "frontendDist": DEV_SERVER,
-            },
-        }
-    )
+    tauri_config = {
+        "build": {
+            "frontendDist": DEV_SERVER,
+        },
+    }
 else:
     tauri_config = None
 

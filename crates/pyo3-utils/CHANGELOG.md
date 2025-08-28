@@ -10,6 +10,11 @@
 
 ### Added
 
+- [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
+
+    - Added features `unstable-from-py-dict`
+    - Added new features `unstable-serde` for new `mod pyo3_utils::serde`
+
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
 
     `from_py_dict::derive_from_py_dict!` can now accept struct with no fields:
