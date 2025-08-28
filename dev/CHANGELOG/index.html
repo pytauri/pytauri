@@ -3203,12 +3203,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/py/codelldb/" class="md-nav__link">
+      <a href="../reference/py/pyo3_utils/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    codelldb
+    pyo3_utils
     
   </span>
   
@@ -3305,12 +3305,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/py/pyo3_utils/" class="md-nav__link">
+      <a href="../reference/py/codelldb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    pyo3_utils
+    codelldb
     
   </span>
   
@@ -3892,6 +3892,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Docs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#internal" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
@@ -3925,7 +3934,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docs" class="md-nav__link">
+  <a href="#docs_1" class="md-nav__link">
     <span class="md-ellipsis">
       Docs
     </span>
@@ -4240,7 +4249,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docs_1" class="md-nav__link">
+  <a href="#docs_2" class="md-nav__link">
     <span class="md-ellipsis">
       Docs
     </span>
@@ -4348,7 +4357,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docs_2" class="md-nav__link">
+  <a href="#docs_3" class="md-nav__link">
     <span class="md-ellipsis">
       Docs
     </span>
@@ -4390,7 +4399,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#docs_3" class="md-nav__link">
+  <a href="#docs_4" class="md-nav__link">
     <span class="md-ellipsis">
       Docs
     </span>
@@ -4632,6 +4641,13 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 </span></code></pre></div>
 </li>
 </ul>
+<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/262">#262</a> - feat: support json <code>str | bytes</code> or <code>dict</code> as input for <code>tauri::Config</code>.</p>
+<p>Use a <code>dict</code> instead of <code>json.dumps({...})</code> as the input for <code>context_factory(tauri_config)</code> in the <code>pytauri-wheel</code> documentation.</p>
+</li>
+</ul>
 <h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
@@ -4660,7 +4676,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 </span></code></pre></div>
 </li>
 </ul>
-<h3 id="docs">Docs<a class="headerlink" href="#docs" title="Permanent link">&para;</a></h3>
+<h3 id="docs_1">Docs<a class="headerlink" href="#docs_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/254">#254</a> - docs(fix): add note on "patching install_name of libpython" for macOS standalone</li>
 </ul>
@@ -5106,7 +5122,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 </ul>
 </li>
 </ul>
-<h3 id="docs_1">Docs<a class="headerlink" href="#docs_1" title="Permanent link">&para;</a></h3>
+<h3 id="docs_2">Docs<a class="headerlink" href="#docs_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/124">#124</a> - docs: update example to use <code>App.run_return</code> instead of <code>App.run</code>, allowing cleanup tasks to be performed after the app exits (e.g., shutting down the <code>nicegui</code> server) and retrieving the exit code.</li>
 </ul>
@@ -5165,7 +5181,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/79">#79</a> - bump <code>rust-version = "1.82"</code></li>
 </ul>
-<h3 id="docs_2">Docs<a class="headerlink" href="#docs_2" title="Permanent link">&para;</a></h3>
+<h3 id="docs_3">Docs<a class="headerlink" href="#docs_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/88">#88</a> - docs: add rust api reference section.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/85">#85</a> - docs: add concepts <code>IPC</code> and <code>using multiprocessing</code> sections.</li>
@@ -5199,7 +5215,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
     Previously, you used <code>prepare_freethreaded_python_with_executable</code> and <code>append_ext_mod</code>. Now, you need to use <code>PythonInterpreterBuilder</code>.
     See the <code>pytauri</code> crate rust API docs and tutorial (examples/tauri-app) <code>main.rs</code> code for more information on how to migrate.</li>
 </ul>
-<h3 id="docs_3">Docs<a class="headerlink" href="#docs_3" title="Permanent link">&para;</a></h3>
+<h3 id="docs_4">Docs<a class="headerlink" href="#docs_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/60">#60</a> - update <code>examples</code> <code>main.rs</code> to remove <code>resource_dir()</code> UNC path prefix <code>\\?\</code> for <code>PythonInterpreterEnv::Standalone</code>. Fix <a href="https://github.com/pallets/jinja/issues/1675#issuecomment-1323555773">pallets/jinja#1675</a> for <code>nicegui-app</code> standalone example.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/55">#55</a> - Add <code>integrate with nicegui</code> example <code>nicegui-app</code>. See <code>examples/nicegui-app</code>.</li>

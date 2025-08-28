@@ -3203,12 +3203,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/py/codelldb/" class="md-nav__link">
+      <a href="../../../reference/py/pyo3_utils/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    codelldb
+    pyo3_utils
     
   </span>
   
@@ -3305,12 +3305,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/py/pyo3_utils/" class="md-nav__link">
+      <a href="../../../reference/py/codelldb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    pyo3_utils
+    codelldb
     
   </span>
   
@@ -3716,6 +3716,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3783,7 +3792,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -3900,7 +3909,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_1" class="md-nav__link">
+  <a href="#internal_2" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4151,6 +4160,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4218,7 +4236,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4335,7 +4353,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_1" class="md-nav__link">
+  <a href="#internal_2" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4497,6 +4515,10 @@
 </ul>
 </li>
 </ul>
+<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/pytauri/pytauri/pull/262">#262</a> - refactor: use <code>pyo3_utils::serde</code> to replace <code>pythonize</code> crate dependency.</li>
+</ul>
 <h2 id="070"><a href="https://github.com/pytauri/pytauri/releases/tag/rs/pytauri-core/v0.7.0">0.7.0</a><a class="headerlink" href="#070" title="Permanent link">&para;</a></h2>
 <h3 id="added_1">Added<a class="headerlink" href="#added_1" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4540,7 +4562,7 @@
 <p><a href="https://github.com/pytauri/pytauri/pull/157">#157</a> - feat: fully implement <code>tauri::RunEvent</code> bindings.</p>
 </li>
 </ul>
-<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/155">#155</a> - refactor: modularize <code>ext_mod_impl::self</code>.</li>
 </ul>
@@ -4618,7 +4640,7 @@
 <li><a href="https://github.com/pytauri/pytauri/pull/75">#75</a> - perf: all methods of <code>WebviewWindow</code> will release the <code>GIL</code> now.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/75">#75</a> - perf: <code>App::{run, run_iteration}</code> will use a singleton <code>Py&lt;AppHandle&gt;</code> as an argument instead of fetching it from <code>tauri::State</code> each loop.</li>
 </ul>
-<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
+<h3 id="internal_2">Internal<a class="headerlink" href="#internal_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/83">#83</a> - refactor: add trait <code>utils::PyResultExt</code> to handle unraisable <code>PyErr</code>.</li>
 </ul>

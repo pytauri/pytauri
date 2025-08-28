@@ -3203,12 +3203,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/py/codelldb/" class="md-nav__link">
+      <a href="../../../reference/py/pyo3_utils/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    codelldb
+    pyo3_utils
     
   </span>
   
@@ -3305,12 +3305,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/py/pyo3_utils/" class="md-nav__link">
+      <a href="../../../reference/py/codelldb/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    pyo3_utils
+    codelldb
     
   </span>
   
@@ -3552,6 +3552,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3775,7 +3784,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -3817,7 +3826,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_1" class="md-nav__link">
+  <a href="#internal_2" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4190,6 +4199,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4413,7 +4431,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4455,7 +4473,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_1" class="md-nav__link">
+  <a href="#internal_2" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4573,6 +4591,13 @@
 <li><code>mod tauri_plugin_window_state</code></li>
 <li><code>mod tauri_plugin_global_shortcut</code></li>
 </ul>
+</li>
+</ul>
+<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/262">#262</a> - feat: support json <code>str | bytes</code> or <code>dict</code> as input for <code>tauri::Config</code>.</p>
+<p>Change the return type annotation of <code>AppHandle.config()</code> from <code>Any</code> to <code>dict[str, Any]</code>.</p>
 </li>
 </ul>
 <h2 id="072"><a href="https://github.com/pytauri/pytauri/releases/tag/py/pytauri/v0.7.2">0.7.2</a><a class="headerlink" href="#072" title="Permanent link">&para;</a></h2>
@@ -4757,7 +4782,7 @@ For example, you can use <code>sys.exit(app.run_return())</code> to gracefully f
 <li><a href="https://github.com/pytauri/pytauri/pull/75">#75</a> - perf: all methods of <code>WebviewWindow</code> will release the <code>GIL</code> now.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/75">#75</a> - perf: <code>App::{run, run_iteration}</code> will use a singleton <code>Py&lt;AppHandle&gt;</code> as an argument instead of fetching it from <code>tauri::State</code> each loop.</li>
 </ul>
-<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/79">#79</a> - <code>ffi.ipc.JavaScriptChannelId.from_str</code> becomes <code>staticmethod</code> from <code>classmethod</code>.</li>
 </ul>
@@ -4793,7 +4818,7 @@ For example, you can use <code>sys.exit(app.run_return())</code> to gracefully f
 <li><a href="https://github.com/pytauri/pytauri/pull/48">#48</a> - feat: accessing the <code>WebviewWindow</code> in <code>Commands</code>.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/49">#49</a> - feat: add <code>Event</code>, <code>EventId</code>, <code>Listener</code>, <code>ImplListener</code> for <a href="https://tauri.app/develop/calling-frontend/#event-system">Event System</a>.</li>
 </ul>
-<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
+<h3 id="internal_2">Internal<a class="headerlink" href="#internal_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/54">#54</a><ul>
 <li>feat: import the extension module from <code>sys.modules["__pytauri_ext_mod__"]</code> if on standalone mode (<code>sys._pytauri_standalone</code>).</li>
