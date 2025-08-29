@@ -159,6 +159,24 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
     "@tauri-apps/plugin-dialog": ^2.3
     ```
 
+### Changed
+
+- [#263](https://github.com/pytauri/pytauri/pull/263) - build: remove upper version constraint for `build-system.requires` deps.
+
+    Updated `pyproject.toml` and docs and to use the following build version constraints:
+
+    ```toml
+    [build-system]
+    requires = [
+        "setuptools >= 80",
+        "setuptools-rust >= 1.11, <2",
+        "setuptools-scm >= 8",
+        "Cython >= 3, <4",
+        "packaging >= 25",
+        "hatchling >= 1.26",
+    ]
+    ```
+
 ### Docs
 
 - [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
