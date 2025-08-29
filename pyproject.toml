@@ -42,11 +42,16 @@ test = [
 ]
 tools = ["pre-commit ==4.2.0"]
 "build-system" = [
-    "setuptools == 80.*",
-    "setuptools-rust == 1.*",
-    "setuptools-scm == 8.*",
-    "Cython == 3.*",
-    "packaging == 25.*",
+    # `setuptools-scm` recommend `setuptools >=80`
+    "setuptools >= 80",
+    # `> 1.11` for free-threading support
+    "setuptools-rust >= 1.11, <2",
+    # `setuptools-scm` recommend `>=8`
+    "setuptools-scm >= 8",
+    # `> 3` for free-threading support
+    "Cython >= 3, <4",
+    # calendar-based versioning (`YY.N`)
+    "packaging >= 25",
 ]
 # NOTE: when adding workspace members,
 # remember to update:

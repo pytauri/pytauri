@@ -33,7 +33,7 @@ source = "https://github.com/pytauri/pytauri"
 # ...
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]

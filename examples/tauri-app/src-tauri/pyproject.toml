@@ -15,10 +15,10 @@ ext_mod = "tauri_app.ext_mod"
 
 [build-system]
 requires = [
-    "setuptools == 80.*",
-    "setuptools-rust == 1.*",
-    "setuptools-scm == 8.*",
-    "Cython == 3.*",
+    "setuptools >= 80",
+    "setuptools-rust >= 1.11, <2",
+    "setuptools-scm >= 8",
+    "Cython >= 3, <4",
 ]
 build-backend = "setuptools.build_meta"
 

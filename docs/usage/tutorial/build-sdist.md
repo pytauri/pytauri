@@ -2,7 +2,7 @@
 
 ## setuptools-rust
 
-When you want to distribute your app in Python format, you need to compile pytauri into a Python extension module file, instead of providing it in memory through `pytauri::standalone::append_ext_mod` in the `main.rs` executable.
+When you want to distribute your app in Python format, you need to compile pytauri into a Python extension module file, instead of providing it in memory through `pytauri::standalone` in the `main.rs` executable.
 
 To do this, we need to use [setuptools-rust](https://github.com/PyO3/setuptools-rust).
 
@@ -10,7 +10,7 @@ Add it to `[build-system]`:
 
 ```toml title="src-tauri/pyproject.toml"
 [build-system]
-requires = ["setuptools>=61", "setuptools-rust==1.*"]
+requires = ["setuptools >= 80", "setuptools-rust >= 1.11, <2"]
 build-backend = "setuptools.build_meta"
 ```
 
@@ -58,7 +58,11 @@ You will also need to tell Setuptools that the Rust files are required to build 
 
     ```toml title="src-tauri/pyproject.toml"
     [build-system]
-    requires = ["setuptools>=61", "setuptools-rust==1.*", "setuptools_scm>=8"]
+    requires = [
+        "setuptools >= 80",
+        "setuptools-rust >= 1.11, <2",
+        "setuptools-scm >= 8",
+      ]
     build-backend = "setuptools.build_meta"
     ```
 

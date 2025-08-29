@@ -6,7 +6,7 @@ dependencies = ["pytauri == 0.1.*", "pydantic == 2.*", "anyio == 4.*"]
 
 
 [build-system]
-requires = ["setuptools == 80.*", "setuptools-scm == 8.*"]
+requires = ["setuptools >= 80", "setuptools-scm >= 8"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages]
