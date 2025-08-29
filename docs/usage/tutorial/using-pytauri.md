@@ -44,7 +44,7 @@ dependencies = ["pytauri == 0.7.*"]  # (2)!
 ext_mod = "tauri_app.ext_mod"
 
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools >= 80"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages]

@@ -2009,15 +2009,15 @@ workspaces = [
 
 [package.metadata.requires-dev]
 build-system = [
-    { name = "cython", specifier = "==3.*" },
-    { name = "packaging", specifier = "==25.*" },
-    { name = "setuptools", specifier = "==80.*" },
-    { name = "setuptools-rust", specifier = "==1.*" },
-    { name = "setuptools-scm", specifier = "==8.*" },
+    { name = "cython", specifier = ">=3,<4" },
+    { name = "packaging", specifier = ">=25" },
+    { name = "setuptools", specifier = ">=80" },
+    { name = "setuptools-rust", specifier = ">=1.11,<2" },
+    { name = "setuptools-scm", specifier = ">=8" },
 ]
 dev = [
     { name = "codelldb", editable = "python/codelldb" },
-    { name = "cython", specifier = "==3.*" },
+    { name = "cython", specifier = ">=3,<4" },
     { name = "debugpy", specifier = "==1.*" },
     { name = "griffe-inherited-docstrings", specifier = "==1.1.*" },
     { name = "griffe-pydantic", specifier = "==1.1.*" },
@@ -2031,7 +2031,7 @@ dev = [
     { name = "mkdocs-section-index", specifier = "~=0.3.10" },
     { name = "mkdocstrings", extras = ["python"], specifier = "==0.29.*" },
     { name = "nicegui-app", editable = "examples/nicegui-app" },
-    { name = "packaging", specifier = "==25.*" },
+    { name = "packaging", specifier = ">=25" },
     { name = "pre-commit", specifier = "==4.2.0" },
     { name = "pyfuture", editable = "python/pyfuture" },
     { name = "pyo3-utils", editable = "python/pyo3-utils" },
@@ -2042,9 +2042,9 @@ dev = [
     { name = "pytest-cov", specifier = "==6.2.*" },
     { name = "pytest-timeout", specifier = "==2.4.*" },
     { name = "ruff", specifier = "==0.12.4" },
-    { name = "setuptools", specifier = "==80.*" },
-    { name = "setuptools-rust", specifier = "==1.*" },
-    { name = "setuptools-scm", specifier = "==8.*" },
+    { name = "setuptools", specifier = ">=80" },
+    { name = "setuptools-rust", specifier = ">=1.11,<2" },
+    { name = "setuptools-scm", specifier = ">=8" },
     { name = "tauri-app", editable = "examples/tauri-app/src-tauri" },
     { name = "tauri-app-wheel", editable = "examples/tauri-app-wheel/python" },
     { name = "trio", specifier = "==0.30.0" },
@@ -2326,15 +2326,15 @@ wheels = [
 
 [[package]]
 name = "setuptools-rust"
-version = "1.10.2"
+version = "1.11.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "semantic-version" },
     { name = "setuptools" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/d3/6b/99a1588d826ceb108694ba00f78bc6afda10ed5d72d550ae8f256af1f7b4/setuptools_rust-1.10.2.tar.gz", hash = "sha256:5d73e7eee5f87a6417285b617c97088a7c20d1a70fcea60e3bdc94ff567c29dc", size = 309315, upload-time = "2024-10-02T06:05:06.747Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/92/bf8589b1a2b6107cf9ec8daa9954c0b7620643fe1f37d31d75e572d995f5/setuptools_rust-1.11.1.tar.gz", hash = "sha256:7dabc4392252ced314b8050d63276e05fdc5d32398fc7d3cce1f6a6ac35b76c0", size = 310804, upload-time = "2025-04-04T14:28:10.576Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/09/3da290ba3934c7003d3a178840579989a7fcfa5bd23f50dd7f2ff27f30e1/setuptools_rust-1.10.2-py3-none-any.whl", hash = "sha256:4b39c435ae9670315d522ed08fa0e8cb29f2a6048033966b6be2571a90ce4f1c", size = 26807, upload-time = "2024-10-02T06:05:04.8Z" },
+    { url = "https://files.pythonhosted.org/packages/b3/01/37e1376f80578882e4f2d451f57d1fb42a599832057a123f57d9f26395c8/setuptools_rust-1.11.1-py3-none-any.whl", hash = "sha256:5eaaddaed268dc24a527ffa659ce56b22d3cf17b781247b779efd611031fe8ea", size = 28120, upload-time = "2025-04-04T14:28:09.564Z" },
 ]
 
 [[package]]

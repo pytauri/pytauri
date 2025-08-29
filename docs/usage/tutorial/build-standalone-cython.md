@@ -18,7 +18,7 @@ Then, add `Cython` as a build dependency:
 [build-system]
 requires = [
     # ...
-    "Cython>=3",
+    "Cython >= 3, <4",
 ]
 build-backend = "setuptools.build_meta"
 ```

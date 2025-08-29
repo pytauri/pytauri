@@ -19,7 +19,7 @@ tauri-app-wheel = "tauri_app_wheel:main"
 
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build]
