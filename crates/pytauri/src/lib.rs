@@ -46,9 +46,9 @@ derive_from_py_dict!(BuilderArgs {
     // We require `invoke_handler` as a required parameter,
     // see: <https://github.com/pytauri/pytauri/pull/133>.
     invoke_handler,
-    #[default]
+    #[pyo3(default)]
     setup,
-    #[default]
+    #[pyo3(default)]
     plugins,
 });
 

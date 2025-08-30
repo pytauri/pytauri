@@ -35,6 +35,7 @@ pub mod ext_mod {
             CloseRequestApi, DragDropEvent, ExitRequestApi, RunEvent, WebviewEvent, WindowEvent,
         },
         runtime::{CursorIcon, Theme, UserAttentionType},
+        url::WebviewUrl,
         webview_version,
     };
     // TODO: constants defined outside a module and then re-exported are not supported,
@@ -84,11 +85,13 @@ pub mod ext_mod {
         use super::*;
 
         #[pymodule_export]
-        pub use ext_mod_impl::webview::{SameSite, Webview, WebviewWindow};
+        pub use ext_mod_impl::webview::{SameSite, Webview, WebviewWindow, WebviewWindowBuilder};
 
-        pub use ext_mod_impl::webview::{Color, Cookie};
+        pub use ext_mod_impl::webview::{Color, Cookie, WebviewWindowBuilderArgs};
 
         pub(crate) use ext_mod_impl::webview::TauriWebviewWindow;
+        #[expect(unused_imports)] // TODO
+        pub(crate) use ext_mod_impl::webview::{WindowConfigFrom, WindowConfigInto};
     }
 
     /// See also: [tauri::menu]

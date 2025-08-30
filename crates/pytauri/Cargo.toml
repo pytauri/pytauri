@@ -25,6 +25,7 @@ standalone = ["dep:libc", "dep:dunce"]
 
 
 tauri-devtools = ["pytauri-core/tauri-devtools"]
+tauri-macos-private-api = ["pytauri-core/tauri-macos-private-api"]
 
 plugin-notification = ["pytauri-core/plugin-notification"]
 plugin-dialog = ["pytauri-core/plugin-dialog"]

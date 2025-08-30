@@ -22,7 +22,7 @@ pyo3 = { workspace = true }
 
 parking_lot = { workspace = true }
 
-serde = { workspace = true, optional = true }
+serde = { workspace = true, features = ["derive"], optional = true }
 serde_json = { workspace = true, optional = true }
 pythonize = { workspace = true, optional = true }
 
@@ -31,8 +31,4 @@ pythonize = { workspace = true, optional = true }
 unstable = ["unstable-from-py-dict", "unstable-serde"]
 
 unstable-from-py-dict = []
-unstable-serde = [
-    "dep:serde",
-    "dep:serde_json",
-    "dep:pythonize",
-]
+unstable-serde = ["dep:serde", "dep:serde_json", "dep:pythonize"]
