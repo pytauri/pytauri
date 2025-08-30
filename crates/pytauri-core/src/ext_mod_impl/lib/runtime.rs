@@ -6,6 +6,8 @@ use pyo3_utils::serde::PySerde;
 use crate::utils::non_exhaustive_panic;
 
 /// See also: [tauri::Config]
+// TODO, PERF: use `&Config` to avoid clone,
+// see [<PySerde as FromPyObject>::extract_bound] comment.
 #[expect(dead_code)] // TODO
 pub(crate) type ConfigFrom = PySerde<tauri::Config>;
 /// See also: [tauri::Config]

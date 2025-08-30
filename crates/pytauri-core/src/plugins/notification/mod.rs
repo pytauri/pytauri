@@ -72,39 +72,39 @@ pub struct NotificationBuilderArgs {
 }
 
 derive_from_py_dict!(NotificationBuilderArgs {
-    #[default]
+    #[pyo3(default)]
     id,
-    #[default]
+    #[pyo3(default)]
     channel_id,
-    #[default]
+    #[pyo3(default)]
     title,
-    #[default]
+    #[pyo3(default)]
     body,
-    #[default]
+    #[pyo3(default)]
     large_body,
-    #[default]
+    #[pyo3(default)]
     summary,
-    #[default]
+    #[pyo3(default)]
     action_type_id,
-    #[default]
+    #[pyo3(default)]
     group,
-    #[default]
+    #[pyo3(default)]
     group_summary,
-    #[default]
+    #[pyo3(default)]
     sound,
-    #[default]
+    #[pyo3(default)]
     inbox_line,
-    #[default]
+    #[pyo3(default)]
     icon,
-    #[default]
+    #[pyo3(default)]
     large_icon,
-    #[default]
+    #[pyo3(default)]
     icon_color,
-    #[default]
+    #[pyo3(default)]
     ongoing,
-    #[default]
+    #[pyo3(default)]
     auto_cancel,
-    #[default]
+    #[pyo3(default)]
     silent,
 });
 

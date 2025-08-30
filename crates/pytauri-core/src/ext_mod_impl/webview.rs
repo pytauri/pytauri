@@ -1,10 +1,15 @@
+use std::{borrow::Cow, path::PathBuf};
+
 use pyo3::{
     prelude::*,
+    pybacked::PyBackedStr,
     types::{PyDict, PyString},
 };
 use pyo3_utils::{
-    from_py_dict::{derive_from_py_dict, FromPyDict as _},
+    from_py_dict::{derive_from_py_dict, FromPyDict as _, NotRequired},
     py_wrapper::{PyWrapper, PyWrapperT0},
+    serde::PySerde,
+    ungil::UnsafeUngilExt,
 };
 use tauri::webview::{
     self,
@@ -14,17 +19,26 @@ use tauri::webview::{
 use crate::{
     ext_mod::{
         image::Image,
+        manager_method_impl,
         menu::{context_menu_impl, ImplContextMenu, Menu, MenuEvent},
         window::{Effects, Monitor, ProgressBarState, TitleBarStyle, Window},
-        CursorIcon, PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32, Position, Size,
-        Theme, Url, UserAttentionType, WebviewEvent, WindowEvent,
+        CursorIcon, ImplManager, PhysicalPositionF64, PhysicalPositionI32, PhysicalSizeU32,
+        Position, Size, Theme, Url, UserAttentionType, WebviewEvent, WebviewUrl, WindowEvent,
     },
     tauri_runtime::Runtime,
-    utils::{cfg_impl, delegate_inner, PyResultExt as _},
+    utils::{cfg_impl, delegate_inner, PyResultExt as _, TauriError},
 };
 
 pub(crate) type TauriWebviewWindow = webview::WebviewWindow<Runtime>;
 type TauriWebview = webview::Webview<Runtime>;
+
+/// See also: [tauri::utils::config::WindowConfig]
+// TODO, PERF: use `&Config` to avoid clone,
+// see [<PySerde as FromPyObject>::extract_bound] comment.
+pub(crate) type WindowConfigFrom = PySerde<tauri::utils::config::WindowConfig>;
+/// See also: [tauri::utils::config::WindowConfig]
+#[expect(dead_code)] // TODO
+pub(crate) type WindowConfigInto<'a> = PySerde<Cow<'a, tauri::utils::config::WindowConfig>>;
 
 /// See also: [tauri::webview::WebviewWindow]
 #[pyclass(frozen)]
@@ -39,7 +53,18 @@ impl WebviewWindow {
 
 #[pymethods]
 impl WebviewWindow {
-    // TODO: fn builder
+    // equivalent to `tauri::WebviewWindow::builder`
+    #[new]
+    #[pyo3(signature = (manager, label, url, /, **kwargs))]
+    fn __new__(
+        py: Python<'_>,
+        manager: ImplManager,
+        label: String,
+        url: &Bound<'_, WebviewUrl>,
+        kwargs: Option<&Bound<'_, PyDict>>,
+    ) -> PyResult<Self> {
+        WebviewWindowBuilder::build(py, manager, label, url, kwargs)
+    }
 
     fn run_on_main_thread(&self, py: Python<'_>, handler: PyObject) -> PyResult<()> {
         py.allow_threads(|| {
@@ -692,21 +717,21 @@ pub struct Cookie {
 derive_from_py_dict!(Cookie {
     key,
     value,
-    #[default]
+    #[pyo3(default)]
     max_age,
-    #[default]
+    #[pyo3(default)]
     expires,
-    #[default]
+    #[pyo3(default)]
     path,
-    #[default]
+    #[pyo3(default)]
     domain,
-    #[default]
+    #[pyo3(default)]
     secure,
-    #[default]
+    #[pyo3(default)]
     httponly,
-    #[default]
+    #[pyo3(default)]
     samesite,
-    #[default]
+    #[pyo3(default)]
     partitioned,
 });
 
@@ -787,5 +812,624 @@ impl Cookie {
             cookie_builder = cookie_builder.partitioned(*partitioned);
         }
         Ok(cookie_builder.build())
+    }
+}
+
+/// See also: [tauri::webview::WebviewWindowBuilder]
+#[non_exhaustive]
+pub struct WebviewWindowBuilderArgs {
+    // TODO, FIXME: on_menu_event: NotRequired<PyObject>,
+    // `on_menu_event` passes `Window` instead of `WebviewWindow`,
+    // we need to submit a PR to tauri to modify the signature,
+    // or add a method to get `WebviewWindow` from `Window`
+
+    // TODO: on_web_resource_request
+    on_navigation: NotRequired<PyObject>,
+    // TODO: on_new_window
+    on_document_title_changed: NotRequired<PyObject>,
+    // TODO: on_download, on_page_load
+    menu: NotRequired<Py<Menu>>,
+    center: NotRequired<bool>,
+    position: NotRequired<(f64, f64)>,
+    inner_size: NotRequired<(f64, f64)>,
+    min_inner_size: NotRequired<(f64, f64)>,
+    max_inner_size: NotRequired<(f64, f64)>,
+    // TODO: inner_size_constraints
+    prevent_overflow: NotRequired<bool>,
+    prevent_overflow_with_margin: NotRequired<Py<Size>>,
+    resizable: NotRequired<bool>,
+    maximizable: NotRequired<bool>,
+    minimizable: NotRequired<bool>,
+    closable: NotRequired<bool>,
+    title: NotRequired<String>,
+    fullscreen: NotRequired<bool>,
+    focusable: NotRequired<bool>,
+    focused: NotRequired<bool>,
+    maximized: NotRequired<bool>,
+    visible: NotRequired<bool>,
+    theme: NotRequired<Option<Theme>>,
+    decorations: NotRequired<bool>,
+    always_on_bottom: NotRequired<bool>,
+    always_on_top: NotRequired<bool>,
+    visible_on_all_workspaces: NotRequired<bool>,
+    content_protected: NotRequired<bool>,
+    icon: NotRequired<Py<Image>>,
+    skip_taskbar: NotRequired<bool>,
+    window_classname: NotRequired<String>,
+    shadow: NotRequired<bool>,
+    parent: NotRequired<Py<WebviewWindow>>,
+    #[cfg(windows)]
+    owner: NotRequired<Py<WebviewWindow>>,
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "dragonfly",
+        target_os = "freebsd",
+        target_os = "netbsd",
+        target_os = "openbsd"
+    ))]
+    transient_for: NotRequired<Py<WebviewWindow>>,
+    #[cfg(windows)]
+    drag_and_drop: NotRequired<bool>,
+    #[cfg(target_os = "macos")]
+    title_bar_style: NotRequired<TitleBarStyle>,
+    #[cfg(target_os = "macos")]
+    traffic_light_position: NotRequired<Py<Position>>,
+    #[cfg(target_os = "macos")]
+    allow_link_preview: NotRequired<bool>,
+    #[cfg(target_os = "macos")]
+    hidden_title: NotRequired<bool>,
+    #[cfg(target_os = "macos")]
+    tabbing_identifier: NotRequired<PyBackedStr>,
+    effects: NotRequired<Effects>,
+    accept_first_mouse: NotRequired<bool>,
+    initialization_script: NotRequired<String>,
+    initialization_script_for_all_frames: NotRequired<String>,
+    user_agent: NotRequired<PyBackedStr>,
+    additional_browser_args: NotRequired<PyBackedStr>,
+    data_directory: NotRequired<PathBuf>,
+    disable_drag_drop_handler: NotRequired<bool>,
+    enable_clipboard_access: NotRequired<bool>,
+    incognito: NotRequired<bool>,
+    auto_resize: NotRequired<bool>,
+    // TODO, PERF: remove `'static` bound
+    proxy_url: NotRequired<Url<'static>>,
+    transparent: NotRequired<bool>,
+    zoom_hotkeys_enabled: NotRequired<bool>,
+    browser_extensions_enabled: NotRequired<bool>,
+    extensions_path: NotRequired<PathBuf>,
+    // TODO: data_store_identifier
+    use_https_scheme: NotRequired<bool>,
+    devtools: NotRequired<bool>,
+    background_color: NotRequired<Color>,
+    // TODO: BackgroundThrottlingPolicy
+    disable_javascript: NotRequired<bool>,
+    // TODO: window_features
+}
+
+derive_from_py_dict!(WebviewWindowBuilderArgs {
+    #[pyo3(default)]
+    on_navigation,
+    #[pyo3(default)]
+    on_document_title_changed,
+    #[pyo3(default)]
+    menu,
+    #[pyo3(default)]
+    center,
+    #[pyo3(default)]
+    position,
+    #[pyo3(default)]
+    inner_size,
+    #[pyo3(default)]
+    min_inner_size,
+    #[pyo3(default)]
+    max_inner_size,
+    #[pyo3(default)]
+    prevent_overflow,
+    #[pyo3(default)]
+    prevent_overflow_with_margin,
+    #[pyo3(default)]
+    resizable,
+    #[pyo3(default)]
+    maximizable,
+    #[pyo3(default)]
+    minimizable,
+    #[pyo3(default)]
+    closable,
+    #[pyo3(default)]
+    title,
+    #[pyo3(default)]
+    fullscreen,
+    #[pyo3(default)]
+    focusable,
+    #[pyo3(default)]
+    focused,
+    #[pyo3(default)]
+    maximized,
+    #[pyo3(default)]
+    visible,
+    #[pyo3(default)]
+    theme,
+    #[pyo3(default)]
+    decorations,
+    #[pyo3(default)]
+    always_on_bottom,
+    #[pyo3(default)]
+    always_on_top,
+    #[pyo3(default)]
+    visible_on_all_workspaces,
+    #[pyo3(default)]
+    content_protected,
+    #[pyo3(default)]
+    icon,
+    #[pyo3(default)]
+    skip_taskbar,
+    #[pyo3(default)]
+    window_classname,
+    #[pyo3(default)]
+    shadow,
+    #[pyo3(default)]
+    parent,
+    #[cfg(windows)]
+    #[pyo3(default)]
+    owner,
+    #[cfg(any(
+        target_os = "linux",
+        target_os = "dragonfly",
+        target_os = "freebsd",
+        target_os = "netbsd",
+        target_os = "openbsd"
+    ))]
+    #[pyo3(default)]
+    transient_for,
+    #[cfg(windows)]
+    #[pyo3(default)]
+    drag_and_drop,
+    #[cfg(target_os = "macos")]
+    #[pyo3(default)]
+    title_bar_style,
+    #[cfg(target_os = "macos")]
+    #[pyo3(default)]
+    traffic_light_position,
+    #[cfg(target_os = "macos")]
+    #[pyo3(default)]
+    allow_link_preview,
+    #[cfg(target_os = "macos")]
+    #[pyo3(default)]
+    hidden_title,
+    #[cfg(target_os = "macos")]
+    #[pyo3(default)]
+    tabbing_identifier,
+    #[pyo3(default)]
+    effects,
+    #[pyo3(default)]
+    accept_first_mouse,
+    #[pyo3(default)]
+    initialization_script,
+    #[pyo3(default)]
+    initialization_script_for_all_frames,
+    #[pyo3(default)]
+    user_agent,
+    #[pyo3(default)]
+    additional_browser_args,
+    #[pyo3(default)]
+    data_directory,
+    #[pyo3(default)]
+    disable_drag_drop_handler,
+    #[pyo3(default)]
+    enable_clipboard_access,
+    #[pyo3(default)]
+    incognito,
+    #[pyo3(default)]
+    auto_resize,
+    #[pyo3(default)]
+    proxy_url,
+    #[pyo3(default)]
+    transparent,
+    #[pyo3(default)]
+    zoom_hotkeys_enabled,
+    #[pyo3(default)]
+    browser_extensions_enabled,
+    #[pyo3(default)]
+    extensions_path,
+    #[pyo3(default)]
+    use_https_scheme,
+    #[pyo3(default)]
+    devtools,
+    #[pyo3(default)]
+    background_color,
+    #[pyo3(default)]
+    disable_javascript,
+});
+
+impl WebviewWindowBuilderArgs {
+    fn from_kwargs(kwargs: Option<&Bound<'_, PyDict>>) -> PyResult<Option<Self>> {
+        kwargs.map(Self::from_py_dict).transpose()
+    }
+
+    fn apply_to_builder<'a, M>(
+        self,
+        py: Python<'_>,
+        mut builder: webview::WebviewWindowBuilder<'a, Runtime, M>,
+    ) -> PyResult<webview::WebviewWindowBuilder<'a, Runtime, M>>
+    where
+        M: tauri::Manager<Runtime>,
+    {
+        let Self {
+            on_navigation,
+            on_document_title_changed,
+            menu,
+            center,
+            position,
+            inner_size,
+            min_inner_size,
+            max_inner_size,
+            prevent_overflow,
+            prevent_overflow_with_margin,
+            resizable,
+            maximizable,
+            minimizable,
+            closable,
+            title,
+            fullscreen,
+            focusable,
+            focused,
+            maximized,
+            visible,
+            theme,
+            decorations,
+            always_on_bottom,
+            always_on_top,
+            visible_on_all_workspaces,
+            content_protected,
+            icon,
+            skip_taskbar,
+            window_classname,
+            shadow,
+            parent,
+            #[cfg(windows)]
+            owner,
+            #[cfg(any(
+                target_os = "linux",
+                target_os = "dragonfly",
+                target_os = "freebsd",
+                target_os = "netbsd",
+                target_os = "openbsd"
+            ))]
+            transient_for,
+            #[cfg(windows)]
+            drag_and_drop,
+            #[cfg(target_os = "macos")]
+            title_bar_style,
+            #[cfg(target_os = "macos")]
+            traffic_light_position,
+            #[cfg(target_os = "macos")]
+            allow_link_preview,
+            #[cfg(target_os = "macos")]
+            hidden_title,
+            #[cfg(target_os = "macos")]
+            tabbing_identifier,
+            effects,
+            accept_first_mouse,
+            initialization_script,
+            initialization_script_for_all_frames,
+            user_agent,
+            additional_browser_args,
+            data_directory,
+            disable_drag_drop_handler,
+            enable_clipboard_access,
+            incognito,
+            auto_resize,
+            proxy_url,
+            transparent,
+            zoom_hotkeys_enabled,
+            browser_extensions_enabled,
+            extensions_path,
+            use_https_scheme,
+            devtools,
+            background_color,
+            disable_javascript,
+        } = self;
+
+        if let Some(on_navigation) = on_navigation.0 {
+            builder = builder.on_navigation(move |url| {
+                Python::with_gil(|py| {
+                    let url = Url::from(url);
+
+                    let handler = on_navigation.bind(py);
+                    let ret = handler
+                        .call1((url,))
+                        .unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `WebviewWindowBuilder::on_navigation` handler"
+                        });
+                    ret.extract::<bool>()
+                        .unwrap_unraisable_py_result(py, Some(&ret), || {
+                            "`WebviewWindowBuilder::on_navigation` return non-bool value"
+                        })
+                })
+            });
+        };
+        if let Some(on_document_title_changed) = on_document_title_changed.0 {
+            builder = builder.on_document_title_changed(move |webview_window, title| {
+                Python::with_gil(|py| {
+                    let webview_window = WebviewWindow::new(webview_window);
+
+                    let handler = on_document_title_changed.bind(py);
+                    handler
+                        .call1((webview_window, title))
+                        .unwrap_unraisable_py_result(py, Some(handler), || {
+                            "Python exception occurred in `WebviewWindowBuilder::on_document_title_changed` handler"
+                        });
+                })
+            });
+        };
+        if let Some(menu) = menu.0 {
+            let menu = menu.get().0.inner_ref().clone();
+            builder = builder.menu(menu);
+        }
+        if let Some(true) = center.0 {
+            builder = builder.center();
+        }
+        if let Some((x, y)) = position.0 {
+            builder = builder.position(x, y);
+        }
+        if let Some((width, height)) = inner_size.0 {
+            builder = builder.inner_size(width, height);
+        }
+        if let Some((min_width, min_height)) = min_inner_size.0 {
+            builder = builder.min_inner_size(min_width, min_height);
+        }
+        if let Some((max_width, max_height)) = max_inner_size.0 {
+            builder = builder.max_inner_size(max_width, max_height);
+        }
+        if let Some(true) = prevent_overflow.0 {
+            builder = builder.prevent_overflow();
+        }
+        if let Some(margin) = prevent_overflow_with_margin.0 {
+            let margin = margin.get().to_tauri(py)?;
+            builder = builder.prevent_overflow_with_margin(margin);
+        }
+        if let Some(resizable) = resizable.0 {
+            builder = builder.resizable(resizable);
+        }
+        if let Some(maximizable) = maximizable.0 {
+            builder = builder.maximizable(maximizable);
+        }
+        if let Some(minimizable) = minimizable.0 {
+            builder = builder.minimizable(minimizable);
+        }
+        if let Some(closable) = closable.0 {
+            builder = builder.closable(closable);
+        }
+        if let Some(title) = title.0 {
+            builder = builder.title(title);
+        }
+        if let Some(fullscreen) = fullscreen.0 {
+            builder = builder.fullscreen(fullscreen);
+        }
+        if let Some(focusable) = focusable.0 {
+            builder = builder.focusable(focusable);
+        }
+        if let Some(focused) = focused.0 {
+            builder = builder.focused(focused);
+        }
+        if let Some(maximized) = maximized.0 {
+            builder = builder.maximized(maximized);
+        }
+        if let Some(visible) = visible.0 {
+            builder = builder.visible(visible);
+        }
+        if let Some(theme) = theme.0 {
+            builder = builder.theme(theme.map(Into::into));
+        }
+        if let Some(decorations) = decorations.0 {
+            builder = builder.decorations(decorations);
+        }
+        if let Some(always_on_bottom) = always_on_bottom.0 {
+            builder = builder.always_on_bottom(always_on_bottom);
+        }
+        if let Some(always_on_top) = always_on_top.0 {
+            builder = builder.always_on_top(always_on_top);
+        }
+        if let Some(visible_on_all_workspaces) = visible_on_all_workspaces.0 {
+            builder = builder.visible_on_all_workspaces(visible_on_all_workspaces);
+        }
+        if let Some(content_protected) = content_protected.0 {
+            builder = builder.content_protected(content_protected);
+        }
+        if let Some(icon) = icon.0 {
+            // TODO, PERF, FIXME: avoid clone.
+            // This is a signature error of tauri.
+            // The signature should have been `icon: Image<'_>`,
+            // but instead it is `icon: Image<'a>`. We need to submit a PR.
+            let icon = icon.get().to_tauri(py).to_owned();
+            builder = builder.icon(icon).map_err(TauriError::from)?;
+        }
+        if let Some(skip_taskbar) = skip_taskbar.0 {
+            builder = builder.skip_taskbar(skip_taskbar);
+        }
+        if let Some(window_classname) = window_classname.0 {
+            builder = builder.window_classname(window_classname);
+        }
+        if let Some(shadow) = shadow.0 {
+            builder = builder.shadow(shadow);
+        }
+        if let Some(parent) = parent.0 {
+            let parent = parent.get().0.inner_ref();
+            builder = builder.parent(&parent).map_err(TauriError::from)?;
+        }
+        #[cfg(windows)]
+        if let Some(owner) = owner.0 {
+            let owner = owner.get().0.inner_ref();
+            builder = builder.owner(&owner).map_err(TauriError::from)?;
+        }
+        #[cfg(any(
+            target_os = "linux",
+            target_os = "dragonfly",
+            target_os = "freebsd",
+            target_os = "netbsd",
+            target_os = "openbsd"
+        ))]
+        if let Some(transient_for) = transient_for.0 {
+            let transient_for = transient_for.get().0.inner_ref();
+            builder = builder
+                .transient_for(&transient_for)
+                .map_err(TauriError::from)?;
+        }
+        #[cfg(windows)]
+        if let Some(drag_and_drop) = drag_and_drop.0 {
+            builder = builder.drag_and_drop(drag_and_drop);
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(title_bar_style) = title_bar_style.0 {
+            builder = builder.title_bar_style(title_bar_style.into());
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(traffic_light_position) = traffic_light_position.0 {
+            let traffic_light_position = traffic_light_position.get().to_tauri(py)?;
+            builder = builder.traffic_light_position(traffic_light_position);
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(allow_link_preview) = allow_link_preview.0 {
+            builder = builder.allow_link_preview(allow_link_preview);
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(hidden_title) = hidden_title.0 {
+            builder = builder.hidden_title(hidden_title);
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(tabbing_identifier) = tabbing_identifier.0 {
+            builder = builder.tabbing_identifier(&tabbing_identifier);
+        }
+        if let Some(effects) = effects.0 {
+            let effects = effects.into_tauri().build();
+            builder = builder.effects(effects);
+        }
+        if let Some(accept_first_mouse) = accept_first_mouse.0 {
+            builder = builder.accept_first_mouse(accept_first_mouse);
+        }
+        if let Some(initialization_script) = initialization_script.0 {
+            builder = builder.initialization_script(initialization_script);
+        }
+        if let Some(initialization_script_for_all_frames) = initialization_script_for_all_frames.0 {
+            builder =
+                builder.initialization_script_for_all_frames(initialization_script_for_all_frames);
+        }
+        if let Some(user_agent) = user_agent.0 {
+            builder = builder.user_agent(&user_agent);
+        }
+        if let Some(additional_browser_args) = additional_browser_args.0 {
+            builder = builder.additional_browser_args(&additional_browser_args);
+        }
+        if let Some(data_directory) = data_directory.0 {
+            builder = builder.data_directory(data_directory);
+        }
+        if let Some(true) = disable_drag_drop_handler.0 {
+            builder = builder.disable_drag_drop_handler();
+        }
+        if let Some(true) = enable_clipboard_access.0 {
+            builder = builder.enable_clipboard_access();
+        }
+        if let Some(incognito) = incognito.0 {
+            builder = builder.incognito(incognito);
+        }
+        if let Some(true) = auto_resize.0 {
+            builder = builder.auto_resize();
+        }
+        if let Some(proxy_url) = proxy_url.0 {
+            builder = builder.proxy_url(proxy_url.into());
+        }
+        builder = cfg_impl!(
+            |any(not(target_os = "macos"), feature = "tauri-macos-private-api")| -> _ {
+                if let Some(transparent) = transparent.0 {
+                    builder = builder.transparent(transparent);
+                }
+                Ok(builder)
+            }
+        )?;
+        if let Some(zoom_hotkeys_enabled) = zoom_hotkeys_enabled.0 {
+            builder = builder.zoom_hotkeys_enabled(zoom_hotkeys_enabled);
+        }
+        if let Some(browser_extensions_enabled) = browser_extensions_enabled.0 {
+            builder = builder.browser_extensions_enabled(browser_extensions_enabled);
+        }
+        if let Some(extensions_path) = extensions_path.0 {
+            builder = builder.extensions_path(extensions_path);
+        }
+        if let Some(use_https_scheme) = use_https_scheme.0 {
+            builder = builder.use_https_scheme(use_https_scheme);
+        }
+        if let Some(devtools) = devtools.0 {
+            builder = builder.devtools(devtools);
+        }
+        if let Some(background_color) = background_color.0 {
+            builder = builder.background_color(background_color.0);
+        }
+        if let Some(true) = disable_javascript.0 {
+            builder = builder.disable_javascript();
+        }
+
+        Ok(builder)
+    }
+}
+
+/// See also: [tauri::webview::WebviewWindowBuilder]
+#[pyclass(frozen)]
+#[non_exhaustive]
+pub struct WebviewWindowBuilder;
+
+#[pymethods]
+impl WebviewWindowBuilder {
+    #[staticmethod]
+    #[pyo3(signature = (manager, label, url, /, **kwargs))]
+    fn build(
+        py: Python<'_>,
+        manager: ImplManager,
+        label: String,
+        url: &Bound<'_, WebviewUrl>,
+        kwargs: Option<&Bound<'_, PyDict>>,
+    ) -> PyResult<WebviewWindow> {
+        let url = url.get().to_tauri()?;
+        let args = WebviewWindowBuilderArgs::from_kwargs(kwargs)?;
+        manager_method_impl!(py, &manager, move |py, manager| {
+            let mut builder = webview::WebviewWindowBuilder::new(manager, label, url);
+            if let Some(args) = args {
+                builder = args.apply_to_builder(py, builder)?;
+            }
+
+            let webview_window = unsafe {
+                // Safety: `WebviewWindowBuilder` does not hold the GIL, so this is safe
+                py.allow_threads_unsend(builder, |builder| builder.build())
+            }
+            .map_err(TauriError::from)?;
+
+            PyResult::Ok(WebviewWindow::new(webview_window))
+        })?
+    }
+
+    #[staticmethod]
+    #[pyo3(signature = (manager, config, /, **kwargs))]
+    fn from_config(
+        py: Python<'_>,
+        manager: ImplManager,
+        config: WindowConfigFrom,
+        kwargs: Option<&Bound<'_, PyDict>>,
+    ) -> PyResult<WebviewWindow> {
+        let config = config.into_inner();
+        let args = WebviewWindowBuilderArgs::from_kwargs(kwargs)?;
+        manager_method_impl!(py, &manager, move |py, manager| {
+            let mut builder = webview::WebviewWindowBuilder::from_config(manager, &config)
+                .map_err(TauriError::from)?;
+            if let Some(args) = args {
+                builder = args.apply_to_builder(py, builder)?;
+            }
+
+            let webview_window = unsafe {
+                // Safety: `WebviewWindowBuilder` does not hold the GIL, so this is safe
+                py.allow_threads_unsend(builder, |builder| builder.build())
+            }
+            .map_err(TauriError::from)?;
+
+            PyResult::Ok(WebviewWindow::new(webview_window))
+        })?
     }
 }

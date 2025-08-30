@@ -34,6 +34,7 @@ from typing_extensions import (
 )
 
 from pytauri.ffi._ext_mod import pytauri_mod
+from pytauri.ffi._typing import Pyo3PathFrom, Pyo3PathInto
 
 __all__ = [
     "IS_DEV",
@@ -74,6 +75,8 @@ __all__ = [
     "UserAttentionType",
     "WebviewEvent",
     "WebviewEventType",
+    "WebviewUrl",
+    "WebviewUrlType",
     "WindowEvent",
     "WindowEventType",
     "builder_factory",
@@ -1025,6 +1028,55 @@ if TYPE_CHECKING:
         RowResize = auto()
         _NonExhaustive = object()
 
+    @final
+    class WebviewUrl:
+        """[tauri::WebviewUrl](https://docs.rs/tauri/latest/tauri/enum.WebviewUrl.html)"""
+
+        @final
+        class External(tuple["Url"]):
+            """[tauri::WebviewUrl::External](https://docs.rs/tauri/latest/tauri/enum.WebviewUrl.html#variant.External)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "Url"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "Url", /) -> Self: ...
+
+        @final
+        class App(tuple[Pyo3PathInto]):
+            """[tauri::WebviewUrl::App](https://docs.rs/tauri/latest/tauri/enum.WebviewUrl.html#variant.App)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: Pyo3PathInto
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: Pyo3PathFrom, /) -> Self: ...
+
+        @final
+        class CustomProtocol(tuple["Url"]):
+            """[tauri::WebviewUrl::CustomProtocol](https://docs.rs/tauri/latest/tauri/enum.WebviewUrl.html#variant.CustomProtocol)
+
+            !!! warning
+                See [pytauri.ffi.lib.Position.Physical][].
+            """
+
+            _0: "Url"
+            __match_args__ = ("_0",)
+
+            def __new__(cls, _0: "Url", /) -> Self: ...
+
+        @final
+        class _NonExhaustive:
+            """Reserved for `#[non_exhaustive]`"""
+
+        # When adding new variants, remember to update `WebviewUrlType`.
+
 else:
     webview_version = pytauri_mod.webview_version
     App = pytauri_mod.App
@@ -1052,6 +1104,7 @@ else:
     Theme = pytauri_mod.Theme
     UserAttentionType = pytauri_mod.UserAttentionType
     CursorIcon = pytauri_mod.CursorIcon
+    WebviewUrl = pytauri_mod.WebviewUrl
 
 
 class BuilderArgs(TypedDict, total=False):
@@ -1189,3 +1242,14 @@ EventTargetType = TypeAliasType(
     ],
 )
 """See [EventTarget][pytauri.ffi.EventTarget] for details."""
+
+WebviewUrlType = TypeAliasType(
+    "WebviewUrlType",
+    Union[
+        WebviewUrl.External,
+        WebviewUrl.App,
+        WebviewUrl.CustomProtocol,
+        WebviewUrl._NonExhaustive,  # pyright: ignore[reportPrivateUsage]
+    ],
+)
+"""See [WebviewUrl][pytauri.ffi.WebviewUrl] for details."""
