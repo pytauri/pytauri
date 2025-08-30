@@ -68,6 +68,7 @@ pyo3 = { version = "0.25" }
 # remember update `[patch.crates-io]` in root `/Cargo.toml` as well.
 pytauri = { version = "0.7", features = [
     "tauri-devtools",
+    "tauri-macos-private-api",
     "plugin-notification",
     "plugin-dialog",
     "plugin-clipboard-manager",

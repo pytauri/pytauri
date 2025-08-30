@@ -152,7 +152,7 @@ struct ContextFactoryKwargs {
 }
 
 derive_from_py_dict!(ContextFactoryKwargs {
-    #[default]
+    #[pyo3(default)]
     tauri_config,
 });
 

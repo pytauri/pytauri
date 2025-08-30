@@ -160,13 +160,13 @@ pub struct Effects {
 }
 
 derive_from_py_dict!(Effects {
-    #[default]
+    #[pyo3(default)]
     effects,
-    #[default]
+    #[pyo3(default)]
     state,
-    #[default]
+    #[pyo3(default)]
     radius,
-    #[default]
+    #[pyo3(default)]
     color,
 });
 
@@ -255,9 +255,9 @@ pub struct ProgressBarState {
 }
 
 derive_from_py_dict!(ProgressBarState {
-    #[default]
+    #[pyo3(default)]
     status,
-    #[default]
+    #[pyo3(default)]
     progress,
 });
 

@@ -142,13 +142,13 @@ pub struct MessageDialogBuilderArgs {
 }
 
 derive_from_py_dict!(MessageDialogBuilderArgs {
-    #[default]
+    #[pyo3(default)]
     title,
-    #[default]
+    #[pyo3(default)]
     parent,
-    #[default]
+    #[pyo3(default)]
     buttons,
-    #[default]
+    #[pyo3(default)]
     kind,
 });
 
@@ -316,17 +316,17 @@ pub struct FileDialogBuilderArgs {
 }
 
 derive_from_py_dict!(FileDialogBuilderArgs {
-    #[default]
+    #[pyo3(default)]
     add_filter,
-    #[default]
+    #[pyo3(default)]
     set_directory,
-    #[default]
+    #[pyo3(default)]
     set_file_name,
-    #[default]
+    #[pyo3(default)]
     set_parent,
-    #[default]
+    #[pyo3(default)]
     set_title,
-    #[default]
+    #[pyo3(default)]
     set_can_create_directories,
 });
 

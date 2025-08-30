@@ -24,6 +24,7 @@
         "pytauri-core/__private",
         "pytauri/standalone",
         "pytauri/tauri-devtools",
+        "pytauri/tauri-macos-private-api",
         "pytauri/plugin-notification",
         "pytauri/plugin-dialog",
         "pytauri/plugin-clipboard-manager",

@@ -169,14 +169,17 @@ fn main() -> PyResult<()> {
     pub struct Foo {
         a: i32,
         b: NotRequired<i32>,
+        #[cfg(all())]
         c: NotRequired<Option<i32>>,
     }
 
     derive_from_py_dict!(Foo {
         a,
-        #[default]
+        #[pyo3(default)]
         b,
-        #[default]
+        // optional cfg attribute, but must be before `#[pyo3(default)]`
+        #[cfg(all())]
+        #[pyo3(default)]
         c,
     });
 
@@ -225,15 +228,19 @@ macro_rules! __derive_from_py_dict {
     };
     ($dict:expr, $key:expr, #$attribute:ident) => {
         compile_error!(concat!(
-            "Invalid attribute: #[",
+            "Invalid attribute: #[pyo3(",
             stringify!($attribute),
-            "]. Only accepted optional `#[default]` attribute."
+            ")]. Only accepted optional `#[pyo3(default)]` attribute."
         ))
     };
 
     (
         $name:ty {
-            $($( #[$meta:ident] )? $field:ident, )*
+            $(
+                $( #[cfg($cfg_meta:meta)] )?
+                $( #[pyo3($pyo3_meta:ident)] )?
+                $field:ident,
+            )*
         }
     ) => {
         impl $crate::from_py_dict::FromPyDict for $name {
@@ -241,11 +248,12 @@ macro_rules! __derive_from_py_dict {
                 use $name as __name;
                 Ok(__name {
                     $(
+                        $( #[cfg($cfg_meta)] )*
                         $field: $crate::from_py_dict::__failed_to_extract_struct_field(
                             dict.py(),
                             {
                                 let key = ::pyo3::intern!(dict.py(), stringify!($field));
-                                $crate::from_py_dict::derive_from_py_dict!(dict, key, #$($meta)?)
+                                $crate::from_py_dict::derive_from_py_dict!(dict, key, #$($pyo3_meta)?)
                             },
                             stringify!($name),
                             stringify!($field),
