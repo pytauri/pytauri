@@ -1,5 +1,8 @@
 # Getting Started
 
+!!! info "Join the Community"
+    If you'd like to chat to the PyTauri maintainers and other PyTauri users, consider joining the [PyTauri Discord server](https://discord.gg/TaXhVp7Shw). We're keen to hear about your experience getting started, so we can make PyTauri as accessible as possible for everyone!
+
 ## Create PyTauri App
 
 !!! tip

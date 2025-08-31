@@ -22,7 +22,7 @@
 
 ## Python
 
-We support all Python versions that are currently in their lifecycle. The current version is `>= 3.9`.
+We support all Python versions that are currently in their lifecycle[^requires-python]. The current version is `>= 3.9`.
 
 <https://www.python.org/downloads/>
 
@@ -33,14 +33,20 @@ We support all Python versions that are currently in their lifecycle. The curren
 
     To install the Python shared library on RPM based distributions (e.g. Fedora, Red Hat, SuSE), install the `python3-devel` package.
 
+[^requires-python]:
+    We typically (though sometimes earlier) drop support for a python version in the next pytauri minor release after it reaches end-of-life.
+
 ## Rust
 
-The latest stable version.
+The *latest*[^msrv] stable version.
 
 <https://www.rust-lang.org/tools/install>
 
 !!! tip "for python developers"
     You can upgrade your existing Rust version by running `#!bash rustup update stable`.
+
+[^msrv]:
+    We may bump the [MSRV](https://rust-lang.github.io/rfcs/2495-min-rust-version.html) in minor/patch releases.
 
 ## System Dependencies
 
