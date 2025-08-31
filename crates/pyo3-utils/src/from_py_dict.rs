@@ -230,7 +230,7 @@ macro_rules! __derive_from_py_dict {
         compile_error!(concat!(
             "Invalid attribute: #[pyo3(",
             stringify!($attribute),
-            ")]. Only accepted optional `#[pyo3(default)]` attribute."
+            ")]. Only the optional `#[pyo3(default)]` attribute is accepted."
         ))
     };
 

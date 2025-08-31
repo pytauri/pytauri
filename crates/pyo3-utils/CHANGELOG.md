@@ -24,7 +24,7 @@
 
 - [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
 
-    `crate::from_py_dict::derive_from_py_dict!` now supprorts optional `#[cfg(...)]` attribute on fields,
+    `crate::from_py_dict::derive_from_py_dict!` now supports optional `#[cfg(...)]` attribute on fields,
     but must be before `#[pyo3(default)]`:
 
     ```rust
