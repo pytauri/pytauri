@@ -4454,20 +4454,46 @@
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
+<p><a href="https://github.com/pytauri/pytauri/pull/265">#265</a> - feat(pytauri): add <code>WebviewWindowBuilder</code> bindings.</p>
+<details class="tip">
+<summary>Added APIs</summary>
+<ul>
+<li>Added <code>tauri-macos-private-api</code> feature</li>
+<li>mod <code>tauri::</code><ul>
+<li>struct <code>{WebviewUrl, WebviewUrlType}</code></li>
+<li><code>mod webview::</code><ul>
+<li>struct <code>{WebviewWindowBuilder, WebviewWindowBuilderArgs}</code></li>
+<li>fn <code>WebviewWindow::{__new__}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The inner field of <code>ext_mod::Url</code> is now publicly accessible:
+    <div class="language-diff highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gd">- Url&lt;&#39;a&gt;(Cow&lt;&#39;a, TauriUrl&gt;)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gi">+ Url&lt;&#39;a&gt;(pub Cow&lt;&#39;a, TauriUrl&gt;)</span>
+</span></code></pre></div></li>
+<li>Added impl:
+    <div class="language-diff highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="gi">+ impl AsRef&lt;tauri::Url&gt; for ext_mod::Url&lt;&#39;_&gt;`</span>
+</span></code></pre></div></li>
+</ul>
+</details>
+</li>
+<li>
 <p><a href="https://github.com/pytauri/pytauri/pull/259">#259</a> - feat(pytauri): more <code>WebviewWindow</code> and <code>AppHandle</code> bindings.</p>
 <details class="tip">
 <summary>Added APIs</summary>
 <ul>
-<li><code>mod tauri::</code><ul>
+<li>Added <code>tauri-devtools</code> feature</li>
+<li>mod <code>tauri::</code><ul>
 <li>fn <code>App::{run_on_main_thread}</code></li>
 <li>fn <code>AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}</code></li>
 <li>struct <code>{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}</code></li>
-<li><code>mod webview::</code><ul>
+<li>mod <code>webview::</code><ul>
 <li>fn <code>WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}</code></li>
 <li>struct <code>{Color, SameSite, Cookie}</code></li>
 </ul>
 </li>
-<li><code>mod window::</code><ul>
+<li>mod <code>window::</code><ul>
 <li>struct <code>{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}</code></li>
 </ul>
 </li>
@@ -4478,41 +4504,43 @@
 </li>
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/220">#220</a> - feat: support registering plugin from python.</p>
-<p>added:</p>
+<details class="tip">
+<summary>Added APIs</summary>
 <ul>
-<li><code>tauri::</code><ul>
-<li><code>mod plugin</code></li>
-<li><code>field BuilderArgs::plugins</code></li>
-<li><code>fn AppHandle::plugin</code></li>
+<li>mod <code>tauri::</code><ul>
+<li>mod <code>plugin</code></li>
+<li>field <code>BuilderArgs::plugins</code></li>
+<li>fn <code>AppHandle::plugin</code></li>
 </ul>
 </li>
-<li><code>tauri_plugin_dialog::</code><ul>
-<li><code>fn init</code></li>
+<li>mod <code>tauri_plugin_dialog::</code><ul>
+<li>fn <code>init</code></li>
 </ul>
 </li>
-<li><code>tauri_plugin_notification::</code><ul>
-<li><code>fn init</code></li>
+<li>mod <code>tauri_plugin_notification::</code><ul>
+<li>fn <code>init</code></li>
 </ul>
 </li>
-<li><code>mod tauri_plugin_clipboard_manager</code></li>
-<li><code>mod tauri_plugin_fs</code></li>
-<li><code>mod tauri_plugin_opener</code></li>
-<li><code>mod tauri_plugin_autostart</code></li>
-<li><code>mod tauri_plugin_deep_link</code></li>
-<li><code>mod tauri_plugin_deep_link</code></li>
-<li><code>mod tauri_plugin_http</code></li>
-<li><code>mod tauri_plugin_os</code></li>
-<li><code>mod tauri_plugin_persisted_scope</code></li>
-<li><code>mod tauri_plugin_positioner</code></li>
-<li><code>mod tauri_plugin_process</code></li>
-<li><code>mod tauri_plugin_shell</code></li>
-<li><code>mod tauri_plugin_single_instance</code></li>
-<li><code>mod tauri_plugin_updater</code></li>
-<li><code>mod tauri_plugin_upload</code></li>
-<li><code>mod tauri_plugin_websocket</code></li>
-<li><code>mod tauri_plugin_window_state</code></li>
-<li><code>mod tauri_plugin_global_shortcut</code></li>
+<li>mod <code>tauri_plugin_clipboard_manager</code></li>
+<li>mod <code>tauri_plugin_fs</code></li>
+<li>mod <code>tauri_plugin_opener</code></li>
+<li>mod <code>tauri_plugin_autostart</code></li>
+<li>mod <code>tauri_plugin_deep_link</code></li>
+<li>mod <code>tauri_plugin_deep_link</code></li>
+<li>mod <code>tauri_plugin_http</code></li>
+<li>mod <code>tauri_plugin_os</code></li>
+<li>mod <code>tauri_plugin_persisted_scope</code></li>
+<li>mod <code>tauri_plugin_positioner</code></li>
+<li>mod <code>tauri_plugin_process</code></li>
+<li>mod <code>tauri_plugin_shell</code></li>
+<li>mod <code>tauri_plugin_single_instance</code></li>
+<li>mod <code>tauri_plugin_updater</code></li>
+<li>mod <code>tauri_plugin_upload</code></li>
+<li>mod <code>tauri_plugin_websocket</code></li>
+<li>mod <code>tauri_plugin_window_state</code></li>
+<li>mod <code>tauri_plugin_global_shortcut</code></li>
 </ul>
+</details>
 </li>
 </ul>
 <h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>

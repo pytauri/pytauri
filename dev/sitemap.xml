@@ -2,386 +2,386 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/js/tauri-plugin-pytauri-api/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/py/codelldb/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/py/pyo3-utils/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/py/pytauri-wheel/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/py/pytauri/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/rs/pyo3-utils/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/rs/pytauri-core/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/rs/pytauri/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CHANGELOG/rs/tauri-plugin-pytauri/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/CONTRIBUTING/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/rs/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/SUMMARY/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/codelldb/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pyo3_utils/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/image/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ipc/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/menu/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/path/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/plugin/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/tray/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/webview/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/window/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/image/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/ipc/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/lib/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/menu/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/path/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/plugin/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/tray/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/webview/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri/ffi/window/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/autostart/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/autostart/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/clipboard_manager/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/clipboard_manager/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/deep_link/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/deep_link/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/dialog/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/dialog/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/fs/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/fs/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/global_shortcut/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/global_shortcut/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/http/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/http/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/notification/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/notification/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/opener/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/opener/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/os/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/os/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/persisted_scope/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/persisted_scope/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/positioner/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/positioner/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/process/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/process/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/shell/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/shell/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/single_instance/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/single_instance/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/updater/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/updater/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/upload/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/upload/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/websocket/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/websocket/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/window_state/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_plugins/window_state/ffi/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_utils/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_utils/async_tools/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_wheel/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/reference/py/pytauri_wheel/lib/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/using-unreleased-commits/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/concepts/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/concepts/async/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/concepts/ipc/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/concepts/mutiprocessing/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/pytauri-wheel/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/build-sdist/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/build-standalone-cython/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/build-standalone/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/build-wheel/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/debugging/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/gen-ts/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/getting-started/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/py-js-ipc/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/state-management/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/using-plugins/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
     <url>
          <loc>https://pytauri.github.io/pytauri/dev/usage/tutorial/using-pytauri/</loc>
-         <lastmod>2025-08-29</lastmod>
+         <lastmod>2025-08-31</lastmod>
     </url>
 </urlset>

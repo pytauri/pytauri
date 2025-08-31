@@ -4148,12 +4148,33 @@
 <h3 id="breaking">BREAKING<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
+<p><a href="https://github.com/pytauri/pytauri/pull/265">#265</a> - feat(pytauri): add <code>WebviewWindowBuilder</code> bindings.</p>
+<p>The <code>#[default]</code> attribute in <code>crate::from_py_dict::derive_from_py_dict!</code> has been renamed to <code>#[pyo3(default)]</code>:</p>
+<div class="language-diff highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>derive_from_py_dict!(Foo {
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gd">-   #[default]</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gi">+   #[pyo3(default)]</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w"> </span>   foo,
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>});
+</span></code></pre></div>
+</li>
+<li>
 <p><a href="https://github.com/pytauri/pytauri/pull/259">#259</a> - feat(pytauri): more <code>WebviewWindow</code> and <code>AppHandle</code> bindings.</p>
 <p>Removed <code>impl IntoPyObject for from_py_dict::NotRequired&lt;T&gt;</code> in favor of <code>#[pyo3(into_py_with)]</code> and <code>NotRequired::{into_py_with, into_py_with_none, into_py_with_default, into_py_with_err}</code>.</p>
 </li>
 </ul>
 <h3 id="added">Added<a class="headerlink" href="#added" title="Permanent link">&para;</a></h3>
 <ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/265">#265</a> - feat(pytauri): add <code>WebviewWindowBuilder</code> bindings.</p>
+<p><code>crate::from_py_dict::derive_from_py_dict!</code> now supports optional <code>#[cfg(...)]</code> attribute on fields,
+but must be before <code>#[pyo3(default)]</code>:</p>
+<div class="language-rust highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">derive_from_py_dict</span><span class="o">!</span><span class="p">(</span><span class="n">Foo</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="cp">#[cfg(all())]</span><span class="w"> </span><span class="c1">// 👈</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="cp">#[pyo3(default)]</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="n">foo</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">});</span>
+</span></code></pre></div>
+</li>
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/262">#262</a> - feat: support json <code>str | bytes</code> or <code>dict</code> as input for <code>tauri::Config</code>.</p>
 <ul>
@@ -4164,7 +4185,7 @@
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/220">#220</a> - feat: support registering plugin from python.</p>
 <p><code>from_py_dict::derive_from_py_dict!</code> can now accept struct with no fields:</p>
-<div class="language-rust highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">derive_from_py_dict</span><span class="o">!</span><span class="p">(</span><span class="n">Foo</span><span class="w"> </span><span class="p">{});</span>
+<div class="language-rust highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">derive_from_py_dict</span><span class="o">!</span><span class="p">(</span><span class="n">Foo</span><span class="w"> </span><span class="p">{});</span>
 </span></code></pre></div>
 </li>
 </ul>
