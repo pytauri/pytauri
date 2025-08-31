@@ -4,19 +4,30 @@
 
 import datetime
 import sys
+from collections.abc import Mapping
 from enum import Enum, auto
 from typing import (
     TYPE_CHECKING,
+    Any,
     Callable,
     Optional,
     final,
 )
 
-from typing_extensions import NotRequired, Self, TypeAliasType, TypedDict
+from typing_extensions import NotRequired, Self, TypeAliasType, TypedDict, Unpack
 
 from pytauri.ffi._ext_mod import pytauri_mod
+from pytauri.ffi._typing import Pyo3PathInto, PySerdeFrom
 
-__all__ = ["Color", "Cookie", "SameSite", "Webview", "WebviewWindow"]
+__all__ = [
+    "Color",
+    "Cookie",
+    "SameSite",
+    "Webview",
+    "WebviewWindow",
+    "WebviewWindowBuilder",
+    "WebviewWindowBuilderArgs",
+]
 
 _webview_mod = pytauri_mod.webview
 
@@ -27,16 +38,23 @@ Color = TypeAliasType("Color", tuple[int, int, int, int])
 `(r, g, b, a): u8`
 """
 
+_WindowConfigFrom = TypeAliasType("_WindowConfigFrom", Mapping[str, Any])
+"""[tauri::utils::config::WindowConfig](https://docs.rs/tauri-utils/latest/tauri_utils/config/struct.WindowConfig.html)"""
+_WindowConfigInto = TypeAliasType("_WindowConfigInto", dict[str, Any])
+"""[tauri::utils::config::WindowConfig](https://docs.rs/tauri-utils/latest/tauri_utils/config/struct.WindowConfig.html)"""
+
 if TYPE_CHECKING:
     from pytauri.ffi.image import Image
     from pytauri.ffi.lib import (
         CursorIcon,
+        ImplManager,
         PositionType,
         SizeType,
         Theme,
         Url,
         UserAttentionType,
         WebviewEventType,
+        WebviewUrlType,
         WindowEventType,
         _PhysicalPositionF64,  # pyright: ignore[reportPrivateUsage]
         _PhysicalPositionI32,  # pyright: ignore[reportPrivateUsage]
@@ -54,6 +72,15 @@ if TYPE_CHECKING:
     @final
     class WebviewWindow:
         """[tauri::webview::WebviewWindow](https://docs.rs/tauri/latest/tauri/webview/struct.WebviewWindow.html)"""
+
+        def __new__(
+            cls,
+            manager: ImplManager,
+            label: str,
+            url: WebviewUrlType,
+            /,
+            **kwargs: Unpack["WebviewWindowBuilderArgs"],
+        ) -> Self: ...
 
         def run_on_main_thread(self, handler: Callable[[], object], /) -> None:
             """Runs the given closure on the main thread.
@@ -198,6 +225,27 @@ if TYPE_CHECKING:
         def as_ref_webview(self) -> "Webview": ...
 
     @final
+    class WebviewWindowBuilder:
+        """[tauri::webview::WebviewWindowBuilder](https://docs.rs/tauri/latest/tauri/webview/struct.WebviewWindowBuilder.html)"""
+
+        @staticmethod
+        def build(
+            manager: ImplManager,
+            label: str,
+            url: WebviewUrlType,
+            /,
+            **kwargs: Unpack["WebviewWindowBuilderArgs"],
+        ) -> "WebviewWindow": ...
+
+        @staticmethod
+        def from_config(
+            manager: ImplManager,
+            config: PySerdeFrom[_WindowConfigFrom],
+            /,
+            **kwargs: Unpack["WebviewWindowBuilderArgs"],
+        ) -> "WebviewWindow": ...
+
+    @final
     class Webview:
         """[tauri::webview::Webview](https://docs.rs/tauri/latest/tauri/webview/struct.Webview.html)"""
 
@@ -213,6 +261,7 @@ if TYPE_CHECKING:
 
 else:
     WebviewWindow = _webview_mod.WebviewWindow
+    WebviewWindowBuilder = _webview_mod.WebviewWindowBuilder
     Webview = _webview_mod.Webview
     SameSite = _webview_mod.SameSite
 
@@ -230,3 +279,87 @@ class Cookie(TypedDict, closed=True):
     httponly: NotRequired[Optional[bool]]
     samesite: NotRequired[Optional[SameSite]]
     partitioned: NotRequired[Optional[bool]]
+
+
+if sys.platform == "win32":
+
+    class _BaseWebviewWindowBuilderArgs(TypedDict):
+        owner: NotRequired["WebviewWindow"]
+        drag_and_drop: NotRequired[bool]
+
+elif sys.platform == "darwin":
+
+    class _BaseWebviewWindowBuilderArgs(TypedDict):
+        title_bar_style: NotRequired["TitleBarStyle"]
+        traffic_light_position: NotRequired["PositionType"]
+        allow_link_preview: NotRequired[bool]
+        hidden_title: NotRequired[bool]
+        tabbing_identifier: NotRequired[str]
+
+elif sys.platform == "linux" or sys.platform.startswith(
+    ("dragonfly", "freebsd", "netbsd", "openbsd")
+):
+
+    class _BaseWebviewWindowBuilderArgs(TypedDict):
+        transient_for: NotRequired["WebviewWindow"]
+
+else:
+
+    class _BaseWebviewWindowBuilderArgs(TypedDict):
+        pass
+
+
+class WebviewWindowBuilderArgs(_BaseWebviewWindowBuilderArgs, closed=True):
+    """[tauri::webview::WebviewWindowBuilder](https://docs.rs/tauri/latest/tauri/webview/struct.WebviewWindowBuilder.html)"""
+
+    on_navigation: NotRequired[Callable[["Url"], bool]]
+    on_document_title_changed: NotRequired[Callable[["WebviewWindow", str], None]]
+    menu: NotRequired["Menu"]
+    center: NotRequired[bool]
+    position: NotRequired[tuple[float, float]]
+    inner_size: NotRequired[tuple[float, float]]
+    min_inner_size: NotRequired[tuple[float, float]]
+    max_inner_size: NotRequired[tuple[float, float]]
+    prevent_overflow: NotRequired[bool]
+    prevent_overflow_with_margin: NotRequired["SizeType"]
+    resizable: NotRequired[bool]
+    maximizable: NotRequired[bool]
+    minimizable: NotRequired[bool]
+    closable: NotRequired[bool]
+    title: NotRequired[str]
+    fullscreen: NotRequired[bool]
+    focusable: NotRequired[bool]
+    focused: NotRequired[bool]
+    maximized: NotRequired[bool]
+    visible: NotRequired[bool]
+    theme: NotRequired[Optional["Theme"]]
+    decorations: NotRequired[bool]
+    always_on_bottom: NotRequired[bool]
+    always_on_top: NotRequired[bool]
+    visible_on_all_workspaces: NotRequired[bool]
+    content_protected: NotRequired[bool]
+    icon: NotRequired["Image"]
+    skip_taskbar: NotRequired[bool]
+    window_classname: NotRequired[str]
+    shadow: NotRequired[bool]
+    parent: NotRequired["WebviewWindow"]
+    effects: NotRequired["Effects"]
+    accept_first_mouse: NotRequired[bool]
+    initialization_script: NotRequired[str]
+    initialization_script_for_all_frames: NotRequired[str]
+    user_agent: NotRequired[str]
+    additional_browser_args: NotRequired[str]
+    data_directory: NotRequired[Pyo3PathInto]
+    disable_drag_drop_handler: NotRequired[bool]
+    enable_clipboard_access: NotRequired[bool]
+    incognito: NotRequired[bool]
+    auto_resize: NotRequired[bool]
+    proxy_url: NotRequired["Url"]
+    transparent: NotRequired[bool]
+    zoom_hotkeys_enabled: NotRequired[bool]
+    browser_extensions_enabled: NotRequired[bool]
+    extensions_path: NotRequired[Pyo3PathInto]
+    use_https_scheme: NotRequired[bool]
+    devtools: NotRequired[bool]
+    background_color: NotRequired["Color"]
+    disable_javascript: NotRequired[bool]

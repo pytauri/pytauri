@@ -4,11 +4,36 @@
 
 ### BREAKING
 
+- [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+    The `#[default]` attribute in `crate::from_py_dict::derive_from_py_dict!` has been renamed to `#[pyo3(default)]`:
+
+    ```diff
+    derive_from_py_dict!(Foo {
+    -   #[default]
+    +   #[pyo3(default)]
+        foo,
+    });
+    ```
+
 - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
 
     Removed `impl IntoPyObject for from_py_dict::NotRequired<T>` in favor of `#[pyo3(into_py_with)]` and `NotRequired::{into_py_with, into_py_with_none, into_py_with_default, into_py_with_err}`.
 
 ### Added
+
+- [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+    `crate::from_py_dict::derive_from_py_dict!` now supports optional `#[cfg(...)]` attribute on fields,
+    but must be before `#[pyo3(default)]`:
+
+    ```rust
+    derive_from_py_dict!(Foo {
+        #[cfg(all())] // 👈
+        #[pyo3(default)]
+        foo,
+    });
+    ```
 
 - [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
 

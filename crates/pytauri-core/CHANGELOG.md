@@ -4,49 +4,68 @@
 
 ### Added
 
+- [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+    ??? tip "Added APIs"
+        - Added `tauri-macos-private-api` feature
+        - mod `tauri::`
+            - struct `{WebviewUrl, WebviewUrlType}`
+            - `mod webview::`
+                - struct `{WebviewWindowBuilder, WebviewWindowBuilderArgs}`
+                - fn `WebviewWindow::{__new__}`
+        - The inner field of `ext_mod::Url` is now publicly accessible:
+            ```diff
+            - Url<'a>(Cow<'a, TauriUrl>)
+            + Url<'a>(pub Cow<'a, TauriUrl>)
+            ```
+        - Added impl:
+            ```diff
+            + impl AsRef<tauri::Url> for ext_mod::Url<'_>`
+            ```
+
 - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
 
     ??? tip "Added APIs"
-        - `mod tauri::`
+        - Added `tauri-devtools` feature
+        - mod `tauri::`
             - fn `App::{run_on_main_thread}`
             - fn `AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}`
             - struct `{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}`
-            - `mod webview::`
+            - mod `webview::`
                 - fn `WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}`
                 - struct `{Color, SameSite, Cookie}`
-            - `mod window::`
+            - mod `window::`
                 - struct `{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}`
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
 
-    added:
-
-    - `tauri::`
-        - `mod plugin`
-        - `field BuilderArgs::plugins`
-        - `fn AppHandle::plugin`
-    - `tauri_plugin_dialog::`
-        - `fn init`
-    - `tauri_plugin_notification::`
-        - `fn init`
-    - `mod tauri_plugin_clipboard_manager`
-    - `mod tauri_plugin_fs`
-    - `mod tauri_plugin_opener`
-    - `mod tauri_plugin_autostart`
-    - `mod tauri_plugin_deep_link`
-    - `mod tauri_plugin_deep_link`
-    - `mod tauri_plugin_http`
-    - `mod tauri_plugin_os`
-    - `mod tauri_plugin_persisted_scope`
-    - `mod tauri_plugin_positioner`
-    - `mod tauri_plugin_process`
-    - `mod tauri_plugin_shell`
-    - `mod tauri_plugin_single_instance`
-    - `mod tauri_plugin_updater`
-    - `mod tauri_plugin_upload`
-    - `mod tauri_plugin_websocket`
-    - `mod tauri_plugin_window_state`
-    - `mod tauri_plugin_global_shortcut`
+    ??? tip "Added APIs"
+        - mod `tauri::`
+            - mod `plugin`
+            - field `BuilderArgs::plugins`
+            - fn `AppHandle::plugin`
+        - mod `tauri_plugin_dialog::`
+            - fn `init`
+        - mod `tauri_plugin_notification::`
+            - fn `init`
+        - mod `tauri_plugin_clipboard_manager`
+        - mod `tauri_plugin_fs`
+        - mod `tauri_plugin_opener`
+        - mod `tauri_plugin_autostart`
+        - mod `tauri_plugin_deep_link`
+        - mod `tauri_plugin_deep_link`
+        - mod `tauri_plugin_http`
+        - mod `tauri_plugin_os`
+        - mod `tauri_plugin_persisted_scope`
+        - mod `tauri_plugin_positioner`
+        - mod `tauri_plugin_process`
+        - mod `tauri_plugin_shell`
+        - mod `tauri_plugin_single_instance`
+        - mod `tauri_plugin_updater`
+        - mod `tauri_plugin_upload`
+        - mod `tauri_plugin_websocket`
+        - mod `tauri_plugin_window_state`
+        - mod `tauri_plugin_global_shortcut`
 
 ### Internal
 

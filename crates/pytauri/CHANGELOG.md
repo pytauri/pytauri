@@ -4,6 +4,10 @@
 
 ### Added
 
+- [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+    Added `tauri-macos-private-api` feature.
+
 - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
 
     Added `tauri-devtools` feature.

@@ -58,6 +58,7 @@ __no_test = []          # for allowing use `--all-features` without running test
 
 
 tauri-devtools = ["tauri/devtools"]
+tauri-macos-private-api = ["tauri/macos-private-api"]
 
 plugin-notification = ["dep:tauri-plugin-notification"]
 plugin-dialog = [
