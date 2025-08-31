@@ -18,9 +18,7 @@ You can now provide a JSON `str`, `bytes`, or a `dict` as the input to `context_
             "frontendDist": "http://localhost:1420",
         },
     }
-
-    # Or
-
+    # or use json str/bytes
     tauri_config = json.dumps(
         {
             "build": {
@@ -72,13 +70,17 @@ You can now provide a JSON `str`, `bytes`, or a `dict` as the input to `context_
 
 ### Added
 
+- [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+    Enabled `pytauri/tauri-macos-private-api` feature.
+
 - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
 
     Enabled `pytauri/tauri-devtools` feature.
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
 
-    enabled following plugin features:
+    Enabled following pytauri plugin features:
 
     ```toml
     [

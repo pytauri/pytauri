@@ -34,19 +34,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### `WebviewWindowBuilder` bindings
+
+> - [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
+
+??? example "Now we can create new `WebviewWindow` from python"
+    ```python
+    import json
+
+    from pytauri import AppHandle, WebviewUrl
+    from pytauri.webview import WebviewWindow, WebviewWindowBuilder
+
+
+    def create_new_webview_window(manager: AppHandle) -> WebviewWindow:
+        webview_window = WebviewWindow(
+            manager,
+            "new_window",
+            WebviewUrl.External("https://example.com"),
+            transparent=True,
+        )
+
+        # or use `WebviewWindowBuilder`
+        webview_window = WebviewWindowBuilder.from_config(
+            manager,
+            {"label": "new_window_1", "url": "https://example.com", "transparent": True},
+        )
+
+        # or use json str/bytes config
+        webview_window = WebviewWindowBuilder.from_config(
+            manager,
+            json.dumps(
+                {"label": "new_window_2", "url": "https://example.com", "transparent": True}
+            ),
+        )
+
+        return webview_window
+    ```
+
+??? tip "Added APIs"
+    - Added `tauri-macos-private-api` feature
+    - mod `tauri::`
+        - struct `{WebviewUrl, WebviewUrlType}`
+        - `mod webview::`
+            - struct `{WebviewWindowBuilder, WebviewWindowBuilderArgs}`
+            - fn `WebviewWindow::{__new__}`
+
 #### More `WebviewWindow` and `AppHandle` bindings
 
 > - [#259](https://github.com/pytauri/pytauri/pull/259) - feat(pytauri): more `WebviewWindow` and `AppHandle` bindings.
 
 ??? tip "Added APIs"
-    - `mod tauri::`
+    - Added `tauri-devtools` feature
+    - mod `tauri::`
         - fn `App::{run_on_main_thread}`
         - fn `AppHandle::{remove_plugin, restart, request_restart, set_dock_visibility, config, primary_monitor, monitor_from_point, available_monitors, cursor_position, cleanup_before_exit}`
         - struct `{PhysicalRect, LogicalRect, UserAttentionType, CursorIcon}`
-        - `mod webview::`
+        - mod `webview::`
             - fn `WebviewWindow::{scale_factor, inner_position, outer_position, inner_size, outer_size, is_always_on_top, current_monitor, primary_monitor, monitor_from_point, available_monitors, cursor_position, request_user_attention, set_effects, set_size, set_min_size, set_max_size, set_position, set_background_color, set_cursor_icon, set_cursor_position, set_overlay_icon, set_badge_label, set_progress_bar, set_title_bar_style, reload, open_devtools, close_devtools, is_devtools_open, cookies_for_url, cookies, set_cookie, delete_cookie}`
             - struct `{Color, SameSite, Cookie}`
-        - `mod window::`
+        - mod `window::`
             - struct `{Monitor, Effect, EffectState, Effects, ProgressBarStatus, ProgressBarState, TitleBarStyle}`
 
 #### Registering Plugin From Python
@@ -75,6 +121,34 @@ app = builder_factory().build(
 
 See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plugins-we-support>, now we add more plugin bindings for Python.
 
+??? tip "Added APIs"
+    - mod `tauri::`
+        - mod `plugin`
+        - field `BuilderArgs::plugins`
+        - fn `AppHandle::plugin`
+    - mod `tauri_plugin_dialog::`
+        - fn `init`
+    - mod `tauri_plugin_notification::`
+        - fn `init`
+    - mod `tauri_plugin_clipboard_manager`
+    - mod `tauri_plugin_fs`
+    - mod `tauri_plugin_opener`
+    - mod `tauri_plugin_autostart`
+    - mod `tauri_plugin_deep_link`
+    - mod `tauri_plugin_deep_link`
+    - mod `tauri_plugin_http`
+    - mod `tauri_plugin_os`
+    - mod `tauri_plugin_persisted_scope`
+    - mod `tauri_plugin_positioner`
+    - mod `tauri_plugin_process`
+    - mod `tauri_plugin_shell`
+    - mod `tauri_plugin_single_instance`
+    - mod `tauri_plugin_updater`
+    - mod `tauri_plugin_upload`
+    - mod `tauri_plugin_websocket`
+    - mod `tauri_plugin_window_state`
+    - mod `tauri_plugin_global_shortcut`
+
 ### BREAKING
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - feat: support registering plugin from python.
@@ -83,7 +157,7 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
 
     The parameters `pytauri_wheel.builder_factory(opener, clipboard_manager, dialog, fs, notification)` have been removed. Please use `pytauri.BuilderArgs.plugins` or `pytauri.Apphandle.plugin` to manually register plugins.
 
-    !!! tip "Migration"
+    ??? tip "Migration"
         === "current"
             ```python
             from pytauri_plugins import clipboard_manager, dialog, fs, notification, opener
@@ -126,38 +200,39 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
 
 - [#220](https://github.com/pytauri/pytauri/pull/220) - [#259](https://github.com/pytauri/pytauri/pull/259) - chore: bump `tauri` dependencies:
 
-    ```toml
-    tauri = { version = "2.8" }
-    tauri-build = { version = "2.4" }
-    tauri-plugin = { version = "2.4" }
-    tauri-utils = { version = "~2.7" }
-    tauri-plugin-opener = { version = "2.5" }
-    tauri-plugin-clipboard-manager = { version = "2.3" }
-    tauri-plugin-dialog = { version = "2.3" }
-    tauri-plugin-fs = { version = "2.4" }
-    tauri-plugin-notification = { version = "2.3" }
-    tauri-plugin-autostart = { version = "2.5" }
-    tauri-plugin-deep-link = { version = "2.4" }
-    tauri-plugin-upload = { version = "2.3" }
-    tauri-plugin-websocket = { version = "2.4" }
-    tauri-plugin-http = { version = "2.5" }
-    tauri-plugin-os = { version = "2.3" }
-    tauri-plugin-persisted-scope = { version = "2.3" }
-    tauri-plugin-positioner = { version = "2.3" }
-    tauri-plugin-process = { version = "2.3" }
-    tauri-plugin-shell = { version = "2.3" }
-    tauri-plugin-single-instance = { version = "2.3" }
-    tauri-plugin-updater = { version = "2.9" }
-    tauri-plugin-window-state = { version = "2.4" }
-    tauri-plugin-global-shortcut = { version = "2.3" }
-    ```
+    ??? info "Bump"
+        ```toml
+        tauri = { version = "2.8" }
+        tauri-build = { version = "2.4" }
+        tauri-plugin = { version = "2.4" }
+        tauri-utils = { version = "~2.7" }
+        tauri-plugin-opener = { version = "2.5" }
+        tauri-plugin-clipboard-manager = { version = "2.3" }
+        tauri-plugin-dialog = { version = "2.3" }
+        tauri-plugin-fs = { version = "2.4" }
+        tauri-plugin-notification = { version = "2.3" }
+        tauri-plugin-autostart = { version = "2.5" }
+        tauri-plugin-deep-link = { version = "2.4" }
+        tauri-plugin-upload = { version = "2.3" }
+        tauri-plugin-websocket = { version = "2.4" }
+        tauri-plugin-http = { version = "2.5" }
+        tauri-plugin-os = { version = "2.3" }
+        tauri-plugin-persisted-scope = { version = "2.3" }
+        tauri-plugin-positioner = { version = "2.3" }
+        tauri-plugin-process = { version = "2.3" }
+        tauri-plugin-shell = { version = "2.3" }
+        tauri-plugin-single-instance = { version = "2.3" }
+        tauri-plugin-updater = { version = "2.9" }
+        tauri-plugin-window-state = { version = "2.4" }
+        tauri-plugin-global-shortcut = { version = "2.3" }
+        ```
 
-    ```yaml
-    "@tauri-apps/cli": ^2.8
-    "@tauri-apps/api": ^2.8
-    "@tauri-apps/plugin-opener": ^2.5
-    "@tauri-apps/plugin-dialog": ^2.3
-    ```
+        ```yaml
+        "@tauri-apps/cli": ^2.8
+        "@tauri-apps/api": ^2.8
+        "@tauri-apps/plugin-opener": ^2.5
+        "@tauri-apps/plugin-dialog": ^2.3
+        ```
 
 ### Changed
 
@@ -182,6 +257,23 @@ See <https://pytauri.github.io/pytauri/0.8/usage/tutorial/using-plugins/#all-plu
 - [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.
 
     Use a `dict` instead of `json.dumps({...})` as the input for `context_factory(tauri_config)` in the `pytauri-wheel` documentation.
+
+    ??? example
+        ```python
+        tauri_config = {
+            "build": {
+                "frontendDist": "http://localhost:1420",
+            },
+        }
+        # or use json str/bytes
+        tauri_config = json.dumps(
+            {
+                "build": {
+                    "frontendDist": "http://localhost:1420",
+                },
+            }
+        )
+        ```
 
 ### Internal
 
