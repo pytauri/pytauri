@@ -56,6 +56,12 @@
         - mod `tauri_plugin_window_state`
         - mod `tauri_plugin_global_shortcut`
 
+### Fixed
+
+- [#268](https://github.com/pytauri/pytauri/pull/268) - fix(gen-ts): fix TS `verbatimModuleSyntax` error in generated IPC client.
+
+    The generated IPC Client code now explicitly uses "type-only import" to fix the previous syntax error that violated TypeScript's `verbatimModuleSyntax` rule.
+
 ### Internal
 
 - [#262](https://github.com/pytauri/pytauri/pull/262) - feat: support json `str | bytes` or `dict` as input for `tauri::Config`.

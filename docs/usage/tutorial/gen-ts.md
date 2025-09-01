@@ -43,7 +43,7 @@ When you run your app (`pnpm tauri dev`), the TypeScript client code will be gen
  */
 
 import { pyInvoke } from "tauri-plugin-pytauri-api";
-import { InvokeOptions } from "@tauri-apps/api/core";
+import type { InvokeOptions } from "@tauri-apps/api/core";
 
 import type { Commands } from "./_apiTypes.d.ts";
 

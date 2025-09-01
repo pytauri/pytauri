@@ -6,7 +6,7 @@
  */
 
 import { pyInvoke } from "tauri-plugin-pytauri-api";
-import { InvokeOptions } from "@tauri-apps/api/core";
+import type { InvokeOptions } from "@tauri-apps/api/core";
 
 import type { Commands } from "./_apiTypes.d.ts";
 
