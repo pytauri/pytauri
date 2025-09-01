@@ -13,7 +13,7 @@
 
 ---
 
-[![CI: docs]][CI: docs#link]
+[![CI: docs]][CI: docs#link] [![msrv]][msrv#link] [![requires-python]][requires-python#link] [![Discord]][Discord#link]
 
 Documentation: <https://pytauri.github.io/pytauri/>
 
@@ -21,6 +21,17 @@ Source Code: <https://github.com/pytauri/pytauri/>
 
 [CI: docs]: https://github.com/pytauri/pytauri/actions/workflows/docs.yml/badge.svg
 [CI: docs#link]: https://github.com/pytauri/pytauri/actions/workflows/docs.yml
+[Discord]: https://img.shields.io/discord/1411349756202188942?logo=discord&label=discord
+[Discord#link]: https://discord.gg/TaXhVp7Shw
+[msrv]: https://img.shields.io/crates/msrv/pytauri?logo=rust
+[msrv#link]: https://rust-lang.github.io/rfcs/2495-min-rust-version.html
+<!--
+TODO: Switch to <https://shields.io/badges/py-pi-python-version>,
+but need to add python version classifiers in `pyproject.toml` first.
+See also <https://github.com/badges/shields/issues/5551>.
+-->
+[requires-python]: https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fpytauri%2Fpytauri%2Frefs%2Fheads%2Fmain%2Fpython%2Fpytauri%2Fpyproject.toml&logo=python
+[requires-python#link]: https://packaging.python.org/en/latest/specifications/core-metadata/#requires-python
 
 ---
 

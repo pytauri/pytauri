@@ -34,6 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Highlights
 
+#### Official Discord Server
+
+> - [#266](https://github.com/pytauri/pytauri/pull/266) - docs: add discord server link.
+
+PyTauri now has an [official Discord server](https://discord.gg/TaXhVp7Shw)! Everyone is welcome to join and chat with PyTauri users and developers 😇!
+
 #### `WebviewWindowBuilder` bindings
 
 > - [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
