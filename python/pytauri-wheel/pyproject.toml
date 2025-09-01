@@ -1,6 +1,6 @@
 [project]
 name = "pytauri-wheel"
-version = "0.7.0" # ❗ when bumping, remember to update workspace dependencies
+version = "0.8.0" # ❗ when bumping, remember to update workspace dependencies
 readme = "README.md"
 license = "Apache-2.0"
 authors = [
@@ -13,7 +13,7 @@ description = "Precompiled wheels for pytauri"
 dependencies = [
     "typing-extensions >= 4.14",
     # ❗ workspaces, must use `==`
-    "pytauri == 0.7.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
+    "pytauri == 0.8.*", # NOTE: must keep the same version as crate `pytauri` in `Cargo.toml`
 ]
 
 [project.urls]
