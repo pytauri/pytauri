@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.4.0]
+
 ### BREAKING
 
 - [#265](https://github.com/pytauri/pytauri/pull/265) - feat(pytauri): add `WebviewWindowBuilder` bindings.
@@ -77,6 +79,7 @@
 ## [0.1.0-beta.0]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.4.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.4.0
 [0.3.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.3.0
 [0.2.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.2.0
 [0.1.0]: https://github.com/pytauri/pytauri/releases/tag/rs/pyo3-utils/v0.1.0

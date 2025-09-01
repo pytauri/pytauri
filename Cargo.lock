@@ -3692,7 +3692,7 @@ dependencies = [
 
 [[package]]
 name = "pyo3-utils"
-version = "0.3.0"
+version = "0.4.0"
 dependencies = [
  "parking_lot",
  "pyo3",
@@ -3703,7 +3703,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "dunce",
  "libc",
@@ -3716,7 +3716,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri-core"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "pyo3",
  "pyo3-utils",
@@ -3758,7 +3758,7 @@ dependencies = [
 
 [[package]]
 name = "pytauri-wheel"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "json-patch",
  "pyo3",
@@ -5291,7 +5291,7 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-pytauri"
-version = "0.7.0"
+version = "0.8.0"
 dependencies = [
  "pyo3",
  "pyo3-build-config",

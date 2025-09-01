@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [0.8.0]
+
 ### Highlights
 
 #### Support `dict` as input for `context_factory(tauri_config)`
@@ -137,6 +139,7 @@ You can now provide a JSON `str`, `bytes`, or a `dict` as the input to `context_
 the first release
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.8.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-wheel/v0.8.0
 [0.7.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-wheel/v0.7.0
 [0.6.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-wheel/v0.6.0
 [0.5.0]: https://github.com/pytauri/pytauri/releases/tag/py/pytauri-wheel/v0.5.0

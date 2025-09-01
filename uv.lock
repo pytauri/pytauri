@@ -1866,7 +1866,7 @@ wheels = [
 
 [[package]]
 name = "pytauri"
-version = "0.7.2"
+version = "0.8.0"
 source = { editable = "python/pytauri" }
 dependencies = [
     { name = "anyio" },
@@ -1904,7 +1904,7 @@ requires-dist = [
 
 [[package]]
 name = "pytauri-wheel"
-version = "0.7.0"
+version = "0.8.0"
 source = { editable = "python/pytauri-wheel" }
 dependencies = [
     { name = "pytauri" },
