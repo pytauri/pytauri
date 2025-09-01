@@ -48,7 +48,7 @@ _CLIENT_PREFIX = f"""\
  */
 
 import {{ pyInvoke }} from "tauri-plugin-pytauri-api";
-import {{ InvokeOptions }} from "@tauri-apps/api/core";
+import type {{ InvokeOptions }} from "@tauri-apps/api/core";
 
 import type {{ {_COMMANDS_TITLE} }} from "./{_API_TYPES_FILE_NAME}";
 

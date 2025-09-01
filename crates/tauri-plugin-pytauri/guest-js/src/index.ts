@@ -1,4 +1,5 @@
-import { invoke, InvokeOptions } from "@tauri-apps/api/core";
+import { invoke } from "@tauri-apps/api/core";
+import type { InvokeOptions } from "@tauri-apps/api/core";
 
 const PY_INVOKE_TAURI_CMD = "plugin:pytauri|pyfunc";
 const PY_INVOKE_HEADER = "pyfunc";
