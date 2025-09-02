@@ -38,9 +38,9 @@ repos:
       - id: python-fmt
         stages: [pre-commit]
         name: python format
-        language: script
+        language: system
         types: [python]
-        entry: scripts/python-fmt.sh
+        entry: just python-fmt
         pass_filenames: false
       - id: rust-fmt
         stages: [pre-commit]
@@ -69,9 +69,9 @@ repos:
       - id: python-verifytypes
         stages: [manual] # because it's slow
         name: python type check
-        language: script
+        language: system
         types: [python]
-        entry: scripts/python-verifytypes.sh
+        entry: just python-verifytypes
         pass_filenames: false
       - id: cargo-clippy # rustup component add clippy
         stages: [manual] # because it's slow
@@ -97,10 +97,10 @@ repos:
       - id: python-test
         stages: [manual] # because it's slow
         name: python test
-        language: script
+        language: system
         types: [python]
         # TODO: more tests
-        entry: scripts/python-test.sh
+        entry: just python-test
         pass_filenames: false
       - id: rust-test-all
         stages: [manual] # because it's slow
