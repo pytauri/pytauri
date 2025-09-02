@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0]
+
 ### Highlights
 
 #### Official Discord Server
@@ -867,6 +869,7 @@ Thanks to [@ISOR3X](https://github.com/ISOR3X) in [#111](https://github.com/pyta
 ## [0.1.0-beta]
 
 [unreleased]: https://github.com/pytauri/pytauri/tree/HEAD
+[0.8.0]: https://github.com/pytauri/pytauri/releases/tag/v0.8.0
 [0.7.2]: https://github.com/pytauri/pytauri/releases/tag/v0.7.2
 [0.7.1]: https://github.com/pytauri/pytauri/releases/tag/v0.7.1
 [0.7.0]: https://github.com/pytauri/pytauri/releases/tag/v0.7.0
