@@ -4,7 +4,7 @@ import sys
 from collections import UserDict
 from collections.abc import Awaitable
 from functools import cache, partial, wraps
-from inspect import Parameter, Signature, signature
+from inspect import Parameter, Signature, signature, iscoroutinefunction
 from logging import getLogger
 from os import PathLike
 from typing import (
@@ -18,7 +18,7 @@ from typing import (
 )
 from warnings import warn
 
-from anyio import current_time
+from anyio import current_time, to_thread
 from anyio.from_thread import BlockingPortal
 from pydantic import (
     BaseModel,
@@ -396,7 +396,10 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                     raise InvokeException(repr(e)) from e
                 kwargs[body_key] = body_arg
 
-            resp = await pyfunc(*args, **kwargs)
+            if iscoroutinefunction(pyfunc):  # PERF
+                resp = await pyfunc(*args, **kwargs)
+            else:
+                resp = await to_thread.run_async(pyfunc, *args, **kwargs)
 
             if deserializer is not None:
                 # - subclass of `BaseModel`
