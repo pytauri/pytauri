@@ -4,7 +4,7 @@ import sys
 from collections import UserDict
 from collections.abc import Awaitable
 from functools import cache, partial, wraps
-from inspect import Parameter, Signature, signature, iscoroutinefunction
+from inspect import Parameter, Signature, signature, isawaitable
 from logging import getLogger
 from os import PathLike
 from typing import (
@@ -396,10 +396,10 @@ class Commands(UserDict[str, _PyInvokHandleData]):
                     raise InvokeException(repr(e)) from e
                 kwargs[body_key] = body_arg
 
-            if iscoroutinefunction(pyfunc):  # PERF
+            if isawaitable(pyfunc):  # PERF
                 resp = await pyfunc(*args, **kwargs)
             else:
-                resp = await to_thread.run_async(pyfunc, *args, **kwargs)
+                resp = await to_thread.run_sync(pyfunc, *args, **kwargs)
 
             if deserializer is not None:
                 # - subclass of `BaseModel`
