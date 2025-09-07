@@ -3828,6 +3828,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#internal" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internal
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3937,7 +3952,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal" class="md-nav__link">
+  <a href="#internal_1" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4351,7 +4366,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_1" class="md-nav__link">
+  <a href="#internal_2" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4402,7 +4417,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_2" class="md-nav__link">
+  <a href="#internal_3" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4453,7 +4468,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#internal_3" class="md-nav__link">
+  <a href="#internal_4" class="md-nav__link">
     <span class="md-ellipsis">
       Internal
     </span>
@@ -4538,6 +4553,17 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 <!-- Refer to: https://github.com/WSH032/fastapi-proxy-lib/blob/main/CHANGELOG.md -->
 
 <h2 id="unreleased"><a href="https://github.com/pytauri/pytauri/tree/HEAD">Unreleased</a><a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<ul>
+<li>
+<p><a href="https://github.com/pytauri/pytauri/pull/275">#275</a> - ci(pre-commit): some hooks are not executed in CI (<code>manual</code> stage).</p>
+<ul>
+<li>Now <code>pre-commit run --all-files --hook-stage=manual</code> ensures all hooks (except <code>commitlint</code>) are executed.</li>
+<li>Added a <code>pnpm-lock</code> hook to keep <code>pnpm-lock.yaml</code> up to date.</li>
+<li>Renamed hooks <code>rust-test-all</code> to <code>rust-unit-test</code>, and <code>rust-test-crate</code> to <code>rust-integration-test</code>.</li>
+</ul>
+</li>
+</ul>
 <h2 id="080"><a href="https://github.com/pytauri/pytauri/releases/tag/v0.8.0">0.8.0</a><a class="headerlink" href="#080" title="Permanent link">&para;</a></h2>
 <h3 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h3>
 <h4 id="official-discord-server">Official Discord Server<a class="headerlink" href="#official-discord-server" title="Permanent link">&para;</a></h4>
@@ -4821,7 +4847,7 @@ and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semant
 </details>
 </li>
 </ul>
-<h3 id="internal">Internal<a class="headerlink" href="#internal" title="Permanent link">&para;</a></h3>
+<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
 <p><a href="https://github.com/pytauri/pytauri/pull/220">#220</a> - feat: support registering plugin from python.</p>
@@ -5322,7 +5348,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/63">#63</a> - chore: bump <code>tauri</code> to <code>v2.3</code>.</li>
 </ul>
-<h3 id="internal_1">Internal<a class="headerlink" href="#internal_1" title="Permanent link">&para;</a></h3>
+<h3 id="internal_2">Internal<a class="headerlink" href="#internal_2" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/119">#119</a> - ci(rs/release): add <code>--no-verify</code> to <code>cargo publish</code> so that we can release parallelly.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/113">#113</a> - ci: add <code>macos-latest</code> os in <code>lint-test</code> CI.</li>
@@ -5371,7 +5397,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 </ul>
 </li>
 </ul>
-<h3 id="internal_2">Internal<a class="headerlink" href="#internal_2" title="Permanent link">&para;</a></h3>
+<h3 id="internal_3">Internal<a class="headerlink" href="#internal_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/81">#81</a> - ci: add <code>clear-cache.yml</code> workflow.</li>
 </ul>
@@ -5399,7 +5425,7 @@ If this is indeed the behavior you expect, explicitly pass <code>None</code>.</p
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/46">#46</a> - bump <code>tauri</code> to <code>v2.2</code></li>
 </ul>
-<h3 id="internal_3">Internal<a class="headerlink" href="#internal_3" title="Permanent link">&para;</a></h3>
+<h3 id="internal_4">Internal<a class="headerlink" href="#internal_4" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="https://github.com/pytauri/pytauri/pull/83">#83</a> - chore: bump <code>pyo3</code> to <code>v0.23.4</code> in <code>Cargo.lock</code> to fix PyO3/pyo3#4828.</li>
 <li><a href="https://github.com/pytauri/pytauri/pull/64">#64</a> - test: add integration tests for <code>command</code> and <code>channel</code> ipc</li>
