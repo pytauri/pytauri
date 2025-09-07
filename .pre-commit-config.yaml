@@ -20,7 +20,9 @@ repos:
     rev: v9.19.0
     hooks:
       - id: commitlint
-        stages: [commit-msg, manual]
+        # NOTE, TODO, FIXME: DO NOT enable for `manual` stage (for now),
+        # because `.git/COMMIT_EDITMSG` does not exist in CI
+        stages: [commit-msg]
         # NOTE: the dependencies must consistent with `commitlint.config.js`
         additional_dependencies: ["@commitlint/config-conventional"]
   - repo: local

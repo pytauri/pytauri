@@ -36,7 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [#275](https://github.com/pytauri/pytauri/pull/275) - ci(pre-commit): some hooks are not executed in CI (`manual` stage).
 
-    - Now `pre-commit run --all-files --hook-stage=manual` ensures all hooks are executed.
+    - Now `pre-commit run --all-files --hook-stage=manual` ensures all hooks (except `commitlint`) are executed.
     - Added a `pnpm-lock` hook to keep `pnpm-lock.yaml` up to date.
     - Renamed hooks `rust-test-all` to `rust-unit-test`, and `rust-test-crate` to `rust-integration-test`.
 
