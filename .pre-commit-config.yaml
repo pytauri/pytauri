@@ -36,28 +36,24 @@ repos:
         entry: uv lock
         pass_filenames: false
       - id: python-fmt
-        stages: [pre-commit]
         name: python format
         language: script
         types: [python]
         entry: scripts/python-fmt.sh
         pass_filenames: false
       - id: rust-fmt
-        stages: [pre-commit]
         name: rust format
         language: system
         types: [rust]
         entry: cargo fmt --all
         pass_filenames: false
       - id: typos
-        stages: [pre-commit]
         name: typos
         language: system
         entry: typos -w
         pass_filenames: false
 
       - id: python-type-check
-        stages: [pre-commit]
         name: python type check
         language: system
         types: [python]
