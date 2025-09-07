@@ -20,6 +20,8 @@ repos:
     rev: v9.19.0
     hooks:
       - id: commitlint
+        # NOTE, TODO, FIXME: DO NOT enable for `manual` stage (for now),
+        # because `.git/COMMIT_EDITMSG` does not exist in CI
         stages: [commit-msg]
         # NOTE: the dependencies must consistent with `commitlint.config.js`
         additional_dependencies: ["@commitlint/config-conventional"]
@@ -27,94 +29,109 @@ repos:
     hooks:
       # ref: <https://github.com/astral-sh/uv-pre-commit/blob/97775dd8479651d7bc0f21fc2d0b960de1ef6267/.pre-commit-hooks.yaml#L11-L20>
       - id: uv-lock
-        name: uv-lock
+        name: update uv lockfile
         language: system
+        entry: uv lock
+        pass_filenames: false
         # # TODO, FIXME: This 'files' regex might be incorrect,
         # # sometimes this hook does not trigger.
         # # For now, we comment it out to always run this hook as workaround.
         # files: ^(uv\.lock|pyproject\.toml|uv\.toml)$
-        entry: uv lock
+        stages: [pre-commit, manual]
+      - id: pnpm-lock
+        name: update pnpm lockfile
+        language: system
+        entry: pnpm install -r --lockfile-only
         pass_filenames: false
+        # files: ^(pnpm-lock\.yaml|pnpm-workspace\.yaml|package\.json)$ # TODO
+        stages: [pre-commit, manual]
+
+      # NOTE: We do not need, nor have `cargo lock`.
+      # `cargo check/build` will automatically update `Cargo.lock`.
+
       - id: python-fmt
-        stages: [pre-commit]
         name: python format
         language: script
-        types: [python]
         entry: scripts/python-fmt.sh
         pass_filenames: false
+        types: [python]
+        stages: [pre-commit, manual]
       - id: rust-fmt
-        stages: [pre-commit]
         name: rust format
         language: system
-        types: [rust]
         entry: cargo fmt --all
         pass_filenames: false
+        types: [rust]
+        stages: [pre-commit, manual]
       - id: typos
-        stages: [pre-commit]
         name: typos
         language: system
         entry: typos -w
         pass_filenames: false
-
-      - id: python-type-check
-        stages: [pre-commit]
-        name: python type check
-        language: system
-        types: [python]
-        entry: pnpm pyright .
-        pass_filenames: false
+        stages: [pre-commit, manual]
 
       # TODO, FIXME: typescript fmt
 
-      - id: python-verifytypes
-        stages: [manual] # because it's slow
+      - id: python-type-check
         name: python type check
-        language: script
+        language: system
+        entry: pnpm pyright .
+        pass_filenames: false
         types: [python]
+        stages: [pre-commit, manual]
+
+      - id: python-verifytypes
+        name: python verifytypes
+        language: script
         entry: scripts/python-verifytypes.sh
         pass_filenames: false
-      - id: cargo-clippy # rustup component add clippy
+        types: [python]
         stages: [manual] # because it's slow
+      - id: cargo-clippy # rustup component add clippy
         name: cargo clippy
         language: system
-        types: [rust]
         entry: cargo clippy --workspace --exclude=pytauri-test --all-features -- -D warnings
         pass_filenames: false
+        types: [rust]
+        stages: [manual] # because it's slow
 
       # 1. Check if TypeScript can compile successfully (typescript check).
       # 2. Check if the JS build dist snapshot tracked for the crate is updated,
       #    such as `tauri-plugin-pytauri/guest-js/dist/api-iife.*.js`.
-      # NOTE: Keep this step after `cargo build` to check that
-      # all dist snapshot required for the crate are tracked.
+      # NOTE: Keep this step after `cargo build/clippy` to check that
+      # all dist snapshot required for the crate are tracked
+      # (because if something missing, the compile will fail, then we will know).
       - id: pnpm-build-snapshot
-        stages: [manual] # because it's slow
         name: pnpm build snapshot
         language: system
-        types_or: [javascript, jsx, ts, tsx]
         entry: pnpm -r build
         pass_filenames: false
+        types_or: [javascript, jsx, ts, tsx]
+        stages: [manual] # because it's slow
 
       - id: python-test
-        stages: [manual] # because it's slow
         name: python test
         language: script
-        types: [python]
-        # TODO: more tests
         entry: scripts/python-test.sh
         pass_filenames: false
-      - id: rust-test-all
+        types: [python]
         stages: [manual] # because it's slow
-        name: rust test all
+      - id: rust-unit-test
+        name: rust unit test
         language: system
-        types: [rust]
         entry: cargo test --workspace --exclude=pytauri-test --all-features
         pass_filenames: false
-      - id: rust-test-crate
-        stages: [manual] # because it's slow
-        name: rust test crate
-        language: system
         types: [rust]
+        stages: [manual] # because it's slow
+      # NOTE: we cannot run this test when the `pytauri/__no_test` feature is enabled
+      # (i.e., with --all-features), so we separate it into a standalone hook.
+      # See `required-features` section of its `Cargo.toml` also.
+      - id: rust-integration-test
+        name: rust integration test
+        language: system
         entry: cargo test -p pytauri-test --features="test"
         pass_filenames: false
+        types: [rust]
+        stages: [manual] # because it's slow
 
       # TODO, FIXME: rust doc check
