@@ -73,7 +73,7 @@ _logger = getLogger(__name__)
 
 _PyHandlerType = Callable[..., Awaitable[_InvokeResponseBody]]
 
-_WrappablePyHandlerType = Callable[..., Awaitable[Union[bytes, BaseModel, Any]]]
+_WrappablePyHandlerType = Union[Callable[..., Awaitable[Union[bytes, BaseModel, Any]]], Callable[..., Union[bytes, BaseModel, Any]]]
 
 _WrappablePyHandlerTypeVar = TypeVar(
     "_WrappablePyHandlerTypeVar", bound=_WrappablePyHandlerType, infer_variance=True
