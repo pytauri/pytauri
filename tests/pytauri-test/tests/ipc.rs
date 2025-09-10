@@ -135,6 +135,10 @@ fn test_ipc() -> Result<(), Box<dyn Error>> {
         let resp: String = get_pytauri_ipc_response(&webview, "command".into(), &body);
         assert_eq!(resp, "pong");
 
+        let resp: String = get_pytauri_ipc_response(&webview, "syncmd".into(), &body);
+        println!("resp: {}", resp);
+        assert_eq!(resp, "syncpong");
+
         Ok(())
     })?;
     Ok(())

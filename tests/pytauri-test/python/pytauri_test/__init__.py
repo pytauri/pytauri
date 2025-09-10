@@ -2,7 +2,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Literal, Optional, cast
 
-from anyio import create_task_group
+from anyio import create_task_group, run
 from anyio.abc import TaskGroup
 from anyio.from_thread import start_blocking_portal
 from pydantic import BaseModel, ConfigDict, RootModel
@@ -60,6 +60,21 @@ async def command(
     await channel_task(channel)
 
     return "pong"
+
+
+@commands.command()
+def syncmd(
+    body: Body,
+    app_handle: AppHandle,  # noqa: ARG001
+    webview_window: WebviewWindow,
+) -> Literal["syncpong"]:
+    assert body.ping == "ping"
+
+    channel = body.channel_id.channel_on(webview_window.as_ref_webview())
+
+    run(channel_task, channel)
+
+    return "syncpong"
 
 
 task_group: TaskGroup
