@@ -23,7 +23,7 @@ lint = [
 ]
 docs = [
     "mkdocs-material ==9.6.*",
-    "mkdocstrings[python] ==0.29.*",
+    "mkdocstrings[python] ==0.30.*",
     "griffe-inherited-docstrings == 1.1.*",
     "griffe-pydantic == 1.1.*",
     "griffe-warnings-deprecated == 1.1.*",

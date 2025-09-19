@@ -1165,7 +1165,7 @@ wheels = [
 
 [[package]]
 name = "mkdocstrings"
-version = "0.29.1"
+version = "0.30.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "importlib-metadata", marker = "python_full_version < '3.10'" },
@@ -1176,9 +1176,9 @@ dependencies = [
     { name = "mkdocs-autorefs" },
     { name = "pymdown-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/41/e8/d22922664a627a0d3d7ff4a6ca95800f5dde54f411982591b4621a76225d/mkdocstrings-0.29.1.tar.gz", hash = "sha256:8722f8f8c5cd75da56671e0a0c1bbed1df9946c0cef74794d6141b34011abd42", size = 1212686, upload-time = "2025-03-31T08:33:11.997Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c5/33/2fa3243439f794e685d3e694590d28469a9b8ea733af4b48c250a3ffc9a0/mkdocstrings-0.30.1.tar.gz", hash = "sha256:84a007aae9b707fb0aebfc9da23db4b26fc9ab562eb56e335e9ec480cb19744f", size = 106350, upload-time = "2025-09-19T10:49:26.446Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/14/22533a578bf8b187e05d67e2c1721ce10e3f526610eebaf7a149d557ea7a/mkdocstrings-0.29.1-py3-none-any.whl", hash = "sha256:37a9736134934eea89cbd055a513d40a020d87dfcae9e3052c2a6b8cd4af09b6", size = 1631075, upload-time = "2025-03-31T08:33:09.661Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/2c/f0dc4e1ee7f618f5bff7e05898d20bf8b6e7fa612038f768bfa295f136a4/mkdocstrings-0.30.1-py3-none-any.whl", hash = "sha256:41bd71f284ca4d44a668816193e4025c950b002252081e387433656ae9a70a82", size = 36704, upload-time = "2025-09-19T10:49:24.805Z" },
 ]
 
 [package.optional-dependencies]
@@ -2029,7 +2029,7 @@ dev = [
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
     { name = "mkdocs-section-index", specifier = "~=0.3.10" },
-    { name = "mkdocstrings", extras = ["python"], specifier = "==0.29.*" },
+    { name = "mkdocstrings", extras = ["python"], specifier = "==0.30.*" },
     { name = "nicegui-app", editable = "examples/nicegui-app" },
     { name = "packaging", specifier = ">=25" },
     { name = "pre-commit", specifier = "==4.2.0" },
@@ -2061,7 +2061,7 @@ docs = [
     { name = "mkdocs-literate-nav", specifier = "==0.6.*" },
     { name = "mkdocs-material", specifier = "==9.6.*" },
     { name = "mkdocs-section-index", specifier = "~=0.3.10" },
-    { name = "mkdocstrings", extras = ["python"], specifier = "==0.29.*" },
+    { name = "mkdocstrings", extras = ["python"], specifier = "==0.30.*" },
 ]
 examples = [
     { name = "nicegui-app", editable = "examples/nicegui-app" },
