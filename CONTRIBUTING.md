@@ -54,10 +54,7 @@ These extensions will help you format, lint, type-check, and debug your code.
 
 ### Debugging
 
-TODO
-
-- check `.vscode/launch.json` and [codelldb](<https://github.com/vadimcn/codelldb/blob/v1.11.5/MANUAL.md#remote-debugging>) for debugging `py/rs` from python.
-- check [vscode/python-debugging](https://code.visualstudio.com/docs/python/debugging#_debugging-by-attaching-over-a-network-connection) for debugging `py/rs` from rust.
+**pytauri** is fully debuggable. For instructions, please see our [debugging tutorial](<https://pytauri.github.io/pytauri/latest/usage/tutorial/debugging/>).
 
 ## Source code
 
