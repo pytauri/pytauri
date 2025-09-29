@@ -11,7 +11,7 @@ Contributions are welcome, and they are greatly appreciated! Every little bit he
 
 Ensure that you have installed `Python`, `uv`, `Node.js`, `pnpm`, `git`, `tauri-cli` and the rest of [Tauri's Prerequisites](<https://tauri.app/start/prerequisites/>).
 
-> Note: The setup script is written for Linux. If you're using Windows, consider running it in a Bash-compatible terminal via [MSYS2](<https://www.msys2.org/>).
+> Note: The setup script is written for Linux. If you're using Windows use the terminal provided by [Git](<https://git-scm.com/downloads/win>).
 
 1. [Fork the pytauri repository on GitHub.](<https://github.com/pytauri/pytauri/fork>)
 2. paste your repo's URL in the script and run it:
