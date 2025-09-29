@@ -108,15 +108,14 @@ cargo doc
 
 TODO
 
-## Pull Requests
+## PR
 
-Before creating a PR make sure that:
-
-- The PR is targeting the `main` branch.
-- Your branch is up to date with `main`.
-- Your contribution is more than just formatting existing code.
-- Your commits are consistent with the PR's title and description.
-- You're not using your fork’s `main` branch to open The PR, **always create a separate feature branch.**
+- PRs should target the `main` branch.
+- Keep branches up to date by `rebase` before merging.
+- Do not add multiple unrelated things in same PR.
+- Do not submit PRs where you just take existing lines and reformat them without changing what they do.
+- Do not change other parts of the code that are not yours for formatting reasons.
+- Do not use your clone's main branch to make a PR - create a branch and PR that.
 
 ### Edit `CHANGELOG.md`
 
