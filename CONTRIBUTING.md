@@ -9,18 +9,21 @@ Contributions are welcome, and they are greatly appreciated! Every little bit he
 
 ## Environment setup
 
-Ensure that you have installed `Python`, `uv`, `Node.js`, `pnpm`, `git`, `tauri-cli` and the rest of [Tauri's Prerequisites](<https://tauri.app/start/prerequisites/>).
+Ensure that you have installed `Rust`, `Python`, `uv`, `Node.js`, `pnpm`, `tauri-cli` and the rest of [Tauri's Prerequisites](https://tauri.app/start/prerequisites/).
 
-> Note: The setup script is written for Linux. If you're using Windows use the terminal provided by [Git](<https://git-scm.com/downloads/win>).
+The setup script is written for Linux. If you're using Windows consider using the bash terminal provided by [Git for Windows](https://gitforwindows.org/).
 
-1. [Fork the pytauri repository on GitHub.](<https://github.com/pytauri/pytauri/fork>)
+1. [Fork the pytauri repository on GitHub.](https://github.com/pytauri/pytauri/fork)
 2. paste your repo's URL in the script and run it:
 ```bash
 #!/bin/bash
 
-# clone your fork locally
-git clone <repo-url>
+# Clone your fork locally
+git clone git@github.com:your_name_here/pytauri.git
 cd pytauri
+
+# Create a new branch for local development
+git checkout -b branch-name
 
 # Install dev dependencies and build the frontend assets
 pnpm install
@@ -29,7 +32,7 @@ pnpm -r run build
 # Activate the virtual environment
 uv venv --python-preference=only-system
 source .venv/bin/activate
-# On Windows: source .venv/Scripts/activate
+# On Windows: `source .venv/Scripts/activate`
 
 # Install dev dependencies and tools
 uv sync
@@ -38,10 +41,6 @@ uv sync
 # https://pre-commit.com/#3-install-the-git-hook-scripts
 pre-commit install
 pre-commit run --all-files
-
-echo "---------------------------------"
-echo "Setup is complete. Please create a local branch if you're contributing to the project!"
-echo 'git checkout -b branch-name'
 ```
 
 That's all! Now, you can start developing.
@@ -54,7 +53,7 @@ These extensions will help you format, lint, type-check, and debug your code.
 
 ### Debugging
 
-**pytauri** is fully debuggable. For instructions, please see our [debugging tutorial](<https://pytauri.github.io/pytauri/latest/usage/tutorial/debugging/>).
+**pytauri** is fully debuggable. For instructions, please see our [debugging tutorial](https://pytauri.github.io/pytauri/latest/usage/tutorial/debugging/).
 
 ## Source code
 
@@ -64,13 +63,13 @@ These extensions will help you format, lint, type-check, and debug your code.
 
 ## Testing
 
-We use [pytest](<https://docs.pytest.org/en/stable/>) and `cargo test` to run our tests.
+We use [pytest](https://docs.pytest.org/en/stable/) and `cargo test` to run our tests.
 
 ## Documentation
 
 ### Python and Tutorial
 
-We use [MkDocs](<https://www.mkdocs.org>), [Material for MkDocs](<https://squidfunk.github.io/mkdocs-material>), [mkdocstrings](<https://mkdocstrings.github.io>) and [mike](<https://github.com/jimporter/mike>) to build our documentation.
+We use [MkDocs](https://www.mkdocs.org), [Material for MkDocs](https://squidfunk.github.io/mkdocs-material), [mkdocstrings](https://mkdocstrings.github.io) and [mike](https://github.com/jimporter/mike) to build our documentation.
 
 The documentation source files are located in `docs/`, `docs_src/`, `mkdocs.yml`, and `utils/`. (See `mkdocs.yml` for additional paths or custom configurations.).
 
@@ -159,7 +158,7 @@ Usually, you don’t need to run checks manually — `pre-commit` runs them auto
 ## 😢
 
 !!! warning
-    The section below is mainly for project maintainers. You probably don’t need to read it.
+    The section below is mainly for project maintainers. You probably don't need to read it.
 
 ---
 
