@@ -1,6 +1,7 @@
-<!-- The content will be also use in `docs/CONTRIBUTING/CONTRIBUTING.md` by `pymdownx.snippets` -->
-<!-- Do not use any **relative link** and  **GitHub-specific syntax** ！-->
-<!-- Do not rename or move the file -->
+<!-- The content of this file is also included in `docs/CONTRIBUTING/CONTRIBUTING.md` via `pymdownx.snippets` -->
+<!-- Do not use any **relative links** or **GitHub-specific syntax** !!! -->
+<!-- Do not rename or move this file -->
+
 
 # Contributing
 
@@ -8,53 +9,51 @@ Contributions are welcome, and they are greatly appreciated! Every little bit he
 
 ## Environment setup
 
-Make sure you have installed `Rust`, `Python`, `uv`, `Node.js`, `pnpm`, `tauri-cli` and Tauri Prerequisites as documented.
+Ensure that you have installed `Rust`, `Python`, `uv`, `Node.js`, `pnpm`, `tauri-cli` and the rest of [Tauri's Prerequisites](https://tauri.app/start/prerequisites/).
 
-Also, you need `bash`. If you are on Windows, you can use [Git for Windows](https://gitforwindows.org/).
+The setup script is written for Linux. If you're using Windows consider using the bash terminal provided by [Git for Windows](https://gitforwindows.org/).
 
-Fork the pytauri repository on GitHub.
-
+1. [Fork the pytauri repository on GitHub.](https://github.com/pytauri/pytauri/fork)
+2. paste your repo's URL in the script and run it:
 ```bash
 #!/bin/bash
 
-# clone your fork locally
+# Clone your fork locally
 git clone git@github.com:your_name_here/pytauri.git
 cd pytauri
-# create a branch for local development
+
+# Create a new branch for local development
 git checkout -b branch-name
 
-# install dev dependencies and build frontend assets
+# Install dev dependencies and build the frontend assets
 pnpm install
 pnpm -r run build
 
-# activate virtual environment
+# Activate the virtual environment
 uv venv --python-preference=only-system
 source .venv/bin/activate
-# or Windows: `source .venv/Scripts/activate`
+# On Windows: `source .venv/Scripts/activate`
 
-# install dev dependencies and tools
+# Install dev dependencies and tools
 uv sync
 
-# Init pre-commit (installed by `uv sync`)
+# Initialize pre-commit hooks (installed by `uv sync`)
 # https://pre-commit.com/#3-install-the-git-hook-scripts
 pre-commit install
 pre-commit run --all-files
 ```
 
-That's all! Now, you can start to develop.
+That's all! Now, you can start developing.
 
 ## IDE setup
 
-We strongly recommend using `VSCode` with the extensions in `.vscode/extensions.json`.
+We strongly recommend using **VS Code** along with the extensions listed in `.vscode/extensions.json`.
 
-These extensions will help you to format, lint, type-check, and debug your code.
+These extensions will help you format, lint, type-check, and debug your code.
 
-### Debug
+### Debugging
 
-TODO
-
-- check `.vscode/launch.json` and [codelldb][] for debugging `py/rs` from python.
-- check [vscode/python-debugging](https://code.visualstudio.com/docs/python/debugging#_debugging-by-attaching-over-a-network-connection) for debugging `py/rs` from rust.
+**pytauri** is fully debuggable. For instructions, please see our [debugging tutorial](https://pytauri.github.io/pytauri/latest/usage/tutorial/debugging/).
 
 ## Source code
 
@@ -64,23 +63,23 @@ TODO
 
 ## Testing
 
-We use [pytest](https://docs.pytest.org/en/stable/) and `cargo test` to test our code.
+We use [pytest](https://docs.pytest.org/en/stable/) and `cargo test` to run our tests.
 
 ## Documentation
 
-### Python and Toturial
+### Python and Tutorial
 
-We use [mkdocs](https://www.mkdocs.org), [mkdocs-material](https://squidfunk.github.io/mkdocs-material), [mkdocstrings](https://mkdocstrings.github.io) and [mike](https://github.com/jimporter/mike) to build our documentation.
+We use [MkDocs](https://www.mkdocs.org), [Material for MkDocs](https://squidfunk.github.io/mkdocs-material), [mkdocstrings](https://mkdocstrings.github.io) and [mike](https://github.com/jimporter/mike) to build our documentation.
 
-The documentation source code is in `docs/`, `docs_src/`, `mkdocs.yml`, and `utils/` (check `mkdocs.yml` to find others).
+The documentation source files are located in `docs/`, `docs_src/`, `mkdocs.yml`, and `utils/`. (See `mkdocs.yml` for additional paths or custom configurations.).
 
-Live-reloading main docs:
+#### Live-reloading the main documentation site:
 
 ```bash
 mkdocs serve  # --dirty # 👈 optional to speed up hot-reload
 ```
 
-Live-reloading versioned docs:
+#### Live-reloading versioned docs (with mike):
 
 ```bash
 mike serve
@@ -123,42 +122,56 @@ If you have made the corresponding changes, please record them in `CHANGELOG.md`
 
 ### Commit message convention
 
-Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/),
-or `pre-commit` will reject your commit.
+Commit messages must follow the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/),
+otherwise `pre-commit` will reject your commit.
 
 !!! info
-    If you don't know how to finish these, it's okay, feel free to initiate a PR, we will help you continue.
+    Not sure how to follow all the contribution rules? No worries — feel free to open a PR, even if it's not perfect.
+    We'll be happy to guide you and help you finish it.
 
 ## CI checks
 
-We will check your commits on GitHub Actions, and your PR will only be merged if it passes the CI checks.
+Commits are checked via **GitHub Actions**, and pull requests can only be merged if all CI checks pass.
 
-You can run these checks locally by executing `pre-commit run --all-files` in **bash**.
+You can run most of these checks locally by executing:
 
-> Usually, you don't need to do this manually, because `pre-commit` will automatically run these checks on each commit as long as you have installed the git hooks via `pre-commit install`.
+```bash
+pre-commit run --all-files
+```
+
+This works as long as you've installed the Git hooks via `pre-commit install`.
+Usually, you don’t need to run checks manually — `pre-commit` runs them automatically on each commit.
 
 !!! tip
-    Some slow checks are not run locally by default. If you really want to run them, pass `--hook-stage=manual`. You can also look at `.pre-commit-config.yaml` and run the individual checks yourself if you prefer.
+    Some slower checks are skipped during normal local runs.
+    If you want to run all checks, including the slow ones, use:
+
+    ```bash
+    pre-commit run --all-files --hook-stage=manual
+    ```
+
+    You can also check `.pre-commit-config.yaml` and run specific hooks individually if you prefer.
+
 
 ---
 
 ## 😢
 
 !!! warning
-    The following 👇 content is for the maintainers of this project, may be you don't need to read it.
+    The section below is mainly for project maintainers. You probably don't need to read it.
 
 ---
 
-## Deploy Docs
+## Deploying The Documentation
 
-please refer to `.github/workflows/docs.yml`.
+The documentations are automatically deployed through **GitHub's workflows**, please refer to `.github/workflows/docs.yml`.
 
-- Every push to the `main` branch will trigger the `dev` version docs deployment.
-- Every `v*` semver tag will trigger the corresponding version docs deployment.
+- Pushing to the `main` branch automatically deploys the **`dev` version** of the documentation.
+- Pushing a semantic version tag (e.g. `v1.2.3`) triggers deployment for that **specific version** of the docs.
 
-    !!! warning
-        - Remember update `CHANGELOG.md` before pushing the version docs tag!
-        - Remember make a Github Release (not package release) manually for the version docs deployment!
+!!! warning
+    - Remember to update `CHANGELOG.md` before pushing the version docs tag!
+    - Remember to make a Github Release (not package release) manually for the version docs deployment!
 
 ## PR Checks
 
@@ -170,23 +183,35 @@ please refer to `.github/workflows/lint-test.yml`.
 
 Please refer to `.github/workflows/publish-*.yml`.
 
-- Every `py|rs|js/package-name/v*` semver tag will trigger the corresponding package publish.
+- Pushing a semantic version tag in the format `py|rs|js/package-name/v*` will trigger publishing for the corresponding package.
 
-First, check-out to a **new branch**, edit `CHANGELOG.md` to record the changes and bump the version.
+### 1. Prepare the release
 
-!!! warning
-    Remember also update the dependencies version for **workspace members**.
-
-Then, push the **new branch** with the **signed tag** to GitHub, and create a PR to the `main` branch.
-
-> Again, the tag must be **signed**!!!
+- Check out a **new branch**.
+- Update `CHANGELOG.md` with the changes.
+- Bump the version accordingly.
 
 !!! warning
-    The `bump version` PR must have **only one commit with the corresponding tag**; otherwise, it will be rejected.
+    Don’t forget to update dependency versions for **workspace members** as needed.
 
-Review the PR, if it's ok, **rebase** it to `main` branch **in local**.
+### 2. Create the release tag
 
-!!! warning "**DO NOT rebase with tag on GitHub.**"
+- Push the **new branch** along with a **signed tag** to GitHub.
+- Open a pull request (PR) from that branch to the `main` branch.
+
+> 🔐 The tag **must be signed**!
+
+!!! warning
+    The **version bump PR** must contain **only one commit** — the one with the version tag.
+    PRs with multiple commits will be rejected.
+
+### 3. Finalize the release
+
+- Review the PR carefully.
+- If everything looks good, **rebase and merge** it into the `main` branch **locally**.
+
+
+!!! warning "**DO NOT rebase with a tag on GitHub.**"
 
     Refer to:
 
@@ -194,19 +219,21 @@ Review the PR, if it's ok, **rebase** it to `main` branch **in local**.
     >
     > When you use this option, GitHub creates modified commits using the original commit data and content.
 
-    This will cause the commits merged into main to be inconsistent with the tagged commits.
+    This will cause the commits merged into `main` to be inconsistent with the tagged commits.
 
-    If you unfortunately do this, you must delete the tag and re-tag the merged commit.
+    If this happens, you must delete the tag and re-tag the merged commit.
 
-Check if everything is ok, for example:
+---
 
-- **check if the tag is on the `main` branch**.
-- **check if the version specified by the tag is correct**.
-- check if the dependencies version of workspace members are updated.
-- check if the link in `CHANGELOG.md` is correct.
+Before approving the release, please verify the following:
 
-If so, make a `approve` in environment `pypi`/`crates-io`/`npmjs` for the workflow.
+- **The tag exists on the `main` branch.**
+- **The version specified by the tag is correct.**
+- Dependency versions for workspace members are updated.
+- Links in `CHANGELOG.md` are accurate.
 
-After that, the `publish-*.yml` workflow will build and publish the package.
+If everything looks good, approve the release in the environment (`pypi` / `crates-io` / `npmjs`) for the workflow.
 
-Finally, edit the `draft release` created by `publish-*.yml` workflow, and publish the release.
+The `publish-*.yml` workflow will then build and publish the package automatically.
+
+Finally, edit the draft release created by the workflow and publish it.

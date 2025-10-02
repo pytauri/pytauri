@@ -46,24 +46,22 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
 
 ## Features
 
-> **TL;DR**
->
-> You are hurry and just wanna see/run the demo? See [examples/tauri-app](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app).
+> If you're in a hurry, you can find the demos in [examples/tauri-app](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app).
 
 [notification]: https://docs.rs/tauri-plugin-notification/latest/tauri_plugin_notification/
 
-- Need Rust compiler, but **almost don't need to write Rust code**!
-- Or use `pytauri-wheel`, **you won't need the Rust compiler, everything can be done in Python**! Check out [examples/tauri-app-wheel](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel).
-- Can be integrated with `tauri-cli` to build and package standalone executables!
+- **You’ll hardly need to write any Rust code**! (rust compiler is still required)
+- Alternatively, use `pytauri-wheel`; **no Rust compiler needed, and everything can be done in Python!** (See [examples/tauri-app-wheel](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app-wheel).)
+- Easily integrates with `tauri-cli` to build and package standalone executables!
     - Use `Cython` to protect your source code!
-- No IPC (inter-process communication) overhead, secure and fast, thanks to [Pyo3]!
+- No inter-process communication (IPC) overhead, making it secure and fast thanks to [Pyo3]!
 - Support Tauri official plugins(e.g., [notification]), and you can write your own plugins!
 
     ![demo](https://github.com/user-attachments/assets/14ad5b51-b333-4d80-b04b-af72c4179571)
 
-- Natively support async python (`asyncio`, `trio` or `anyio`)
-- **100%** [Type Completeness](https://microsoft.github.io/pyright/#/typed-libraries?id=type-completeness)
-- Ergonomic API (and as close as possible to the Tauri Rust API)
+- Native support for async Python (`asyncio`, `trio` and `anyio`).
+- **100%** [Type Completeness](https://microsoft.github.io/pyright/#/typed-libraries?id=type-completeness).
+- Ergonomic API that is as close as possible to the Tauri Rust API.
     - [Automatically generated TypeScript types and client for IPC](https://github.com/pytauri/pytauri/tree/main/examples/tauri-app/src/client)
     - Python
 
@@ -117,13 +115,13 @@ If you think this project is helpful, consider giving it a star [![GitHub Repo s
         }
         ```
 
-- Can be integrated with [nicegui]/[gradio]/[FastAPI] to achieve a full-stack Python development experience (i.g., without `Node.js`). See [examples/nicegui-app](https://github.com/pytauri/pytauri/tree/main/examples/nicegui-app).
+- Can be integrated with [NiceGUI], [Gradio] and [FastAPI] to achieve a full-stack Python development experience (i.e., without `Node.js`). See [examples/nicegui-app](https://github.com/pytauri/pytauri/tree/main/examples/nicegui-app).
 
 ## Release
 
 We follow [Semantic Versioning 2.0.0](https://semver.org/).
 
-Rust and its Python bindings, PyTauri core and its plugins will keep the same `MAJOR.MINOR` version number.
+Rust and its Python bindings, PyTauri core and its plugins will maintain the same `MAJOR.MINOR` version number.
 
 | name | pypi | crates.io | npmjs |
 |:-------:|:----:|:---------:|:-----:|
@@ -160,15 +158,15 @@ Rust and its Python bindings, PyTauri core and its plugins will keep the same `M
 
 ### For Pythoneer
 
-I hope `PyTauri` can become an alternative to [pywebview] and [Pystray], leveraging Tauri's comprehensive features to offer Python developers a GUI framework and a batteries-included development experience similar to [electron] and [PySide].
+I hope `PyTauri` can become a viable alternative to [pywebview] and [Pystray], leveraging Tauri's comprehensive features to provide Python developers with a GUI framework and a batteries-included development experience similar to [electron] and [PySide].
 
 > PyTauri is inspired by [FastAPI] and [Pydantic], aiming to offer a similar development experience.
 
 ### For Rustacean
 
-Through [Pyo3], I hope Rust developers can better utilize the Python ecosystem (e.g., building AI GUI applications with [PyTorch]).
+Through [Pyo3], I hope Rust developers can better utilize the Python ecosystem, for example by building AI GUI applications with [PyTorch].
 
-Although Rust's lifetime and ownership system makes Rust code safer, Python's garbage collection (GC) will make life easier. 😆
+Although Rust's lifetime and ownership system makes it safer, Python's garbage collection (GC) will make life easier. 😆
 
 [pywebview]: https://github.com/r0x0r/pywebview
 [Pystray]: https://github.com/moses-palmer/pystray
@@ -177,18 +175,18 @@ Although Rust's lifetime and ownership system makes Rust code safer, Python's ga
 [FastAPI]: https://github.com/fastapi/fastapi
 [Pydantic]: https://github.com/pydantic/pydantic
 [PyTorch]: https://github.com/pytorch/pytorch
-[nicegui]: https://github.com/zauberzeug/nicegui
-[gradio]: https://github.com/gradio-app/gradio
+[NiceGUI]: https://github.com/zauberzeug/nicegui
+[Gradio]: https://github.com/gradio-app/gradio
 
 ## Used By
 
-Although PyTauri is a fairly young project, a few people have used it to make cool projects:
+Although PyTauri is a fairly young project, a few people have already used it to build some cool projects:
 
 - [Digger Solo](https://solo.digger.lol/) - AI powered file manager
 
 ## Credits
 
-PyTauri is a project that aims to provide Python bindings for [Tauri], a cross-platform webview GUI library. `Tauri` is a trademark of the Tauri Program within the Commons Conservancy and PyTauri is not officially endorsed or supported by them. PyTauri is an independent and community-driven effort that respects the original goals and values of Tauri. PyTauri does not claim any ownership or affiliation with the Tauri Program.
+PyTauri is a project that aims to provide Python bindings for [Tauri], a cross-platform webview GUI library. `Tauri` is a trademark of the Tauri Program within the Commons Conservancy, and PyTauri is neither officially endorsed nor supported by them. PyTauri is an independent, and community-driven effort that respects the original goals and values of Tauri. PyTauri does not claim any ownership of or affiliation with the Tauri Program.
 
 ## License
 
